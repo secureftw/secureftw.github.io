@@ -1,0 +1,28 @@
+import { IConnectedWallet, ITransaction, IWalletType } from "../neo/wallet/interfaces";
+import { INetworkType } from "../neo/network";
+import { sc } from "@cityofzion/neon-core";
+
+export interface IWalletStates {
+  useDevWallet?: boolean;
+  list: {
+    key: IWalletType;
+    label: string;
+  }[];
+  invokeScript?: sc.ContractCallJson;
+  network: INetworkType;
+  connectedWallet?: IConnectedWallet;
+  isWalletModalActive: boolean;
+  openWalletModal: () => void;
+  closeWalletModal: () => void;
+  connectWallet: (wallet: IWalletType) => void;
+  disConnectWallet: () => void;
+  doInvoke: (invokeScript: sc.ContractCallJson) => void;
+  closeInvoke: () => void;
+  transactions: ITransaction[]
+}
+
+export interface ContextOptions {
+  network: INetworkType;
+  useLocalStorage?: boolean;
+  useDevWallet?: boolean;
+}

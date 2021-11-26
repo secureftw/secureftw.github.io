@@ -1,0 +1,57 @@
+$primary: hsl(153, 53%, 53%);
+$link: $primary;
+$hr-height: 1px;
+@import "../../node_modules/bulma/bulma";
+$sidebar-bg-color: $white !important;
+$icon-bg-color: $white !important;
+$highlight-color: $black !important;
+$submenu-bg-color-collapsed: $light !important;
+$submenu-bg-color: $light !important;
+$sidebar-width: 230px !important;
+@import "../../node_modules/react-pro-sidebar/dist/scss/styles";
+
+/* html */
+html {
+  @extend .has-navbar-fixed-top;
+  background-color: $light;
+  overflow-y: overlay;
+}
+
+/**
+Align element in center
+ */
+.is-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/**
+Pro sidebar bug
+ */
+.pro-menu-item{
+  &.active{
+    .pro-icon{
+      color: $primary!important;
+    }
+  }
+  .pro-item-content a{
+    color: $dark!important;
+    &:hover{
+      color: $black!important;
+    }
+  }
+}
+
+/**
+For fixed top height
+ */
+.sidebar {
+  top: 52px !important;
+  .sidebar-sidebar{
+    box-shadow: none!important;
+  }
+  .sidebar-content{
+    transition: none!important;
+  }
+}
