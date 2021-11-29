@@ -17,17 +17,16 @@ export interface IBalance {
   amount: string;
 }
 
-export interface ITransaction{
-  network: INetworkType
-  wallet: IWalletType,
-  status: "PENDING" | "SUBMITTED"
-  txid: string,
-  contractHash: string
-  method: string,
-  args: any
-  createdAt: string
+export interface ITransaction {
+  network: INetworkType;
+  wallet: IWalletType;
+  // status: "PENDING" | "SUBMITTED";
+  txid: string;
+  contractHash: string;
+  method: string;
+  args: any;
+  createdAt: string;
 }
-
 
 export interface ITxReceipt {
   txid: string;
@@ -43,5 +42,3 @@ export type IContractCallArgs =
   | "ByteArray"
   | "Array"
   | "Address";
-
-

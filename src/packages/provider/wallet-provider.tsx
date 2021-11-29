@@ -15,11 +15,19 @@ export const WalletContextProvider = (props: {
 
   const [isWalletModalActive, setWalletModalActive] = useState(false);
 
-  const [connectedWallet, setConnectedWallet] = useState<IConnectedWallet | undefined>(props.options.useLocalStorage ? LocalStorage.getWallet() : undefined);
+  const [connectedWallet, setConnectedWallet] = useState<
+    IConnectedWallet | undefined
+  >(props.options.useLocalStorage ? LocalStorage.getWallet() : undefined);
 
-  const [invokeScript, setInvokeScript] = useState<sc.ContractCallJson | undefined>();
+  const [invokeScript, setInvokeScript] = useState<
+    sc.ContractCallJson | undefined
+  >();
 
-  const [transactions, setTransactions] = useState(props.options.useLocalStorage ? LocalStorage.getTransactions() : []);
+  // const [transactions, setTransactions] = useState(
+  //   props.options.useLocalStorage ? LocalStorage.initStorage(network) : []
+  // );
+
+  const [pendingTransactions, setPendingTransactions] = useState<string[]>([]);
 
   const openWalletModal = () => setWalletModalActive(true);
 
@@ -27,15 +35,14 @@ export const WalletContextProvider = (props: {
 
   const connectWallet = async (walletType: IWalletType) => {
     try {
-      const connectedWallet = await new WalletAPI(walletType).init(network);
-      setConnectedWallet(connectedWallet);
+      const res = await new WalletAPI(walletType).init(network);
+      setConnectedWallet(res);
       if (props.options.useLocalStorage) {
-        LocalStorage.setWallet(connectedWallet);
+        LocalStorage.setWallet(res);
       }
       setWalletModalActive(false);
-    } catch (e) {
-      console.error(e);
-      toast.error(`Failed to connect`);
+    } catch (e: any) {
+      toast.error(e.message);
     }
   };
 
@@ -44,12 +51,20 @@ export const WalletContextProvider = (props: {
     setConnectedWallet(undefined);
   };
 
-  const doInvoke = (invokeScript: sc.ContractCallJson) => {
+  const doInvoke = (args: sc.ContractCallJson) => {
     if (isWalletModalActive) setWalletModalActive(false);
-    setInvokeScript(invokeScript);
+    setInvokeScript(args);
   };
 
   const closeInvoke = () => setInvokeScript(undefined);
+
+  const addPendingTransaction = (txid: string) => {
+    setPendingTransactions([...pendingTransactions, txid]);
+  };
+
+  const removePendingTransaction = (txid: string) => {
+    setPendingTransactions(pendingTransactions.filter((i) => i !== txid));
+  };
 
   const contextValue: IWalletStates = {
     useDevWallet: props.options.useDevWallet,
@@ -64,7 +79,9 @@ export const WalletContextProvider = (props: {
     disConnectWallet,
     doInvoke,
     closeInvoke,
-    transactions,
+    addPendingTransaction,
+    removePendingTransaction,
+    pendingTransactions,
   };
 
   return (

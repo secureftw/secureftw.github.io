@@ -1,29 +1,23 @@
 import React from "react";
-import {
-  IFarmDepositRecord,
-  IFarmSnapshot,
-} from "../../../packages/neo/contracts/ftw/farm/interfaces";
-import { useWallet } from "../../../packages/provider";
-import { FarmContract } from "../../../packages/neo/contracts";
+import { IFarmDepositRecord } from "../../../packages/neo/contracts/ftw/farm/interfaces";
 
 interface IMyPositionProps {
   deposit?: IFarmDepositRecord;
-  // lastClaim?: string;
   lastSnapshotNo: string;
   onCancel: () => void;
+  onPositionChange: () => void;
   onClaim: () => void;
 }
 const MyPosition = ({
   deposit,
-  // lastClaim,
   lastSnapshotNo,
   onCancel,
   onClaim,
+  onPositionChange,
 }: IMyPositionProps) => {
-  // const { connectedWallet, network } = useWallet();
   if (!deposit) return <div></div>;
   const lastClaimNo = deposit.lastClaimNo ? parseFloat(deposit.lastClaimNo) : 0;
-  let isClaimable = parseFloat(lastSnapshotNo) > lastClaimNo;
+  const isClaimable = parseFloat(lastSnapshotNo) > lastClaimNo;
   return (
     <>
       <div className="level">
@@ -38,14 +32,23 @@ const MyPosition = ({
             </div>
           </div>
         </div>
-
         <div className="level-right">
-          <button
-            onClick={onCancel}
-            className="button is-black is-outlined is-inverted"
-          >
-            Close
-          </button>
+          <div className="buttons">
+            {!isClaimable && (
+              <button
+                onClick={onPositionChange}
+                className="button is-black is-outlined is-inverted"
+              >
+                Change position
+              </button>
+            )}
+            <button
+              onClick={onCancel}
+              className="button is-black is-outlined is-inverted"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
       {isClaimable && (

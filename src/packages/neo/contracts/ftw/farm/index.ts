@@ -2,7 +2,6 @@ import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { NEO_SCRIPT_HASH } from "../../../consts";
-import { InvokeResult } from "@cityofzion/neon-core/lib/rpc/Query";
 import { FARM_SCRIPT_HASH } from "./consts";
 import { IFarmContractStatus } from "./interfaces";
 import {
@@ -10,6 +9,8 @@ import {
   parseDeposit,
   parseSnapshotPaginate,
 } from "./helpers";
+import { FTW_SCRIPT_HASH } from "../nep17";
+import { base64ToFixed8 } from "../../../utils";
 
 export class FarmContract {
   network: INetworkType;
@@ -20,9 +21,6 @@ export class FarmContract {
     this.contractHash = FARM_SCRIPT_HASH[networkType];
   }
 
-  /**
-   * Listing NFT to sell
-   */
   deposit = async (
     connectedWallet: IConnectedWallet,
     amount: string,
@@ -108,16 +106,29 @@ export class FarmContract {
     );
   };
 
-  getCurrentActivityHeight = async (): Promise<string> => {
-    const getHeight = {
-      operation: "getActivityHeight",
+  changePosition = async (
+    connectedWallet: IConnectedWallet,
+    position: string
+  ): Promise<string> => {
+    const invokeScript = {
+      operation: "changePosition",
       scriptHash: this.contractHash,
-      args: [],
+      args: [
+        {
+          type: "Address",
+          value: connectedWallet.account.address,
+        },
+        {
+          type: "Integer",
+          value: position,
+        },
+      ],
     };
-
-    const res: InvokeResult = await Network.read(this.network, [getHeight]);
-    // @ts-ignore
-    return res.stack[0].value;
+    return new wallet.WalletAPI(connectedWallet.key).invoke(
+      this.network,
+      connectedWallet.account.address,
+      invokeScript
+    );
   };
 
   getStatus = async (
@@ -133,6 +144,18 @@ export class FarmContract {
         },
       ],
     };
+
+    const ftwBalance = {
+      operation: "balanceOf",
+      scriptHash: FTW_SCRIPT_HASH[this.network],
+      args: [
+        {
+          type: "Hash160",
+          value: this.contractHash,
+        },
+      ],
+    };
+
     const timeLeft = {
       operation: "timeLeft",
       scriptHash: this.contractHash,
@@ -168,7 +191,15 @@ export class FarmContract {
       ],
     };
 
-    const scripts = [neoBalance, timeLeft, interval, range, vote, snapshots];
+    const scripts = [
+      neoBalance,
+      ftwBalance,
+      timeLeft,
+      interval,
+      range,
+      vote,
+      snapshots,
+    ];
 
     if (connectedWallet) {
       const deposit = {
@@ -204,18 +235,19 @@ export class FarmContract {
     const res = await Network.read(this.network, scripts);
     return {
       neoBalance: res.stack[0].value as string,
-      timeLeft: res.stack[1].value as string,
-      interval: res.stack[2].value as string,
-      range: res.stack[3].value as string,
-      vote: res.stack[4].value as string,
-      snapshots: parseSnapshotPaginate(res.stack[5].value),
+      ftwBalance: base64ToFixed8(res.stack[1].value as string),
+      timeLeft: res.stack[2].value as string,
+      interval: res.stack[3].value as string,
+      range: res.stack[4].value as string,
+      vote: res.stack[5].value as string,
+      snapshots: parseSnapshotPaginate(res.stack[6].value),
       deposit:
-        connectedWallet && res.stack[6].value
-          ? parseDeposit(res.stack[6].value)
+        connectedWallet && res.stack[7].value
+          ? parseDeposit(res.stack[7].value)
           : undefined,
       claims:
-        connectedWallet && res.stack[7].value
-          ? parseClaimPaginate(res.stack[7].value)
+        connectedWallet && res.stack[8].value
+          ? parseClaimPaginate(res.stack[8].value)
           : undefined,
     };
   };

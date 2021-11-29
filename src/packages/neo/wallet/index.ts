@@ -76,18 +76,16 @@ export class WalletAPI {
         balances,
       };
     } catch (e) {
-      console.error(e);
       throw e;
     }
   };
-
-  testInvoke = () => {};
 
   /* Control signing and send transaction. TODO:Need to improve type hardcoding later */
   invoke = async (
     network: INetworkType,
     senderAddress: string,
-    invokeScript: sc.ContractCallJson
+    invokeScript: sc.ContractCallJson,
+    extraSystemFee?: string
   ): Promise<string> => {
     const wallet = await this.getInstance(this.walletType);
     let res;
@@ -98,15 +96,19 @@ export class WalletAPI {
       invokeScript.signers = [
         {
           account: NeonWallet.getScriptHashFromAddress(senderAddress),
-          scopes: tx.WitnessScope.Global,
+          scopes: tx.WitnessScope.CalledByEntry,
         },
       ];
+      if (extraSystemFee) {
+        // @ts-ignore
+        invokeScript.extraSystemFee = extraSystemFee;
+      }
       res = await wallet.invoke(invokeScript);
     }
     const submittedTx: ITransaction = {
       network,
       wallet: this.walletType,
-      status: "PENDING",
+      // status: "PENDING",
       txid: res.txid,
       contractHash: invokeScript.scriptHash,
       method: invokeScript.operation,

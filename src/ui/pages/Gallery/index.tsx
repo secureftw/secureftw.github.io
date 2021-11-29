@@ -3,7 +3,7 @@ import PageLayout from "../../components/PageLayout";
 import PropertiesModal from "./PropertiesModal";
 import toast from "react-hot-toast";
 import { useWallet } from "../../../packages/provider";
-import { FarmContract, NFTContract } from "../../../packages/neo/contracts";
+import { NFTContract } from "../../../packages/neo/contracts";
 import DisplayRune from "./DisplayRune";
 import { IRuneMeta } from "../../../packages/neo/contracts/ftw/nft/interfaces";
 import DisplayRandomRune from "../../components/DisplayRandomRune";
@@ -13,7 +13,7 @@ const Gallery = (props) => {
   const [error, setError] = useState("");
   const [propertiesModalActive, setPropertiesModalActive] =
     useState<IRuneMeta>();
-  const { connectedWallet, network } = useWallet();
+  const { connectedWallet, network, addPendingTransaction } = useWallet();
   const onPropertiesModalActive = (obj: IRuneMeta) => {
     if (connectedWallet) {
       setPropertiesModalActive(obj);
@@ -24,7 +24,23 @@ const Gallery = (props) => {
   const onMint = async () => {
     if (connectedWallet) {
       try {
-        const txid = await new NFTContract(network).mint(connectedWallet);
+        const res = await new NFTContract(network).mint(connectedWallet);
+        addPendingTransaction(res);
+      } catch (e: any) {
+        toast.error(e.message);
+      }
+    } else {
+      toast.error("Please connect wallet.");
+    }
+  };
+
+  const withdraw = async () => {
+    if (connectedWallet) {
+      try {
+        const res = await new NFTContract(network).withdrawFund(
+          connectedWallet
+        );
+	      addPendingTransaction(res)
       } catch (e: any) {
         toast.error(e.message);
       }
@@ -57,6 +73,9 @@ const Gallery = (props) => {
             </p>
             <button onClick={onMint} className="button is-primary">
               Mint: 10 GAS
+            </button>
+            <button onClick={withdraw} className="button is-primary">
+              withdraw
             </button>
           </div>
         </div>

@@ -1,10 +1,28 @@
 import store from "store2";
 import { IConnectedWallet, ITransaction } from "../wallet/interfaces";
+import { FARM_SCRIPT_HASH } from "../contracts/ftw/farm/consts";
+import { NFT_SCRIPT_HASH } from "../contracts";
 
 const CONNECTED_WALLET = "CONNECTED_WALLET";
 const TRANSACTIONS = "TRANSACTIONS";
 
 export class LocalStorage {
+  public static initStorage = (network: string): ITransaction[] => {
+    const supportContracts = [
+      FARM_SCRIPT_HASH[network],
+      NFT_SCRIPT_HASH[network],
+    ];
+    const transactions = LocalStorage.getTransactions();
+    const validatedTx: ITransaction[] = [];
+    transactions.forEach((tx) => {
+      if (supportContracts.includes(tx.contractHash)) {
+        validatedTx.push(tx);
+      } else {
+        LocalStorage.removeTransaction(tx);
+      }
+    });
+    return validatedTx;
+  };
   public static getWallet = (): IConnectedWallet | undefined =>
     validateConnectedWallet(store.get(CONNECTED_WALLET));
 
@@ -28,6 +46,7 @@ export class LocalStorage {
     }
     window.dispatchEvent(new Event("transactions"));
   }
+
   public static updatePendingTransaction(txId: string) {
     let transactions = store.get(TRANSACTIONS);
     transactions = transactions.map((tx) => {

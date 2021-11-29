@@ -1,62 +1,52 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ClipLoader } from "react-spinners";
 import { useWallet } from "../../provider";
-import { LocalStorage } from "../../neo/local-storage";
 import { Network } from "../../neo/network";
-import { ITransaction } from "../../neo/wallet/interfaces";
 
 const PendingTransaction = (props) => {
-  const { network } = useWallet();
-  const [items, setItems] = useState<ITransaction[]>([]);
+  const { network, pendingTransactions, removePendingTransaction } =
+    useWallet();
+  // const [items, setItems] = useState<ITransaction[]>([]);
 
-  const handleTransactionsChange = useCallback((event) => {
-    let transactions = LocalStorage.getTransactions();
-    transactions = transactions.filter((i) => i.status === "PENDING");
-    if (transactions.length > 0) {
-      setItems(transactions);
-      for (const tx of transactions) {
-        pingFunc(tx);
-      }
-    }
-  }, []);
-
-  const pingFunc = (tx) => {
-    let retryNum = 0;
-
-    // create interval as a named function
-    const interval = async () => {
-      const intervalCall = await Network.getNotificationsFromTxId(
-        tx.txid,
-        network
-      );
-      if (intervalCall) {
-        const _items = items.filter((item) => item.txid !== tx.txid);
-        setItems(_items);
-        LocalStorage.updatePendingTransaction(tx.txid);
-        return false;
-      }
-
-      retryNum++;
-
-      if (retryNum >= 10) {
-        return;
-      }
-
-      setTimeout(interval, 10000);
-    };
-    // call interval
-    interval();
-  };
+  // const handleTransactionsChange = useCallback(async (event) => {
+  //   const transactions = LocalStorage.getTransactions();
+  //   const pendingTransactions = transactions.filter(
+  //     (i) => i.status === "PENDING"
+  //   );
+  //   if (pendingTransactions.length > 0) {
+  //     setItems(transactions);
+  //     for (const tx of transactions) {
+  //       const res = await Network.getRawTx(tx.txid, network);
+  //       setItems(items.filter((i) => i.txid !== tx.txid));
+  //       console.log(1);
+  //       console.log(res);
+  //     }
+  //   }
+  // }, []);
 
   useEffect(() => {
+    async function checkTxid() {
+      try {
+        for (const txid of pendingTransactions) {
+          const res = await Network.getRawTx(txid, network);
+          removePendingTransaction(txid);
+        }
+      } catch (e: any) {
+        console.error(e);
+      }
+    }
+
+    if (pendingTransactions.length > 0) {
+      checkTxid();
+    }
     // handleTransactionsChange(() => {});
-    window.addEventListener("transactions", handleTransactionsChange);
-    return () => {
-      window.removeEventListener("transactions", handleTransactionsChange);
-    };
-  }, []);
-  console.log(items)
-  if (items.length === 0) return <></>;
+    // window.addEventListener("transactions", handleTransactionsChange);
+    // return () => {
+    //   window.removeEventListener("transactions", handleTransactionsChange);
+    // };
+  }, [pendingTransactions]);
+  // console.log(items);
+  if (pendingTransactions.length === 0) return <></>;
   return (
     <div className="navbar-item pr-0">
       <div
@@ -64,7 +54,7 @@ const PendingTransaction = (props) => {
         className="is-center button is-outlined is-rounded is-small"
       >
         <ClipLoader loading={true} size={15} />
-        <span className="ml-2">{`${items.length} Pending`}</span>
+        <span className="ml-2">{`${pendingTransactions.length} Pending`}</span>
       </div>
     </div>
   );

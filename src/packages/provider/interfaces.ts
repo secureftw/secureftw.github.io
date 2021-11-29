@@ -1,4 +1,8 @@
-import { IConnectedWallet, ITransaction, IWalletType } from "../neo/wallet/interfaces";
+import {
+  IConnectedWallet,
+  ITransaction,
+  IWalletType,
+} from "../neo/wallet/interfaces";
 import { INetworkType } from "../neo/network";
 import { sc } from "@cityofzion/neon-core";
 
@@ -17,8 +21,10 @@ export interface IWalletStates {
   connectWallet: (wallet: IWalletType) => void;
   disConnectWallet: () => void;
   doInvoke: (invokeScript: sc.ContractCallJson) => void;
+  addPendingTransaction: (txid: string) => void;
+  removePendingTransaction: (txid: string) => void;
   closeInvoke: () => void;
-  transactions: ITransaction[]
+  pendingTransactions: string[];
 }
 
 export interface ContextOptions {

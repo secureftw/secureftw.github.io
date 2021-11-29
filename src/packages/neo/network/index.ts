@@ -5,18 +5,19 @@ import {
   PRIVATE_CONFIG,
   PRIVATENET,
   TESTNET,
-  TESTNET_CONFIG
+  TESTNET_CONFIG,
 } from "../consts";
 import { InvokeResult } from "@cityofzion/neon-core/lib/rpc";
-import { ApplicationLogJson } from "@cityofzion/neon-core/lib/rpc/Query";
+import {
+  ApplicationLogJson,
+  GetRawTransactionResult,
+} from "@cityofzion/neon-core/lib/rpc/Query";
 import { convertContractCallParam } from "../utils";
-import { StackItemJson } from "@cityofzion/neon-core/lib/sc";
 
 export type INetworkType = typeof PRIVATENET | typeof MAINNET | typeof TESTNET;
 
 export class Network {
-
-  private static readonly READ_LOG_FREQUENCY = 6000; //ms
+  private static readonly READ_LOG_FREQUENCY = 6000;
 
   static getRPCClient = (networkType: INetworkType) => {
     let config;
@@ -34,16 +35,43 @@ export class Network {
     return new rpc.RPCClient(config.url);
   };
 
-  static findNotificationFromTxId = async (txId: string, scriptHash: string, eventName: string, networkType: INetworkType) => {
+  static getRawTx = async (txid: string, network: INetworkType) => {
+    const rpcClient = Network.getRPCClient(network);
+    // Cycle
+    let rawTx: GetRawTransactionResult | undefined;
+    do {
+      try {
+      	console.log("ping")
+        rawTx = await rpcClient.getRawTransaction(txid, true);
+      } catch (e) {
+        await Network.sleep(Network.READ_LOG_FREQUENCY);
+      }
+    } while (!rawTx);
+
+    return rawTx;
+  };
+
+  static findNotificationFromTxId = async (
+    txId: string,
+    scriptHash: string,
+    eventName: string,
+    networkType: INetworkType
+  ) => {
     // Get transaction notifications
-    const notifications = await Network.getNotificationsFromTxId(txId, networkType);
+    const notifications = await Network.getNotificationsFromTxId(
+      txId,
+      networkType
+    );
     // Return selected one
     return notifications.find(
-      (n: any) => n.contract === "0x" + scriptHash && n.eventname === eventName,
+      (n: any) => n.contract === "0x" + scriptHash && n.eventname === eventName
     );
   };
 
-  static getNotificationsFromTxId = async (txId: string, network: INetworkType) => {
+  static getNotificationsFromTxId = async (
+    txId: string,
+    network: INetworkType
+  ) => {
     // Get rpc client to do calls
     const rpcClient = Network.getRPCClient(network);
 
@@ -78,9 +106,9 @@ export class Network {
       }
       sb.emitAppCall(script.scriptHash, script.operation, params);
     });
-    const res =await rpcClient.invokeScript(u.HexString.fromHex(sb.build()));
-    if(res.state === "FAULT"){
-      console.error("RPC read error" + res)
+    const res = await rpcClient.invokeScript(u.HexString.fromHex(sb.build()));
+    if (res.state === "FAULT") {
+      console.error("RPC read error" + res);
       throw new Error(res.exception ? res.exception : "Network error");
     }
     return res;

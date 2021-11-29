@@ -9,15 +9,16 @@ interface IActionModal {
   onClose: () => void;
 }
 const CancelModal = ({ onClose }: IActionModal) => {
-  const { network, connectedWallet, openWalletModal } = useWallet();
+  const { network, connectedWallet, openWalletModal, addPendingTransaction } =
+    useWallet();
   const [txid, setTxid] = useState<string>();
   const onCancel = async () => {
     if (connectedWallet) {
       try {
-        const txid = await new FarmContract(network).remove(connectedWallet);
+        const res = await new FarmContract(network).remove(connectedWallet);
+        addPendingTransaction(res);
         setTxid(txid);
       } catch (e: any) {
-        console.error(e);
         toast.error(e.message);
       }
     } else {

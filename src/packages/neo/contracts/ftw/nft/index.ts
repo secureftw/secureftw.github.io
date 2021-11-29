@@ -1,7 +1,7 @@
 import { sc, u } from "@cityofzion/neon-core";
 import { GAS_SCRIPT_HASH } from "../../../consts";
 import { INetworkType, Network } from "../../../network";
-import { NFT_CONTRACT_OWNER, NFT_SCRIPT_HASH } from "./consts";
+import { NFT_SCRIPT_HASH } from "./consts";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { IRuneMeta } from "./interfaces";
@@ -16,15 +16,11 @@ export class NFTContract {
     this.contractHash = NFT_SCRIPT_HASH[networkType];
   }
 
-  static owner = NFT_CONTRACT_OWNER;
-
-  mint = async (
-    connectedWallet: IConnectedWallet,
-  ): Promise<string> => {
-    const invokeScript ={
+  mint = async (connectedWallet: IConnectedWallet): Promise<string> => {
+    const invokeScript = {
       operation: "transfer",
       scriptHash: GAS_SCRIPT_HASH,
-      args:  [
+      args: [
         {
           type: "Address",
           value: connectedWallet.account.address,
@@ -35,15 +31,29 @@ export class NFTContract {
         },
         {
           type: "Integer",
-          value: 10_00000000,
+          value: 1000000000,
         },
         {
           type: "String",
           value: "1",
-        }
+        },
       ],
-    }
-    return await new wallet.WalletAPI(connectedWallet.key).invoke(
+    };
+    return new wallet.WalletAPI(connectedWallet.key).invoke(
+      this.network,
+      connectedWallet.account.address,
+      invokeScript,
+      "0.01"
+    );
+  };
+
+  withdrawFund = async (connectedWallet: IConnectedWallet): Promise<string> => {
+    const invokeScript = {
+      operation: "withdrawFund",
+      scriptHash: this.contractHash,
+      args: [],
+    };
+    return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
       connectedWallet.account.address,
       invokeScript
@@ -76,7 +86,7 @@ export class NFTContract {
     const script = this.getPropertiesScript(tokenId);
     const res = await Network.read(this.network, [script]);
     // @ts-ignore
-    return parseProperties(res.stack)
+    return parseProperties(res.stack);
   };
 
   getTokensOfScript = (ownerAddress: string) => {
@@ -117,6 +127,5 @@ export class NFTContract {
       return u.HexString.fromBase64(item.value as string).toAscii();
     });
   };
-
 }
 export { NFT_SCRIPT_HASH } from "./consts";

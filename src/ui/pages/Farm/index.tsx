@@ -11,6 +11,8 @@ import Pool from "./Pool";
 import CancelModal from "./CancelModal";
 import ClaimModal from "./ClaimModal";
 import Claims from "./Claims";
+import PositionModal from "./PositionModal";
+import About from "./About";
 
 const Farm = () => {
   // let location = useLocation();
@@ -18,6 +20,7 @@ const Farm = () => {
   const [modalActive, setModalActive] = useState(false);
   const [cancelModalActive, setCancelModalActive] = useState(false);
   const [claimModalActive, setClaimModalActive] = useState(false);
+  const [positionModalActive, setPositionModalActive] = useState(false);
   const [error, setError] = useState("");
   const [contractStatus, setContractStatus] = useState<IFarmContractStatus>();
   const onActive = () => {
@@ -29,6 +32,7 @@ const Farm = () => {
   };
   const onCancelModalActive = () => setCancelModalActive(true);
   const onClaimModalActive = () => setClaimModalActive(true);
+  const onPositionChange = () => setPositionModalActive(true);
   const { connectedWallet, network } = useWallet();
   useEffect(() => {
     async function fetchContractStatus() {
@@ -76,12 +80,21 @@ const Farm = () => {
               >
                 Snapshots
               </button>
+              <button
+                onClick={() => setRoute("ABOUT")}
+                className={`button mb-0 ${
+                  route === "ABOUT" ? "is-black" : "is-dark"
+                }`}
+              >
+                About
+              </button>
             </div>
 
             <NotifyError msg={error} onClose={() => setError("")} />
             {route === "POOL" && (
               <Pool
                 contractStatus={contractStatus}
+                onPositionChange={onPositionChange}
                 onDeposit={onActive}
                 onCancel={onCancelModalActive}
                 onClaim={onClaimModalActive}
@@ -96,6 +109,7 @@ const Farm = () => {
                 contractStatus={contractStatus}
               />
             )}
+            {route === "ABOUT" && <About contractStatus={contractStatus} />}
           </div>
         </div>
       </div>
@@ -103,6 +117,13 @@ const Farm = () => {
         <ActionModal
           range={contractStatus.range}
           onClose={() => setModalActive(false)}
+        />
+      )}
+      {contractStatus && contractStatus.deposit && positionModalActive && (
+        <PositionModal
+          currentPosition={contractStatus.deposit.position}
+          range={contractStatus.range}
+          onClose={() => setPositionModalActive(false)}
         />
       )}
       {cancelModalActive && (

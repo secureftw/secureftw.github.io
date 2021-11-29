@@ -13,7 +13,7 @@ const Claims = ({ contractStatus, onClaim }: IClaimsProps) => {
   const lastClaimNo = contractStatus.deposit.lastClaimNo
     ? parseFloat(contractStatus.deposit.lastClaimNo)
     : 0;
-  let isClaimable =
+  const isClaimable =
     parseFloat(contractStatus.snapshots.totalItems) > lastClaimNo;
   return (
     <div className="box">
