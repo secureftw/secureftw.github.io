@@ -34,20 +34,20 @@ const Gallery = (props) => {
     }
   };
 
-  const withdraw = async () => {
-    if (connectedWallet) {
-      try {
-        const res = await new NFTContract(network).withdrawFund(
-          connectedWallet
-        );
-	      addPendingTransaction(res)
-      } catch (e: any) {
-        toast.error(e.message);
-      }
-    } else {
-      toast.error("Please connect wallet.");
-    }
-  };
+  // const withdraw = async () => {
+  //   if (connectedWallet) {
+  //     try {
+  //       const res = await new NFTContract(network).withdrawFund(
+  //         connectedWallet
+  //       );
+  //       addPendingTransaction(res)
+  //     } catch (e: any) {
+  //       toast.error(e.message);
+  //     }
+  //   } else {
+  //     toast.error("Please connect wallet.");
+  //   }
+  // };
 
   useEffect(() => {
     async function fetchContractStatus() {
@@ -73,9 +73,6 @@ const Gallery = (props) => {
             </p>
             <button onClick={onMint} className="button is-primary">
               Mint: 10 GAS
-            </button>
-            <button onClick={withdraw} className="button is-primary">
-              withdraw
             </button>
           </div>
         </div>

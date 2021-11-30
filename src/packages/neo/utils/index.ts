@@ -1,5 +1,6 @@
 import { sc, u, wallet } from "@cityofzion/neon-core";
 import moment from "moment";
+import { num2fixed8 } from "@cityofzion/neon-core/lib/u/BigInteger";
 
 export const truncateAddress = (address: string) => {
   return `${address.substring(0, 4)}...${address.substr(address.length - 2)}`;
@@ -13,7 +14,7 @@ export const convertContractCallParam = (param: any) => {
   switch (param.type) {
     case "Address":
       return sc.ContractParam.hash160(
-        wallet.getScriptHashFromAddress(param.value),
+        wallet.getScriptHashFromAddress(param.value)
       );
 
     case "Hash160":
@@ -24,11 +25,11 @@ export const convertContractCallParam = (param: any) => {
       return sc.ContractParam.integer(param.value);
     case "Array":
       return sc.ContractParam.array(
-        ...param.value.map((i: any) => convertContractCallParam(i)),
+        ...param.value.map((i: any) => convertContractCallParam(i))
       );
     case "ByteArray":
       return sc.ContractParam.byteArray(
-        u.hex2base64(u.str2hexstring(param.value)),
+        u.hex2base64(u.str2hexstring(param.value))
       );
     default:
       throw new Error("No support param");
@@ -40,11 +41,16 @@ export const base64ToAddress = (str: string) =>
 
 export const base64ToHash160 = (str: string) => u.reverseHex(u.base642hex(str));
 
-export const base64ToString = (str: string) => u.HexString.fromBase64(str).toAscii().toString()
+export const base64ToString = (str: string) =>
+  u.HexString.fromBase64(str).toAscii().toString();
 
-export const base64ToFixed8 = (str: string) => u.BigInteger.fromNumber(str).toDecimal(8)
+export const base64ToFixed8 = (str: string) => {
+  const no = u.BigInteger.fromNumber(str).toDecimal(8);
+  return no;
+};
 
-export const base64ToDate = (str: string) => moment.unix(parseInt(str) / 1000).format("lll")
+export const base64ToDate = (str: string) =>
+  moment.unix(parseFloat(str) / 1000).format("lll");
 
 export function truncateDecimal(v, p) {
   const s = Math.pow(10, p || 0);
