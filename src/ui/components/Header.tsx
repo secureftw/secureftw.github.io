@@ -6,10 +6,11 @@ import Logo from "./Logo";
 import { useApp } from "../../common/hooks/use-app";
 import { useWallet } from "../../packages/provider";
 import { utils } from "../../packages/neo";
-import { COLLECTION_PATH, FARM_PATH, GALLERY_PATH } from "../../consts";
+import { COLLECTION_PATH, GALLERY_PATH, MENU, SMITH_PATH } from "../../consts";
 import PendingTransaction from "../../packages/ui/PendingTransaction";
 import WalletDropdown from "./WalletDropdown";
 import { getWalletIcon } from "../../packages/ui/Wallet/helpers";
+import NetworkSwitch from "./NetworkSwitch";
 
 const Header = () => {
   const { toggleSidebar, toggleWalletSidebar } = useApp();
@@ -39,11 +40,7 @@ const Header = () => {
           >
             <FaBars />
           </div>
-          <Link
-            className="has-text-white navbar-item is-center"
-            to="/"
-            // style={{ margin: "auto" }}
-          >
+          <Link className="has-text-white navbar-item is-center" to="/">
             <Logo />
           </Link>
           <div
@@ -75,7 +72,6 @@ const Header = () => {
                   </div>
                   <div className="media-content">
                     {utils.truncateAddress(connectedWallet.account.address)}
-                    {/*{utils.truncateAddress(connectedWallet.account.address)}*/}
                   </div>
                 </div>
               </div>
@@ -97,38 +93,28 @@ const Header = () => {
 
         <div className="navbar-menu ml-3">
           <div className="navbar-start">
-            <NavLink
-	            exact={true}
-              activeClassName="is-active"
-              to={FARM_PATH}
-              className="navbar-item"
-            >
-              <strong>⚔️ GAS ⚔️</strong>
-            </NavLink>
-            <NavLink
-              activeClassName="is-active"
-              to={GALLERY_PATH}
-              className="navbar-item"
-            >
-              <strong>Rune</strong>
-            </NavLink>
+            {MENU.map((route) => {
+              if (!route.network.includes(network)) return <></>;
+              return (
+                <NavLink
+                  key={route.label}
+                  activeClassName="is-active"
+                  to={route.path}
+                  className="navbar-item"
+                >
+                  <strong>{route.label}</strong>
+                </NavLink>
+              );
+            })}
           </div>
         </div>
         <div className="navbar-end is-hidden-touch">
           <div className="navbar-item">
-            <small>{network}</small>
+            <NetworkSwitch />
           </div>
           <PendingTransaction />
           <div className="navbar-item">
             <div className="buttons">
-              {/*<button*/}
-              {/*  onClick={toggleWalletSidebar}*/}
-              {/*  className="button is-small is-black is-rounded"*/}
-              {/*>*/}
-              {/*  {connectedWallet*/}
-              {/*    ? utils.truncateAddress(connectedWallet.account.address)*/}
-              {/*    : "Connect wallet"}*/}
-              {/*</button>*/}
               {connectedWallet ? (
                 <WalletDropdown connectedWallet={connectedWallet} />
               ) : (

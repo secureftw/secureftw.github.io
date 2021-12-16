@@ -37,12 +37,12 @@ export const PRIVATE_CONFIG = {
 
 export const TESTNET_CONFIG = {
   label: "N3TestNet",
-  url: "http://seed2t4.neo.org:20332",
+  url: "https://testnet1.neo.coz.io:443",
 };
 
 export const MAINNET_CONFIG = {
   label: "N3MainNet",
-  url: "http://127.0.0.1:50012",
+  url: "https://n3seed2.ngd.network:10332",
 };
 
 /* Contract hashes */

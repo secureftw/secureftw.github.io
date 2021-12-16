@@ -6,14 +6,20 @@ interface IPoolProps {
   contractStatus?: IFarmContractStatus;
   onDeposit: () => void;
   onCancel: () => void;
-	onPositionChange: () => void;
+  onPositionChange: () => void;
   onClaim: () => void;
 }
-const Pool = ({ contractStatus, onDeposit, onCancel, onClaim, onPositionChange }: IPoolProps) => {
+const Pool = ({
+  contractStatus,
+  onDeposit,
+  onCancel,
+  onClaim,
+  onPositionChange,
+}: IPoolProps) => {
   return (
     <div className="">
       <div className="box">
-        <div className="level is-mobile">
+        <div className="level">
           <div className="level-left">
             <div className="level-item is-block">
               <h1 className="title is-4 is-marginless">Total</h1>

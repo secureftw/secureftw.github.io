@@ -10,7 +10,7 @@ const SnapshotCountdown = ({
   onCreateSnapshot,
 }: ISnapshotCountdownProps) => {
   const CreateSnapshotBtn = () => (
-    <button onClick={onCreateSnapshot} className="button is-button is-primary">
+    <button onClick={onCreateSnapshot} className="button is-button is-black">
       Creat snapshot
     </button>
   );

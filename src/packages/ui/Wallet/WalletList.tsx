@@ -3,11 +3,8 @@ import { useWallet } from "../../provider";
 import { DEV } from "../../neo/consts";
 import { getWalletIcon } from "./helpers";
 
-const WalletList = (props) => {
+const WalletList = () => {
   const { connectWallet, list, useDevWallet } = useWallet();
-  const onConnect = () =>{
-
-  }
   return (
     <>
       <p className="subtitle is-6">

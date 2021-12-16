@@ -67,14 +67,15 @@ export class DevWallet {
     invokeScript: sc.ContractCallJson
   ) {
     const rpcClient = Network.getRPCClient(network);
+    const version: any = await rpcClient.getVersion();
     const txObj = await DevWallet.build(
       rpcClient,
       invokeScript,
       DevWallet.account.address
     );
-    const version: any = await rpcClient.getVersion();
     txObj.sign(DevWallet.account, version.protocol.network);
     const txid = await rpcClient.sendRawTransaction(txObj);
+    // tslint:disable-next-line:no-console
     console.log(
       JSON.stringify(
         {

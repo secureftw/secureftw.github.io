@@ -2,9 +2,12 @@ import store from "store2";
 import { IConnectedWallet, ITransaction } from "../wallet/interfaces";
 import { FARM_SCRIPT_HASH } from "../contracts/ftw/farm/consts";
 import { NFT_SCRIPT_HASH } from "../contracts";
+import { MAINNET } from "../consts";
+import { INetworkType } from "../network";
 
 const CONNECTED_WALLET = "CONNECTED_WALLET";
 const TRANSACTIONS = "TRANSACTIONS";
+const NETWORK = "NETWORK";
 
 export class LocalStorage {
   public static initStorage = (network: string): ITransaction[] => {
@@ -23,6 +26,15 @@ export class LocalStorage {
     });
     return validatedTx;
   };
+
+  public static getNetwork = () => {
+    return store.get(NETWORK) ? store.get(NETWORK) : MAINNET;
+  };
+
+  public static setNetwork = (network: INetworkType) => {
+    return store.set(NETWORK, network);
+  };
+
   public static getWallet = (): IConnectedWallet | undefined =>
     validateConnectedWallet(store.get(CONNECTED_WALLET));
 

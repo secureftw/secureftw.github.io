@@ -25,10 +25,10 @@ export interface IWalletStates {
   removePendingTransaction: (txid: string) => void;
   closeInvoke: () => void;
   pendingTransactions: string[];
+  switchNetwork: (network: INetworkType) => void;
 }
 
 export interface ContextOptions {
-  network: INetworkType;
   useLocalStorage?: boolean;
   useDevWallet?: boolean;
 }

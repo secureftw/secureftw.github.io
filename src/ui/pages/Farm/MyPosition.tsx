@@ -23,7 +23,7 @@ const MyPosition = ({
       <div className="level">
         <div className="level-left">
           <div className="level-item is-block">
-            <div className="has-text-grey-lighter">
+            <div className="">
               My position
               <br />
               <span className="is-capitalized">
@@ -35,17 +35,11 @@ const MyPosition = ({
         <div className="level-right">
           <div className="buttons">
             {!isClaimable && (
-              <button
-                onClick={onPositionChange}
-                className="button is-black is-outlined is-inverted"
-              >
+              <button onClick={onPositionChange} className="button is-black">
                 Change position
               </button>
             )}
-            <button
-              onClick={onCancel}
-              className="button is-black is-outlined is-inverted"
-            >
+            <button onClick={onCancel} className="button is-light">
               Close
             </button>
           </div>

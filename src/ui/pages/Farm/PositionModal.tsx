@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Modal from "../../components/Modal";
-import NumberFormat from "react-number-format";
 import { FarmContract } from "../../../packages/neo/contracts";
 import { useWallet } from "../../../packages/provider";
 import { toast } from "react-hot-toast";
@@ -12,7 +11,7 @@ interface IActionModal {
   onClose: () => void;
 }
 const PositionModal = ({ currentPosition, range, onClose }: IActionModal) => {
-  const [position, setPosition] = useState(currentPosition);
+  const [position, setPosition] = useState("");
   const { network, connectedWallet, openWalletModal } = useWallet();
   const [txid, setTxid] = useState<string>();
   const onChange = async () => {

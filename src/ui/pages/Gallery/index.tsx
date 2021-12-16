@@ -6,20 +6,17 @@ import { useWallet } from "../../../packages/provider";
 import { NFTContract } from "../../../packages/neo/contracts";
 import DisplayRune from "./DisplayRune";
 import { IRuneMeta } from "../../../packages/neo/contracts/ftw/nft/interfaces";
-import DisplayRandomRune from "../../components/DisplayRandomRune";
+import Banner from "./Banner";
 
-const Gallery = (props) => {
+const Gallery = () => {
   const [tokens, setTokens] = useState<any>([]);
+  const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [propertiesModalActive, setPropertiesModalActive] =
     useState<IRuneMeta>();
   const { connectedWallet, network, addPendingTransaction } = useWallet();
   const onPropertiesModalActive = (obj: IRuneMeta) => {
-    if (connectedWallet) {
-      setPropertiesModalActive(obj);
-    } else {
-      toast.error("Please connect wallet.");
-    }
+    setPropertiesModalActive(obj);
   };
   const onMint = async () => {
     if (connectedWallet) {
@@ -34,78 +31,58 @@ const Gallery = (props) => {
     }
   };
 
-  // const withdraw = async () => {
-  //   if (connectedWallet) {
-  //     try {
-  //       const res = await new NFTContract(network).withdrawFund(
-  //         connectedWallet
-  //       );
-  //       addPendingTransaction(res)
-  //     } catch (e: any) {
-  //       toast.error(e.message);
-  //     }
-  //   } else {
-  //     toast.error("Please connect wallet.");
-  //   }
-  // };
-
   useEffect(() => {
     async function fetchContractStatus() {
       setError("");
+      setLoading(true);
       try {
         const res = await new NFTContract(network).getTokens();
         setTokens(res);
       } catch (e: any) {
         setError(e.message);
+      } finally {
+        setLoading(false);
       }
     }
     fetchContractStatus();
-  }, [connectedWallet]);
+  }, [connectedWallet, network]);
   return (
-    <>
-      <section className="hero is-white">
-        <div className="hero-body">
-          <div className="container">
-            <h1 className="title">Forthewin Runes</h1>
-            <p className="subtitle">
-              FTW Rune is unique. Purely generated in the smart contract with
-              random pixels and attributes.
-            </p>
-            <button onClick={onMint} className="button is-primary">
-              Mint: 10 GAS
-            </button>
-          </div>
-        </div>
-      </section>
-      <PageLayout>
+    <section id="Rune">
+      <Banner onMint={onMint} />
+      {isLoading ? (
+        <PageLayout>
+          <div>Loading..</div>
+        </PageLayout>
+      ) : error ? (
+        <PageLayout>
+          <div>{error}</div>
+        </PageLayout>
+      ) : (
         <div
           style={{
             flexFlow: "wrap",
-            // width: "640px",
-            // margin: "0 auto"
           }}
           className="is-flex"
         >
-          <DisplayRandomRune width="20%" height="20%" />
           {tokens.map((tokenId) => (
             <DisplayRune
-              width={"20%"}
-              height={"20%"}
+              key={tokenId}
+              width={"10%"}
+              height={"10%"}
               tokenId={tokenId}
               network={network}
               onClick={onPropertiesModalActive}
             />
           ))}
         </div>
-      </PageLayout>
-      {/*<button onClick={onMint} className="button is-black">Mint</button>*/}
+      )}
       {propertiesModalActive && (
         <PropertiesModal
           properties={propertiesModalActive}
           onClose={() => setPropertiesModalActive(undefined)}
         />
       )}
-    </>
+    </section>
   );
 };
 

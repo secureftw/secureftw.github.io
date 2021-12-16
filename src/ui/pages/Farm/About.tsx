@@ -1,42 +1,27 @@
-import React, { useState } from "react";
+import React  from "react";
 import { IFarmContractStatus } from "../../../packages/neo/contracts/ftw/farm/interfaces";
-import { useWallet } from "../../../packages/provider";
-import { FarmContract } from "../../../packages/neo/contracts";
-import { toast } from "react-hot-toast";
-import SnapshotCountdown from "./SnapshotCountdown";
-import SnapshotCard from "./SnapshotCard";
+import moment from "moment";
 
 interface ISnapshotListProps {
   contractStatus?: IFarmContractStatus;
 }
 const SnapshotList = ({ contractStatus }: ISnapshotListProps) => {
-  const { network, connectedWallet, openWalletModal } = useWallet();
-  const [txid, setTxid] = useState<string>();
-  const onCreateSnapshot = async () => {
-    if (connectedWallet) {
-      try {
-        const res = await new FarmContract(network).createSnapshot(
-          connectedWallet
-        );
-        setTxid(res);
-      } catch (e: any) {
-        toast.error(e.message);
-      }
-    } else {
-      openWalletModal();
-    }
-  };
   if (!contractStatus) return <div></div>;
+  const tempTime = moment.duration(contractStatus.interval);
+  const format = `Every ${
+    tempTime.hours() > 0
+      ? `${tempTime.hours()} hours ${tempTime.minutes()} mins`
+      : `${tempTime.minutes()} mins`
+  }`;
   return (
-    <div className="box">
-	    <h1 className="title is-4">About</h1>
-
-	    <h4 className="title is-6">Current settings</h4>
-	    <p className="subtitle is-6">
-		    Range: {contractStatus.range}
-		    <br />
-		    Interval: {contractStatus.interval}
-	    </p>
+    <div className="">
+      <h1 className="title is-4">About</h1>
+      <h4 className="title is-6">Current settings</h4>
+      <p className="subtitle is-6">
+        Position range: {contractStatus.range}
+        <br />
+        Interval: {format}
+      </p>
     </div>
   );
 };

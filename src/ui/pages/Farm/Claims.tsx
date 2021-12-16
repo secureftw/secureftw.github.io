@@ -16,7 +16,7 @@ const Claims = ({ contractStatus, onClaim }: IClaimsProps) => {
   const isClaimable =
     parseFloat(contractStatus.snapshots.totalItems) > lastClaimNo;
   return (
-    <div className="box">
+    <div className="">
       <div className="level">
         <div className="level-left">
           <div className="level-item">
@@ -36,22 +36,26 @@ const Claims = ({ contractStatus, onClaim }: IClaimsProps) => {
           </div>
         </div>
       </div>
-      {contractStatus.claims.items.map((item) => {
-        return (
-          <div key={item.createdAt} className="media">
-            <div className="media-left">#{item.no}</div>
-            <div className="media-content">
-              Snapshots: {`${item.from} ~ ${item.end}`}
-              <br />
-              GAS: {item.GAS}
-              <br />
-              FTW: {item.FTW}
-              <br />
-              {item.createdAt}
+      {contractStatus.claims.items.length > 0 ? (
+        contractStatus.claims.items.map((item) => {
+          return (
+            <div key={item.createdAt} className="media">
+              <div className="media-left">#{item.no}</div>
+              <div className="media-content">
+                Snapshots: {`${item.from} ~ ${item.end}`}
+                <br />
+                GAS: {item.GAS}
+                <br />
+                FTW: {item.FTW}
+                <br />
+                {item.createdAt}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })
+      ) : (
+        <div>No claims to display</div>
+      )}
     </div>
   );
 };

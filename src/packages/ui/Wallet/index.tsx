@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { utils } from "../../neo";
 import WalletDropdown from "./WalletDropdown";
 import WalletList from "./WalletList";
 import AssetCard from "./AssetCard";
 import { useWallet } from "../../provider";
 import Runes from "./Runes";
+import { Network } from "../../neo/network";
 
 const Wallet = (props) => {
   const { connectedWallet } = useWallet();

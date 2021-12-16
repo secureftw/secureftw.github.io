@@ -1,8 +1,8 @@
 import neo3Dapi from "neo3-dapi";
-import { IConnectedWallet, ITransaction, IWalletType } from "./interfaces";
-import { DEV, NEO_LINE, O3, TOKEN_LIST, WALLET_LIST } from "../consts";
+import { ITransaction, IWalletType } from "./interfaces";
+import { DEV, NEO_LINE, O3, WALLET_LIST } from "../consts";
 import { DevWallet } from "./dev-wallet";
-import { sc, tx, wallet as NeonWallet } from "@cityofzion/neon-core";
+import { tx, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { INetworkType } from "../network";
 import { LocalStorage } from "../local-storage";
 import moment from "moment";
@@ -35,45 +35,72 @@ export class WalletAPI {
     return instance;
   };
 
+  private O3Wallet = async () => {
+    const instance = neo3Dapi;
+    const provider = await instance.getProvider();
+    const account = await instance.getAccount();
+    const network = await instance.getNetworks();
+    const balances = await instance.getBalance(
+      {
+        params: {
+          address: account.address,
+          contracts: [],
+        },
+      },
+      network.defaultNetwork
+    );
+    // TODO: Need to some sort of validation for balances in case wallet doesn't have any address?
+    return { provider, account, network, balances: balances[account.address] };
+  };
+
+  private NeoLine = async () => {
+    // @ts-ignore
+    const instance = new NEOLineN3.Init();
+    // @ts-ignore
+    // NEOLineN3 doesn't have getNetworks function
+    const instance2 = new NEOLine.Init();
+    const network = await instance2.getNetworks();
+    const provider = await instance.getProvider();
+    const account = await instance.getAccount();
+    const balances = await instance.getBalance({
+      params: {
+        address: account.address,
+        contracts: [],
+      },
+    });
+    return { provider, account, network, balances: balances[account.address] };
+  };
+
+  private Dev = async (defaultNetwork: INetworkType) => {
+    const instance = DevWallet;
+    const network = await instance.getNetworks(defaultNetwork);
+    const provider = await instance.getProvider();
+    const account = await instance.getAccount();
+    const balances = await instance.getBalance(defaultNetwork);
+    return { provider, account, network, balances };
+  };
+
   /**
    * TODO: Remove dev wallet when 3rd party has privatenet support
    * @param defaultNetwork
    */
-  init = async (defaultNetwork: INetworkType): Promise<IConnectedWallet> => {
+  init = async (defaultNetwork: INetworkType): Promise<any> => {
+    let wallet;
     try {
-      const wallet = await this.getInstance(this.walletType);
-      let network;
-      let balances;
-      /* Temporary hard coding because of neoline */
-      if (this.walletType === NEO_LINE) {
-        // @ts-ignore
-        const neoline = new NEOLine.Init();
-        network = await neoline.getNetworks();
-      } else if (this.walletType === DEV) {
-        network = await wallet.getNetworks(defaultNetwork);
-      }
-
-      const provider = await wallet.getProvider();
-      const account = await wallet.getAccount();
-
-      if (this.walletType === DEV) {
-        balances = await wallet.getBalance(defaultNetwork);
-      } else {
-        const res = await wallet.getBalance({
-          params: {
-            address: account.address,
-            contracts: TOKEN_LIST(network.defaultNetwork),
-          },
-        });
-        balances = res[account.address];
-        // console.log(res)
+      switch (this.walletType) {
+        case O3:
+          wallet = await this.O3Wallet();
+          break;
+        case NEO_LINE:
+          wallet = await this.NeoLine();
+          break;
+        case DEV:
+          wallet = await this.Dev(defaultNetwork);
+          break;
       }
       return {
         key: this.walletType,
-        provider,
-        account,
-        network,
-        balances,
+        ...wallet,
       };
     } catch (e) {
       throw e;
@@ -84,38 +111,41 @@ export class WalletAPI {
   invoke = async (
     network: INetworkType,
     senderAddress: string,
-    invokeScript: sc.ContractCallJson,
+    invokeScript: any,
     extraSystemFee?: string
   ): Promise<string> => {
-    const wallet = await this.getInstance(this.walletType);
-    let res;
-    if (this.walletType === DEV) {
-      res = await wallet.invoke(network, invokeScript);
-    } else {
-      // @ts-ignore
-      invokeScript.signers = [
-        {
-          account: NeonWallet.getScriptHashFromAddress(senderAddress),
-          scopes: tx.WitnessScope.CalledByEntry,
-        },
-      ];
-      if (extraSystemFee) {
-        // @ts-ignore
-        invokeScript.extraSystemFee = extraSystemFee;
+    try {
+      const wallet = await this.getInstance(this.walletType);
+      let res;
+      if (this.walletType === DEV) {
+        res = await wallet.invoke(network, invokeScript);
+      } else {
+        invokeScript.signers = [
+          {
+            account: NeonWallet.getScriptHashFromAddress(senderAddress),
+            scopes: tx.WitnessScope.CalledByEntry,
+          },
+        ];
+        if (extraSystemFee) {
+          invokeScript.extraSystemFee = extraSystemFee;
+        }
+        res = await wallet.invoke(invokeScript);
       }
-      res = await wallet.invoke(invokeScript);
+      const submittedTx: ITransaction = {
+        network,
+        wallet: this.walletType,
+        txid: res.txid,
+        contractHash: invokeScript.scriptHash,
+        method: invokeScript.operation,
+        args: invokeScript.args,
+        createdAt: moment().format("MMMM Do YYYY, h:mm:ss a"),
+      };
+      LocalStorage.addTransaction(submittedTx);
+      return res.txid;
+    } catch (e: any) {
+      console.error(e);
+      // TODO: All wallets return different errors and it seems standard is coming we need to improve handling errors.
+      throw new Error("Failed to invoke");
     }
-    const submittedTx: ITransaction = {
-      network,
-      wallet: this.walletType,
-      // status: "PENDING",
-      txid: res.txid,
-      contractHash: invokeScript.scriptHash,
-      method: invokeScript.operation,
-      args: invokeScript.args,
-      createdAt: moment().format("MMMM Do YYYY, h:mm:ss a"),
-    };
-    LocalStorage.addTransaction(submittedTx);
-    return res.txid;
   };
 }

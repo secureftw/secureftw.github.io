@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import Modal from "../../components/Modal";
-import { useWallet } from "../../../packages/provider";
-import { toast } from "react-hot-toast";
 import { IRuneMeta } from "../../../packages/neo/contracts/ftw/nft/interfaces";
 
 interface IPropertiesModal {
@@ -13,6 +11,26 @@ const PropertiesModal = ({ properties, onClose }: IPropertiesModal) => {
     <Modal onClose={onClose}>
       <>
         <h1 className="title is-4">{properties.name}</h1>
+        {/*<div className="field is-grouped is-grouped-multiline">*/}
+        {/*  <div className="control">*/}
+        {/*    <div className="tags has-addons">*/}
+        {/*      <span className="tag is-dark">Phase</span>*/}
+        {/*      <span className="tag is-info">{properties.phase}</span>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+
+        {/*  <div className="control">*/}
+        {/*    <div className="tags has-addons">*/}
+        {/*      <span className="tag is-dark">Luck</span>*/}
+        {/*      <span className="tag is-success">{properties.luck}</span>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
+
+        <p className="subtitle is-7">
+          <strong>Phase:</strong> {properties.phase}, <strong>Luck:</strong>{" "}
+          {properties.luck}
+        </p>
         <figure className="image is-square">
           <img src={properties.image} />
         </figure>

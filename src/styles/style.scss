@@ -29,16 +29,16 @@ Align element in center
 /**
 Pro sidebar bug
  */
-.pro-menu-item{
-  &.active{
-    .pro-icon{
-      color: $primary!important;
+.pro-menu-item {
+  &.active {
+    .pro-icon {
+      color: $primary !important;
     }
   }
-  .pro-item-content a{
-    color: $dark!important;
-    &:hover{
-      color: $black!important;
+  .pro-item-content a {
+    color: $dark !important;
+    &:hover {
+      color: $black !important;
     }
   }
 }
@@ -48,10 +48,33 @@ For fixed top height
  */
 .sidebar {
   top: 52px !important;
-  .sidebar-sidebar{
-    box-shadow: none!important;
+  .sidebar-sidebar {
+    box-shadow: none !important;
   }
-  .sidebar-content{
-    transition: none!important;
+  .sidebar-content {
+    transition: none !important;
+  }
+}
+
+.navbar-item {
+  img {
+    max-height: none;
+  }
+}
+
+.content p {
+  word-break: break-all;
+}
+
+.press-font {
+  font-family: "Press Start 2P" !important;
+}
+
+#Rune {
+  .rune {
+    @include mobile {
+      width: 20%!important;
+      height: 20!important;
+    }
   }
 }

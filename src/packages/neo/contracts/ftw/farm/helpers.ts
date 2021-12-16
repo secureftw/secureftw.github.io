@@ -53,7 +53,7 @@ const parseSnapshotItem = (stackItem) => {
       totalNeo: item.value[2].value, // NEO amount
       totalGas: base64ToFixed8(item.value[3].value),
       range: base64ToFixed8(item.value[4].value),
-      winPosition: base64ToString(item.value[5].value),
+      winPosition: item.value[5].value,
       createdAt: base64ToDate(item.value[6].value),
     };
   });

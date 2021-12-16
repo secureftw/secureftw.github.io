@@ -13,9 +13,11 @@ import ClaimModal from "./ClaimModal";
 import Claims from "./Claims";
 import PositionModal from "./PositionModal";
 import About from "./About";
+import { TESTNET } from "../../../packages/neo/consts";
 
 const Farm = () => {
   // let location = useLocation();
+  const production = [TESTNET];
   const [route, setRoute] = useState("POOL");
   const [modalActive, setModalActive] = useState(false);
   const [cancelModalActive, setCancelModalActive] = useState(false);
@@ -46,50 +48,33 @@ const Farm = () => {
     }
     fetchContractStatus();
   }, [connectedWallet, route]);
+  if (!production.includes(network))
+    return (
+      <PageLayout>This smart contract is not support in {network}.</PageLayout>
+    );
   return (
     <PageLayout>
       <div className="columns is-centered">
         <div className="column is-half">
-          <div className="box has-background-black">
-            <div className="buttons has-background-dark p-3">
-              <button
-                onClick={() => setRoute("POOL")}
-                className={`button mb-0 ${
-                  route === "POOL" ? "is-black" : "is-dark"
-                }`}
-              >
-                Pool
-              </button>
-
-              {connectedWallet && contractStatus && contractStatus.deposit && (
-                <button
-                  onClick={() => setRoute("CLAIMS")}
-                  className={`button mb-0 ${
-                    route === "CLAIMS" ? "is-black" : "is-dark"
-                  }`}
-                >
-                  Claims
-                </button>
-              )}
-
-              <button
-                onClick={() => setRoute("SNAPSHOTS")}
-                className={`button mb-0 ${
-                  route === "SNAPSHOTS" ? "is-black" : "is-dark"
-                }`}
-              >
-                Snapshots
-              </button>
-              <button
-                onClick={() => setRoute("ABOUT")}
-                className={`button mb-0 ${
-                  route === "ABOUT" ? "is-black" : "is-dark"
-                }`}
-              >
-                About
-              </button>
+          <div className="box ">
+            <div className="tabs is-toggle">
+              <ul>
+                <li className={route === "POOL" ? "is-active" : ""}>
+                  <a onClick={() => setRoute("POOL")}>Pool</a>
+                </li>
+                {connectedWallet && contractStatus && contractStatus.deposit && (
+                  <li className={route === "CLAIMS" ? "is-active" : ""}>
+                    <a onClick={() => setRoute("CLAIMS")}>Claims</a>
+                  </li>
+                )}
+                <li className={route === "SNAPSHOTS" ? "is-active" : ""}>
+                  <a onClick={() => setRoute("SNAPSHOTS")}>Snapshots</a>
+                </li>
+                <li className={route === "ABOUT" ? "is-active" : ""}>
+                  <a onClick={() => setRoute("ABOUT")}>About</a>
+                </li>
+              </ul>
             </div>
-
             <NotifyError msg={error} onClose={() => setError("")} />
             {route === "POOL" && (
               <Pool

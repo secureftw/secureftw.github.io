@@ -7,7 +7,7 @@ const MobileMenuSlider = (props) => {
   const { sidebarStatus, toggleSidebar } = useApp();
   return (
     <SideNav
-      style={{ top: "52px"}}
+      style={{ top: "52px" }}
       // navStyle={{ width: "80%" }}
       showNav={sidebarStatus}
       onHideNav={toggleSidebar}

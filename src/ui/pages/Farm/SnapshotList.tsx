@@ -28,7 +28,7 @@ const SnapshotList = ({ contractStatus }: ISnapshotListProps) => {
   };
   if (!contractStatus) return <div></div>;
   return (
-    <div className="box">
+    <div className="">
       <div className="level">
         <div className="level-left">
           <div className="level-item">

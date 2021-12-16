@@ -5,13 +5,14 @@ import { LocalStorage } from "../neo/local-storage";
 import { sc } from "@cityofzion/neon-core";
 import { WalletAPI } from "../neo/wallet";
 import toast from "react-hot-toast";
+import { INetworkType } from "../neo/network";
 
 export const WalletContext = createContext({} as IWalletStates);
 export const WalletContextProvider = (props: {
   options: ContextOptions;
   children: any;
 }) => {
-  const [network] = useState(props.options.network);
+  const [network, setNetwork] = useState(LocalStorage.getNetwork());
 
   const [isWalletModalActive, setWalletModalActive] = useState(false);
 
@@ -62,6 +63,11 @@ export const WalletContextProvider = (props: {
     setPendingTransactions([...pendingTransactions, txid]);
   };
 
+  const switchNetwork = (val: INetworkType) => {
+    setNetwork(val);
+    LocalStorage.setNetwork(val);
+  };
+
   const removePendingTransaction = (txid: string) => {
     setPendingTransactions(pendingTransactions.filter((i) => i !== txid));
   };
@@ -82,6 +88,7 @@ export const WalletContextProvider = (props: {
     addPendingTransaction,
     removePendingTransaction,
     pendingTransactions,
+    switchNetwork,
   };
 
   return (

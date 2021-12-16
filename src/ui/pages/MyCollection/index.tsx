@@ -1,43 +1,38 @@
 import React, { useEffect, useState } from "react";
 import PageLayout from "../../components/PageLayout";
-import toast from "react-hot-toast";
 import { useWallet } from "../../../packages/provider";
 import { NFTContract } from "../../../packages/neo/contracts";
-import DisplayRune from "../Gallery/DisplayRune";
 import PropertiesModal from "../Gallery/PropertiesModal";
 import { IRuneMeta } from "../../../packages/neo/contracts/ftw/nft/interfaces";
-import DisplayRandomRune from "../../components/DisplayRandomRune";
 import { GALLERY_PATH } from "../../../consts";
 import { Link } from "react-router-dom";
 
-const MyCollection = (props) => {
-  const [isLoading, setLoading] = useState(true);
+const MyCollection = () => {
   const [tokens, setTokens] = useState<any>([]);
+  const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [propertiesModalActive, setPropertiesModalActive] =
     useState<IRuneMeta>();
   const { connectedWallet, network } = useWallet();
   const onPropertiesModalActive = (obj: IRuneMeta) => {
-    if (connectedWallet) {
-      setPropertiesModalActive(obj);
-    } else {
-      toast.error("Please connect wallet.");
-    }
+    setPropertiesModalActive(obj);
   };
 
   useEffect(() => {
-    async function fetchContractStatus() {
+    async function fetchContractStatus(address: string) {
       setError("");
       try {
-        const res = await new NFTContract(network).getTokens();
+        const res = await new NFTContract(network).getTokensOf(address);
         setTokens(res);
         setLoading(false);
       } catch (e: any) {
         setError(e.message);
       }
     }
-    fetchContractStatus();
-  }, [connectedWallet]);
+    if (connectedWallet) {
+      fetchContractStatus(connectedWallet.account.address);
+    }
+  }, [connectedWallet, network]);
   return (
     <>
       <section className="hero is-white">
@@ -54,16 +49,15 @@ const MyCollection = (props) => {
           <div>{error}</div>
         ) : (
           <div className="columns is-multiline">
-            {tokens.length === 0 ? (
-              tokens.map((tokenId) => (
+            {tokens.length > 0 ? (
+              tokens.map((token) => (
                 <div className="column is-3">
-                  <DisplayRune
-                    width="100%"
-                    height="100%"
-                    tokenId={tokenId}
-                    network={network}
-                    onClick={onPropertiesModalActive}
-                  />
+                  <figure
+                    className="image"
+                    onClick={() => onPropertiesModalActive(token)}
+                  >
+                    <img src={token.image} />
+                  </figure>
                 </div>
               ))
             ) : (

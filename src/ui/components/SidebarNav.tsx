@@ -1,33 +1,30 @@
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useApp } from "../../common/hooks/use-app";
-import { FARM_PATH, GALLERY_PATH } from "../../consts";
+import { GALLERY_PATH, MENU, SMITH_PATH } from "../../consts";
+import { useWallet } from "../../packages/provider";
 
 const SidebarNav = (props) => {
-  const location = useLocation();
+  const { network } = useWallet();
   const { toggleSidebar } = useApp();
   return (
     <aside className="menu p-5">
       <p className="menu-label">Menu</p>
       <ul className="menu-list">
-        <li>
-          <NavLink
-            onClick={toggleSidebar}
-            activeClassName={"is-active"}
-            to={FARM_PATH}
-          >
-            GAS
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            onClick={toggleSidebar}
-            activeClassName={"is-active"}
-            to={GALLERY_PATH}
-          >
-            FTW NFT
-          </NavLink>
-        </li>
+        {MENU.map((route) => {
+          if (!route.network.includes(network)) return <></>;
+          return (
+            <li key={route.label}>
+              <NavLink
+                onClick={toggleSidebar}
+                activeClassName={"is-active"}
+                to={route.path}
+              >
+                {route.label}
+              </NavLink>
+            </li>
+          );
+        })}
       </ul>
     </aside>
   );

@@ -35,7 +35,7 @@ const DisplayRune = ({
   return (
     <figure
       style={{ width, height }}
-      className="image"
+      className="image rune"
       onClick={() => onClick(token)}
     >
       <img src={token.image} />
