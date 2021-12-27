@@ -1,7 +1,9 @@
 import { INetworkType } from "../network";
 import { ENDPOINT } from "./consts";
 
-export class TTMRestAPI {
+// interface IRuneFilter = "All" | "Fire" |  ""
+
+export class RestAPI {
   network: INetworkType;
   endpoint: string;
 
@@ -21,16 +23,7 @@ export class TTMRestAPI {
     }
   };
 
-  // Uses to grab nft after minting
-  async getCharacterByOrderNo(category: string, orderNo: string) {
-    category = category.toLowerCase();
-    category = category.replace(" ", "-");
-    return await this.fetchResult(
-      this.endpoint + "/sale/" + category + "/" + orderNo
-    );
-  }
-
-  async getActiveTrades(page: string) {
-    return await this.fetchResult(this.endpoint + "/trade/items/" + page);
+  async getRunes(filter) {
+    return this.fetchResult(this.endpoint + "/runes/" + filter);
   }
 }

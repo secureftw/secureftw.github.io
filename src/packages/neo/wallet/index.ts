@@ -16,25 +16,6 @@ export class WalletAPI {
 
   static list = WALLET_LIST;
 
-  private getInstance = async (walletType: IWalletType): Promise<any> => {
-    let instance: any;
-    switch (walletType) {
-      case O3:
-        instance = neo3Dapi;
-        break;
-      case NEO_LINE:
-        // @ts-ignore
-        instance = new NEOLineN3.Init();
-        break;
-      case DEV:
-        instance = DevWallet;
-        break;
-      default:
-        throw new Error("No support wallet!");
-    }
-    return instance;
-  };
-
   private O3Wallet = async () => {
     const instance = neo3Dapi;
     const provider = await instance.getProvider();
@@ -50,7 +31,13 @@ export class WalletAPI {
       network.defaultNetwork
     );
     // TODO: Need to some sort of validation for balances in case wallet doesn't have any address?
-    return { provider, account, network, balances: balances[account.address] };
+    return {
+      instance,
+      provider,
+      account,
+      network,
+      balances: balances[account.address],
+    };
   };
 
   private NeoLine = async () => {
@@ -68,7 +55,13 @@ export class WalletAPI {
         contracts: [],
       },
     });
-    return { provider, account, network, balances: balances[account.address] };
+    return {
+      instance,
+      provider,
+      account,
+      network,
+      balances: balances[account.address],
+    };
   };
 
   private Dev = async (defaultNetwork: INetworkType) => {
@@ -77,7 +70,7 @@ export class WalletAPI {
     const provider = await instance.getProvider();
     const account = await instance.getAccount();
     const balances = await instance.getBalance(defaultNetwork);
-    return { provider, account, network, balances };
+    return { instance, provider, account, network, balances };
   };
 
   /**
@@ -102,23 +95,28 @@ export class WalletAPI {
         key: this.walletType,
         ...wallet,
       };
-    } catch (e) {
-      throw e;
+    } catch (e: any) {
+      throw new Error(e.description);
     }
   };
 
   /* Control signing and send transaction. TODO:Need to improve type hardcoding later */
   invoke = async (
-    network: INetworkType,
+    currentNetwork: INetworkType,
     senderAddress: string,
     invokeScript: any,
     extraSystemFee?: string
   ): Promise<string> => {
+    const { instance, network } = await this.init(currentNetwork);
+    if (network.defaultNetwork !== currentNetwork) {
+      throw new Error(
+        "Your wallet's network doesn't match with the app network setting."
+      );
+    }
     try {
-      const wallet = await this.getInstance(this.walletType);
       let res;
       if (this.walletType === DEV) {
-        res = await wallet.invoke(network, invokeScript);
+        res = await instance.invoke(network, invokeScript);
       } else {
         invokeScript.signers = [
           {
@@ -129,7 +127,7 @@ export class WalletAPI {
         if (extraSystemFee) {
           invokeScript.extraSystemFee = extraSystemFee;
         }
-        res = await wallet.invoke(invokeScript);
+        res = await instance.invoke(invokeScript);
       }
       const submittedTx: ITransaction = {
         network,
@@ -143,9 +141,7 @@ export class WalletAPI {
       LocalStorage.addTransaction(submittedTx);
       return res.txid;
     } catch (e: any) {
-      console.error(e);
-      // TODO: All wallets return different errors and it seems standard is coming we need to improve handling errors.
-      throw new Error("Failed to invoke");
+      throw new Error(e.description);
     }
   };
 }

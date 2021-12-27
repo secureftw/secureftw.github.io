@@ -1,6 +1,5 @@
 import { sc, u, wallet } from "@cityofzion/neon-core";
 import moment from "moment";
-import { num2fixed8 } from "@cityofzion/neon-core/lib/u/BigInteger";
 
 export const truncateAddress = (address: string) => {
   return `${address.substring(0, 4)}...${address.substr(address.length - 2)}`;
@@ -16,7 +15,6 @@ export const convertContractCallParam = (param: any) => {
       return sc.ContractParam.hash160(
         wallet.getScriptHashFromAddress(param.value)
       );
-
     case "Hash160":
       return sc.ContractParam.hash160(param.value);
     case "String":

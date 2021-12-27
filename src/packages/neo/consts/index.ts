@@ -37,7 +37,8 @@ export const PRIVATE_CONFIG = {
 
 export const TESTNET_CONFIG = {
   label: "N3TestNet",
-  url: "https://testnet1.neo.coz.io:443",
+  // url: "https://testnet1.neo.coz.io:443",
+  url: "https://testnet2.neo.coz.io:443",
 };
 
 export const MAINNET_CONFIG = {

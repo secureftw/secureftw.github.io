@@ -6,7 +6,7 @@ import Logo from "./Logo";
 import { useApp } from "../../common/hooks/use-app";
 import { useWallet } from "../../packages/provider";
 import { utils } from "../../packages/neo";
-import { COLLECTION_PATH, GALLERY_PATH, MENU, SMITH_PATH } from "../../consts";
+import { COLLECTION_PATH, MENU } from "../../consts";
 import PendingTransaction from "../../packages/ui/PendingTransaction";
 import WalletDropdown from "./WalletDropdown";
 import { getWalletIcon } from "../../packages/ui/Wallet/helpers";

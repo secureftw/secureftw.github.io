@@ -2,12 +2,12 @@ import React, { createContext, useContext, useState } from "react";
 // import toast from "react-hot-toast";
 
 interface IAppContext {
-  sidebarStatus: boolean
-  walletSidebarStatus: boolean
-  openSidebar: () => void
-  closeSidebar: () => void
-  toggleSidebar: () => void
-  toggleWalletSidebar: () => void
+  sidebarStatus: boolean;
+  walletSidebarStatus: boolean;
+  openSidebar: () => void;
+  closeSidebar: () => void;
+  toggleSidebar: () => void;
+  toggleWalletSidebar: () => void;
 }
 
 export const AppContext = createContext({} as IAppContext);
@@ -18,17 +18,17 @@ export const AppCContextProvider = (props: { children: any }) => {
   const openSidebar = () => setSidebarStatus(true);
   const closeSidebar = () => setSidebarStatus(false);
   const toggleSidebar = () => {
-    if(walletSidebarStatus){
+    if (walletSidebarStatus) {
       setWalletSidebarStatus(false);
     }
     setSidebarStatus(!sidebarStatus);
-  }
+  };
   const toggleWalletSidebar = () => {
-    if(sidebarStatus){
-      setSidebarStatus(false)
+    if (sidebarStatus) {
+      setSidebarStatus(false);
     }
     setWalletSidebarStatus(!walletSidebarStatus);
-  }
+  };
 
   const contextValue = {
     sidebarStatus,
@@ -36,7 +36,7 @@ export const AppCContextProvider = (props: { children: any }) => {
     closeSidebar,
     toggleSidebar,
     walletSidebarStatus,
-    toggleWalletSidebar
+    toggleWalletSidebar,
   };
 
   return (

@@ -3,7 +3,6 @@ import PageLayout from "../../components/PageLayout";
 import { useWallet } from "../../../packages/provider";
 import { NFTContract } from "../../../packages/neo/contracts";
 import PropertiesModal from "../Gallery/PropertiesModal";
-import { IRuneMeta } from "../../../packages/neo/contracts/ftw/nft/interfaces";
 import { GALLERY_PATH } from "../../../consts";
 import { Link } from "react-router-dom";
 
@@ -11,11 +10,10 @@ const MyCollection = () => {
   const [tokens, setTokens] = useState<any>([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [propertiesModalActive, setPropertiesModalActive] =
-    useState<IRuneMeta>();
+  const [propertiesModalActive, setPropertiesModalActive] = useState<string>();
   const { connectedWallet, network } = useWallet();
-  const onPropertiesModalActive = (obj: IRuneMeta) => {
-    setPropertiesModalActive(obj);
+  const onPropertiesModalActive = (tokenId: string) => {
+    setPropertiesModalActive(tokenId);
   };
 
   useEffect(() => {
@@ -54,7 +52,7 @@ const MyCollection = () => {
                 <div className="column is-3">
                   <figure
                     className="image"
-                    onClick={() => onPropertiesModalActive(token)}
+                    onClick={() => onPropertiesModalActive(token.tokenId)}
                   >
                     <img src={token.image} />
                   </figure>
@@ -80,7 +78,7 @@ const MyCollection = () => {
       {/*<button onClick={onMint} className="button is-black">Mint</button>*/}
       {propertiesModalActive && (
         <PropertiesModal
-          properties={propertiesModalActive}
+          tokenId={propertiesModalActive}
           onClose={() => setPropertiesModalActive(undefined)}
         />
       )}

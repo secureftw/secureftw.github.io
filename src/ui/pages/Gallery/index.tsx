@@ -4,26 +4,28 @@ import PropertiesModal from "./PropertiesModal";
 import toast from "react-hot-toast";
 import { useWallet } from "../../../packages/provider";
 import { NFTContract } from "../../../packages/neo/contracts";
-import DisplayRune from "./DisplayRune";
-import { IRuneMeta } from "../../../packages/neo/contracts/ftw/nft/interfaces";
 import Banner from "./Banner";
+import { RestAPI } from "../../../packages/neo/api";
+import { RUNE_PHASE_FILTER } from "../../../packages/neo/contracts/ftw/nft/consts";
 
 const Gallery = () => {
+  const [filter, setFilter] = useState<string>(RUNE_PHASE_FILTER[0]);
   const [tokens, setTokens] = useState<any>([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [propertiesModalActive, setPropertiesModalActive] =
-    useState<IRuneMeta>();
+  const [propertiesModalActive, setPropertiesModalActive] = useState<string>();
   const { connectedWallet, network, addPendingTransaction } = useWallet();
-  const onPropertiesModalActive = (obj: IRuneMeta) => {
-    setPropertiesModalActive(obj);
+  const onPropertiesModalActive = (tokenId: string) => {
+    setPropertiesModalActive(tokenId);
   };
+  const onFilterChange = (val: string) => setFilter(val);
   const onMint = async () => {
     if (connectedWallet) {
       try {
         const res = await new NFTContract(network).mint(connectedWallet);
         addPendingTransaction(res);
       } catch (e: any) {
+      	console.log(e)
         toast.error(e.message);
       }
     } else {
@@ -36,8 +38,9 @@ const Gallery = () => {
       setError("");
       setLoading(true);
       try {
-        const res = await new NFTContract(network).getTokens();
-        setTokens(res);
+        const items = await new RestAPI(network).getRunes(filter);
+        // const res = await new NFTContract(network).getTokens();
+        setTokens(items);
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -45,10 +48,15 @@ const Gallery = () => {
       }
     }
     fetchContractStatus();
-  }, [connectedWallet, network]);
+  }, [network, filter]);
   return (
     <section id="Rune">
-      <Banner onMint={onMint} />
+      <Banner
+        network={network}
+        filter={filter}
+        onFilterChange={onFilterChange}
+        onMint={onMint}
+      />
       {isLoading ? (
         <PageLayout>
           <div>Loading..</div>
@@ -60,25 +68,32 @@ const Gallery = () => {
       ) : (
         <div
           style={{
+            display: "flex",
             flexFlow: "wrap",
           }}
-          className="is-flex"
         >
-          {tokens.map((tokenId) => (
-            <DisplayRune
-              key={tokenId}
-              width={"10%"}
-              height={"10%"}
-              tokenId={tokenId}
-              network={network}
-              onClick={onPropertiesModalActive}
-            />
+          {tokens.map((token) => (
+            <figure
+              style={{ width: "10%" }}
+              key={token.tokenId}
+              className="image rune"
+              onClick={() => onPropertiesModalActive(token.tokenId.toString())}
+            >
+              <img src={token.image} />
+              {/*<small*/}
+              {/*  className="has-text-white"*/}
+              {/*  style={{ position: "absolute", top: 0 }}*/}
+              {/*>*/}
+              {/*  #{token.tokenId}*/}
+              {/*</small>*/}
+              {/*<span className="has-text-white">{token.phase}</span>*/}
+            </figure>
           ))}
         </div>
       )}
       {propertiesModalActive && (
         <PropertiesModal
-          properties={propertiesModalActive}
+          tokenId={propertiesModalActive}
           onClose={() => setPropertiesModalActive(undefined)}
         />
       )}

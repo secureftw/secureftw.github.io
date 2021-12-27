@@ -1,9 +1,18 @@
 import React from "react";
 import DisplayRandomRune from "../../components/DisplayRandomRune";
+import {
+  RUNE_PHASE_FILTER,
+  RUNE_PRICE,
+} from "../../../packages/neo/contracts/ftw/nft/consts";
+import { INetworkType } from "../../../packages/neo/network";
+import { u } from "@cityofzion/neon-core";
 interface IBannerProps {
+  network: INetworkType;
+  filter: string;
   onMint: () => void;
+  onFilterChange: (val: string) => void;
 }
-const Banner = ({ onMint }: IBannerProps) => {
+const Banner = ({ onMint, onFilterChange, filter, network }: IBannerProps) => {
   return (
     <section className="hero is-white">
       <div className="hero-body">
@@ -35,7 +44,7 @@ const Banner = ({ onMint }: IBannerProps) => {
                     onClick={onMint}
                     className="button is-primary press-font"
                   >
-                    Mint: 10 GAS
+                    Mint: {RUNE_PRICE[network]} GAS
                   </button>
                 </div>
               </div>
@@ -56,13 +65,31 @@ const Banner = ({ onMint }: IBannerProps) => {
                   onClick={onMint}
                   className="button is-primary press-font"
                 >
-                  Mint: 10 GAS
+                  Mint: {RUNE_PRICE[network]} GAS
                 </button>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {/*<div className="hero-foot">*/}
+      {/*  <nav className="tabs is-boxed is-fullwidth">*/}
+      {/*    <div className="container">*/}
+      {/*      <ul>*/}
+      {/*        {RUNE_PHASE_FILTER.map((phase) => {*/}
+      {/*          return (*/}
+      {/*            <li*/}
+      {/*              key={phase}*/}
+      {/*              className={filter === phase ? "is-active" : ""}*/}
+      {/*            >*/}
+      {/*              <a onClick={() => onFilterChange(phase)}>{phase}</a>*/}
+      {/*            </li>*/}
+      {/*          );*/}
+      {/*        })}*/}
+      {/*      </ul>*/}
+      {/*    </div>*/}
+      {/*  </nav>*/}
+      {/*</div>*/}
     </section>
   );
 };

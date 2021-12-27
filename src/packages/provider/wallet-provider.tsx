@@ -6,6 +6,7 @@ import { sc } from "@cityofzion/neon-core";
 import { WalletAPI } from "../neo/wallet";
 import toast from "react-hot-toast";
 import { INetworkType } from "../neo/network";
+// import { PRIVATENET, TESTNET } from "../neo/consts";
 
 export const WalletContext = createContext({} as IWalletStates);
 export const WalletContextProvider = (props: {
@@ -13,6 +14,7 @@ export const WalletContextProvider = (props: {
   children: any;
 }) => {
   const [network, setNetwork] = useState(LocalStorage.getNetwork());
+  // const [network, setNetwork] = useState<INetworkType>(PRIVATENET);
 
   const [isWalletModalActive, setWalletModalActive] = useState(false);
 

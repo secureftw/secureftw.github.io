@@ -1,41 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../../components/Modal";
-import { IRuneMeta } from "../../../packages/neo/contracts/ftw/nft/interfaces";
+import { useWallet } from "../../../packages/provider";
+import { NFTContract } from "../../../packages/neo/contracts";
 
 interface IPropertiesModal {
-  properties: IRuneMeta;
+  tokenId: string;
   onClose: () => void;
 }
-const PropertiesModal = ({ properties, onClose }: IPropertiesModal) => {
+const PropertiesModal = ({ tokenId, onClose }: IPropertiesModal) => {
+  const [item, setItem] = useState<any>([]);
+  const [isLoading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { network } = useWallet();
+  useEffect(() => {
+    async function fetchContractStatus() {
+      setError("");
+      setLoading(true);
+      try {
+        const res = await new NFTContract(network).getProperties(
+          tokenId.toString()
+        );
+        setItem(res);
+      } catch (e: any) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchContractStatus();
+  }, [network]);
   return (
     <Modal onClose={onClose}>
-      <>
-        <h1 className="title is-4">{properties.name}</h1>
-        {/*<div className="field is-grouped is-grouped-multiline">*/}
-        {/*  <div className="control">*/}
-        {/*    <div className="tags has-addons">*/}
-        {/*      <span className="tag is-dark">Phase</span>*/}
-        {/*      <span className="tag is-info">{properties.phase}</span>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
+      {isLoading ? (
+        <div>Loading the rune data from the chain..</div>
+      ) : error ? (
+        <div>{error}</div>
+      ) : (
+        <>
+          <h1 className="title is-4">{item.name}</h1>
 
-        {/*  <div className="control">*/}
-        {/*    <div className="tags has-addons">*/}
-        {/*      <span className="tag is-dark">Luck</span>*/}
-        {/*      <span className="tag is-success">{properties.luck}</span>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-
-        <p className="subtitle is-7">
-          <strong>Phase:</strong> {properties.phase}, <strong>Luck:</strong>{" "}
-          {properties.luck}
-        </p>
-        <figure className="image is-square">
-          <img src={properties.image} />
-        </figure>
-        <p className="subtitle is-7 has-text-right mt-3">{properties.owner}</p>
-      </>
+          <p className="subtitle is-7">
+            <strong>Phase:</strong> {item.phase}, <strong>Luck:</strong>{" "}
+            {item.luck}
+          </p>
+          <figure className="image is-square">
+            <img src={item.image} />
+          </figure>
+          <p className="subtitle is-7 has-text-right mt-3">{item.owner}</p>
+        </>
+      )}
     </Modal>
   );
 };

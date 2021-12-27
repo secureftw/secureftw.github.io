@@ -3,5 +3,5 @@ export interface IRuneMeta {
   owner: string;
   image: string;
   phase: string;
-  luck: string
+  luck: string;
 }
