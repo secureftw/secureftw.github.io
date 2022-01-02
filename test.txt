@@ -1,3 +1,0 @@
-invoke 0xaa4fb927b3fe004e689a278d188689c9f050a8b2 transfer [{"type":"Hash160","value":"0x2027419d41932a668d43a2c087e93d6d02abec48"},{"type":"ByteArray","value":"3239"},{"type":"ByteArray","value":"3239"}] NS9QLsaY8RzN9fxTWj9AECyLaJvsk38XUb
-invoke 0xaa4fb927b3fe004e689a278d188689c9f050a8b2 transfer [{"type":"Hash160","value":"0x2027419d41932a668d43a2c087e93d6d02abec48"},{"type":"ByteArray","value":"IMT4"},{"type":"ByteArray","value":"3239"}] NS9QLsaY8RzN9fxTWj9AECyLaJvsk38XUb
-invoke 0xaa4fb927b3fe004e689a278d188689c9f050a8b2 transfer [{"type":"Hash160","value":"0x2027419d41932a668d43a2c087e93d6d02abec48"},{"type":"ByteArray","value":"SU1UNA=="},{"type":"ByteArray","value":"3239"}] NS9QLsaY8RzN9fxTWj9AECyLaJvsk38XUb
