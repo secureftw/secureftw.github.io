@@ -1,40 +1,40 @@
 import React, { useEffect, useState } from "react";
+import Pagination from "bulma-pagination-react";
 import { useWallet } from "../../../../../../packages/provider";
 import { TournamentContract } from "../../../../../../packages/neo/contracts/ftw/tournament";
-import ResultModal from "./ResultModal";
-import toast from "react-hot-toast";
-import DisplayRuneTable from "./DisplayRuneTable";
+import NFTDetailModal from "./NFTDetailModal";
+import HistoryTable from "./HistoryTable";
 import Replay from "./Replay";
+import PlayButton from "../../../components/PlayButton";
+import { ADMIN_FOR_PLAY } from "../../../../../../packages/neo/contracts/ftw/tournament/consts";
+import AfterTransactionSubmitted from "../../../../../../packages/ui/AfterTransactionSubmitted";
+import Modal from "../../../../../components/Modal";
 
-const History = (props) => {
+interface IHistoryProps {
+  arenaNo: string;
+}
+const History = ({ arenaNo }: IHistoryProps) => {
+  const [playTxid, setPlayTxid] = useState("");
+  const [claimTxid, setClaimTxid] = useState("");
+  const [page, setPage] = useState(1);
   const [nftModalActive, setNftModalActive] = useState();
   const [replayModalActive, setReplayModalActive] = useState();
-  const [history, setHistory] = useState<any>([]);
+  const [history, setHistory] = useState<any>();
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { connectedWallet, network, addPendingTransaction } = useWallet();
+  const { connectedWallet, network } = useWallet();
   const onNFTModalActive = (obj) => setNftModalActive(obj);
   const onReplayModalActive = (obj) => setReplayModalActive(obj);
-  const onPlay = async () => {
-    if (connectedWallet) {
-      try {
-        const res = await new TournamentContract(network).play(connectedWallet);
-        addPendingTransaction(res);
-        // setModalActive(false);
-      } catch (e: any) {
-        toast.error(e.message);
-      }
-    } else {
-      toast.error("Please connect wallet.");
-    }
-  };
 
   useEffect(() => {
     async function fetchHistory() {
       setError("");
       setLoading(true);
       try {
-        const res = await new TournamentContract(network).history();
+        const res = await new TournamentContract(network).history(
+          arenaNo,
+          page
+        );
         setHistory(res);
       } catch (e: any) {
         setError(e.message);
@@ -43,7 +43,7 @@ const History = (props) => {
       }
     }
     fetchHistory();
-  }, [connectedWallet, network]);
+  }, [connectedWallet, network, page]);
   return (
     <div>
       {isLoading ? (
@@ -52,63 +52,111 @@ const History = (props) => {
         <div>{error}</div>
       ) : (
         <>
-          <div className="level is-mobile">
-            <div className="level-left">
-              <div className="level-item">
-                <h3 className="title">Match history</h3>
-              </div>
-            </div>
-
-            <div className="level-right">
-              <div className="level-item">
-                <button
-                  className="button is-primary press-font"
-                  onClick={onPlay}
-                >
-                  Start
-                </button>
-              </div>
-            </div>
-          </div>
-
           <div className="box">
+            <div className="level is-mobile">
+              <div className="level-left">
+                <div className="level-item">
+                  <h3 className="title">History</h3>
+                </div>
+              </div>
+
+              {ADMIN_FOR_PLAY[network].length !== 0 &&
+              ADMIN_FOR_PLAY[network].includes(
+                connectedWallet?.account.address
+              ) ? (
+                <div className="level-right">
+                  <div className="level-item">
+                    <PlayButton onSubmitted={setPlayTxid} arenaNo={arenaNo} />
+                  </div>
+                </div>
+              ) : ADMIN_FOR_PLAY[network].length === 0 ? (
+                <div className="level-right">
+                  <div className="level-item">
+                    <PlayButton onSubmitted={setPlayTxid} arenaNo={arenaNo} />
+                  </div>
+                </div>
+              ) : (
+                <div></div>
+              )}
+            </div>
             {history.items && history.items.length > 0 ? (
               history.items.map((game) => {
                 return (
-                  <DisplayRuneTable
-                    key={game.no}
-                    gameNo={game.no}
+                  <HistoryTable
+                    key={game.gameNo}
+                    width={"64px"}
+                    height={"64px"}
+                    history={game}
+                    arenaNo={arenaNo}
                     network={network}
                     onClick={(obj) => {
                       onNFTModalActive(obj);
                     }}
                     onReplay={() => onReplayModalActive(game)}
-                    width={"64px"}
-                    height={"64px"}
-                    tokenId={game.champion}
+                    onClaimed={setClaimTxid}
                   />
                 );
               })
             ) : (
-              <h1 className="title">No history yet</h1>
+              <div>Game hasn't been played</div>
+            )}
+            {history && history.totalPages > 1 && (
+              <div className="media">
+                <div className="media-content">
+                  <Pagination
+                    pages={history.totalPages}
+                    currentPage={page}
+                    onChange={(_page) => {
+                      if (page !== _page) {
+                        setPage(_page);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
             )}
           </div>
         </>
       )}
+
       {nftModalActive && (
-        <ResultModal
+        <NFTDetailModal
           rune={nftModalActive}
           onClose={() => setNftModalActive(undefined)}
         />
       )}
+
       {replayModalActive && (
         <Replay
+          arenaNo={arenaNo}
           gameHistory={replayModalActive}
           onClick={(obj) => {
             onNFTModalActive(obj);
           }}
           onClose={() => setReplayModalActive(undefined)}
         />
+      )}
+
+      {playTxid && (
+        <Modal onClose={() => setPlayTxid("")}>
+          <AfterTransactionSubmitted
+            txid={playTxid}
+            network={network}
+            onSuccess={() => setPlayTxid("")}
+            onError={() => setPlayTxid("")}
+          />
+        </Modal>
+      )}
+
+      {claimTxid && (
+        <Modal onClose={() => setClaimTxid("")}>
+          <AfterTransactionSubmitted
+            txid={playTxid}
+            network={network}
+            onSuccess={() => setClaimTxid("")}
+            onError={() => setClaimTxid("")}
+          />
+        </Modal>
       )}
     </div>
   );

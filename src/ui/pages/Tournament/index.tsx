@@ -1,16 +1,18 @@
-import React from "react";
-import PageLayout from "../../components/PageLayout";
-import Banner from "./scenes/Arena/Banner";
-import { ARENA_HOME_PATH, ARENA_PATH } from "./pageRoutes";
+import React, { useEffect } from "react";
+import { ARENA_PATH } from "./pageRoutes";
 import { Route } from "react-router-dom";
-import ArenaHome from "./scenes/Home";
+import ArenaMenu from "./scenes/Home";
 import Arena from "./scenes/Arena";
+import { TOURNAMENT_PATH } from "../../../consts";
 
 const Tournament = () => {
+  useEffect(() => {
+    document.title = "Forthewin Arena: NFT tournament on NEO";
+  }, []);
   return (
     <section>
-      <Route exact={true} path={ARENA_HOME_PATH} component={ArenaHome} />
-      <Route exact={true} path={ARENA_PATH} component={Arena} />
+      <Route exact={true} path={TOURNAMENT_PATH} component={ArenaMenu} />
+      <Route path={ARENA_PATH} component={Arena} />
     </section>
   );
 };

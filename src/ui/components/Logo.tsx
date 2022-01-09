@@ -1,14 +1,14 @@
 import React from "react";
-import DisplayRandomRune from "./DisplayRandomRune";
-
 const Logo = () => {
   return (
     <>
-      {/*<img*/}
-      {/*  src={"/logo/FTW.png"}*/}
-      {/*  height="40px"*/}
-      {/*/>*/}
-      <DisplayRandomRune width="36px" height="36px" />
+      <img
+        alt="Forthewin Logo"
+        src={"/logo/512_512.svg"}
+        width="36px"
+        height="36px"
+      />
+      {/*<DisplayRandomRune width="36px" height="36px" />*/}
     </>
   );
 };

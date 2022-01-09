@@ -2,8 +2,8 @@ import neo3Dapi from "neo3-dapi";
 import { ITransaction, IWalletType } from "./interfaces";
 import { DEV, NEO_LINE, O3, WALLET_LIST } from "../consts";
 import { DevWallet } from "./dev-wallet";
-import { tx, wallet as NeonWallet } from "@cityofzion/neon-core";
-import { INetworkType } from "../network";
+import { rpc, sc, tx, wallet as NeonWallet } from "@cityofzion/neon-core";
+import { INetworkType, Network } from "../network";
 import { LocalStorage } from "../local-storage";
 import moment from "moment";
 
@@ -113,22 +113,34 @@ export class WalletAPI {
         "Your wallet's network doesn't match with the app network setting."
       );
     }
+    if (extraSystemFee) {
+      invokeScript.extraSystemFee = extraSystemFee;
+    }
+
+    invokeScript.signers = [
+      {
+        account: NeonWallet.getScriptHashFromAddress(senderAddress),
+        scopes: tx.WitnessScope.CalledByEntry,
+      },
+    ];
+
+    // const rpcClient = Network.getRPCClient(currentNetwork);
+    // const transaction = await DevWallet.build(rpcClient, invokeScript);
+    // console.log(script);
+    // const invokeFunctionResponse = await rpcClient.invokeScript(
+    //   transaction.script,
+    //   transaction.signers
+    // );
+    // console.log(invokeFunctionResponse);
     try {
-      let res;
-      if (this.walletType === DEV) {
-        res = await instance.invoke(network, invokeScript);
-      } else {
-        invokeScript.signers = [
-          {
-            account: NeonWallet.getScriptHashFromAddress(senderAddress),
-            scopes: tx.WitnessScope.CalledByEntry,
-          },
-        ];
-        if (extraSystemFee) {
-          invokeScript.extraSystemFee = extraSystemFee;
-        }
-        res = await instance.invoke(invokeScript);
-      }
+	    const rpcClient = Network.getRPCClient(currentNetwork);
+	    const transaction = await DevWallet.build(rpcClient, invokeScript);
+      const res = await instance.invoke(invokeScript, currentNetwork);
+      // if (this.walletType === DEV) {
+      //   res = await instance.invoke(invokeScript, currentNetwork);
+      // } else {
+      //   res = await instance.invoke(invokeScript);
+      // }
       const submittedTx: ITransaction = {
         network,
         wallet: this.walletType,
@@ -141,7 +153,11 @@ export class WalletAPI {
       LocalStorage.addTransaction(submittedTx);
       return res.txid;
     } catch (e: any) {
-      throw new Error(e.description);
+      // TODO: Need to improve dev wallet error handling as dapi standard.
+      if (e.description) {
+        throw new Error(e.description);
+      }
+      throw e;
     }
   };
 }

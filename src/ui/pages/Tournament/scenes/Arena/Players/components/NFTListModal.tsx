@@ -2,27 +2,31 @@ import React, { useEffect, useState } from "react";
 import Modal from "../../../../../../components/Modal";
 import { NFTContract } from "../../../../../../../packages/neo/contracts";
 import { useWallet } from "../../../../../../../packages/provider";
-import PageLayout from "../../../../../../components/PageLayout";
+import AfterTransactionSubmitted from "../../../../../../../packages/ui/AfterTransactionSubmitted";
 import { TournamentContract } from "../../../../../../../packages/neo/contracts/ftw/tournament";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 interface INFTListModalModal {
+  arenaNo: string;
   onClose: () => void;
 }
-const NFTListModal = ({ onClose }: INFTListModalModal) => {
+const NFTListModal = ({ arenaNo, onClose }: INFTListModalModal) => {
+  const [txid, setTxid] = useState("");
   const [tokens, setTokens] = useState<any>([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { connectedWallet, network, addPendingTransaction } = useWallet();
-  const onJoin = async (tokenId: string) => {
+
+  const onRegister = async (tokenId: string) => {
     if (connectedWallet) {
       try {
-        const res = await new TournamentContract(network).join(
+        const res = await new TournamentContract(network).register(
           connectedWallet,
-          tokenId
+          tokenId,
+          arenaNo
         );
         addPendingTransaction(res);
-        // onClose();
+        setTxid(res);
       } catch (e: any) {
         toast.error(e.message);
       }
@@ -30,6 +34,7 @@ const NFTListModal = ({ onClose }: INFTListModalModal) => {
       toast.error("Please connect wallet.");
     }
   };
+
   useEffect(() => {
     async function fetchContractStatus() {
       setError("");
@@ -52,40 +57,49 @@ const NFTListModal = ({ onClose }: INFTListModalModal) => {
   return (
     <Modal onClose={onClose}>
       <>
-        <h5 className="title is-5">Select NFT to sell</h5>
-        <div className="box">
-          {isLoading ? (
-            <PageLayout>
-              <div>Loading..</div>
-            </PageLayout>
-          ) : error ? (
-            <PageLayout>
-              <div>{error}</div>
-            </PageLayout>
-          ) : tokens.length > 0 ? (
-            <div
-              style={{
-                flexFlow: "wrap",
-              }}
-              className="is-flex"
-            >
-              {tokens.map((token) => {
-                return (
-                  <figure
-                    key={token.tokenId}
-                    // style={{ width, height }}
-                    className="image is-64x64"
-                    onClick={() => onJoin(token.tokenId)}
-                  >
-                    <img src={token.image} />
-                  </figure>
-                );
-              })}
+        {txid ? (
+          <AfterTransactionSubmitted
+            txid={txid}
+            network={network}
+            onSuccess={onClose}
+            onError={() => setTxid("")}
+          />
+        ) : (
+          <div>
+            <div className="block">
+              <h5 className="title is-5">Select a NFT to send to the ARENA</h5>
             </div>
-          ) : (
-            <div>You don't have runes</div>
-          )}
-        </div>
+            <div>
+              {isLoading ? (
+                <div>Loading..</div>
+              ) : error ? (
+                <div>{error}</div>
+              ) : tokens.length > 0 ? (
+                <div
+                  style={{
+                    flexFlow: "wrap",
+                  }}
+                  className="is-flex"
+                >
+                  {tokens.map((token) => {
+                    return (
+                      <figure
+                        key={token.tokenId}
+                        // style={{ width, height }}
+                        className="image is-64x64"
+                        onClick={() => onRegister(token.tokenId)}
+                      >
+                        <img src={token.image} />
+                      </figure>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div>You don't have runes</div>
+              )}
+            </div>
+          </div>
+        )}
       </>
     </Modal>
   );

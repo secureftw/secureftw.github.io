@@ -6,15 +6,15 @@ import { sc } from "@cityofzion/neon-core";
 import { WalletAPI } from "../neo/wallet";
 import toast from "react-hot-toast";
 import { INetworkType } from "../neo/network";
-// import { PRIVATENET, TESTNET } from "../neo/consts";
 
+// tslint:disable-next-line:no-object-literal-type-assertion
 export const WalletContext = createContext({} as IWalletStates);
 export const WalletContextProvider = (props: {
   options: ContextOptions;
   children: any;
 }) => {
   const [network, setNetwork] = useState(LocalStorage.getNetwork());
-  // const [network, setNetwork] = useState<INetworkType>(PRIVATENET);
+  const [totalTxSubmit, setTotalTxSubmit] = useState(0);
 
   const [isWalletModalActive, setWalletModalActive] = useState(false);
 
@@ -74,6 +74,10 @@ export const WalletContextProvider = (props: {
     setPendingTransactions(pendingTransactions.filter((i) => i !== txid));
   };
 
+  const increaseTotalTxSubmit = () => {
+    setTotalTxSubmit(totalTxSubmit + 1);
+  };
+
   const contextValue: IWalletStates = {
     useDevWallet: props.options.useDevWallet,
     network,
@@ -91,6 +95,8 @@ export const WalletContextProvider = (props: {
     removePendingTransaction,
     pendingTransactions,
     switchNetwork,
+    totalTxSubmit,
+    increaseTotalTxSubmit,
   };
 
   return (

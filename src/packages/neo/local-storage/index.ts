@@ -1,7 +1,7 @@
 import store from "store2";
 import { IConnectedWallet, ITransaction } from "../wallet/interfaces";
 import { FARM_SCRIPT_HASH } from "../contracts/ftw/farm/consts";
-import { NFT_SCRIPT_HASH } from "../contracts";
+import { RUNE_SCRIPT_HASH } from "../contracts";
 import { MAINNET } from "../consts";
 import { INetworkType } from "../network";
 
@@ -13,7 +13,7 @@ export class LocalStorage {
   public static initStorage = (network: string): ITransaction[] => {
     const supportContracts = [
       FARM_SCRIPT_HASH[network],
-      NFT_SCRIPT_HASH[network],
+      RUNE_SCRIPT_HASH[network],
     ];
     const transactions = LocalStorage.getTransactions();
     const validatedTx: ITransaction[] = [];

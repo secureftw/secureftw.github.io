@@ -47,6 +47,14 @@ export const base64ToFixed8 = (str: string) => {
   return no;
 };
 
+export const toDecimal = (val: string): number => {
+  return parseFloat(u.BigInteger.fromNumber(val).toDecimal(8).toString());
+};
+
+// export const toNumber = () => {
+//
+// }
+
 export const base64ToDate = (str: string) =>
   moment.unix(parseFloat(str) / 1000).format("lll");
 

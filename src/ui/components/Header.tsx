@@ -93,11 +93,11 @@ const Header = () => {
 
         <div className="navbar-menu ml-3">
           <div className="navbar-start">
-            {MENU.map((route) => {
-              if (!route.network.includes(network)) return <></>;
+            {MENU.map((route, i) => {
+              if (!route.network.includes(network)) return false;
               return (
                 <NavLink
-                  key={route.label}
+                  key={`header-${route.label}${i}`}
                   activeClassName="is-active"
                   to={route.path}
                   className="navbar-item"

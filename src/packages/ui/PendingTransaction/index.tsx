@@ -4,14 +4,19 @@ import { useWallet } from "../../provider";
 import { Network } from "../../neo/network";
 
 const PendingTransaction = () => {
-  const { network, pendingTransactions, removePendingTransaction } =
-    useWallet();
+  const {
+    network,
+    pendingTransactions,
+    removePendingTransaction,
+    // increaseTotalTxSubmit,
+  } = useWallet();
   useEffect(() => {
     async function checkTxid() {
       try {
         for (const txid of pendingTransactions) {
           const res = await Network.getRawTx(txid, network);
           removePendingTransaction(txid);
+          // increaseTotalTxSubmit();
         }
       } catch (e: any) {
         console.error(e);

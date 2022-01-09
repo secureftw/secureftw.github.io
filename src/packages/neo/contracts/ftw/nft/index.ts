@@ -1,7 +1,7 @@
 import { sc, u } from "@cityofzion/neon-core";
 import { GAS_SCRIPT_HASH } from "../../../consts";
 import { INetworkType, Network } from "../../../network";
-import { NFT_SCRIPT_HASH, RUNE_PRICE } from "./consts";
+import { RUNE_SCRIPT_HASH, RUNE_PRICE } from "./consts";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { IRuneMeta } from "./interfaces";
@@ -13,7 +13,7 @@ export class NFTContract {
 
   constructor(networkType: INetworkType) {
     this.network = networkType;
-    this.contractHash = NFT_SCRIPT_HASH[networkType];
+    this.contractHash = RUNE_SCRIPT_HASH[networkType];
   }
 
   mint = async (connectedWallet: IConnectedWallet): Promise<string> => {
@@ -131,4 +131,4 @@ export class NFTContract {
     });
   };
 }
-export { NFT_SCRIPT_HASH } from "./consts";
+export { RUNE_SCRIPT_HASH } from "./consts";

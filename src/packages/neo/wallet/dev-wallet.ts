@@ -64,68 +64,70 @@ export class DevWallet {
   }
 
   static async invoke(
-    network: INetworkType,
-    invokeScript: sc.ContractCallJson
+    invokeScript: sc.ContractCallJson & {
+      extraSystemFee?: string;
+      signers: any[];
+    },
+    network: INetworkType
   ) {
     const rpcClient = Network.getRPCClient(network);
     const version: any = await rpcClient.getVersion();
-    const txObj = await DevWallet.build(
-      rpcClient,
-      invokeScript,
-      DevWallet.account.address
-    );
+    const txObj = await DevWallet.build(rpcClient, invokeScript);
     txObj.sign(DevWallet.account, version.protocol.network);
     const txid = await rpcClient.sendRawTransaction(txObj);
-    // tslint:disable-next-line:no-console
-    console.log(
-      JSON.stringify(
-        {
-          RPC: rpc,
-          Transaction: txObj,
-          Network: version,
-          "Network Fee": txObj.networkFee.toDecimal(8).toString(),
-          "System Fee": txObj.systemFee.toDecimal(8).toString(),
-        },
-        null,
-        4
-      )
-    );
+    // // tslint:disable-next-line:no-console
+    // console.log(
+    //   JSON.stringify(
+    //     {
+    //       RPC: rpc,
+    //       Transaction: txObj,
+    //       Network: version,
+    //       "Network Fee": txObj.networkFee.toDecimal(8).toString(),
+    //       "System Fee": txObj.systemFee.toDecimal(8).toString(),
+    //     },
+    //     null,
+    //     4
+    //   )
+    // );
     return {
       txid,
       nodeUrl: rpcClient.url,
     };
   }
 
+  static createScript = (invokeScript: sc.ContractCallJson) => {
+    return sc.createScript({
+      scriptHash: invokeScript.scriptHash,
+      operation: invokeScript.operation,
+      args: invokeScript.args
+        ? invokeScript.args.map((param: any) => convertContractCallParam(param))
+        : [],
+    });
+  };
+
   static build = async (
     rpcClient: rpc.RPCClient,
-    invokeScript: sc.ContractCallJson,
-    senderAddress: string,
-    cosignerAddress?: string
+    invokeScript: sc.ContractCallJson & {
+      extraSystemFee?: string;
+      signers: any[];
+    }
+    // cosignerAddress?: string
   ): Promise<tx.Transaction> => {
     const currentHeight = await rpcClient.getBlockCount();
-    // @ts-ignore
-    invokeScript.args = invokeScript.args.map((param: any) =>
-      convertContractCallParam(param)
-    );
-    const script = sc.createScript({ ...invokeScript });
 
-    const signers = [
-      {
-        account: wallet.getScriptHashFromAddress(senderAddress),
-        scopes: tx.WitnessScope.Global,
-      },
-    ];
-    if (cosignerAddress) {
-      signers.push({
-        account: wallet.getScriptHashFromAddress(cosignerAddress),
-        scopes: tx.WitnessScope.Global,
-      });
-    }
+    const script = this.createScript(invokeScript);
+
+    // if (cosignerAddress) {
+    //   signers.push({
+    //     account: wallet.getScriptHashFromAddress(cosignerAddress),
+    //     scopes: tx.WitnessScope.Global,
+    //   });
+    // }
 
     const transaction = new tx.Transaction({
       validUntilBlock: currentHeight + 1,
       script,
-      signers,
+      signers: invokeScript.signers,
     });
 
     transaction.networkFee = await DevWallet.calculateNetworkFee(
@@ -137,6 +139,13 @@ export class DevWallet {
       transaction
     );
     transaction.systemFee = systemFee;
+    if (invokeScript.extraSystemFee) {
+      const fee = u.BigInteger.fromDecimal(
+        invokeScript.extraSystemFee,
+        8
+      ).toString();
+      transaction.systemFee = systemFee.add(parseFloat(fee));
+    }
     //
     // if (cosigner) {
     //   transaction.sign(cosigner, version.network);

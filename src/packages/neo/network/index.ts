@@ -6,11 +6,15 @@ import {
   PRIVATENET,
   TESTNET,
   TESTNET_CONFIG,
+  TESTNET_CONFIG_2,
+  MAINNET_CONFIG_2,
 } from "../consts";
+// tslint:disable-next-line:no-submodule-imports
 import { InvokeResult } from "@cityofzion/neon-core/lib/rpc";
 import {
   ApplicationLogJson,
   GetRawTransactionResult,
+  // tslint:disable-next-line:no-submodule-imports
 } from "@cityofzion/neon-core/lib/rpc/Query";
 import { convertContractCallParam } from "../utils";
 
@@ -35,14 +39,24 @@ export class Network {
     return new rpc.RPCClient(config.url);
   };
 
-  static getRawTx = async (txid: string, network: INetworkType) => {
-    const rpcClient = Network.getRPCClient(network);
-    // Cycle
-    let rawTx: GetRawTransactionResult | undefined;
+  static getRawTx = async (txid: string, networkType: INetworkType) => {
+    let config;
+    switch (networkType) {
+      case PRIVATENET:
+        config = PRIVATE_CONFIG;
+        break;
+      case TESTNET:
+        config = TESTNET_CONFIG_2;
+        break;
+      case MAINNET:
+        config = MAINNET_CONFIG_2;
+        break;
+    }
+    const rpcClient = new rpc.RPCClient(config.url);
+    let rawTx: any;
     do {
       try {
-      	console.log("ping")
-        rawTx = await rpcClient.getRawTransaction(txid, true);
+        rawTx = await rpcClient.getApplicationLog(txid);
       } catch (e) {
         await Network.sleep(Network.READ_LOG_FREQUENCY);
       }

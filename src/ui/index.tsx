@@ -26,7 +26,7 @@ const App = () => {
     <WalletContextProvider
       options={{
         useLocalStorage: true,
-        // useDevWallet: true,
+        useDevWallet: process.env.NODE_ENV === "development",
       }}
     >
       <Router>
@@ -35,12 +35,11 @@ const App = () => {
         <Route exact path={HOME_PATH} component={Home} />
         <Route path={GALLERY_PATH} component={Gallery} />
         <Route path={TOURNAMENT_PATH} component={Tournament} />
-        <Route exact path={SMITH_PATH} component={Smith} />
-        <Route exact path={FARM_PATH} component={Farm} />
+        <Route path={SMITH_PATH} component={Smith} />
+        <Route path={FARM_PATH} component={Farm} />
         <Route path={COLLECTION_PATH} component={MyCollection} />
         <MobileMenuSlider />
         <WalletSidebar />
-        {/*<NetworkCheck />*/}
       </Router>
     </WalletContextProvider>
   );

@@ -26,4 +26,8 @@ export class RestAPI {
   async getRunes(filter) {
     return this.fetchResult(this.endpoint + "/runes/" + filter);
   }
+
+  async getRune(tokenId) {
+    return this.fetchResult(this.endpoint + "/rune/" + tokenId);
+  }
 }

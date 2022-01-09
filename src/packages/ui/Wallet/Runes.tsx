@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import { NFTContract } from "../../neo/contracts";
 import { IRuneMeta } from "../../neo/contracts/ftw/nft/interfaces";
 import { useWallet } from "../../provider";
-import toast from "react-hot-toast";
-import DisplayRune from "../../../ui/pages/Gallery/DisplayRune";
-import DisplayRandomRune from "../../../ui/components/DisplayRandomRune";
 import { IConnectedWallet } from "../../neo/wallet/interfaces";
 
 interface IRunesProps {

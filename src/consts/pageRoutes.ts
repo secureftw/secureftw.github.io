@@ -16,7 +16,7 @@ export const MENU = [
   {
     label: "Arena",
     path: TOURNAMENT_PATH,
-    network: [PRIVATENET, TESTNET],
+    network: [PRIVATENET, TESTNET, MAINNET],
   },
   {
     label: "Smith",

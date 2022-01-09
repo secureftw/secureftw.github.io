@@ -6,6 +6,7 @@
   "dependencies": {
     "@cityofzion/neon-core": "^5.0.0-next.16",
     "bulma": "^0.9.3",
+    "bulma-pagination-react": "^0.1.1",
     "jquery": "^3.6.0",
     "moment": "^2.29.1",
     "neo3-dapi": "^1.0.1",

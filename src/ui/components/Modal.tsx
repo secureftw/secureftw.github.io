@@ -15,7 +15,7 @@ const ModalCard = ({ onClose, children, isLoading, error }: IProps) => {
     };
   }, []);
   return (
-    <div className="modal is-active" style={{ zIndex: 99999 }}>
+    <div className="modal is-active" style={{ zIndex: 99 }}>
       <div className="modal-background" onClick={onClose} />
       <section className="modal-content">
         <div className="box">

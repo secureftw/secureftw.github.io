@@ -41,9 +41,20 @@ export const TESTNET_CONFIG = {
   url: "https://testnet2.neo.coz.io:443",
 };
 
+// Using for tx monitor
+export const TESTNET_CONFIG_2 = {
+  label: "N3TestNet",
+  url: "https://testnet1.neo.coz.io:443",
+};
+
 export const MAINNET_CONFIG = {
   label: "N3MainNet",
   url: "https://n3seed2.ngd.network:10332",
+};
+
+export const MAINNET_CONFIG_2 = {
+  label: "N3MainNet",
+  url: "https://mainnet1.neo.coz.io:443",
 };
 
 /* Contract hashes */
@@ -53,7 +64,7 @@ export const NEO_SCRIPT_HASH = NEON_CONST.NATIVE_CONTRACT_HASH.NeoToken;
 export const TOKEN_LIST = (network: INetworkType) => [
   NEO_SCRIPT_HASH,
   GAS_SCRIPT_HASH,
-  // NFT_SCRIPT_HASH[network]
+  // RUNE_SCRIPT_HASH[network]
 ];
 
 /* Dev wallet */

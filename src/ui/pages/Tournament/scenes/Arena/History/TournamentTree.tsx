@@ -1,6 +1,6 @@
 import React from "react";
 import { IPlayer } from "../../../../../../packages/neo/contracts/ftw/tournament/interfaces";
-import DisplayRune from "../../../DisplayRune";
+import DisplayRuneWithProperties from "../../../components/DisplayRuneWithProperties";
 import { fight } from "../helpers";
 import { useWallet } from "../../../../../../packages/provider";
 
@@ -19,86 +19,43 @@ function* chunks(arr, n) {
 
 const TournamentTree = ({ onClick, champ, tree, nonce }: ITournamentTree) => {
   const { network } = useWallet();
-  // @ts-ignore
-  let arena16: IPlayer[] = [];
-  let arena8: IPlayer[] = [];
-  let arena4: IPlayer[] = [];
-  let arena2: IPlayer[] = [];
-  // @ts-ignore
-  const arena32 = [...chunks(tree, 2)];
-  arena32.forEach((arr) => {
-    const res = fight(
-      arr[0].phase,
-      arr[0].luck,
-      arr[1].phase,
-      arr[1].luck,
-      nonce
-    );
-    if (res === "A") {
-      arena16.push(arr[0]);
-    } else {
-      arena16.push(arr[1]);
-    }
-  });
-  // @ts-ignore
-  arena16 = [...chunks(arena16, 2)];
-  arena16.forEach((arr) => {
-    const res = fight(
-      arr[0].phase,
-      arr[0].luck,
-      arr[1].phase,
-      arr[1].luck,
-      nonce
-    );
-    if (res === "A") {
-      arena8.push(arr[0]);
-    } else {
-      arena8.push(arr[1]);
-    }
-  });
-  // @ts-ignore
-  arena8 = [...chunks(arena8, 2)];
-  arena8.forEach((arr) => {
-    const res = fight(
-      arr[0].phase,
-      arr[0].luck,
-      arr[1].phase,
-      arr[1].luck,
-      nonce
-    );
-    if (res === "A") {
-      arena4.push(arr[0]);
-    } else {
-      arena4.push(arr[1]);
-    }
-  });
-  // @ts-ignore
-  arena4 = [...chunks(arena4, 2)];
-  arena4.forEach((arr) => {
-    const res = fight(
-      arr[0].phase,
-      arr[0].luck,
-      arr[1].phase,
-      arr[1].luck,
-      nonce
-    );
-    if (res === "A") {
-      arena2.push(arr[0]);
-    } else {
-      arena2.push(arr[1]);
-    }
-  });
 
-  // @ts-ignore
-  arena2 = [...chunks(arena2, 2)];
-
-  // @ts-ignore
-  const arenaTree = [arena2, arena4, arena8, arena16, arena32];
+  let capacity = tree.length;
+  let stage: IPlayer[] = tree;
+  let winners: IPlayer[] = [];
+  let match: IPlayer[] = [];
+  let rounds: any[] = [];
+  while (capacity >= 2) {
+    for (let i = 0; i < capacity; i++) {
+      match.push(stage[i]);
+      if (match.length === 2) {
+        const res = fight(
+          match[0].phase,
+          match[0].luck,
+          match[1].phase,
+          match[1].luck,
+          nonce
+        );
+        if (res === "A") {
+          winners.push(match[0]);
+        } else {
+          winners.push(match[1]);
+        }
+        match = [];
+      }
+    }
+    // @ts-ignore
+    rounds.push([...chunks(stage, 2)]);
+    stage = winners;
+    winners = [];
+    capacity = capacity / 2;
+  }
+  rounds = rounds.reverse();
 
   return (
     <>
       <div className="is-flex mb-5" style={{ justifyContent: "safe center" }}>
-        <DisplayRune
+        <DisplayRuneWithProperties
           network={network}
           onClick={(obj) => {
             onClick(obj);
@@ -108,7 +65,7 @@ const TournamentTree = ({ onClick, champ, tree, nonce }: ITournamentTree) => {
           tokenId={champ}
         />
       </div>
-      {arenaTree.map((arena) => {
+      {rounds.map((arena) => {
         return (
           <div className="is-flex mb-5" style={{ justifyContent: "center" }}>
             {arena.map((arr, i) => {
@@ -124,7 +81,7 @@ const TournamentTree = ({ onClick, champ, tree, nonce }: ITournamentTree) => {
                   className={`is-flex ${arena.length - 1 !== i ? "mr-5" : ""} `}
                 >
                   <div style={{ opacity: winner === "A" ? "1" : "0.3" }}>
-                    <DisplayRune
+                    <DisplayRuneWithProperties
                       network={network}
                       onClick={(obj) => {
                         onClick(obj);
@@ -135,7 +92,7 @@ const TournamentTree = ({ onClick, champ, tree, nonce }: ITournamentTree) => {
                     />
                   </div>
                   <div style={{ opacity: winner === "B" ? "1" : "0.3" }}>
-                    <DisplayRune
+                    <DisplayRuneWithProperties
                       network={network}
                       onClick={(obj) => {
                         onClick(obj);

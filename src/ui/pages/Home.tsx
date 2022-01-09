@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import PageLayout from "../components/PageLayout";
 // tslint:disable-next-line:no-submodule-imports
 import DOTS from "vanta/dist/vanta.halo.min";
-import DisplayRandomRune from "../components/DisplayRandomRune";
+import RuneLoading from "../../packages/ui/AfterTransactionSubmitted/RuneLoading";
 // import * as THREE from "three";
 
 const Home = (props) => {

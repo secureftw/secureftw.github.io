@@ -1,8 +1,4 @@
-import {
-  IConnectedWallet,
-  ITransaction,
-  IWalletType,
-} from "../neo/wallet/interfaces";
+import { IConnectedWallet, IWalletType } from "../neo/wallet/interfaces";
 import { INetworkType } from "../neo/network";
 import { sc } from "@cityofzion/neon-core";
 
@@ -26,6 +22,8 @@ export interface IWalletStates {
   closeInvoke: () => void;
   pendingTransactions: string[];
   switchNetwork: (network: INetworkType) => void;
+  totalTxSubmit: number;
+  increaseTotalTxSubmit: () => void;
 }
 
 export interface ContextOptions {

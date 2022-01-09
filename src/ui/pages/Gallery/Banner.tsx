@@ -1,18 +1,14 @@
 import React from "react";
-import DisplayRandomRune from "../../components/DisplayRandomRune";
-import {
-  RUNE_PHASE_FILTER,
-  RUNE_PRICE,
-} from "../../../packages/neo/contracts/ftw/nft/consts";
+import { RUNE_PRICE } from "../../../packages/neo/contracts/ftw/nft/consts";
 import { INetworkType } from "../../../packages/neo/network";
-import { u } from "@cityofzion/neon-core";
+import DisplayRandomRune from "../../components/RandomRune";
 interface IBannerProps {
   network: INetworkType;
   filter: string;
   onMint: () => void;
   onFilterChange: (val: string) => void;
 }
-const Banner = ({ onMint, onFilterChange, filter, network }: IBannerProps) => {
+const Banner = ({ onMint, network }: IBannerProps) => {
   return (
     <section className="hero is-white">
       <div className="hero-body">

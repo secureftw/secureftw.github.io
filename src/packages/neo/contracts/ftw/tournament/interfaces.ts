@@ -1,3 +1,4 @@
+
 export interface IPlayer {
   playerNo: string;
   owner: string;
@@ -14,9 +15,14 @@ export interface IHistory {
 }
 
 export interface IHistoryGame {
-  no: string;
+	gameNo: string;
+  tournamentTree: IPlayer[];
   champion: string;
   nonce: string;
-  tournamentTree: IPlayer[];
+  betsOnChampion: string;
+  totalBets: string;
+  rollover: string;
+  fee: string;
+  championPrize: string;
   createdAt: string;
 }
