@@ -2,17 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { TOURNAMENT_PATH } from "../../../../../consts";
 import PageLayout from "../../../../components/PageLayout";
+import { useWallet } from "../../../../../packages/provider";
+import { MAINNET } from "../../../../../packages/neo/consts";
 
-const ARENA_LIST = ["8", "16", "32", "64", "128"];
-const ARENA_COLOR = {
-  "4": "is-black",
-  "8": "is-black",
-  "16": "is-black",
-  "32": "is-black",
-  "64": "is-black",
-  "128": "is-black",
-};
 const ArenaHome = (props) => {
+  const { network } = useWallet();
+  let ARENA_LIST = ["8", "16", "32", "64", "128", "256"];
+  if (network === MAINNET) {
+    ARENA_LIST = ["8", "16", "32", "64", "128"];
+  }
   return (
     <div
       style={{
@@ -40,17 +38,10 @@ const ArenaHome = (props) => {
                 >
                   ARENA {arena}
                 </Link>
-                {/*<Link*/}
-                {/*  to={TOURNAMENT_PATH + "/" + arena}*/}
-                {/*  className="button is-white"*/}
-                {/*>*/}
-                {/*  Enter*/}
-                {/*</Link>*/}
               </div>
             </div>
           );
         })}
-        {/*</div>*/}
       </PageLayout>
     </div>
   );

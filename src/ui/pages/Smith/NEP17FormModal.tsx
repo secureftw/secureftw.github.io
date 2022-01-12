@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import Modal from "../../components/Modal";
 import { useWallet } from "../../../packages/provider";
 import { toast } from "react-hot-toast";
-import TransactionSubmitted from "../../components/TransactionSubmitted";
 import NumberFormat from "react-number-format";
 import { SmithContract } from "../../../packages/neo/contracts/ftw/smith";
 import { DEPLOY_FEE } from "../../../packages/neo/contracts/ftw/smith/consts";
 import { detectEmojiInString } from "./helpers";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
+import { balanceCheck } from "../../../packages/neo/utils";
 
 interface IActionModal {
   onClose: () => void;
@@ -38,19 +38,23 @@ const NEP17FormModal = ({ onClose }: IActionModal) => {
       );
     } else {
       if (connectedWallet) {
-        try {
-          const res = await new SmithContract(network).createNEP17(
-            connectedWallet,
-            values.name,
-            values.symbol,
-            values.decimals,
-            values.totalSupply,
-            values.author,
-            values.description
-          );
-          setTxid(res);
-        } catch (e: any) {
-          toast.error(e.message);
+        if (balanceCheck(connectedWallet.balances, 20)) {
+          try {
+            const res = await new SmithContract(network).createNEP17(
+              connectedWallet,
+              values.name,
+              values.symbol,
+              values.decimals,
+              values.totalSupply,
+              values.author,
+              values.description
+            );
+            setTxid(res);
+          } catch (e: any) {
+            toast.error(e.message);
+          }
+        } else {
+          toast.error("You must have more than 20 GAS.");
         }
       } else {
         toast.error("Please connect wallet.");
@@ -87,6 +91,7 @@ const NEP17FormModal = ({ onClose }: IActionModal) => {
               </div>
             </div>
           </div>
+          <small>NOTE: Please do not use EMOJI or Unicode.</small>
           <hr />
           <div className="field">
             <label className="label">Token Name</label>

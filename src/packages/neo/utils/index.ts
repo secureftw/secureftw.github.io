@@ -1,5 +1,6 @@
 import { sc, u, wallet } from "@cityofzion/neon-core";
 import moment from "moment";
+import { IBalance } from "../wallet/interfaces";
 
 export const truncateAddress = (address: string) => {
   return `${address.substring(0, 4)}...${address.substr(address.length - 2)}`;
@@ -62,3 +63,18 @@ export function truncateDecimal(v, p) {
   const s = Math.pow(10, p || 0);
   return Math.trunc(s * v) / s;
 }
+
+export const balanceCheck = (
+  balances: IBalance[],
+  requiredAmount: number
+): boolean => {
+  let hasBalance = false;
+  balances.forEach((bal) => {
+    if (bal.symbol === "GAS") {
+      if (parseFloat(bal.amount) > requiredAmount) {
+        hasBalance = true;
+      }
+    }
+  });
+  return hasBalance;
+};

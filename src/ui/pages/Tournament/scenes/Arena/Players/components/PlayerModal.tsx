@@ -11,6 +11,7 @@ interface IPlayerModalProps {
   player: IRuneMeta & { tokenId: string; gameOwner: string };
   onClose: () => void;
 }
+
 const PlayerModal = ({ arenaNo, player, onClose }: IPlayerModalProps) => {
   const [txid, setTxid] = useState("");
   const { connectedWallet, network } = useWallet();
@@ -39,6 +40,8 @@ const PlayerModal = ({ arenaNo, player, onClose }: IPlayerModalProps) => {
                   <p>{player.phase}</p>
                   <strong>Luck</strong>
                   <p>{player.luck}</p>
+                  <strong>Owner</strong>
+                  <p>{player.gameOwner}</p>
                 </div>
               </div>
             </div>

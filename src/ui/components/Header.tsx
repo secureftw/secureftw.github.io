@@ -112,7 +112,7 @@ const Header = () => {
           <div className="navbar-item">
             <NetworkSwitch />
           </div>
-          <PendingTransaction />
+          {/*<PendingTransaction />*/}
           <div className="navbar-item">
             <div className="buttons">
               {connectedWallet ? (

@@ -6,12 +6,13 @@ import { SmithContract } from "../../../packages/neo/contracts/ftw/smith";
 import { DEPLOY_FEE } from "../../../packages/neo/contracts/ftw/smith/consts";
 import { detectEmojiInString } from "./helpers";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
+import { balanceCheck } from "../../../packages/neo/utils";
 
 interface IActionModal {
   onClose: () => void;
 }
 const NEP11FormModal = ({ onClose }: IActionModal) => {
-  const { network, connectedWallet, openWalletModal } = useWallet();
+  const { network, connectedWallet } = useWallet();
   const [txid, setTxid] = useState<string>();
   const [values, setValues] = useState({
     name: "",
@@ -34,18 +35,22 @@ const NEP11FormModal = ({ onClose }: IActionModal) => {
       );
     } else {
       if (connectedWallet) {
-        try {
-          const res = await new SmithContract(network).createNEP11(
-            connectedWallet,
-            values.name,
-            values.symbol,
-            values.author,
-            values.description,
-            values.email
-          );
-          setTxid(res);
-        } catch (e: any) {
-          toast.error(e.message);
+        if (balanceCheck(connectedWallet.balances, 20)) {
+          try {
+            const res = await new SmithContract(network).createNEP11(
+              connectedWallet,
+              values.name,
+              values.symbol,
+              values.author,
+              values.description,
+              values.email
+            );
+            setTxid(res);
+          } catch (e: any) {
+            toast.error(e.message);
+          }
+        } else {
+          toast.error("You must have more than 20 GAS.");
         }
       } else {
         toast.error("Please connect wallet.");
@@ -81,6 +86,7 @@ const NEP11FormModal = ({ onClose }: IActionModal) => {
               </div>
             </div>
           </div>
+          <small>NOTE: Please do not use EMOJI or Unicode.</small>
           <hr />
           <div className="field">
             <label className="label">NFT Contract Name</label>

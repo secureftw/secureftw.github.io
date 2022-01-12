@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { NFTContract } from "../../../../packages/neo/contracts";
 import { INetworkType } from "../../../../packages/neo/network";
 import { IRuneMeta } from "../../../../packages/neo/contracts/ftw/nft/interfaces";
 import { RestAPI } from "../../../../packages/neo/api";
+// tslint:disable-next-line:no-submodule-imports
 import { FaStar } from "react-icons/fa";
 
 interface IDisplayRuneProps {

@@ -44,6 +44,13 @@ const History = ({ arenaNo }: IHistoryProps) => {
     }
     fetchHistory();
   }, [connectedWallet, network, page]);
+
+  let totalPages = 0;
+  if (history) {
+    const itemsPerPage = parseFloat(arenaNo) >= 64 ? 2 : 5;
+    totalPages = Math.ceil(history.totalItems / itemsPerPage);
+  }
+
   return (
     <div>
       {isLoading ? (
@@ -100,11 +107,11 @@ const History = ({ arenaNo }: IHistoryProps) => {
             ) : (
               <div>Game hasn't been played</div>
             )}
-            {history && history.totalPages > 1 && (
+            {totalPages > 1 && (
               <div className="media">
                 <div className="media-content">
                   <Pagination
-                    pages={history.totalPages}
+                    pages={totalPages}
                     currentPage={page}
                     onChange={(_page) => {
                       if (page !== _page) {

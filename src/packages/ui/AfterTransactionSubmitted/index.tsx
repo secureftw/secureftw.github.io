@@ -73,7 +73,7 @@ const AfterTransactionSubmitted = ({
               <a
                 target="_blank"
                 href={`https://${
-                  network === TESTNET && "testnet."
+                  network === TESTNET ? "testnet." : ""
                 }explorer.onegate.space/transactionInfo/${txid}`}
               >
                 View txid on explorer
