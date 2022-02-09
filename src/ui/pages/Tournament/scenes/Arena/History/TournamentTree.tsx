@@ -5,6 +5,7 @@ import { fight } from "../helpers";
 import { useWallet } from "../../../../../../packages/provider";
 
 interface ITournamentTree {
+  gameNo: string;
   champ: string;
   nonce: string;
   tree: IPlayer[];
@@ -17,7 +18,13 @@ function* chunks(arr, n) {
   }
 }
 
-const TournamentTree = ({ onClick, champ, tree, nonce }: ITournamentTree) => {
+const TournamentTree = ({
+  gameNo,
+  onClick,
+  champ,
+  tree,
+  nonce,
+}: ITournamentTree) => {
   const { network } = useWallet();
 
   let capacity = tree.length;
@@ -34,7 +41,8 @@ const TournamentTree = ({ onClick, champ, tree, nonce }: ITournamentTree) => {
           match[0].luck,
           match[1].phase,
           match[1].luck,
-          nonce
+          nonce,
+          gameNo
         );
         if (res === "A") {
           winners.push(match[0]);
@@ -74,7 +82,8 @@ const TournamentTree = ({ onClick, champ, tree, nonce }: ITournamentTree) => {
                 arr[0].luck,
                 arr[1].phase,
                 arr[1].luck,
-                nonce
+                nonce,
+                gameNo
               );
               return (
                 <div

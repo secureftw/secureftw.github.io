@@ -5,8 +5,6 @@ import { TournamentContract } from "../../../../../../packages/neo/contracts/ftw
 import NFTDetailModal from "./NFTDetailModal";
 import HistoryTable from "./HistoryTable";
 import Replay from "./Replay";
-import PlayButton from "../../../components/PlayButton";
-import { ADMIN_FOR_PLAY } from "../../../../../../packages/neo/contracts/ftw/tournament/consts";
 import AfterTransactionSubmitted from "../../../../../../packages/ui/AfterTransactionSubmitted";
 import Modal from "../../../../../components/Modal";
 
@@ -14,7 +12,6 @@ interface IHistoryProps {
   arenaNo: string;
 }
 const History = ({ arenaNo }: IHistoryProps) => {
-  const [playTxid, setPlayTxid] = useState("");
   const [claimTxid, setClaimTxid] = useState("");
   const [page, setPage] = useState(1);
   const [nftModalActive, setNftModalActive] = useState();
@@ -60,32 +57,7 @@ const History = ({ arenaNo }: IHistoryProps) => {
       ) : (
         <>
           <div className="box">
-            <div className="level is-mobile">
-              <div className="level-left">
-                <div className="level-item">
-                  <h3 className="title">History</h3>
-                </div>
-              </div>
-
-              {ADMIN_FOR_PLAY[network].length !== 0 &&
-              ADMIN_FOR_PLAY[network].includes(
-                connectedWallet?.account.address
-              ) ? (
-                <div className="level-right">
-                  <div className="level-item">
-                    <PlayButton onSubmitted={setPlayTxid} arenaNo={arenaNo} />
-                  </div>
-                </div>
-              ) : ADMIN_FOR_PLAY[network].length === 0 ? (
-                <div className="level-right">
-                  <div className="level-item">
-                    <PlayButton onSubmitted={setPlayTxid} arenaNo={arenaNo} />
-                  </div>
-                </div>
-              ) : (
-                <div></div>
-              )}
-            </div>
+            <h3 className="title">History</h3>
             {history.items && history.items.length > 0 ? (
               history.items.map((game) => {
                 return (
@@ -144,21 +116,10 @@ const History = ({ arenaNo }: IHistoryProps) => {
         />
       )}
 
-      {playTxid && (
-        <Modal onClose={() => setPlayTxid("")}>
-          <AfterTransactionSubmitted
-            txid={playTxid}
-            network={network}
-            onSuccess={() => setPlayTxid("")}
-            onError={() => setPlayTxid("")}
-          />
-        </Modal>
-      )}
-
       {claimTxid && (
         <Modal onClose={() => setClaimTxid("")}>
           <AfterTransactionSubmitted
-            txid={playTxid}
+            txid={claimTxid}
             network={network}
             onSuccess={() => setClaimTxid("")}
             onError={() => setClaimTxid("")}

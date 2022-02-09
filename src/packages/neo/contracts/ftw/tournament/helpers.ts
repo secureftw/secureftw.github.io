@@ -42,6 +42,9 @@ const parseGame = (stackItem): IHistoryGame[] => {
       fee: item.value[7].value,
       championPrize: item.value[8].value,
       createdAt: item.value[9].value,
+      champOwner: item.value[10]
+        ? base64ToAddress(item.value[10].value)
+        : undefined,
     };
   });
 };
@@ -55,8 +58,8 @@ export const calculateClaimableAmount = (
     parseFloat(history.fee) -
     parseFloat(history.championPrize);
   totalAmount = totalAmount + parseFloat(history.rollover);
-  const ownershipPercentage =
-    (((betAmount * 1000) / parseFloat(history.betsOnChampion)) * 1000) / 100;
-  const myClaimAble = (totalAmount * ownershipPercentage) / (100 * 100);
+  let myClaimAble =
+    (totalAmount * betAmount) / parseFloat(history.betsOnChampion);
+  myClaimAble = Math.floor(myClaimAble);
   return toDecimal(myClaimAble.toString());
 };

@@ -49,7 +49,14 @@ export const base64ToFixed8 = (str: string) => {
 };
 
 export const toDecimal = (val: string): number => {
-  return parseFloat(u.BigInteger.fromNumber(val).toDecimal(8).toString());
+  try {
+    const amount = parseFloat(
+      u.BigInteger.fromNumber(parseFloat(val)).toDecimal(8).toString()
+    );
+    return amount;
+  } catch (e) {
+    return 0;
+  }
 };
 
 // export const toNumber = () => {

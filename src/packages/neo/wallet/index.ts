@@ -1,8 +1,9 @@
 import neo3Dapi from "neo3-dapi";
 import { ITransaction, IWalletType } from "./interfaces";
-import { DEV, NEO_LINE, O3, WALLET_LIST } from "../consts";
+import { DEV, NEO_LINE, O3, ONE_GATE, WALLET_LIST } from "../consts";
+import { NeoDapi } from "@neongd/neo-dapi";
 import { DevWallet } from "./dev-wallet";
-import { rpc, sc, tx, wallet as NeonWallet } from "@cityofzion/neon-core";
+import { tx, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { INetworkType, Network } from "../network";
 import { LocalStorage } from "../local-storage";
 import moment from "moment";
@@ -30,6 +31,26 @@ export class WalletAPI {
       },
       network.defaultNetwork
     );
+    // TODO: Need to some sort of validation for balances in case wallet doesn't have any address?
+    return {
+      instance,
+      provider,
+      account,
+      network,
+      balances: balances[account.address],
+    };
+  };
+
+  private OneGate = async () => {
+    // @ts-ignore
+    const instance = new NeoDapi(window.OneGate);
+    const provider = await instance.getProvider();
+    const account = await instance.getAccount();
+    const network = await instance.getNetworks();
+    const balances = await instance.getNep17Balances({
+      address: account.address,
+      assetHashes: [],
+    });
     // TODO: Need to some sort of validation for balances in case wallet doesn't have any address?
     return {
       instance,
@@ -87,6 +108,9 @@ export class WalletAPI {
         case NEO_LINE:
           wallet = await this.NeoLine();
           break;
+        case ONE_GATE:
+          wallet = await this.OneGate();
+          break;
         case DEV:
           wallet = await this.Dev(defaultNetwork);
           break;
@@ -96,7 +120,7 @@ export class WalletAPI {
         ...wallet,
       };
     } catch (e: any) {
-      throw new Error(e.description);
+      throw new Error(e.description ? e.description : e.message);
     }
   };
 
@@ -105,7 +129,9 @@ export class WalletAPI {
     currentNetwork: INetworkType,
     senderAddress: string,
     invokeScript: any,
-    extraSystemFee?: string
+    extraSystemFee?: string,
+    testInvoke?: boolean,
+    isGlobal?: boolean
   ): Promise<string> => {
     const { instance, network } = await this.init(currentNetwork);
     if (network.defaultNetwork !== currentNetwork) {
@@ -120,27 +146,27 @@ export class WalletAPI {
     invokeScript.signers = [
       {
         account: NeonWallet.getScriptHashFromAddress(senderAddress),
-        scopes: tx.WitnessScope.CalledByEntry,
+        scopes: isGlobal
+          ? tx.WitnessScope.Global
+          : tx.WitnessScope.CalledByEntry,
       },
     ];
 
-    // const rpcClient = Network.getRPCClient(currentNetwork);
-    // const transaction = await DevWallet.build(rpcClient, invokeScript);
-    // console.log(script);
-    // const invokeFunctionResponse = await rpcClient.invokeScript(
-    //   transaction.script,
-    //   transaction.signers
-    // );
-    // console.log(invokeFunctionResponse);
+    // Do test invoke if required.
+    if (testInvoke) {
+      const rpcClient = Network.getRPCClient(currentNetwork);
+      const transaction = await DevWallet.build(rpcClient, invokeScript);
+      const invokeFunctionResponse = await rpcClient.invokeScript(
+        transaction.script,
+        transaction.signers
+      );
+      if (invokeFunctionResponse.state === "FAULT") {
+        throw new Error(invokeFunctionResponse.exception as string);
+      }
+    }
+
     try {
-	    const rpcClient = Network.getRPCClient(currentNetwork);
-	    const transaction = await DevWallet.build(rpcClient, invokeScript);
       const res = await instance.invoke(invokeScript, currentNetwork);
-      // if (this.walletType === DEV) {
-      //   res = await instance.invoke(invokeScript, currentNetwork);
-      // } else {
-      //   res = await instance.invoke(invokeScript);
-      // }
       const submittedTx: ITransaction = {
         network,
         wallet: this.walletType,

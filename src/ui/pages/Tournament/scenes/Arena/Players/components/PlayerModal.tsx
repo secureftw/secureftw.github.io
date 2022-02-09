@@ -1,20 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IRuneMeta } from "../../../../../../../packages/neo/contracts/ftw/nft/interfaces";
 import Modal from "../../../../../../components/Modal";
 import { useWallet } from "../../../../../../../packages/provider";
 import BetButton from "../../../../components/BetButton";
 import LeaveButton from "../../../../components/LeaveButton";
 import AfterTransactionSubmitted from "../../../../../../../packages/ui/AfterTransactionSubmitted";
+import { TournamentContract } from "../../../../../../../packages/neo/contracts/ftw/tournament";
+import { toDecimal } from "../../../../../../../packages/neo/utils";
 
 interface IPlayerModalProps {
   arenaNo: string;
+  gameNo?: number;
   player: IRuneMeta & { tokenId: string; gameOwner: string };
   onClose: () => void;
 }
 
-const PlayerModal = ({ arenaNo, player, onClose }: IPlayerModalProps) => {
+const PlayerModal = ({
+  arenaNo,
+  gameNo,
+  player,
+  onClose,
+}: IPlayerModalProps) => {
   const [txid, setTxid] = useState("");
   const { connectedWallet, network } = useWallet();
+  const [status, setStatus] = useState({
+    totalBets: "",
+    userBets: "",
+  });
+  const [isLoading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    async function fetchContractStatus(_gameNo) {
+      setError("");
+      setLoading(true);
+      try {
+        const res = await new TournamentContract(network).getBetOnPlayer(
+          arenaNo,
+          _gameNo,
+          player.tokenId,
+          connectedWallet ? connectedWallet.account.address : undefined
+        );
+        setStatus(res);
+      } catch (e: any) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (gameNo) {
+      fetchContractStatus(gameNo);
+    }
+  }, [gameNo, network]);
   return (
     <Modal onClose={onClose}>
       <div>
@@ -42,6 +78,14 @@ const PlayerModal = ({ arenaNo, player, onClose }: IPlayerModalProps) => {
                   <p>{player.luck}</p>
                   <strong>Owner</strong>
                   <p>{player.gameOwner}</p>
+                  <strong>Current support amount</strong>
+                  <p>{toDecimal(status.totalBets)}</p>
+                  {connectedWallet && (
+                    <>
+                      <strong>My support amount</strong>
+                      <p>{toDecimal(status.userBets)}</p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

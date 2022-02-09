@@ -6,6 +6,10 @@ export const GALLERY_PATH = "/NFT/gallery";
 export const TOURNAMENT_PATH = "/arena";
 export const SMITH_PATH = "/smith";
 export const COLLECTION_PATH = "/NFT/collection";
+export const SWAP_PATH = "/swap";
+export const SWAP_PATH_LIQUIDITY = "/swap/liquidity";
+export const SWAP_PATH_FARM = "/swap/claim";
+export const FUSION_PATH = "/fusion";
 
 export const MENU = [
   {
@@ -24,8 +28,18 @@ export const MENU = [
     network: [PRIVATENET, TESTNET, MAINNET],
   },
   {
+    label: "Swap",
+    path: SWAP_PATH,
+    network: [PRIVATENET, TESTNET],
+  },
+  {
     label: "GAS-FI",
     path: FARM_PATH,
+    network: [PRIVATENET, TESTNET],
+  },
+  {
+    label: "Fusion",
+    path: FUSION_PATH,
     network: [PRIVATENET, TESTNET],
   },
 ];

@@ -1,11 +1,12 @@
 import { INetworkType, Network } from "../../../network";
-import { TOURNAMENT_SCRIPT_HASH } from "./consts";
+import { SUPPORT_TICKET_PRICE, TOURNAMENT_SCRIPT_HASH } from "./consts";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { RUNE_SCRIPT_HASH } from "../nft";
 import { parsePlayer, parseHistory } from "./helpers";
 import { GAS_SCRIPT_HASH } from "../../../consts";
-import { toDecimal } from "../../../utils";
+import { base64ToAddress, toDecimal } from "../../../utils";
+import { u } from "@cityofzion/neon-core";
 
 export class TournamentContract {
   network: INetworkType;
@@ -48,7 +49,6 @@ export class TournamentContract {
       this.network,
       connectedWallet.account.address,
       invokeScript
-      // "0.01"
     );
   };
 
@@ -70,7 +70,8 @@ export class TournamentContract {
       this.network,
       connectedWallet.account.address,
       invokeScript,
-      "0.1"
+      "0.05",
+      true
     );
   };
 
@@ -112,7 +113,10 @@ export class TournamentContract {
       args: [
         { type: "Address", value: connectedWallet.account.address },
         { type: "Hash160", value: this.contractHash },
-        { type: "Integer", value: "10000000" },
+        {
+          type: "Integer",
+          value: u.BigInteger.fromDecimal(SUPPORT_TICKET_PRICE, 8).toString(),
+        },
         {
           type: "Array",
           value: [
@@ -126,7 +130,8 @@ export class TournamentContract {
       this.network,
       connectedWallet.account.address,
       invokeScript,
-      "0.01"
+      undefined,
+      true
     );
   };
 
@@ -224,11 +229,54 @@ export class TournamentContract {
     };
   };
 
+  getBetOnPlayer = async (
+    arenaNo: string,
+    gameNo: string,
+    tokenId: string,
+    address: string
+  ): Promise<{
+    totalBets: string;
+    userBets: string;
+  }> => {
+    const scripts: any = [];
+    const script = {
+      scriptHash: this.contractHash,
+      operation: "getBetsOnPlayer",
+      args: [
+        { type: "Integer", value: arenaNo },
+        { type: "Integer", value: gameNo },
+        { type: "String", value: tokenId },
+      ],
+    };
+    scripts.push(script);
+
+    if (address) {
+      const script1 = {
+        scriptHash: this.contractHash,
+        operation: "getBetsOnAccount",
+        args: [
+          { type: "Integer", value: arenaNo },
+          { type: "Integer", value: gameNo },
+          { type: "String", value: tokenId },
+          { type: "Address", value: address },
+        ],
+      };
+      scripts.push(script1);
+    }
+    const res = await Network.read(this.network, scripts);
+    return {
+      totalBets: res.stack[0].value as string,
+      userBets: res.stack[1] ? (res.stack[1].value as string) : "",
+    };
+  };
+
   getCurrentPrize = async (
     arenaNo: string
   ): Promise<{
     prize: number;
     gameNo: number;
+    previousChampWallet?: string;
+    timeElapsedFromPreviousGame?: string;
   }> => {
     const script = {
       scriptHash: this.contractHash,
@@ -240,10 +288,31 @@ export class TournamentContract {
       operation: "getGameHeight",
       args: [{ type: "Integer", value: arenaNo }],
     };
-    const res = await Network.read(this.network, [script, script1]);
+    const script2 = {
+      scriptHash: this.contractHash,
+      operation: "getPreviousWinner",
+      args: [{ type: "Integer", value: arenaNo }],
+    };
+    const script3 = {
+      scriptHash: this.contractHash,
+      operation: "getTimeElapsed",
+      args: [{ type: "Integer", value: arenaNo }],
+    };
+    const res = await Network.read(this.network, [
+      script,
+      script1,
+      script2,
+      script3,
+    ]);
     return {
       prize: toDecimal(res.stack[0].value as string),
       gameNo: parseFloat(res.stack[1].value as string) + 1,
+      previousChampWallet: res.stack[2].value
+        ? base64ToAddress(res.stack[2].value as string)
+        : undefined,
+      timeElapsedFromPreviousGame: res.stack[3].value
+        ? (res.stack[3].value as string)
+        : undefined,
     };
   };
 }

@@ -5,9 +5,11 @@ import Header from "./components/Header";
 import {
   COLLECTION_PATH,
   FARM_PATH,
+	FUSION_PATH,
   GALLERY_PATH,
   HOME_PATH,
   SMITH_PATH,
+	SWAP_PATH,
   TOURNAMENT_PATH,
 } from "../consts";
 import { WalletContextProvider } from "../packages/provider";
@@ -20,6 +22,8 @@ import MobileMenuSlider from "./components/MobileMenuSlider";
 import Home from "./pages/Home";
 import Smith from "./pages/Smith";
 import Tournament from "./pages/Tournament";
+import Swap from "./pages/Swap";
+import Fusion from "./pages/Fusion";
 
 const App = () => {
   return (
@@ -38,6 +42,8 @@ const App = () => {
         <Route path={SMITH_PATH} component={Smith} />
         <Route path={FARM_PATH} component={Farm} />
         <Route path={COLLECTION_PATH} component={MyCollection} />
+        <Route path={SWAP_PATH} component={Swap} />
+        <Route path={FUSION_PATH} component={Fusion} />
         <MobileMenuSlider />
         <WalletSidebar />
       </Router>

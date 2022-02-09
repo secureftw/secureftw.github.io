@@ -1,38 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { TOURNAMENT_PATH } from "../../../../../consts";
 import { useWallet } from "../../../../../packages/provider";
-import { TournamentContract } from "../../../../../packages/neo/contracts/ftw/tournament";
+import PlayButton from "../../components/PlayButton";
+import Modal from "../../../../components/Modal";
+import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
+import { ADMIN_FOR_PLAY } from "../../../../../packages/neo/contracts/ftw/tournament/consts";
 
 interface IBanner {
   arenaNo: string;
-}
-const Banner = ({ arenaNo }: IBanner) => {
-  const location = useLocation();
-  const [status, setStatus] = useState<{
+  pathname: string;
+  status?: {
     prize: number;
     gameNo: number;
-  }>();
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+    previousChampWallet?: string;
+    timeElapsedFromPreviousGame?: string;
+  };
+}
+const Banner = ({ arenaNo, status, pathname }: IBanner) => {
   const { connectedWallet, network } = useWallet();
-  useEffect(() => {
-    async function fetchBetAmount() {
-      setError("");
-      setLoading(true);
-      try {
-        const res = await new TournamentContract(network).getCurrentPrize(
-          arenaNo
-        );
-        setStatus(res);
-      } catch (e: any) {
-        setError(e.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchBetAmount();
-  }, [network, location.pathname]);
+  const [playTxid, setPlayTxid] = useState("");
+
+  let hasPermissionToPlay = false;
+  if (ADMIN_FOR_PLAY[network].includes(connectedWallet?.account.address)) {
+    hasPermissionToPlay = true;
+  }
+  if (
+    connectedWallet &&
+    status &&
+    connectedWallet.account.address === status.previousChampWallet
+  ) {
+    hasPermissionToPlay = true;
+  }
   return (
     <section className="hero is-white">
       <div className="hero-body">
@@ -49,7 +48,18 @@ const Banner = ({ arenaNo }: IBanner) => {
 
             <div className="level-left">
               <div className="level-item">
-                <h1 className="title is-marginless">ARENA {arenaNo}</h1>
+                <div>
+                  <h1 className="title mb-3">ARENA {arenaNo}</h1>
+                  {hasPermissionToPlay && (
+                    <div className="has-text-centered">
+                      <PlayButton
+                        onSubmitted={setPlayTxid}
+                        arenaNo={arenaNo}
+                        status={status}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -72,7 +82,7 @@ const Banner = ({ arenaNo }: IBanner) => {
             <ul>
               <li
                 className={
-                  location.pathname === TOURNAMENT_PATH + "/" + arenaNo
+                  pathname === TOURNAMENT_PATH + "/" + arenaNo
                     ? "is-active"
                     : ""
                 }
@@ -81,8 +91,7 @@ const Banner = ({ arenaNo }: IBanner) => {
               </li>
               <li
                 className={
-                  location.pathname ===
-                  TOURNAMENT_PATH + "/" + arenaNo + "/history"
+                  pathname === TOURNAMENT_PATH + "/" + arenaNo + "/history"
                     ? "is-active"
                     : ""
                 }
@@ -95,6 +104,17 @@ const Banner = ({ arenaNo }: IBanner) => {
           </div>
         </nav>
       </div>
+
+      {playTxid && (
+        <Modal onClose={() => setPlayTxid("")}>
+          <AfterTransactionSubmitted
+            txid={playTxid}
+            network={network}
+            onSuccess={() => setPlayTxid("")}
+            onError={() => setPlayTxid("")}
+          />
+        </Modal>
+      )}
     </section>
   );
 };

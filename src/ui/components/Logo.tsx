@@ -4,7 +4,7 @@ const Logo = () => {
     <>
       <img
         alt="Forthewin Logo"
-        src={"/logo/512_512.svg"}
+        src={"/logo/FTW_512_512.svg"}
         width="36px"
         height="36px"
       />

@@ -57,7 +57,7 @@ const Home = (props) => {
                   // style={{ display: "flex", justifyContent: "center" }}
                 >
                   <video style={{ width: "450px" }} autoPlay loop>
-                    <source src={"/migration.mp4"} type="video/mp4" />
+                    <source src={"/assets/migration.mp4"} type="video/mp4" />
                   </video>
                 </div>
               </div>

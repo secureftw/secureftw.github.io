@@ -13,7 +13,7 @@ export class RestAPI {
   }
 
   fetchResult = async (url: string) => {
-    const res = await fetch(url);
+    const res = await fetch(url, { mode: "cors" });
     const json = await res.json();
     if (res.status === 200) {
       return json;

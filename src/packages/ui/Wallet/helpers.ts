@@ -2,16 +2,19 @@ import { CONST } from "../../neo";
 
 export const getWalletIcon = (key: string) => {
   let svg = "";
-  switch (key){
+  switch (key) {
     case CONST.DEV:
-      svg = "/dev.png"
+      svg = "/icons/dev.png";
       break;
     case CONST.O3:
-      svg = "/o3.svg"
+      svg = "/icons/o3.svg";
       break;
     case CONST.NEO_LINE:
-      svg = "/neoline.svg"
+      svg = "/icons/neoline.svg";
+      break;
+    case CONST.ONE_GATE:
+      svg = "/icons/onegate.png";
       break;
   }
-  return svg
-}
+  return svg;
+};

@@ -1,4 +1,5 @@
-export const fight = (aPhase, aLuck, bPhase, bLuck, nonce) => {
+export const fight = (aPhase, aLuck, bPhase, bLuck, nonce, gameNo) => {
+  gameNo = parseFloat(gameNo);
   aLuck = parseFloat(aLuck);
   bLuck = parseFloat(bLuck);
   nonce = parseFloat(nonce);
@@ -120,7 +121,8 @@ export const fight = (aPhase, aLuck, bPhase, bLuck, nonce) => {
     case "Dark":
       switch (bPhase) {
         case "Light":
-          aLuck = aLuck - 3;
+          // Formula changed from Game#5
+          aLuck = aLuck - (gameNo > 4 ? 5 : 3);
           break;
         default:
           aLuck = aLuck + 3;
@@ -130,7 +132,8 @@ export const fight = (aPhase, aLuck, bPhase, bLuck, nonce) => {
     case "Light":
       switch (bPhase) {
         case "Dark":
-          aLuck = aLuck + 3;
+          // Formula changed from Game#5
+          aLuck = aLuck + (gameNo > 4 ? 5 : 3);
           break;
         default:
           aLuck = aLuck - 3;

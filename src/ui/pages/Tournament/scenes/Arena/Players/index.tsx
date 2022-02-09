@@ -6,7 +6,7 @@ import PlayerModal from "./components/PlayerModal";
 import { IRuneMeta } from "../../../../../../packages/neo/contracts/ftw/nft/interfaces";
 import RegisterButton from "./components/ArenaRegisterButton";
 
-const Players = ({ arenaNo }: { arenaNo: string }) => {
+const Players = ({ arenaNo, gameNo }: { arenaNo: string; gameNo?: number }) => {
   const [playerModalActive, setPlayerModalActive] = useState<
     IRuneMeta & { tokenId: string; gameOwner: string }
   >();
@@ -31,7 +31,7 @@ const Players = ({ arenaNo }: { arenaNo: string }) => {
       }
     }
     fetchContractStatus();
-  }, [connectedWallet, network]);
+  }, [connectedWallet, network, arenaNo, gameNo]);
   return (
     <div>
       {isLoading ? (
@@ -76,6 +76,7 @@ const Players = ({ arenaNo }: { arenaNo: string }) => {
       {playerModalActive && (
         <PlayerModal
           arenaNo={arenaNo}
+          gameNo={gameNo}
           onClose={() => setPlayerModalActive(undefined)}
           player={playerModalActive}
         />

@@ -1,11 +1,11 @@
 import { CONST as NEON_CONST } from "@cityofzion/neon-core";
-import { INetworkType } from "../network";
 import { IWalletType } from "../wallet/interfaces";
 
 /* Wallets */
 export const O3 = "O3";
 export const NEO_LINE = "NEO_LINE";
 export const DEV = "DEV";
+export const ONE_GATE = "ONE_GATE";
 export const WALLET_LIST: {
   label: string;
   key: IWalletType;
@@ -22,6 +22,10 @@ export const WALLET_LIST: {
     label: "O3",
     key: O3,
   },
+  // {
+  //   label: "OneGate",
+  //   key: ONE_GATE,
+  // },
 ];
 
 /* Network types */
@@ -61,11 +65,7 @@ export const MAINNET_CONFIG_2 = {
 export const GAS_SCRIPT_HASH = NEON_CONST.NATIVE_CONTRACT_HASH.GasToken;
 export const NEO_SCRIPT_HASH = NEON_CONST.NATIVE_CONTRACT_HASH.NeoToken;
 
-export const TOKEN_LIST = (network: INetworkType) => [
-  NEO_SCRIPT_HASH,
-  GAS_SCRIPT_HASH,
-  // RUNE_SCRIPT_HASH[network]
-];
+export const TOKEN_LIST = () => [NEO_SCRIPT_HASH, GAS_SCRIPT_HASH];
 
 /* Dev wallet */
 export const DEV_WALLET_PRIVATE_KEY =

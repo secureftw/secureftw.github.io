@@ -14,7 +14,7 @@ const ArenaHome = (props) => {
   return (
     <div
       style={{
-        backgroundImage: 'url("arena-bg.jpeg")',
+        backgroundImage: 'url("/assets/arena-bg.jpeg")',
         backgroundSize: "cover",
         height: "calc(100vh - 52px)",
         backgroundPosition: "center",

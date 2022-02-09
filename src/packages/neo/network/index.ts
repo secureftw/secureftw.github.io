@@ -109,7 +109,8 @@ export class Network {
 
   static read = async (
     network: INetworkType,
-    scripts: sc.ContractCallJson[]
+    scripts: sc.ContractCallJson[],
+    passFaultCheck?: boolean
   ): Promise<InvokeResult> => {
     const rpcClient = Network.getRPCClient(network);
     const sb = new sc.ScriptBuilder();
@@ -121,7 +122,7 @@ export class Network {
       sb.emitAppCall(script.scriptHash, script.operation, params);
     });
     const res = await rpcClient.invokeScript(u.HexString.fromHex(sb.build()));
-    if (res.state === "FAULT") {
+    if (!passFaultCheck && res.state === "FAULT") {
       console.error("RPC read error" + res);
       throw new Error(res.exception ? res.exception : "Network error");
     }

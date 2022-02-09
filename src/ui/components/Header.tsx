@@ -7,10 +7,11 @@ import { useApp } from "../../common/hooks/use-app";
 import { useWallet } from "../../packages/provider";
 import { utils } from "../../packages/neo";
 import { COLLECTION_PATH, MENU } from "../../consts";
-import PendingTransaction from "../../packages/ui/PendingTransaction";
 import WalletDropdown from "./WalletDropdown";
 import { getWalletIcon } from "../../packages/ui/Wallet/helpers";
 import NetworkSwitch from "./NetworkSwitch";
+// tslint:disable-next-line:no-submodule-imports
+import { FaMedium, FaTwitter } from "react-icons/all";
 
 const Header = () => {
   const { toggleSidebar, toggleWalletSidebar } = useApp();
@@ -109,6 +110,22 @@ const Header = () => {
           </div>
         </div>
         <div className="navbar-end is-hidden-touch">
+          <div className="navbar-item">
+            <a
+              target="_blank"
+              href="https://twitter.com/N3_FTW_NETWORK"
+              className="button is-white is-small "
+            >
+              <FaTwitter />
+            </a>
+            <a
+              target="_blank"
+              href="https://medium.com/@Forthewin_network"
+              className="button is-white is-small"
+            >
+              <FaMedium />
+            </a>
+          </div>
           <div className="navbar-item">
             <NetworkSwitch />
           </div>

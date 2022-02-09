@@ -14,3 +14,6 @@ export const ADMIN_FOR_PLAY = {
   ],
   [CONST.MAINNET]: ["NS9QLsaY8RzN9fxTWj9AECyLaJvsk38XUb"],
 };
+
+export const SUPPORT_TICKET_PRICE = "0.2";
+export const TOURNAMENT_TIME_PADDING = 3600000;

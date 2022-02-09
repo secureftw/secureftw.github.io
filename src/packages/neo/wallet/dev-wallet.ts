@@ -76,7 +76,6 @@ export class DevWallet {
     txObj.sign(DevWallet.account, version.protocol.network);
     const txid = await rpcClient.sendRawTransaction(txObj);
     // // tslint:disable-next-line:no-console
-    // console.log(
     //   JSON.stringify(
     //     {
     //       RPC: rpc,

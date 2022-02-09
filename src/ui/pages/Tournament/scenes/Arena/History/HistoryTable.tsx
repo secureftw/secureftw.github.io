@@ -6,7 +6,6 @@ import { IRuneMeta } from "../../../../../../packages/neo/contracts/ftw/nft/inte
 import { INetworkType } from "../../../../../../packages/neo/network";
 import { IHistoryGame } from "../../../../../../packages/neo/contracts/ftw/tournament/interfaces";
 import ClaimButton from "../../../components/ClaimButton";
-import { u } from "@cityofzion/neon-core";
 import { toDecimal } from "../../../../../../packages/neo/utils";
 
 interface IDisplayRuneProps {
@@ -63,15 +62,20 @@ const HistoryTable = ({
           <br />
           Champ: {token.name} ({token.phase} / {token.luck})
           <br />
-          Total bets: {toDecimal(history.totalBets)}
+          {history.champOwner && (
+            <>
+              Champ address: {history.champOwner} <br />
+            </>
+          )}
+          Total supports: {toDecimal(history.totalBets)}GAS
           <br />
-          Rollover: {toDecimal(history.rollover)}
+          Rollover: {toDecimal(history.rollover)}GAS
           <br />
-          Total bets on champ: {toDecimal(history.betsOnChampion)}
+          Total supports on champ: {toDecimal(history.betsOnChampion)}GAS
           <br />
-          Fee: {toDecimal(history.fee)}
+          Champ reward: {toDecimal(history.championPrize)}GAS
           <br />
-          Champ prize: {toDecimal(history.championPrize)}
+          Operation reward: {toDecimal(history.fee)}GAS
         </div>
         <button onClick={() => onReplay()} className="button is-black is-small">
           <span className="icon">

@@ -56,8 +56,9 @@ const ClaimButton = ({ arenaNo, history, onClaimed }: IClaimButtonProps) => {
     if (connectedWallet) {
       fetchBetAmount(connectedWallet.account.address);
     }
-  }, [connectedWallet, network]);
+  }, [connectedWallet, network, history]);
   if (!connectedWallet) return <></>;
+	if (history.betsOnChampion === "0") return <></>;
   if (!status.betAmount) return <></>;
   return (
     <>
