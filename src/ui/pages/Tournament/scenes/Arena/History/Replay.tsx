@@ -24,7 +24,8 @@ const Replay = ({ arenaNo, gameHistory, onClick, onClose }: IReplayProps) => {
       </h1>
       <section className="modal-content" style={{ width: "100%" }}>
         <TournamentTree
-          gameNo={gameHistory.gameNo}
+          // Game formula was changed from game 5 except arena 4 and 2;
+          gameNo={parseFloat(arenaNo) < 8 ? "5" : gameHistory.gameNo}
           champ={gameHistory.champion}
           tree={gameHistory.tournamentTree}
           nonce={gameHistory.nonce}

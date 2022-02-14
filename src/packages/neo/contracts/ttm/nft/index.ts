@@ -1,8 +1,8 @@
-import { sc, u } from "@cityofzion/neon-core";
+import { u } from "@cityofzion/neon-core";
 import { INetworkType, Network } from "../../../network";
 import { parseProperties } from "./helpers";
 import { TTM_SCRIPT_HASH } from "./consts";
-
+const CRYPTONAUT_REGEX = /^C0/;
 export class TTMNFTContract {
   network: INetworkType;
   contractHash: string;
@@ -47,9 +47,11 @@ export class TTMNFTContract {
     // @ts-ignore
     for await (const item of res.stack[0].iterator) {
       const tokenId = u.HexString.fromBase64(item.value as string).toAscii();
-      const meta = await this.getProperties(tokenId);
-      // @ts-ignore
-      metaList.push({ tokenId, ...meta });
+      if (CRYPTONAUT_REGEX.test(tokenId)) {
+        const meta = await this.getProperties(tokenId);
+        // @ts-ignore
+        metaList.push({ tokenId, ...meta });
+      }
     }
     return metaList;
   };

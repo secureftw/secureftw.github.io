@@ -7,7 +7,7 @@ import { MAINNET } from "../../../../../packages/neo/consts";
 
 const ArenaHome = (props) => {
   const { network } = useWallet();
-  let ARENA_LIST = ["8", "16", "32", "64", "128", "256"];
+  let ARENA_LIST = ["4", "8", "16", "32", "64", "128", "256"];
   if (network === MAINNET) {
     ARENA_LIST = ["8", "16", "32", "64", "128"];
   }

@@ -1,123 +1,131 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import PageLayout from "../components/PageLayout";
-// tslint:disable-next-line:no-submodule-imports
-import DOTS from "vanta/dist/vanta.halo.min";
-import RuneLoading from "../../packages/ui/AfterTransactionSubmitted/RuneLoading";
-// import * as THREE from "three";
+import BgContainer from "../components/BgContainer";
+import { GALLERY_PATH, SMITH_PATH, SWAP_PATH } from "../../consts";
+import { ARENA_PATH } from "./Tournament/pageRoutes";
+import { Link } from "react-router-dom";
+import { useWallet } from "../../packages/provider";
+import { MAINNET, TESTNET } from "../../packages/neo/consts";
+import toast from "react-hot-toast";
 
-const Home = (props) => {
-  const [vantaEffect, setVantaEffect] = useState(0);
-  const myRef = useRef(null);
-  useEffect(() => {
-    if (!vantaEffect) {
-      setVantaEffect(
-        DOTS({
-          el: myRef.current,
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.0,
-          minWidth: 200.0,
-          backgroundColor: 0x80822,
-          size: 2.8,
-        })
-      );
-    }
-    return () => {
-      if (vantaEffect) {
-        // @ts-ignore
-        vantaEffect.destroy();
+const CARDS = [
+  {
+    title: "FTW Rune",
+    type: "NFT",
+    desc: "FTW Rune is an algorithmically generated NFT created and stored onchain.",
+    img: "assets/runes.png",
+    link: GALLERY_PATH,
+  },
+  {
+    title: "FTW Arena",
+    type: "GameFi",
+    desc: " FTW Runes against each other with the victor earning a GAS prize.",
+    img: "assets/arena-bg.jpeg",
+    link: ARENA_PATH,
+  },
+  {
+    title: "FTW Smith",
+    type: "Utility",
+    desc: "FTW Smith helps users to create and deploy fungible/Non-fungible token smart contracts without any codes.",
+    img: "assets/smith.png",
+    link: SMITH_PATH,
+  },
+  {
+    title: "FTW Swap",
+    type: "DeFi",
+    desc: "Coming soon. Try on our Testnet.",
+    img: "assets/swap.png",
+    link: SWAP_PATH,
+  },
+  // {
+  //   title: "FTW Lab",
+  //   type: "Testnet",
+  //   desc: "Preview FTW future apps.",
+  //   img: "assets/testnet.png",
+  //   link: SMITH_PATH,
+  // },
+];
+
+const Home = () => {
+  const { network, switchNetwork } = useWallet();
+  const onSwitchNetwork = () => {
+    if (network !== TESTNET) {
+      // eslint-disable-next-line no-restricted-globals
+      if (confirm("Are you sure to switch network?")) {
+        switchNetwork(TESTNET);
+        toast.success("Network switched");
       }
-    };
-  }, [vantaEffect]);
+    }
+  };
   return (
     <div>
-      <section className="hero is-white">
+      <section className="hero is-black">
         <div className="hero-body">
           <div className="container">
-            <div className="columns">
-              <div className="column is-flex" style={{ alignItems: "center" }}>
-                <div>
-                  <h1 className="title">Forthewin is back</h1>
-                  <p className="subtitle">
-                    Migrate your Neo-legacy FTX to the new <span>N3 FTW</span>
-                  </p>
-                  <a
-                    target="_blank"
-                    href="https://nepmigration.com/"
-                    className="button is-primary"
-                  >
-                    Go to Migrate
-                  </a>
-                </div>
-              </div>
-              <div className="column is-hidden-touch">
-                <div
-                  className="block"
-                  // style={{ display: "flex", justifyContent: "center" }}
-                >
-                  <video style={{ width: "450px" }} autoPlay loop>
-                    <source src={"/assets/migration.mp4"} type="video/mp4" />
-                  </video>
-                </div>
-              </div>
-            </div>
+            <h1 className="title">Forthewin Network</h1>
+            <p className="subtitle">
+              Building something cool decentralized stuff on NEO blockchain.{" "}
+            </p>
           </div>
         </div>
       </section>
       <PageLayout>
-        <div className="columns halo" ref={myRef}>
-          <div className="column">
-            <div className="has-background-white">
-              <div className="box content">
-                <h3>Neo-legacy</h3>
-                <h6>Symbol</h6>
-                <p>FTX</p>
-                <h6>Contract hash</h6>
-                <p>0xaac66f9779ca67d819d05492805d251dab02fc7b</p>
-                <h6>Total supply</h6>
-                <p>500,000,000</p>
-                <h6>Browser</h6>
-                <p>
-                  <a
-                    className="has-text-dark"
-                    target="_blank"
-                    href="https://neotracker.io/asset/aac66f9779ca67d819d05492805d251dab02fc7b"
-                  >
-                    Open
-                  </a>
-                </p>
+        <div className="columns is-multiline">
+          {CARDS.map((card) => {
+            return (
+              <div key={card.title} className="column is-4">
+                <div className="card">
+                  <div className="card-image is-clickable">
+                    <Link to={card.link}>
+                      <figure className="image">
+                        <BgContainer src={card.img} height="300px" />
+                      </figure>
+                    </Link>
+                  </div>
+                  <div className="card-content">
+                    <div className="media">
+                      <div className="media-content">
+                        <p className="title is-4">
+                          <Link className={"has-text-dark"} to={card.link}>
+                            {card.title}
+                          </Link>
+                        </p>
+                        <span className="tag is-primary">{card.type}</span>
+                      </div>
+                    </div>
+                    <div className="content" style={{ minHeight: "100px" }}>
+                      {card.desc}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="column">
-            <div className="has-background-white">
-              <div className="box content">
-                <h3>N3</h3>
-                <h6>Symbol</h6>
-                <p>FTW</p>
-                <h6>Contract hash</h6>
-                <p>
-                  <a
-                    target="_blank"
-                    className="has-text-dark"
-                    href="https://explorer.onegate.space/contractinfo/0x9f8b20c31bb9e45003f2d9f316d2caf1dcd1bf20"
-                  >
-                    0x9f8b20c31bb9e45003f2d9f316d2caf1dcd1bf20
-                  </a>
-                </p>
-                <h6>Total supply</h6>
-                <p>500,000,000</p>
-                <h6>Browser</h6>
-                <p>
-                  <a
-                    className="has-text-dark"
-                    target="_blank"
-                    href="https://explorer.onegate.space/NEP17tokeninfo/0x9f8b20c31bb9e45003f2d9f316d2caf1dcd1bf20"
-                  >
-                    Open
-                  </a>
-                </p>
+            );
+          })}
+          <div className="column is-4">
+            <div className="card">
+              <div
+                className="card-image is-clickable"
+                onClick={onSwitchNetwork}
+              >
+                <figure className="image">
+                  <BgContainer src={"assets/lab.png"} height="300px" />
+                </figure>
+              </div>
+              <div className="card-content">
+                <div className="media">
+                  <div className="media-content">
+                    <p
+                      onClick={onSwitchNetwork}
+                      className="title is-4 is-clickable"
+                    >
+                      FTW Lab
+                    </p>
+                    <span className="tag is-primary">Testnet</span>
+                  </div>
+                </div>
+                <div className="content" style={{ minHeight: "100px" }}>
+                  Preview FTW future apps.
+                </div>
               </div>
             </div>
           </div>

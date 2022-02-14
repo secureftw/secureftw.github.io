@@ -53,6 +53,7 @@ const Swap = () => {
         tokenA,
         val
       );
+      console.log(res);
       setAmountB(res as any);
     }
   };
@@ -67,6 +68,7 @@ const Swap = () => {
     if (connectedWallet) {
       if (tokenA && tokenB && amountA && amountB) {
         try {
+        	console.log(amountB)
           const res = await new SwapContract(network).swap(
             connectedWallet,
             tokenA,
@@ -93,12 +95,19 @@ const Swap = () => {
   const loadPair = async (A, B) => {
     setPairLoading(true);
     const res = await new SwapContract(network).getPair(A, B, connectedWallet);
-    setPairLoading(false);
-    setReserve(res);
+	  setReserve(res);
+	  setPairLoading(false);
     if (amountA && res[tokenA] !== 0) {
+      // const estimated = await new SwapContract(network).getEstimate(
+      //   A,
+      //   B,
+      //   A,
+      //   amountA
+      // );
+      // console.log(estimated);
       // @ts-ignore
-      const estimated = getEstimate(amountA, res[A], res[B]);
-      setAmountB(estimated.toString());
+	    const estimated = getEstimate(amountA, res[A], res[B]);
+      setAmountB(estimated ? estimated.toString() : "0");
     }
   };
 

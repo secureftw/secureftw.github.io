@@ -1,15 +1,16 @@
 import React from "react";
+import ReactGA from "react-ga";
 import { HashRouter as Router, Route } from "react-router-dom";
 import Header from "./components/Header";
-
 import {
   COLLECTION_PATH,
   FARM_PATH,
-	FUSION_PATH,
+  FUSION_PATH,
   GALLERY_PATH,
   HOME_PATH,
+  MIGRATION_PATH,
   SMITH_PATH,
-	SWAP_PATH,
+  SWAP_PATH,
   TOURNAMENT_PATH,
 } from "../consts";
 import { WalletContextProvider } from "../packages/provider";
@@ -24,6 +25,10 @@ import Smith from "./pages/Smith";
 import Tournament from "./pages/Tournament";
 import Swap from "./pages/Swap";
 import Fusion from "./pages/Fusion";
+import Migration from "./pages/Migration";
+import ReactGa from "./components/ReactGa";
+
+ReactGA.initialize("UA-114435339-1");
 
 const App = () => {
   return (
@@ -44,8 +49,10 @@ const App = () => {
         <Route path={COLLECTION_PATH} component={MyCollection} />
         <Route path={SWAP_PATH} component={Swap} />
         <Route path={FUSION_PATH} component={Fusion} />
+        <Route exact path={MIGRATION_PATH} component={Migration} />
         <MobileMenuSlider />
         <WalletSidebar />
+        <ReactGa />
       </Router>
     </WalletContextProvider>
   );

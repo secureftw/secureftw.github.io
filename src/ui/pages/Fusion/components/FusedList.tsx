@@ -4,8 +4,11 @@ import { FusionContract } from "../../../../packages/neo/contracts/ftw/fuse";
 import { toast } from "react-hot-toast";
 import ModalCard from "../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../packages/ui/AfterTransactionSubmitted";
-
-const FusedList = () => {
+interface IFusedListProps {
+  onSubmitted: (txid: string) => void;
+  onReset: () => void;
+}
+const FusedList = ({ onSubmitted, onReset }: IFusedListProps) => {
   const [tokens, setTokens] = useState<any>([]);
   const [detail, setDetail] = useState<any>();
   const [isLoading, setLoading] = useState(false);
@@ -20,8 +23,8 @@ const FusedList = () => {
           connectedWallet,
           detail.tokenId
         );
-        console.log(res);
-        // setTxid(res);
+        setDetail(false);
+        onSubmitted(res);
       } catch (e: any) {
         toast.error(e.message);
       }

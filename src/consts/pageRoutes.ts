@@ -1,6 +1,7 @@
 import { MAINNET, PRIVATENET, TESTNET } from "../packages/neo/consts";
 
 export const HOME_PATH = "/";
+export const MIGRATION_PATH = "/migration";
 export const FARM_PATH = "/gas";
 export const GALLERY_PATH = "/NFT/gallery";
 export const TOURNAMENT_PATH = "/arena";
@@ -41,5 +42,10 @@ export const MENU = [
     label: "Fusion",
     path: FUSION_PATH,
     network: [PRIVATENET, TESTNET],
+  },
+  {
+    label: "Migration",
+    path: MIGRATION_PATH,
+    network: [PRIVATENET, TESTNET, MAINNET],
   },
 ];

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 // tslint:disable-next-line:no-submodule-imports
-import { FaBars, FaWallet } from "react-icons/fa";
+import { FaBars, FaGithub, FaWallet } from "react-icons/fa";
 import Logo from "./Logo";
 import { useApp } from "../../common/hooks/use-app";
 import { useWallet } from "../../packages/provider";
@@ -117,6 +117,13 @@ const Header = () => {
               className="button is-white is-small "
             >
               <FaTwitter />
+            </a>
+            <a
+              target="_blank"
+              href="https://github.com/ForTheWinn"
+              className="button is-white is-small"
+            >
+              <FaGithub />
             </a>
             <a
               target="_blank"

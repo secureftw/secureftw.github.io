@@ -1,3 +1,4 @@
+// Game formula was changed from game 5 except arena 4 and 2;
 export const fight = (aPhase, aLuck, bPhase, bLuck, nonce, gameNo) => {
   gameNo = parseFloat(gameNo);
   aLuck = parseFloat(aLuck);
