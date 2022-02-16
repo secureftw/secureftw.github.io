@@ -5,6 +5,8 @@ import { MENU } from "../../consts";
 import { useWallet } from "../../packages/provider";
 // tslint:disable-next-line:no-submodule-imports
 import { FaMedium, FaTwitter } from "react-icons/all";
+// tslint:disable-next-line:no-submodule-imports
+import { FaGithub } from "react-icons/fa";
 
 const SidebarNav = (props) => {
   const { network } = useWallet();
@@ -32,12 +34,27 @@ const SidebarNav = (props) => {
       </aside>
       <div className="p-5" style={{ position: "absolute", bottom: "40px" }}>
         <div className="buttons">
-          <div className="button is-white has-text-info">
+          <a
+            target="_blank"
+            href="https://twitter.com/N3_FTW_NETWORK"
+            className="button is-white is-small "
+          >
             <FaTwitter />
-          </div>
-          <div className="button is-white">
+          </a>
+          <a
+            target="_blank"
+            href="https://github.com/ForTheWinn"
+            className="button is-white is-small"
+          >
+            <FaGithub />
+          </a>
+          <a
+            target="_blank"
+            href="https://medium.com/@Forthewin_network"
+            className="button is-white is-small"
+          >
             <FaMedium />
-          </div>
+          </a>
         </div>
       </div>
     </>

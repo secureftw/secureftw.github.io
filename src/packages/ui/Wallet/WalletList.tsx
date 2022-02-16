@@ -21,7 +21,7 @@ const WalletList = () => {
               onClick={() => connectWallet(_wallet.key)}
             >
               <span className="panel-icon">
-                <img src={getWalletIcon(_wallet.key)} alt="React Logo" />
+                <img src={getWalletIcon(_wallet.key)} />
                 {/*<_wallet.img />*/}
                 {/*<i className="fas fa-book" aria-hidden="true"></i>*/}
               </span>

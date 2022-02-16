@@ -22,10 +22,10 @@ export const WALLET_LIST: {
     label: "O3",
     key: O3,
   },
-  // {
-  //   label: "OneGate",
-  //   key: ONE_GATE,
-  // },
+  {
+    label: "OneGate",
+    key: ONE_GATE,
+  },
 ];
 
 /* Network types */

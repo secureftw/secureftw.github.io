@@ -6,20 +6,29 @@ import Logo from "./Logo";
 import { useApp } from "../../common/hooks/use-app";
 import { useWallet } from "../../packages/provider";
 import { utils } from "../../packages/neo";
-import { COLLECTION_PATH, MENU } from "../../consts";
+import { MENU } from "../../consts";
 import WalletDropdown from "./WalletDropdown";
 import { getWalletIcon } from "../../packages/ui/Wallet/helpers";
 import NetworkSwitch from "./NetworkSwitch";
 // tslint:disable-next-line:no-submodule-imports
 import { FaMedium, FaTwitter } from "react-icons/all";
+import { MAINNET, TESTNET } from "../../packages/neo/consts";
+import toast from "react-hot-toast";
 
 const Header = () => {
   const { toggleSidebar, toggleWalletSidebar } = useApp();
-  const { connectedWallet, network, disConnectWallet } = useWallet();
+  const { connectedWallet, network, disConnectWallet, switchNetwork } =
+    useWallet();
   const [isActive, setActive] = useState(false);
   const handleDisconnectWallet = () => {
     setActive(false);
     disConnectWallet();
+  };
+  const handleSwitchNetwork = () => {
+    const targetNetwork = network === TESTNET ? MAINNET : TESTNET;
+    switchNetwork(targetNetwork);
+    setActive(false);
+    toast.success(`Network switched. You are on ${targetNetwork}`);
   };
   return (
     <nav
@@ -67,9 +76,12 @@ const Header = () => {
           >
             <div className="navbar-start">
               <div className="navbar-item">
-                <div className="media">
+                <div className="media" style={{ alignItems: "center" }}>
                   <div className="media-left">
-                    <img src={getWalletIcon(connectedWallet.key)} />
+                    <img
+                      width="32px"
+                      src={getWalletIcon(connectedWallet.key)}
+                    />
                   </div>
                   <div className="media-content">
                     {utils.truncateAddress(connectedWallet.account.address)}
@@ -77,13 +89,43 @@ const Header = () => {
                 </div>
               </div>
               <hr className="dropdown-divider" />
-              <Link
-                onClick={() => setActive(false)}
-                className="navbar-item has-text-dark"
-                to={COLLECTION_PATH}
-              >
-                My NFT
-              </Link>
+              <div className="navbar-item">
+                <div className="level is-mobile">
+                  <div className="level-left">
+                    <div className="level-item">
+                      <span
+                        className={
+                          network === TESTNET
+                            ? "has-text-danger"
+                            : "has-text-info"
+                        }
+                      >
+                        {" "}
+                        {network}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="level-right">
+                    <div className="level-item">
+                      <button
+                        onClick={handleSwitchNetwork}
+                        className="button is-small"
+                      >
+                        Switch
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/*<hr className="dropdown-divider" />*/}
+              {/*<Link*/}
+              {/*  onClick={() => setActive(false)}*/}
+              {/*  className="navbar-item has-text-dark"*/}
+              {/*  to={COLLECTION_PATH}*/}
+              {/*>*/}
+              {/*  My NFT*/}
+              {/*</Link>*/}
               <hr className="dropdown-divider" />
               <a onClick={handleDisconnectWallet} className="navbar-item">
                 Disconnect wallet

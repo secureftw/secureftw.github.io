@@ -1,9 +1,17 @@
 import neo3Dapi from "neo3-dapi";
 import { ITransaction, IWalletType } from "./interfaces";
-import { DEV, NEO_LINE, O3, ONE_GATE, WALLET_LIST } from "../consts";
+import {
+  DEV,
+  MAINNET,
+  NEO_LINE,
+  O3,
+  ONE_GATE,
+  TESTNET,
+  WALLET_LIST,
+} from "../consts";
 import { NeoDapi } from "@neongd/neo-dapi";
 import { DevWallet } from "./dev-wallet";
-import { tx, wallet as NeonWallet } from "@cityofzion/neon-core";
+import { tx, u, wallet, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { INetworkType, Network } from "../network";
 import { LocalStorage } from "../local-storage";
 import moment from "moment";
@@ -47,6 +55,8 @@ export class WalletAPI {
     const provider = await instance.getProvider();
     const account = await instance.getAccount();
     const network = await instance.getNetworks();
+    network.defaultNetwork =
+      network.defaultNetwork === "MainNet" ? MAINNET : TESTNET;
     const balances = await instance.getNep17Balances({
       address: account.address,
       assetHashes: [],
@@ -57,7 +67,7 @@ export class WalletAPI {
       provider,
       account,
       network,
-      balances: balances[account.address],
+      balances,
     };
   };
 
@@ -120,7 +130,11 @@ export class WalletAPI {
         ...wallet,
       };
     } catch (e: any) {
-      throw new Error(e.description ? e.description : e.message);
+      if (this.walletType === ONE_GATE) {
+        throw new Error("OneGate wallet only supports in OneGate web browser.");
+      } else {
+        throw new Error(e.description ? e.description : e.message);
+      }
     }
   };
 
@@ -138,9 +152,6 @@ export class WalletAPI {
       throw new Error(
         "Your wallet's network doesn't match with the app network setting."
       );
-    }
-    if (extraSystemFee) {
-      invokeScript.extraSystemFee = extraSystemFee;
     }
 
     invokeScript.signers = [
@@ -162,6 +173,30 @@ export class WalletAPI {
       );
       if (invokeFunctionResponse.state === "FAULT") {
         throw new Error(invokeFunctionResponse.exception as string);
+      }
+    }
+
+    // Hard coding for OG wallet
+    if (this.walletType === ONE_GATE) {
+      invokeScript.args = invokeScript.args.map((param: any) => {
+        if (param.type === "Address") {
+          return {
+            type: "Hash160",
+            value: wallet.getScriptHashFromAddress(param.value),
+          };
+        } else {
+          return param;
+        }
+      });
+      if (extraSystemFee) {
+        invokeScript.extraSystemFee = u.BigInteger.fromDecimal(
+          extraSystemFee,
+          8
+        ).toString();
+      }
+    } else {
+      if (extraSystemFee) {
+        invokeScript.extraSystemFee = extraSystemFee;
       }
     }
 

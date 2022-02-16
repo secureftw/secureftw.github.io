@@ -1,21 +1,18 @@
 import { CONST } from "../../../index";
-import { FTW_SCRIPT_HASH, NUDES_SCRIPT_HASH } from "../nep17";
+import {
+  DOGE_SCRIPT_HASH,
+  FTW_SCRIPT_HASH,
+  MOON_SCRIPT_HASH,
+  NUDES_SCRIPT_HASH,
+} from "../nep17";
 import { GAS_SCRIPT_HASH, MAINNET, PRIVATENET, TESTNET } from "../../../consts";
 import { INetworkType } from "../../../network";
 
 export const SWAP_SCRIPT_HASH = {
   [CONST.PRIVATENET]: "aeac82f7830f4083b98089baa51060e621febb10",
-  // [CONST.TESTNET]: "26ba77bcc207b9a7549c0ca52fa4e6aa41760153",
-  [CONST.TESTNET]: "e59f3df3cfae2af534222b5a522b040e4a2e7204",
+  [CONST.TESTNET]: "428783fccfb6b194f7d33cd421e9f56f48efbde5",
   [CONST.MAINNET]: "",
 };
-
-// export const SWAP_PAIRS = [
-// 	{
-//
-// 	}
-//
-// ];
 
 export const ASSET_LIST = {
   [PRIVATENET]: {
@@ -50,6 +47,16 @@ export const ASSET_LIST = {
       contractHash: NUDES_SCRIPT_HASH[TESTNET],
       symbol: "NUDES",
       logo: "/symbols/nudes.png",
+    },
+    [DOGE_SCRIPT_HASH[TESTNET]]: {
+      contractHash: DOGE_SCRIPT_HASH[TESTNET],
+      symbol: "DOGE",
+      logo: "/symbols/unknown.png",
+    },
+    [MOON_SCRIPT_HASH[TESTNET]]: {
+      contractHash: MOON_SCRIPT_HASH[TESTNET],
+      symbol: "WMOON",
+      logo: "/symbols/unknown.png",
     },
   },
   [MAINNET]: {

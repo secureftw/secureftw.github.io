@@ -89,7 +89,7 @@ const Input = ({
               // format={(val) => {} }
             />
             {userBalance ? (
-              <div className="level">
+              <div className="level is-mobile">
                 <div className="level-left">
                   <small className="is-size-7">
                     <div className="level-item">Balance</div>

@@ -40,6 +40,7 @@ export const WalletContextProvider = (props: {
     try {
       const res = await new WalletAPI(walletType).init(network);
       setConnectedWallet(res);
+      toast.success("Wallet connected");
       if (props.options.useLocalStorage) {
         LocalStorage.setWallet(res);
       }
@@ -52,6 +53,7 @@ export const WalletContextProvider = (props: {
   const disConnectWallet = () => {
     LocalStorage.removeWallet();
     setConnectedWallet(undefined);
+    toast.success("Wallet disconnected");
   };
 
   const doInvoke = (args: sc.ContractCallJson) => {

@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useWallet } from "../../../../../packages/provider";
 import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
-import { SwapContract } from "../../../../../packages/neo/contracts";
+import {
+  FTW_SCRIPT_HASH,
+  SwapContract,
+} from "../../../../../packages/neo/contracts";
 import { toast } from "react-hot-toast";
 import { getEstimate } from "../../../../../packages/neo/contracts/ftw/swap/helpers";
 import Input from "../../components/Input";
@@ -17,7 +20,7 @@ const Swap = () => {
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
   >("");
-  const [tokenA, setTokenA] = useState<any>(GAS_SCRIPT_HASH);
+  const [tokenA, setTokenA] = useState<any>(FTW_SCRIPT_HASH[network]);
   const [amountA, setAmountA] = useState("");
   const [tokenB, setTokenB] = useState<any>();
   const [amountB, setAmountB] = useState("");
@@ -68,7 +71,7 @@ const Swap = () => {
     if (connectedWallet) {
       if (tokenA && tokenB && amountA && amountB) {
         try {
-        	console.log(amountB)
+          console.log(amountB);
           const res = await new SwapContract(network).swap(
             connectedWallet,
             tokenA,
@@ -95,8 +98,8 @@ const Swap = () => {
   const loadPair = async (A, B) => {
     setPairLoading(true);
     const res = await new SwapContract(network).getPair(A, B, connectedWallet);
-	  setReserve(res);
-	  setPairLoading(false);
+    setReserve(res);
+    setPairLoading(false);
     if (amountA && res[tokenA] !== 0) {
       // const estimated = await new SwapContract(network).getEstimate(
       //   A,
@@ -106,7 +109,7 @@ const Swap = () => {
       // );
       // console.log(estimated);
       // @ts-ignore
-	    const estimated = getEstimate(amountA, res[A], res[B]);
+      const estimated = getEstimate(amountA, res[A], res[B]);
       setAmountB(estimated ? estimated.toString() : "0");
     }
   };

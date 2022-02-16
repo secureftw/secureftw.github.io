@@ -1,10 +1,7 @@
 import React from "react";
 import Modal from "../../../../components/Modal";
 import { useWallet } from "../../../../../packages/provider";
-import {
-  ASSET_LIST,
-  ASSETS,
-} from "../../../../../packages/neo/contracts/ftw/swap/consts";
+import { ASSETS } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 interface IAssetListModalProps {
   tokenA?: string;
   tokenB?: string;
@@ -17,7 +14,7 @@ const AssetListModal = ({
   onAssetClick,
   onClose,
 }: IAssetListModalProps) => {
-  const { connectedWallet, network } = useWallet();
+  const { network } = useWallet();
   const assets = ASSETS(network).filter((asset) => {
     return asset.contractHash !== tokenA && asset.contractHash !== tokenB;
   });

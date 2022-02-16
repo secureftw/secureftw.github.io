@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import Input from "../../components/Input";
 import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
 import { useWallet } from "../../../../../packages/provider";
-import { SwapContract } from "../../../../../packages/neo/contracts";
+import {
+  FTW_SCRIPT_HASH,
+  SwapContract,
+} from "../../../../../packages/neo/contracts";
 import AssetListModal from "../../components/AssetListModal";
 import { toast } from "react-hot-toast";
 import { getEstimate } from "../../../../../packages/neo/contracts/ftw/swap/helpers";
@@ -16,7 +19,7 @@ const Liquidity = (props) => {
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
   >("");
-  const [tokenA, setTokenA] = useState<any>(GAS_SCRIPT_HASH);
+  const [tokenA, setTokenA] = useState<any>(FTW_SCRIPT_HASH[network]);
   const [amountA, setAmountA] = useState("");
   const [tokenB, setTokenB] = useState<any>();
   const [amountB, setAmountB] = useState("");
@@ -105,7 +108,7 @@ const Liquidity = (props) => {
           res[tokenB] !== 0
         ) {
           // @ts-ignore
-	        const estimated = getEstimate(amountA, res[tokenA], res[tokenB]);
+          const estimated = getEstimate(amountA, res[tokenA], res[tokenB]);
           console.log(estimated);
           setAmountB(estimated.toString());
         }
@@ -118,7 +121,7 @@ const Liquidity = (props) => {
           res[tokenB] !== 0
         ) {
           // @ts-ignore
-	        const estimated = getEstimate(amountB, res[tokenB], res[tokenA]);
+          const estimated = getEstimate(amountB, res[tokenB], res[tokenA]);
           setAmountA(estimated.toString());
         }
       } catch (e: any) {
