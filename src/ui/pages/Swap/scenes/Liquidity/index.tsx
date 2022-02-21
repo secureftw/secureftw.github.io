@@ -13,6 +13,8 @@ import { getEstimate } from "../../../../../packages/neo/contracts/ftw/swap/help
 import { FaExchangeAlt } from "react-icons/all";
 import { toDecimal } from "../../../../../packages/neo/utils";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
+import Modal from "../../../../components/Modal";
+import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 
 const Liquidity = (props) => {
   const { network, connectedWallet, openWalletModal } = useWallet();
@@ -25,10 +27,12 @@ const Liquidity = (props) => {
   const [amountB, setAmountB] = useState("");
   const [reserve, setReserve] = useState<any>();
   const [isPairLoading, setPairLoading] = useState(false);
+  const [txid, setTxid] = useState("");
 
   const onAssetChange = (type: "A" | "B" | "") => {
     setAssetChangeModalActive(type);
   };
+
   const onAssetClick = (assetHash) => {
     if (isAssetChangeModalActive === "A") {
       setTokenA(assetHash);
@@ -36,6 +40,12 @@ const Liquidity = (props) => {
       setTokenB(assetHash);
     }
     setAssetChangeModalActive("");
+  };
+
+  const onSuccess = () => {
+    setAmountA("");
+    setAmountB("");
+    setTxid("");
   };
 
   const onAddLiquidity = async () => {
@@ -49,6 +59,7 @@ const Liquidity = (props) => {
             tokenB,
             amountB
           );
+          setTxid(res);
         } catch (e: any) {
           toast.error(e.description ? e.description : e.message);
         }
@@ -60,8 +71,17 @@ const Liquidity = (props) => {
 
   const onTokenAAmountChange = (type: "A" | "B", val: string) => {
     if (type === "A") {
-      if (tokenB && reserve && reserve[tokenA] !== 0 && reserve[tokenB] !== 0) {
-        const estimated = getEstimate(val, reserve[tokenA], reserve[tokenB]);
+      if (
+        tokenB &&
+        reserve &&
+        reserve.pair[tokenA] !== 0 &&
+        reserve.pair[tokenB] !== 0
+      ) {
+        const estimated = getEstimate(
+          val,
+          reserve.pair[tokenA],
+          reserve.pair[tokenB]
+        );
         setAmountB(estimated.toString());
       }
       setAmountA(val);
@@ -70,10 +90,10 @@ const Liquidity = (props) => {
         tokenA &&
         tokenB &&
         reserve &&
-        reserve[tokenA] !== 0 &&
-        reserve[tokenB] !== 0
+        reserve.pair[tokenA] !== 0 &&
+        reserve.pair[tokenB] !== 0
       ) {
-        const estimated = getEstimate(val, reserve[tokenB], reserve[tokenA]);
+        const estimated = getEstimate(val, reserve.pair[tokenB], reserve.pair[tokenA]);
         setAmountA(estimated.toString());
       }
       setAmountB(val);
@@ -98,7 +118,6 @@ const Liquidity = (props) => {
         );
         setPairLoading(false);
         setReserve(res);
-        console.log(res);
         if (
           tokenA &&
           tokenB &&
@@ -107,9 +126,7 @@ const Liquidity = (props) => {
           res[tokenA] !== 0 &&
           res[tokenB] !== 0
         ) {
-          // @ts-ignore
           const estimated = getEstimate(amountA, res[tokenA], res[tokenB]);
-          console.log(estimated);
           setAmountB(estimated.toString());
         }
         if (
@@ -150,7 +167,7 @@ const Liquidity = (props) => {
   //   tokenAofB = Math.floor(tokenAofB);
   //   tokenAofB = toDecimal(tokenAofB.toString());
   // }
-  const noLiquidity = reserve && reserve[tokenA] === 0 && reserve[tokenB] === 0;
+  const noLiquidity = reserve && reserve.pair[tokenA] === 0 && reserve.pair[tokenB] === 0;
   return (
     <>
       {noLiquidity && (
@@ -162,6 +179,7 @@ const Liquidity = (props) => {
           time and can be claimed by withdrawing your liquidity.
         </div>
       )}
+
       <div className="is-relative">
         <Input
           heading="Pair A"
@@ -171,13 +189,11 @@ const Liquidity = (props) => {
           setValue={(val, e) => onTokenAAmountChange("A", val)}
           userBalance={reserve ? reserve.balances[tokenA] : undefined}
         />
-
         <div className="pt-3 pb-3">
           <button onClick={onSwitch} className="button is-white">
             <FaExchangeAlt />
           </button>
         </div>
-
         <Input
           heading="Pair B"
           // isReadOnly={
@@ -193,7 +209,6 @@ const Liquidity = (props) => {
           setValue={(val, e) => onTokenAAmountChange("B", val)}
           userBalance={reserve && tokenB ? reserve.balances[tokenB] : undefined}
         />
-
         {connectedWallet ? (
           tokenA && tokenB && amountA && amountB ? (
             <>
@@ -228,16 +243,27 @@ const Liquidity = (props) => {
             </button>
           </>
         )}
-
-        {isAssetChangeModalActive && (
-          <AssetListModal
-            tokenA={tokenA}
-            tokenB={tokenB}
-            onAssetClick={onAssetClick}
-            onClose={() => setAssetChangeModalActive("")}
-          />
-        )}
       </div>
+
+      {txid && (
+        <Modal onClose={() => setTxid("")}>
+          <AfterTransactionSubmitted
+            txid={txid}
+            network={network}
+            onSuccess={onSuccess}
+            onError={() => setTxid("")}
+          />
+        </Modal>
+      )}
+
+      {isAssetChangeModalActive && (
+        <AssetListModal
+          tokenA={tokenA}
+          tokenB={tokenB}
+          onAssetClick={onAssetClick}
+          onClose={() => setAssetChangeModalActive("")}
+        />
+      )}
     </>
   );
 };

@@ -4,9 +4,9 @@ import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { RUNE_SCRIPT_HASH } from "../nft";
 import { parsePlayer, parseHistory } from "./helpers";
-import { GAS_SCRIPT_HASH } from "../../../consts";
+import { DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH } from "../../../consts";
 import { base64ToAddress, toDecimal } from "../../../utils";
-import { u } from "@cityofzion/neon-core";
+import { u, wallet as NeonWallet } from "@cityofzion/neon-core";
 
 export class TournamentContract {
   network: INetworkType;
@@ -22,6 +22,9 @@ export class TournamentContract {
     tokenId: string,
     arenaNo: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "transfer",
       scriptHash: RUNE_SCRIPT_HASH[this.network],
@@ -44,10 +47,10 @@ export class TournamentContract {
           ],
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };
@@ -56,6 +59,9 @@ export class TournamentContract {
     connectedWallet: IConnectedWallet,
     arenaNo: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "play",
       scriptHash: this.contractHash,
@@ -65,10 +71,10 @@ export class TournamentContract {
           value: arenaNo,
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript,
       "0.05",
       true
@@ -80,6 +86,9 @@ export class TournamentContract {
     tokenId: string,
     arenaNo: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "leave",
       scriptHash: this.contractHash,
@@ -93,10 +102,10 @@ export class TournamentContract {
           value: tokenId,
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
       // "0.1"
     );
@@ -107,11 +116,14 @@ export class TournamentContract {
     tokenId: string,
     arenaNo: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "transfer",
       scriptHash: GAS_SCRIPT_HASH,
       args: [
-        { type: "Address", value: connectedWallet.account.address },
+        { type: "Hash160", value: senderHash },
         { type: "Hash160", value: this.contractHash },
         {
           type: "Integer",
@@ -125,10 +137,10 @@ export class TournamentContract {
           ],
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript,
       undefined,
       true
@@ -140,6 +152,9 @@ export class TournamentContract {
     arenaNo: string,
     gameNo: string
   ): Promise<string> => {
+	  const senderHash = NeonWallet.getScriptHashFromAddress(
+		  connectedWallet.account.address
+	  );
     const invokeScript = {
       operation: "claim",
       scriptHash: this.contractHash,
@@ -147,10 +162,10 @@ export class TournamentContract {
         { type: "Integer", value: arenaNo },
         { type: "Integer", value: gameNo },
       ],
+	    signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };

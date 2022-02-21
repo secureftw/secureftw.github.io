@@ -89,10 +89,10 @@ const Input = ({
               // format={(val) => {} }
             />
             {userBalance ? (
-              <div className="level is-mobile">
+              <div className="level is-mobile mt-1">
                 <div className="level-left">
                   <small className="is-size-7">
-                    <div className="level-item">Balance</div>
+                    <div className="level-item">Your balance</div>
                   </small>
                 </div>
 

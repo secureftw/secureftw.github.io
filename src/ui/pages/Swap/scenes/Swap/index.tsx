@@ -14,31 +14,49 @@ import { FaExchangeAlt } from "react-icons/all";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
+import { Link, useLocation } from "react-router-dom";
+import { SWAP_PATH_LIQUIDITY } from "../../../../../consts";
+import queryString from "query-string";
+import store from "store2";
+import { LocalStorage } from "../../../../../packages/neo/local-storage";
 
 const Swap = () => {
+  const location = useLocation();
+  const params = queryString.parse(location.search);
   const { network, connectedWallet, openWalletModal } = useWallet();
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
   >("");
-  const [tokenA, setTokenA] = useState<any>(FTW_SCRIPT_HASH[network]);
+  const cachedTokenA = LocalStorage.getSwapTokenA();
+  const [tokenA, setTokenA] = useState<any>(
+    params.tokenA
+      ? params.tokenA
+      : cachedTokenA
+      ? cachedTokenA
+      : FTW_SCRIPT_HASH[network]
+  );
+  const cachedTokenB = LocalStorage.getSwapTokenB();
+  const [tokenB, setTokenB] = useState<any>(
+    params.tokenB ? params.tokenB : cachedTokenB ? cachedTokenB : undefined
+  );
   const [amountA, setAmountA] = useState("");
-  const [tokenB, setTokenB] = useState<any>();
   const [amountB, setAmountB] = useState("");
   const [reserve, setReserve] = useState<any>();
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
-
   const onAssetChange = (type: "A" | "B" | "") => {
     setAssetChangeModalActive(type);
   };
 
   const onAssetClick = (assetHash) => {
     if (isAssetChangeModalActive === "A") {
+      LocalStorage.setSwapTokenA(assetHash);
       setTokenA(assetHash);
       if (tokenB) {
         loadPair(assetHash, tokenB);
       }
     } else {
+      LocalStorage.setSwapTokenB(assetHash);
       setTokenB(assetHash);
       if (tokenA) {
         loadPair(tokenA, assetHash);
@@ -56,7 +74,6 @@ const Swap = () => {
         tokenA,
         val
       );
-      console.log(res);
       setAmountB(res as any);
     }
   };
@@ -71,7 +88,6 @@ const Swap = () => {
     if (connectedWallet) {
       if (tokenA && tokenB && amountA && amountB) {
         try {
-          console.log(amountB);
           const res = await new SwapContract(network).swap(
             connectedWallet,
             tokenA,
@@ -88,11 +104,28 @@ const Swap = () => {
       toast.error("Please connect wallet");
     }
   };
-  const onSwitch = () => {
+  const onSwitch = async () => {
     setTokenB(tokenA);
     setTokenA(tokenB ? tokenB : "");
     setAmountB(amountA);
     setAmountA(amountB);
+    if (tokenB && amountB && amountB !== "0" && tokenA) {
+      const estimated = await new SwapContract(network).getEstimate(
+        tokenB,
+        tokenA,
+        tokenB,
+        amountB
+      );
+      setTokenB(tokenA);
+      setTokenA(tokenB ? tokenB : "");
+      setAmountA(amountB);
+      setAmountB(estimated ? estimated.toString() : "0");
+    } else {
+      setTokenB(tokenA);
+      setTokenA(tokenB ? tokenB : "");
+      setAmountB(amountA);
+      setAmountA(amountB);
+    }
   };
 
   const loadPair = async (A, B) => {
@@ -100,44 +133,26 @@ const Swap = () => {
     const res = await new SwapContract(network).getPair(A, B, connectedWallet);
     setReserve(res);
     setPairLoading(false);
-    if (amountA && res[tokenA] !== 0) {
-      // const estimated = await new SwapContract(network).getEstimate(
-      //   A,
-      //   B,
-      //   A,
-      //   amountA
-      // );
-      // console.log(estimated);
+    if (amountA && res.pair[tokenA] !== 0) {
+      const estimated = await new SwapContract(network).getEstimate(
+        A,
+        B,
+        A,
+        amountA
+      );
       // @ts-ignore
-      const estimated = getEstimate(amountA, res[A], res[B]);
+      // const estimated = getEstimate(amountA, res[A], res[B]);
       setAmountB(estimated ? estimated.toString() : "0");
+    } else {
+      setAmountB("0");
     }
   };
 
-  // useEffect(() => {
-  //   async function fetchPair(A, B) {
-  //     try {
-  //       setPairLoading(true);
-  //       const res = await new SwapContract(network).getPair(
-  //         A,
-  //         B,
-  //         connectedWallet
-  //       );
-  //       setPairLoading(false);
-  //       setReserve(res);
-  //       if (amountA && res[tokenA] !== 0) {
-  //         // @ts-ignore
-  //         const estimated = getEstimate(amountA, res[A], res[B]);
-  //         setAmountB(estimated.toString());
-  //       }
-  //     } catch (e: any) {
-  //       // setError(e.message);
-  //     }
-  //   }
-  //   if (tokenA && tokenB) {
-  //     fetchPair(tokenA, tokenB);
-  //   }
-  // }, [network, tokenA, tokenB]);
+  useEffect(() => {
+    if (params.tokenA && params.tokenB) {
+      loadPair(params.tokenA, params.tokenB);
+    }
+  }, [location]);
 
   // let tokenBofA = 0;
   // let tokenAofB = 0;
@@ -155,13 +170,19 @@ const Swap = () => {
   //   tokenAofB = Math.floor(tokenAofB);
   //   tokenAofB = toDecimal(tokenAofB.toString());
   // }
-  const noLiquidity = reserve && reserve[tokenA] === 0 && reserve[tokenB] === 0;
+  const noLiquidity =
+    reserve && reserve.pair[tokenA] === 0 && reserve.pair[tokenB] === 0;
   return (
     <div>
       <>
         {noLiquidity && (
-          <div className="notification is-danger">
-            No liquidity with the pairs.
+          <div className="notification is-info">
+            No liquidity with the pairs. Provide liquidity and earn fees.
+            <br />
+            <br />
+            <Link className="button is-small is-light" to={SWAP_PATH_LIQUIDITY}>
+              Go to liquidity page
+            </Link>
           </div>
         )}
         <Input
@@ -207,7 +228,7 @@ const Swap = () => {
               <button
                 disabled={
                   reserve.balances[tokenA] < parseFloat(amountA) ||
-                  reserve[tokenB] < parseFloat(amountB)
+                  reserve.pair[tokenB] < parseFloat(amountB)
                 }
                 onClick={onSwap}
                 className="button is-fullwidth is-primary"

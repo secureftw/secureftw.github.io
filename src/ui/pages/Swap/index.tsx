@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import PageLayout from "../../components/PageLayout";
 import NavSwitch from "./components/NavSwitch";
 import {
@@ -13,7 +13,7 @@ import Farm from "./scenes/Farm";
 import { useWallet } from "../../../packages/provider";
 import { MAINNET } from "../../../packages/neo/consts";
 
-const Swap = (props) => {
+const Swap = () => {
   const { network } = useWallet();
   if (network === MAINNET)
     return (

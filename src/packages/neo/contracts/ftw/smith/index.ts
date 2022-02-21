@@ -1,7 +1,7 @@
 import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
-import { GAS_SCRIPT_HASH } from "../../../consts";
+import { DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH } from "../../../consts";
 import { DEPLOY_FEE, SMITH_SCRIPT_HASH } from "./consts";
 import { ISmithContractStatus, ISmithNEP11RecordPaginate } from "./interfaces";
 import {
@@ -30,13 +30,16 @@ export class SmithContract {
     author: string,
     description: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "transfer",
       scriptHash: GAS_SCRIPT_HASH,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "Hash160",
@@ -89,10 +92,10 @@ export class SmithContract {
           ],
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };
@@ -105,13 +108,16 @@ export class SmithContract {
     description: string,
     email: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "transfer",
       scriptHash: GAS_SCRIPT_HASH,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "Hash160",
@@ -160,10 +166,10 @@ export class SmithContract {
           ],
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };
@@ -176,6 +182,9 @@ export class SmithContract {
     image: string,
     json
   ) => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "mintNFT",
       scriptHash: contractHash,
@@ -197,10 +206,10 @@ export class SmithContract {
           value: json,
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };

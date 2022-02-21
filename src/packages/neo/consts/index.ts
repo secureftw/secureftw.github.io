@@ -1,4 +1,4 @@
-import { CONST as NEON_CONST } from "@cityofzion/neon-core";
+import { CONST as NEON_CONST, tx } from "@cityofzion/neon-core";
 import { IWalletType } from "../wallet/interfaces";
 
 /* Wallets */
@@ -70,3 +70,10 @@ export const TOKEN_LIST = () => [NEO_SCRIPT_HASH, GAS_SCRIPT_HASH];
 /* Dev wallet */
 export const DEV_WALLET_PRIVATE_KEY =
   "7b5d7fda53932ed9d43eb848dd521455767a4d40b5a994e6f351605e5a4ce26a";
+
+export const DEFAULT_WITNESS_SCOPE = (senderHash: string) => {
+  return {
+    account: senderHash,
+    scopes: tx.WitnessScope.CalledByEntry,
+  };
+};

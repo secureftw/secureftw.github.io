@@ -2,7 +2,10 @@ import { CONST, wallet } from "../../../index";
 import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { parseProperties } from "../../ttm/nft/helpers";
-import { u } from "@cityofzion/neon-core";
+import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
+import {DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH} from "../../../consts";
+import { RUNE_SCRIPT_HASH } from "../nft";
+import { TTM_SCRIPT_HASH } from "../../ttm/nft";
 
 export const FUSE_SCRIPT_HASH = {
   [CONST.PRIVATENET]: "f88481099b58a7ddff6693098037b23476a9dcee",
@@ -24,13 +27,16 @@ export class FusionContract {
     cryptonautTokenId: string,
     runeTokenId: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "fuse",
       scriptHash: this.contractHash,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "String",
@@ -41,42 +47,54 @@ export class FusionContract {
           value: runeTokenId,
         },
       ],
+      signers: [
+        {
+          account: senderHash,
+          scopes: tx.WitnessScope.CustomContracts,
+          allowedContracts: [
+            this.contractHash,
+            RUNE_SCRIPT_HASH[this.network],
+            TTM_SCRIPT_HASH[this.network],
+	          GAS_SCRIPT_HASH
+          ],
+        },
+      ],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript,
       undefined,
-      undefined,
-      true
+      undefined
     );
   };
 
   refund = async (
     connectedWallet: IConnectedWallet,
-    tokenId: string,
+    tokenId: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "refund",
       scriptHash: this.contractHash,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "String",
           value: tokenId,
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript,
       undefined,
-      undefined,
-      true
+      undefined
     );
   };
 

@@ -1,7 +1,7 @@
 import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
-import { NEO_SCRIPT_HASH } from "../../../consts";
+import { DEFAULT_WITNESS_SCOPE, NEO_SCRIPT_HASH } from "../../../consts";
 import { FARM_SCRIPT_HASH } from "./consts";
 import { IFarmContractStatus } from "./interfaces";
 import {
@@ -11,6 +11,7 @@ import {
 } from "./helpers";
 import { FTW_SCRIPT_HASH } from "../nep17";
 import { base64ToFixed8 } from "../../../utils";
+import { wallet as NeonWallet } from "@cityofzion/neon-core";
 
 export class FarmContract {
   network: INetworkType;
@@ -26,13 +27,16 @@ export class FarmContract {
     amount: string,
     position: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "transfer",
       scriptHash: NEO_SCRIPT_HASH,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "Hash160",
@@ -47,28 +51,31 @@ export class FarmContract {
           value: parseFloat(position),
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };
 
   remove = async (connectedWallet: IConnectedWallet): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "removeFund",
       scriptHash: this.contractHash,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };
@@ -76,32 +83,38 @@ export class FarmContract {
   createSnapshot = async (
     connectedWallet: IConnectedWallet
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "createSnapshot",
       scriptHash: this.contractHash,
       args: [],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };
 
   claim = async (connectedWallet: IConnectedWallet): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "claim",
       scriptHash: this.contractHash,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };
@@ -110,23 +123,26 @@ export class FarmContract {
     connectedWallet: IConnectedWallet,
     position: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "changePosition",
       scriptHash: this.contractHash,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "Integer",
           value: position,
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };
@@ -231,7 +247,6 @@ export class FarmContract {
       scripts.push(deposit);
       scripts.push(claims);
     }
-
     const res = await Network.read(this.network, scripts);
     return {
       neoBalance: res.stack[0].value as string,

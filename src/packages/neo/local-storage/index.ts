@@ -8,6 +8,8 @@ import { INetworkType } from "../network";
 const CONNECTED_WALLET = "CONNECTED_WALLET";
 const TRANSACTIONS = "TRANSACTIONS";
 const NETWORK = "NETWORK";
+const SWAP_TOKEN_A = "SWAP_TOKEN_A"
+const SWAP_TOKEN_B = "SWAP_TOKEN_B"
 
 export class LocalStorage {
   public static initStorage = (network: string): ITransaction[] => {
@@ -74,6 +76,11 @@ export class LocalStorage {
     store.remove(TRANSACTIONS, tx);
 
   public static clearTransaction = () => store.set(TRANSACTIONS, []);
+
+  static setSwapTokenA = (val: string) => store.set(SWAP_TOKEN_A, val);
+  static setSwapTokenB = (val: string) => store.set(SWAP_TOKEN_B, val);
+  static getSwapTokenA = () => store.get(SWAP_TOKEN_A);
+  static getSwapTokenB = () => store.get(SWAP_TOKEN_B);
 }
 
 const validateConnectedWallet = (connectedWallet?: IConnectedWallet) => {

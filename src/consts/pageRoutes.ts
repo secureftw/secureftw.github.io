@@ -10,6 +10,7 @@ export const COLLECTION_PATH = "/NFT/collection";
 export const SWAP_PATH = "/swap";
 export const SWAP_PATH_LIQUIDITY = "/swap/liquidity";
 export const SWAP_PATH_FARM = "/swap/claim";
+export const SWAP_PATH_HISTORY = "/swap/claim/history";
 export const FUSION_PATH = "/fusion";
 
 export const MENU = [

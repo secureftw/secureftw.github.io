@@ -10,6 +10,7 @@ import { MENU } from "../../consts";
 import WalletDropdown from "./WalletDropdown";
 import { getWalletIcon } from "../../packages/ui/Wallet/helpers";
 import NetworkSwitch from "./NetworkSwitch";
+import NetworkSwitch2 from "./NetworkSwitch2";
 // tslint:disable-next-line:no-submodule-imports
 import { FaMedium, FaTwitter } from "react-icons/all";
 import { MAINNET, TESTNET } from "../../packages/neo/consts";
@@ -90,33 +91,7 @@ const Header = () => {
               </div>
               <hr className="dropdown-divider" />
               <div className="navbar-item">
-                <div className="level is-mobile">
-                  <div className="level-left">
-                    <div className="level-item">
-                      <span
-                        className={
-                          network === TESTNET
-                            ? "has-text-danger"
-                            : "has-text-info"
-                        }
-                      >
-                        {" "}
-                        {network}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="level-right">
-                    <div className="level-item">
-                      <button
-                        onClick={handleSwitchNetwork}
-                        className="button is-small"
-                      >
-                        Switch
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <NetworkSwitch2 />
               </div>
               {/*<hr className="dropdown-divider" />*/}
               {/*<Link*/}

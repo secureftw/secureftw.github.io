@@ -1,11 +1,17 @@
 import { u } from "@cityofzion/neon-core";
-import { base64ToHash160, toDecimal } from "../../../utils";
+import {
+  base64ToDate,
+  base64ToFixed8,
+  base64ToHash160,
+  toDecimal,
+} from "../../../utils";
+import { IPair } from "./interfaces";
 
 export const getEstimate = (
   amount: string,
   reserveA: number,
   reserveB: number
-) => {
+): number => {
   const fixed8TokenAmount = u.BigInteger.fromDecimal(amount, 8).toString();
   // let keys = Object.keys(pairInfo);
   // keys = keys.filter((k) => k !== token);
@@ -13,8 +19,7 @@ export const getEstimate = (
   // const reservedB = pairInfo[keys[0]];
   let estimated = (parseFloat(fixed8TokenAmount) * reserveB) / reserveA;
   estimated = Math.floor(estimated);
-  estimated = toDecimal(estimated.toString());
-  return estimated;
+  return toDecimal(estimated.toString());
 };
 
 export const getUserShare = (totalShares, userShare, poolA, poolB) => {
@@ -37,7 +42,7 @@ export const parseUserStake = (stackItem) => {
   };
 };
 
-export const parsePair = (stackItem) => {
+export const parsePair = (stackItem): IPair => {
   return {
     tokenA: base64ToHash160(stackItem.value[0].value as string),
     tokenB: base64ToHash160(stackItem.value[1].value as string),
@@ -45,4 +50,24 @@ export const parsePair = (stackItem) => {
     amountB: toDecimal(stackItem.value[3].value),
     totalShare: toDecimal(stackItem.value[4].value),
   };
+};
+
+export const parseSwapPaginate = (stackItem: any) => {
+  return {
+    totalItems: stackItem[0].value,
+    totalPages: stackItem[1].value,
+    page: stackItem[2].value,
+    items: parseSwap(stackItem[3].value),
+  };
+};
+
+const parseSwap = (stackItem) => {
+  return stackItem.map((item) => {
+    return {
+      tokenIn: base64ToHash160(item.value[0].value),
+      tokenOut: base64ToHash160(item.value[1].value), // NEO amount
+      tokenInAmount: toDecimal(item.value[2].value), // NEO amount
+      tokenOutAmount: toDecimal(item.value[3].value),
+    };
+  });
 };

@@ -3,8 +3,10 @@ import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { SWAP_SCRIPT_HASH } from "./consts";
 import { base64ToHash160, toDecimal } from "../../../utils";
-import { u } from "@cityofzion/neon-core";
-import { parsePair, parseUserStake } from "./helpers";
+import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
+import {parsePair, parseSwapPaginate, parseUserStake} from "./helpers";
+import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
+import { IPairInfo } from "./interfaces";
 
 export class SwapContract {
   network: INetworkType;
@@ -22,13 +24,16 @@ export class SwapContract {
     tokenB: string,
     amountB: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "addPair",
       scriptHash: this.contractHash,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "Hash160",
@@ -47,14 +52,19 @@ export class SwapContract {
           value: u.BigInteger.fromDecimal(amountB, 8).toString(),
         },
       ],
+      signers: [
+        {
+          account: senderHash,
+          scopes: tx.WitnessScope.CustomContracts,
+          allowedContracts: [this.contractHash, tokenA, tokenB],
+        },
+      ],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript,
       undefined,
-      undefined,
-      true
+      undefined
     );
   };
 
@@ -63,13 +73,16 @@ export class SwapContract {
     tokenA: string,
     tokenB: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "removeLiquidity",
       scriptHash: this.contractHash,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "Hash160",
@@ -80,14 +93,13 @@ export class SwapContract {
           value: tokenB,
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript,
       undefined,
-      undefined,
-      true
+      undefined
     );
   };
 
@@ -96,13 +108,16 @@ export class SwapContract {
     tokenA: string,
     tokenB: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "claim",
       scriptHash: this.contractHash,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "Hash160",
@@ -113,14 +128,13 @@ export class SwapContract {
           value: tokenB,
         },
       ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript,
       undefined,
-      undefined,
-      true
+      undefined
     );
   };
 
@@ -131,13 +145,16 @@ export class SwapContract {
     tokenB: string,
     amountB: string
   ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "swap",
       scriptHash: this.contractHash,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "Hash160",
@@ -156,14 +173,19 @@ export class SwapContract {
           value: u.BigInteger.fromDecimal(amountB, 8).toString(),
         },
       ],
+      signers: [
+        {
+          account: senderHash,
+          scopes: tx.WitnessScope.CustomContracts,
+          allowedContracts: [this.contractHash, tokenA],
+        },
+      ],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript,
       undefined,
-      undefined,
-      true
+      undefined
     );
   };
 
@@ -171,7 +193,7 @@ export class SwapContract {
     tokenA: string,
     tokenB: string,
     connectedWallet?: IConnectedWallet
-  ) => {
+  ): Promise<IPairInfo> => {
     const scripts: any = [];
     const script = {
       scriptHash: this.contractHash,
@@ -200,8 +222,12 @@ export class SwapContract {
     const pair = parsePair(res.stack[0]);
     const obj = {
       reserve: pair,
-      [pair.tokenA]: pair.amountA,
-      [pair.tokenB]: pair.amountB,
+      pair: {
+        [pair.tokenA]: pair.amountA,
+        [pair.tokenB]: pair.amountB,
+      },
+      // [pair.tokenA]: pair.amountA,
+      // [pair.tokenB]: pair.amountB,
       balances: {
         [tokenA]: 0,
         [tokenB]: 0,
@@ -215,7 +241,6 @@ export class SwapContract {
   };
 
   getPairs = async () => {
-    const scripts: any = [];
     const script = {
       scriptHash: this.contractHash,
       operation: "getPairs",
@@ -237,7 +262,6 @@ export class SwapContract {
         };
       });
     } catch (e) {
-      // tslint:disable-next-line:no-console
       return [];
     }
   };
@@ -258,8 +282,7 @@ export class SwapContract {
     };
     try {
       const res = await Network.read(this.network, [script], true);
-      // @ts-ignore
-      return toDecimal(res.stack[0].value);
+      return toDecimal(res.stack[0].value as string);
     } catch (e) {
       return undefined;
     }
@@ -294,7 +317,6 @@ export class SwapContract {
         pair: parsePair(res.stack[1]),
       };
     } catch (e) {
-      // tslint:disable-next-line:no-console
       return undefined;
     }
   };
@@ -317,8 +339,24 @@ export class SwapContract {
       const res = await Network.read(this.network, [script], true);
       return parseUserStake(res.stack[0]);
     } catch (e) {
-    	console.log(e)
-      // tslint:disable-next-line:no-console
+      return undefined;
+    }
+  };
+
+  getSwapHistory = async (tokenA: string, tokenB: string, page: string) => {
+    const script = {
+      scriptHash: this.contractHash,
+      operation: "getSwaps",
+      args: [
+        { type: "Hash160", value: tokenA },
+        { type: "Hash160", value: tokenB },
+        { type: "Integer", value: page },
+      ],
+    };
+    try {
+      const res = await Network.read(this.network, [script], );
+      return parseSwapPaginate(res.stack[0].value);
+    } catch (e) {
       return undefined;
     }
   };

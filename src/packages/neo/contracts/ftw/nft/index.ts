@@ -1,5 +1,5 @@
-import { sc, u } from "@cityofzion/neon-core";
-import { GAS_SCRIPT_HASH } from "../../../consts";
+import { sc, u, wallet as NeonWallet } from "@cityofzion/neon-core";
+import { DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH } from "../../../consts";
 import { INetworkType, Network } from "../../../network";
 import { RUNE_SCRIPT_HASH, RUNE_PRICE } from "./consts";
 import { IConnectedWallet } from "../../../wallet/interfaces";
@@ -17,13 +17,16 @@ export class NFTContract {
   }
 
   mint = async (connectedWallet: IConnectedWallet): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "transfer",
       scriptHash: GAS_SCRIPT_HASH,
       args: [
         {
-          type: "Address",
-          value: connectedWallet.account.address,
+          type: "Hash160",
+          value: senderHash,
         },
         {
           type: "Hash160",
@@ -41,24 +44,27 @@ export class NFTContract {
           value: "1",
         },
       ],
+	    signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript,
       "0.01"
     );
   };
 
   withdrawFund = async (connectedWallet: IConnectedWallet): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "withdrawFund",
       scriptHash: this.contractHash,
       args: [],
+	    signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
-      connectedWallet.account.address,
       invokeScript
     );
   };

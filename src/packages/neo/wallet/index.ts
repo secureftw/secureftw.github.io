@@ -11,7 +11,7 @@ import {
 } from "../consts";
 import { NeoDapi } from "@neongd/neo-dapi";
 import { DevWallet } from "./dev-wallet";
-import { tx, u, wallet, wallet as NeonWallet } from "@cityofzion/neon-core";
+import { u, wallet } from "@cityofzion/neon-core";
 import { INetworkType, Network } from "../network";
 import { LocalStorage } from "../local-storage";
 import moment from "moment";
@@ -109,25 +109,25 @@ export class WalletAPI {
    * @param defaultNetwork
    */
   init = async (defaultNetwork: INetworkType): Promise<any> => {
-    let wallet;
+    let _instance;
     try {
       switch (this.walletType) {
         case O3:
-          wallet = await this.O3Wallet();
+          _instance = await this.O3Wallet();
           break;
         case NEO_LINE:
-          wallet = await this.NeoLine();
+          _instance = await this.NeoLine();
           break;
         case ONE_GATE:
-          wallet = await this.OneGate();
+          _instance = await this.OneGate();
           break;
         case DEV:
-          wallet = await this.Dev(defaultNetwork);
+          _instance = await this.Dev(defaultNetwork);
           break;
       }
       return {
         key: this.walletType,
-        ...wallet,
+        ..._instance,
       };
     } catch (e: any) {
       if (this.walletType === ONE_GATE) {
@@ -141,11 +141,9 @@ export class WalletAPI {
   /* Control signing and send transaction. TODO:Need to improve type hardcoding later */
   invoke = async (
     currentNetwork: INetworkType,
-    senderAddress: string,
     invokeScript: any,
     extraSystemFee?: string,
-    testInvoke?: boolean,
-    isGlobal?: boolean
+    testInvoke?: boolean
   ): Promise<string> => {
     const { instance, network } = await this.init(currentNetwork);
     if (network.defaultNetwork !== currentNetwork) {
@@ -153,15 +151,6 @@ export class WalletAPI {
         "Your wallet's network doesn't match with the app network setting."
       );
     }
-
-    invokeScript.signers = [
-      {
-        account: NeonWallet.getScriptHashFromAddress(senderAddress),
-        scopes: isGlobal
-          ? tx.WitnessScope.Global
-          : tx.WitnessScope.CalledByEntry,
-      },
-    ];
 
     // Do test invoke if required.
     if (testInvoke) {
