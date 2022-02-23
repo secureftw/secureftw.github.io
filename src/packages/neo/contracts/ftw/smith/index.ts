@@ -9,8 +9,10 @@ import {
   parsePaginate,
   parseSmithProperties,
 } from "./helpers";
-import { u, wallet as NeonWallet } from "@cityofzion/neon-core";
+import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { IRuneMeta } from "../nft/interfaces";
+import { RUNE_SCRIPT_HASH } from "../nft";
+import { TTM_SCRIPT_HASH } from "../../ttm/nft";
 
 export class SmithContract {
   network: INetworkType;
@@ -34,65 +36,45 @@ export class SmithContract {
       connectedWallet.account.address
     );
     const invokeScript = {
-      operation: "transfer",
-      scriptHash: GAS_SCRIPT_HASH,
+      operation: "createNEP17",
+      scriptHash: this.contractHash,
       args: [
         {
           type: "Hash160",
           value: senderHash,
         },
         {
-          type: "Hash160",
-          value: this.contractHash,
+          type: "String",
+          value: contractName,
+        },
+        {
+          type: "String",
+          value: author,
+        },
+        {
+          type: "String",
+          value: description,
+        },
+        {
+          type: "String",
+          value: symbol,
         },
         {
           type: "Integer",
-          value: u.BigInteger.fromDecimal(
-            DEPLOY_FEE[this.network],
-            8
-          ).toString(),
+          value: totalSupply,
         },
         {
-          type: "Array",
-          value: [
-            {
-              type: "String",
-              value: "nep17",
-            },
-            {
-              type: "Hash160",
-              value: NeonWallet.getScriptHashFromAddress(
-                connectedWallet.account.address
-              ),
-            },
-            {
-              type: "String",
-              value: contractName,
-            },
-            {
-              type: "String",
-              value: author,
-            },
-            {
-              type: "String",
-              value: description,
-            },
-            {
-              type: "String",
-              value: symbol,
-            },
-            {
-              type: "Integer",
-              value: totalSupply,
-            },
-            {
-              type: "Integer",
-              value: decimals,
-            },
-          ],
+          type: "Integer",
+          value: decimals,
         },
       ],
-      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+      signers: [
+        {
+          account: senderHash,
+          scopes: tx.WitnessScope.CustomContracts,
+          allowedContracts: [this.contractHash, GAS_SCRIPT_HASH],
+        },
+      ],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
@@ -112,61 +94,41 @@ export class SmithContract {
       connectedWallet.account.address
     );
     const invokeScript = {
-      operation: "transfer",
-      scriptHash: GAS_SCRIPT_HASH,
+      operation: "createNEP11",
+      scriptHash: this.contractHash,
       args: [
         {
           type: "Hash160",
           value: senderHash,
         },
         {
-          type: "Hash160",
-          value: this.contractHash,
+          type: "String",
+          value: symbol,
         },
         {
-          type: "Integer",
-          value: u.BigInteger.fromDecimal(
-            DEPLOY_FEE[this.network],
-            8
-          ).toString(),
+          type: "String",
+          value: contractName,
         },
         {
-          type: "Array",
-          value: [
-            {
-              type: "String",
-              value: "nep11",
-            },
-            {
-              type: "Hash160",
-              value: NeonWallet.getScriptHashFromAddress(
-                connectedWallet.account.address
-              ),
-            },
-            {
-              type: "String",
-              value: symbol,
-            },
-            {
-              type: "String",
-              value: contractName,
-            },
-            {
-              type: "String",
-              value: description,
-            },
-            {
-              type: "String",
-              value: author,
-            },
-            {
-              type: "String",
-              value: email,
-            },
-          ],
+          type: "String",
+          value: description,
+        },
+        {
+          type: "String",
+          value: author,
+        },
+        {
+          type: "String",
+          value: email,
         },
       ],
-      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+      signers: [
+        {
+          account: senderHash,
+          scopes: tx.WitnessScope.CustomContracts,
+          allowedContracts: [this.contractHash, GAS_SCRIPT_HASH],
+        },
+      ],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,

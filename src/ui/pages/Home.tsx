@@ -5,7 +5,7 @@ import { GALLERY_PATH, SMITH_PATH, SWAP_PATH } from "../../consts";
 import { ARENA_PATH } from "./Tournament/pageRoutes";
 import { Link } from "react-router-dom";
 import { useWallet } from "../../packages/provider";
-import { MAINNET, TESTNET } from "../../packages/neo/consts";
+import { TESTNET } from "../../packages/neo/consts";
 import toast from "react-hot-toast";
 
 const CARDS = [
