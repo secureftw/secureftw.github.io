@@ -31,7 +31,7 @@ const Swap = () => {
             <NavSwitch />
             <div className="box is-shadowless">
               <Route exact={true} path={SWAP_PATH} component={SwapBox} />
-              <Route path={SWAP_PATH_LIQUIDITY} component={Liquidity} />
+              {/*<Route path={SWAP_PATH_LIQUIDITY} component={Liquidity} />*/}
               <Route path={SWAP_PATH_FARM} component={Farm} />
               {/*<NotifyError msg={error} onClose={() => setError("")} />*/}
             </div>

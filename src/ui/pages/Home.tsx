@@ -64,7 +64,7 @@ const Home = () => {
           <div className="container">
             <h1 className="title">Forthewin Network</h1>
             <p className="subtitle">
-              Building something cool decentralized stuff on NEO blockchain.{" "}
+              Building some cool decentralized stuff on NEO blockchain.{" "}
             </p>
           </div>
         </div>

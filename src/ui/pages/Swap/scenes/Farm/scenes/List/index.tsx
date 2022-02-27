@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { ASSET_LIST } from "../../../../../../../packages/neo/contracts/ftw/swap/consts";
 import { Link } from "react-router-dom";
-import { SWAP_PATH_HISTORY } from "../../../../../../../consts";
+import {
+  SWAP_PATH_HISTORY,
+  SWAP_PATH_LIQUIDITY,
+} from "../../../../../../../consts";
 import Modal from "../../../../../../components/Modal";
 import FarmDetail from "../Detail";
 import { useWallet } from "../../../../../../../packages/provider";
 import { SwapContract } from "../../../../../../../packages/neo/contracts";
+import CreatePool from "../CreatePool";
 
 const PairList = (props) => {
   const { network, connectedWallet } = useWallet();
   const [list, setList] = useState<any[]>([]);
   const [detail, setDetail] = useState();
-  const [isLoading, setLoading] = useState(false);
+  const [isCreateModalActive, setCreateModalActive] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -28,9 +33,29 @@ const PairList = (props) => {
     }
     fetch();
   }, []);
-  if (isLoading) return <div>Loading pairs..</div>;
+  if (isLoading) return <div>Loading..</div>;
   return (
     <div>
+      <div className="level is-mobile">
+        <div className="level-left">
+          <div className="level-item">
+            <h1 className="title is-5">Pools</h1>
+          </div>
+        </div>
+        <div className="level-right">
+          <div className="level-item">
+            <button
+              onClick={() => setCreateModalActive(true)}
+              className="button is-light"
+            >
+              Create
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
       {list.map((item, i) => {
         return (
           <div
@@ -55,7 +80,16 @@ const PairList = (props) => {
                   search: `?tokenA=${item.tokenA}&tokenB=${item.tokenB}`,
                 }}
               >
-                History
+                Swap history
+              </Link>
+              <br />
+              <Link
+                to={{
+                  pathname: `${SWAP_PATH_LIQUIDITY}`,
+                  search: `?tokenA=${item.tokenA}&tokenB=${item.tokenB}`,
+                }}
+              >
+                Add liquidity
               </Link>
             </div>
             <div className="media-right">
@@ -69,6 +103,12 @@ const PairList = (props) => {
           </div>
         );
       })}
+
+      {isCreateModalActive && (
+        <Modal onClose={() => setCreateModalActive(false)}>
+          <CreatePool />
+        </Modal>
+      )}
 
       {detail && connectedWallet && (
         <Modal onClose={() => setDetail(undefined)}>

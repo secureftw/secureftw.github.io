@@ -13,79 +13,54 @@ const Banner = ({ onMint, network }: IBannerProps) => {
     <section className="hero is-white">
       <div className="hero-body">
         <div className="container">
-          <div className="columns">
-            <div className="column">
-              <div>
-                <h1 className="title">Forthewin Runes</h1>
-                <p className="subtitle">Algorithms-generated lucky runes</p>
-
-                <div className="content is-small">
-                  <p>
-                    <strong>Max supply</strong>
-                    <br />
-                    500 runes
-                  </p>
-                  <p>
-                    <strong>Attribute #1</strong>
-                    <br />
-                    Random phase (Dark, Light, Fire, Water, Wood, Earth, Metal)
-                  </p>
-                  <p>
-                    <strong>Attribute #2</strong>
-                    <br /> Luck (1 ~ 10)
-                  </p>
-                </div>
-                <div className="block has-text-centered-mobile is-hidden-mobile">
-                  <button
-                    onClick={onMint}
-                    className="button is-primary press-font"
-                  >
-                    Mint: {RUNE_PRICE[network]} GAS
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="column">
-              <div
-                className="block"
-                style={{ display: "flex", justifyContent: "center" }}
-              >
-                <DisplayRandomRune
-                  isActive={true}
-                  width="230px"
-                  height="230px"
-                />
-              </div>
-              <div className="block has-text-centered-mobile is-hidden-tablet">
-                <button
-                  onClick={onMint}
-                  className="button is-primary press-font"
+          <div>
+            <h1 className="title">FTW Runes</h1>
+            <p className="subtitle">Algorithms-generated, stored onchain NFT</p>
+            <div className="content is-small">
+              <p>
+                <strong>Smart contract</strong>
+                <br />
+                <a
+                  className="has-text-dark is-size-7"
+                  href="https://explorer.onegate.space/contractinfo/0xbebd4eb7c09ca5b59004aa8b58c9bfc81270e5d6"
                 >
-                  Mint: {RUNE_PRICE[network]} GAS
-                </button>
-              </div>
+                  0xbebd4eb7c09ca5b59004aa8b58c9bfc81270e5d6
+                </a>
+              </p>
+              <p>
+                <strong>Max supply</strong>
+                <br />
+                500 runes (Sold out)
+              </p>
+              <p>
+                <strong>Attribute #1</strong>
+                <br />
+                Dark, Light, Fire, Water, Wood, Earth, Metal
+              </p>
+              <p>
+                <strong>Attribute #2</strong>
+                <br /> Luck (1 ~ 10)
+              </p>
+              <p>
+                <strong>Press</strong>
+                <br />
+                <a
+                  // className="has-text-dark is-size-7"
+                  href="https://neonewstoday.com/general/forthewin-network-launches-token-generator-and-ftw-rune-with-image-stored-onchain"
+                >
+                  Article 1, &nbsp;
+                </a>
+                <a
+                  // className="has-text-dark is-size-7"
+                  href="https://neonewstoday.com/nft/ftw-arena-tickets-now-on-sale/"
+                >
+                  Article 2
+                </a>
+              </p>
             </div>
           </div>
         </div>
       </div>
-      {/*<div className="hero-foot">*/}
-      {/*  <nav className="tabs is-boxed is-fullwidth">*/}
-      {/*    <div className="container">*/}
-      {/*      <ul>*/}
-      {/*        {RUNE_PHASE_FILTER.map((phase) => {*/}
-      {/*          return (*/}
-      {/*            <li*/}
-      {/*              key={phase}*/}
-      {/*              className={filter === phase ? "is-active" : ""}*/}
-      {/*            >*/}
-      {/*              <a onClick={() => onFilterChange(phase)}>{phase}</a>*/}
-      {/*            </li>*/}
-      {/*          );*/}
-      {/*        })}*/}
-      {/*      </ul>*/}
-      {/*    </div>*/}
-      {/*  </nav>*/}
-      {/*</div>*/}
     </section>
   );
 };

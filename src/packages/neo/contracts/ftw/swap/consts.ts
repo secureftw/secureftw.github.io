@@ -78,6 +78,29 @@ export const ASSET_LIST = {
     },
   },
 };
+
+export const PAIR_LIST = {
+  [PRIVATENET]: [
+    {
+      label: "FTW - NUDES",
+      value: {
+        tokenA: FTW_SCRIPT_HASH[PRIVATENET],
+        tokenB: NUDES_SCRIPT_HASH[PRIVATENET],
+      },
+    },
+  ],
+  [TESTNET]: [
+    {
+      label: "FTW - NUDES",
+      value: {
+        tokenA: FTW_SCRIPT_HASH[TESTNET],
+        tokenB: NUDES_SCRIPT_HASH[TESTNET],
+      },
+    },
+  ],
+  [MAINNET]: [],
+};
+
 export const ASSETS = (network: INetworkType) => {
   const keys = Object.keys(ASSET_LIST[network]);
   return keys.map((key) => {

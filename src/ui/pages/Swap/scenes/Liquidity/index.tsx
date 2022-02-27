@@ -11,26 +11,33 @@ import { toast } from "react-hot-toast";
 import { getEstimate } from "../../../../../packages/neo/contracts/ftw/swap/helpers";
 // tslint:disable-next-line:no-submodule-imports
 import { FaExchangeAlt } from "react-icons/all";
-import { toDecimal } from "../../../../../packages/neo/utils";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
+import { useLocation } from "react-router-dom";
+// tslint:disable-next-line:no-implicit-dependencies
+import queryString from "query-string";
 
 const Liquidity = (props) => {
+  const location = useLocation();
+  const params = queryString.parse(location.search);
+  const isNewPoolMode = !params.tokenA && !params.tokenBv;
   const { network, connectedWallet, openWalletModal } = useWallet();
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
   >("");
-  const [tokenA, setTokenA] = useState<any>(FTW_SCRIPT_HASH[network]);
+  const [tokenA, setTokenA] = useState<any>(params.tokenA ? params.tokenA : "");
   const [amountA, setAmountA] = useState("");
-  const [tokenB, setTokenB] = useState<any>();
+  const [tokenB, setTokenB] = useState<any>(params.tokenB ? params.tokenB : "");
   const [amountB, setAmountB] = useState("");
   const [reserve, setReserve] = useState<any>();
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
 
   const onAssetChange = (type: "A" | "B" | "") => {
-    setAssetChangeModalActive(type);
+    if (isNewPoolMode) {
+      setAssetChangeModalActive(type);
+    }
   };
 
   const onAssetClick = (assetHash) => {
@@ -93,7 +100,11 @@ const Liquidity = (props) => {
         reserve.pair[tokenA] !== 0 &&
         reserve.pair[tokenB] !== 0
       ) {
-        const estimated = getEstimate(val, reserve.pair[tokenB], reserve.pair[tokenA]);
+        const estimated = getEstimate(
+          val,
+          reserve.pair[tokenB],
+          reserve.pair[tokenA]
+        );
         setAmountA(estimated.toString());
       }
       setAmountB(val);
@@ -151,25 +162,14 @@ const Liquidity = (props) => {
     }
   }, [tokenA, tokenB]);
 
-  // let tokenBofA = 0;
-  // let tokenAofB = 0;
-  //
-  // if (tokenA && tokenB && amountA && amountB && pairInfo) {
-  //   const reservedA = pairInfo[tokenA];
-  //   const reservedB = pairInfo[tokenB];
-  //   tokenBofA =
-  //     (parseFloat("100000000") * parseFloat(reservedB)) / parseFloat(reservedA);
-  //   tokenBofA = Math.floor(tokenBofA);
-  //   tokenBofA = toDecimal(tokenBofA.toString());
-  //
-  //   tokenAofB =
-  //     (parseFloat("100000000") * parseFloat(reservedA)) / parseFloat(reservedB);
-  //   tokenAofB = Math.floor(tokenAofB);
-  //   tokenAofB = toDecimal(tokenAofB.toString());
-  // }
-  const noLiquidity = reserve && reserve.pair[tokenA] === 0 && reserve.pair[tokenB] === 0;
+  const noLiquidity =
+    reserve && reserve.pair[tokenA] === 0 && reserve.pair[tokenB] === 0;
   return (
     <>
+      <h1 className="title is-5">
+        {noLiquidity ? "Create a new pool" : "Add liquidity"}
+      </h1>
+      <hr />
       {noLiquidity && (
         <div className="notification is-info">
           <strong>Liquidity Provider Rewards</strong>
@@ -183,7 +183,10 @@ const Liquidity = (props) => {
       <div className="is-relative">
         <Input
           heading="Pair A"
-          onClickAsset={() => onAssetChange("A")}
+          onClickAsset={() => {
+            onAssetChange("A");
+          }}
+          contractHash={tokenA}
           asset={tokenA ? ASSET_LIST[network][tokenA] : undefined}
           val={amountA}
           setValue={(val, e) => onTokenAAmountChange("A", val)}
@@ -196,14 +199,11 @@ const Liquidity = (props) => {
         </div>
         <Input
           heading="Pair B"
-          // isReadOnly={
-          //   pairInfo &&
-          //   tokenB &&
-          //   pairInfo[tokenA] !== "0" &&
-          //   pairInfo[tokenB] !== "0"
-          // }
           isLoading={isPairLoading}
-          onClickAsset={() => onAssetChange("B")}
+          onClickAsset={() => {
+            onAssetChange("B");
+          }}
+          contractHash={tokenB}
           asset={tokenB ? ASSET_LIST[network][tokenB] : undefined}
           val={amountB}
           setValue={(val, e) => onTokenAAmountChange("B", val)}
@@ -213,11 +213,6 @@ const Liquidity = (props) => {
           tokenA && tokenB && amountA && amountB ? (
             <>
               <hr />
-              {/*<div className="box">*/}
-              {/*  {`${tokenBofA} ${ASSET_LIST[tokenB].symbol} per ${ASSET_LIST[tokenA].symbol}`}*/}
-              {/*  <br />*/}
-              {/*  {`${tokenAofB} ${ASSET_LIST[tokenA].symbol} per ${ASSET_LIST[tokenB].symbol}`}*/}
-              {/*</div>*/}
               <button
                 disabled={
                   reserve.balances[tokenA] < parseFloat(amountA) ||

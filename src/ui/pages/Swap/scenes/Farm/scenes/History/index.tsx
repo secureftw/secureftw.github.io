@@ -42,11 +42,12 @@ const History = () => {
   return (
     <div>
       <h1 className="title is-5">Swap history</h1>
+      <hr />
       {data.totalItems === "0" ? (
         <p className="subtitle is-6">No data</p>
       ) : (
         <div className="table-container">
-          <table className="table">
+          <table className="table is-fullwidth">
             <thead>
               <tr>
                 <th>In</th>

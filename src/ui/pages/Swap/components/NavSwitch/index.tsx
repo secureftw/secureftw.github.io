@@ -21,15 +21,15 @@ const NavSwitch = (props) => {
         >
           <Link to={SWAP_PATH}>Swap</Link>
         </li>
-        <li
-          className={
-            location.pathname === SWAP_PATH_LIQUIDITY
-              ? "is-active"
-              : "has-background-white"
-          }
-        >
-          <Link to={SWAP_PATH_LIQUIDITY}>Liquidity</Link>
-        </li>
+        {/*<li*/}
+        {/*  className={*/}
+        {/*    location.pathname === SWAP_PATH_LIQUIDITY*/}
+        {/*      ? "is-active"*/}
+        {/*      : "has-background-white"*/}
+        {/*  }*/}
+        {/*>*/}
+        {/*  <Link to={SWAP_PATH_LIQUIDITY}>Liquidity</Link>*/}
+        {/*</li>*/}
         <li
           className={
             location.pathname.includes(SWAP_PATH_FARM)
@@ -37,17 +37,8 @@ const NavSwitch = (props) => {
               : "has-background-white"
           }
         >
-          <Link to={SWAP_PATH_FARM}>Farm</Link>
+          <Link to={SWAP_PATH_FARM}>Pools</Link>
         </li>
-        {/*<li*/}
-        {/*  className={*/}
-        {/*    location.pathname === SWAP_PATH_HISTORY*/}
-        {/*      ? "is-active"*/}
-        {/*      : "has-background-white"*/}
-        {/*  }*/}
-        {/*>*/}
-        {/*  <Link to={SWAP_PATH_HISTORY}>History</Link>*/}
-        {/*</li>*/}
       </ul>
     </div>
   );

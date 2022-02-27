@@ -2,9 +2,9 @@ import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { SWAP_SCRIPT_HASH } from "./consts";
-import { base64ToHash160, toDecimal } from "../../../utils";
+import { base64ToHash160, base64ToString, toDecimal } from "../../../utils";
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
-import {parsePair, parseSwapPaginate, parseUserStake} from "./helpers";
+import { parsePair, parseSwapPaginate, parseUserStake } from "./helpers";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
 import { IPairInfo } from "./interfaces";
 
@@ -354,10 +354,69 @@ export class SwapContract {
       ],
     };
     try {
-      const res = await Network.read(this.network, [script], );
+      const res = await Network.read(this.network, [script]);
       return parseSwapPaginate(res.stack[0].value);
     } catch (e) {
       return undefined;
     }
+  };
+
+  getContractHashes = async (tokenA: string, tokenB: string): Promise<any> => {
+    const script1 = {
+      scriptHash: tokenA,
+      operation: "symbol",
+      args: [],
+    };
+    const script2 = {
+      scriptHash: tokenA,
+      operation: "decimals",
+      args: [],
+    };
+    const script3 = {
+      scriptHash: tokenB,
+      operation: "symbol",
+      args: [],
+    };
+    const script4 = {
+      scriptHash: tokenB,
+      operation: "decimals",
+      args: [],
+    };
+    const script5 = {
+      scriptHash: this.contractHash,
+      operation: "getPair",
+      args: [
+        { type: "Hash160", value: tokenA },
+        { type: "Hash160", value: tokenB },
+      ],
+    };
+    const res = await Network.read(this.network, [
+      script1,
+      script2,
+      script3,
+      script4,
+      script5,
+    ]);
+    return {
+      tokenA: {
+        symbol: base64ToString(res.stack[0].value as string),
+        decimals: res.stack[1].value,
+      },
+      tokenB: {
+        symbol: base64ToString(res.stack[2].value as string),
+        decimals: res.stack[3].value,
+      },
+      reserve: parsePair(res.stack[4]),
+    };
+  };
+
+  getContractSymbol = async (tokenA: string): Promise<any> => {
+    const script1 = {
+      scriptHash: tokenA,
+      operation: "symbol",
+      args: [],
+    };
+    const res = await Network.read(this.network, [script1]);
+    return base64ToString(res.stack[0].value as string);
   };
 }

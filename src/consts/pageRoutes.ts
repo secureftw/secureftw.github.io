@@ -9,10 +9,14 @@ export const SMITH_PATH = "/smith";
 export const SMITH_PATH_NEP11 = "/smith/nep11";
 export const COLLECTION_PATH = "/NFT/collection";
 export const SWAP_PATH = "/swap";
-export const SWAP_PATH_LIQUIDITY = "/swap/liquidity";
-export const SWAP_PATH_FARM = "/swap/claim";
-export const SWAP_PATH_HISTORY = "/swap/claim/history";
+// export const SWAP_PATH_LIQUIDITY = "/swap/liquidity";
+export const SWAP_PATH_FARM = "/swap/pools";
+export const SWAP_PATH_HISTORY = "/swap/pools/history";
+export const SWAP_PATH_LIQUIDITY = "/swap/pools/liquidity";
 export const FUSION_PATH = "/fusion";
+export const INCUBATOR_PATH = "/incubator";
+export const INCUBATOR_POOL_PATH = "/incubator/pool";
+export const INCUBATOR_REGISTER_PATH = "/incubator/register";
 
 export const MENU = [
   {
@@ -29,6 +33,11 @@ export const MENU = [
     label: "Smith",
     path: SMITH_PATH,
     network: [PRIVATENET, TESTNET, MAINNET],
+  },
+  {
+    label: "DAO Incubator",
+    path: INCUBATOR_PATH,
+    network: [PRIVATENET],
   },
   {
     label: "Swap",

@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 // tslint:disable-next-line:no-submodule-imports
 import { FaAngleDown, FaQuestionCircle } from "react-icons/all";
 import NumberFormat from "react-number-format";
+import { useWallet } from "../../../../../packages/provider";
+import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
+import { SwapContract } from "../../../../../packages/neo/contracts";
 
 interface IInputProps {
+  contractHash?: string;
   asset?: {
     symbol: string;
     logo: string;
@@ -17,6 +21,7 @@ interface IInputProps {
   userBalance?: string;
 }
 const Input = ({
+  contractHash,
   asset,
   val,
   heading,
@@ -26,6 +31,23 @@ const Input = ({
   isReadOnly,
   userBalance,
 }: IInputProps) => {
+  const { network } = useWallet();
+  const [symbol, setSymbol] = useState<string>();
+  const [logo, setLogo] = useState<string>();
+  useEffect(() => {
+    async function fetchTokenInfo(_hash) {
+      const res = await new SwapContract(network).getContractSymbol(_hash);
+      setSymbol(res as string);
+    }
+    if (contractHash) {
+      if (ASSET_LIST[network][contractHash]) {
+        setSymbol(ASSET_LIST[network][contractHash].symbol);
+        setLogo(ASSET_LIST[network][contractHash].logo);
+      } else {
+        fetchTokenInfo(contractHash);
+      }
+    }
+  }, [contractHash]);
   return (
     <div className="">
       <div className="columns">
@@ -45,11 +67,7 @@ const Input = ({
                   }}
                   className="image is-clickable is-flex"
                 >
-                  {asset ? (
-                    <img src={asset.logo} />
-                  ) : (
-                    <FaQuestionCircle size={35} />
-                  )}
+                  {logo ? <img src={logo} /> : <FaQuestionCircle size={35} />}
                 </div>
               </div>
               <div
@@ -59,7 +77,7 @@ const Input = ({
                 {heading && <p className="heading">{heading}</p>}
                 <div style={{ alignItems: "center", display: "flex" }}>
                   <span className="has-text-weight-bold">
-                    {asset ? asset.symbol : "Select"}
+                    {symbol ? symbol : "Select"}
                   </span>
                   <span className="icon">
                     <FaAngleDown />
