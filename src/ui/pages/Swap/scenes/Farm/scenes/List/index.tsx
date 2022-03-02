@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import {
   SWAP_PATH_HISTORY,
   SWAP_PATH_LIQUIDITY,
+  SWAP_PATH_TRADE,
 } from "../../../../../../../consts";
 import Modal from "../../../../../../components/Modal";
 import FarmDetail from "../Detail";
 import { useWallet } from "../../../../../../../packages/provider";
 import { SwapContract } from "../../../../../../../packages/neo/contracts";
 import CreatePool from "../CreatePool";
+import PoolCard from "../../../../components/PoolCard";
 
 const PairList = (props) => {
   const { network, connectedWallet } = useWallet();
@@ -44,12 +46,13 @@ const PairList = (props) => {
         </div>
         <div className="level-right">
           <div className="level-item">
-            <button
-              onClick={() => setCreateModalActive(true)}
+            <Link
+              to={SWAP_PATH_LIQUIDITY}
+              // onClick={() => setCreateModalActive(true)}
               className="button is-light"
             >
               Create
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -57,51 +60,7 @@ const PairList = (props) => {
       <hr />
 
       {list.map((item, i) => {
-        return (
-          <div
-            style={{ alignItems: "center" }}
-            className="media"
-            key={"pairs" + i}
-          >
-            <div className="media-left">
-              <strong>TVL</strong>
-            </div>
-            <div className="media-content is-vcentered">
-              {ASSET_LIST[network][item.tokenA].symbol} /{" "}
-              {ASSET_LIST[network][item.tokenB].symbol}
-              <br />
-              <small>
-                {item.amountA} / {item.amountB}
-              </small>
-              <br />
-              <Link
-                to={{
-                  pathname: `${SWAP_PATH_HISTORY}`,
-                  search: `?tokenA=${item.tokenA}&tokenB=${item.tokenB}`,
-                }}
-              >
-                Swap history
-              </Link>
-              <br />
-              <Link
-                to={{
-                  pathname: `${SWAP_PATH_LIQUIDITY}`,
-                  search: `?tokenA=${item.tokenA}&tokenB=${item.tokenB}`,
-                }}
-              >
-                Add liquidity
-              </Link>
-            </div>
-            <div className="media-right">
-              <button
-                onClick={() => setDetail(item)}
-                className="button is-light"
-              >
-                Detail
-              </button>
-            </div>
-          </div>
-        );
+        return <PoolCard key={`pool-${i}`} {...item} />;
       })}
 
       {isCreateModalActive && (

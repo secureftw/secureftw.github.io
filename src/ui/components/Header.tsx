@@ -25,12 +25,14 @@ const Header = () => {
     setActive(false);
     disConnectWallet();
   };
+
   const handleSwitchNetwork = () => {
     const targetNetwork = network === TESTNET ? MAINNET : TESTNET;
     switchNetwork(targetNetwork);
     setActive(false);
     toast.success(`Network switched. You are on ${targetNetwork}`);
   };
+
   return (
     <nav
       className="navbar has-shadow is-white is-fixed-top"
@@ -93,14 +95,6 @@ const Header = () => {
               <div className="navbar-item">
                 <NetworkSwitch2 />
               </div>
-              {/*<hr className="dropdown-divider" />*/}
-              {/*<Link*/}
-              {/*  onClick={() => setActive(false)}*/}
-              {/*  className="navbar-item has-text-dark"*/}
-              {/*  to={COLLECTION_PATH}*/}
-              {/*>*/}
-              {/*  My NFT*/}
-              {/*</Link>*/}
               <hr className="dropdown-divider" />
               <a onClick={handleDisconnectWallet} className="navbar-item">
                 Disconnect wallet
@@ -113,16 +107,38 @@ const Header = () => {
           <div className="navbar-start">
             {MENU.map((route, i) => {
               if (!route.network.includes(network)) return false;
-              return (
-                <NavLink
-                  key={`header-${route.label}${i}`}
-                  activeClassName="is-active"
-                  to={route.path}
-                  className="navbar-item"
-                >
-                  <strong>{route.label}</strong>
-                </NavLink>
-              );
+              if (route.category) {
+                return (
+                  <div className="navbar-item has-dropdown is-hoverable">
+                    <div className="navbar-link">{route.label}</div>
+                    <div className="navbar-dropdown is-boxed">
+                      {route.category.map((item, index) => {
+                        return (
+                          <NavLink
+                            key={`category-${item.label}-${item.label}${index}`}
+                            activeClassName="is-active"
+                            to={item.path}
+                            className="navbar-item"
+                          >
+                            {item.label}
+                          </NavLink>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              } else {
+                return (
+                  <NavLink
+                    key={`header-${route.label}${i}`}
+                    activeClassName="is-active"
+                    to={route.path}
+                    className="navbar-item"
+                  >
+                    <strong>{route.label}</strong>
+                  </NavLink>
+                );
+              }
             })}
           </div>
         </div>

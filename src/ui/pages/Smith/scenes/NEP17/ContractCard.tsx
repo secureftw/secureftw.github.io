@@ -52,7 +52,9 @@ const ContractCard = ({ data }: IContractCardProps) => {
           <div className="control">
             <div className="tags has-addons">
               <span className="tag is-dark">Total supply</span>
-              <span className="tag is-info">{data.totalSupply}</span>
+              <span className="tag is-info">
+                {parseFloat(data.totalSupply).toLocaleString()}
+              </span>
             </div>
           </div>
           <div className="control">

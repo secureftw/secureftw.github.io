@@ -7,11 +7,8 @@ import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/const
 import { SwapContract } from "../../../../../packages/neo/contracts";
 
 interface IInputProps {
-  contractHash?: string;
-  asset?: {
-    symbol: string;
-    logo: string;
-  };
+  contractHash: string;
+  symbol: string;
   val: string;
   heading?: string;
   isLoading?: boolean;
@@ -22,7 +19,7 @@ interface IInputProps {
 }
 const Input = ({
   contractHash,
-  asset,
+  symbol,
   val,
   heading,
   setValue,
@@ -32,22 +29,9 @@ const Input = ({
   userBalance,
 }: IInputProps) => {
   const { network } = useWallet();
-  const [symbol, setSymbol] = useState<string>();
-  const [logo, setLogo] = useState<string>();
-  useEffect(() => {
-    async function fetchTokenInfo(_hash) {
-      const res = await new SwapContract(network).getContractSymbol(_hash);
-      setSymbol(res as string);
-    }
-    if (contractHash) {
-      if (ASSET_LIST[network][contractHash]) {
-        setSymbol(ASSET_LIST[network][contractHash].symbol);
-        setLogo(ASSET_LIST[network][contractHash].logo);
-      } else {
-        fetchTokenInfo(contractHash);
-      }
-    }
-  }, [contractHash]);
+  const logo = ASSET_LIST[network][contractHash]
+    ? ASSET_LIST[network][contractHash].logo
+    : undefined;
   return (
     <div className="">
       <div className="columns">
@@ -102,7 +86,7 @@ const Input = ({
                 }
               }}
               thousandSeparator={true}
-              suffix={asset ? " " + asset.symbol : ""}
+              suffix={" " + symbol}
               allowLeadingZeros={false}
               // format={(val) => {} }
             />
@@ -117,7 +101,7 @@ const Input = ({
                 <div className="level-right">
                   <div className="level-item">
                     <small className="is-size-7">
-                      {userBalance} {asset && asset.symbol}
+                      {userBalance} {symbol}
                     </small>
                   </div>
                 </div>

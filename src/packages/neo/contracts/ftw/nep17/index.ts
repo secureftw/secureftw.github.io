@@ -3,7 +3,7 @@ import { CONST } from "../../../index";
 export const FTW_SCRIPT_HASH = {
   [CONST.PRIVATENET]: "c1a56650f12420405c5b7e2634eb3779a0c3e396",
   [CONST.TESTNET]: "c1a56650f12420405c5b7e2634eb3779a0c3e396",
-  [CONST.MAINNET]: "9f8b20c31bb9e45003f2d9f316d2caf1dcd1bf20 ",
+  [CONST.MAINNET]: "9f8b20c31bb9e45003f2d9f316d2caf1dcd1bf20",
 };
 
 export const NUDES_SCRIPT_HASH = {

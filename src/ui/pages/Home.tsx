@@ -1,7 +1,7 @@
 import React from "react";
 import PageLayout from "../components/PageLayout";
 import BgContainer from "../components/BgContainer";
-import { GALLERY_PATH, SMITH_PATH, SWAP_PATH } from "../../consts";
+import {GALLERY_PATH, SMITH_PATH, SWAP_PATH, TOURNAMENT_PATH} from "../../consts";
 import { ARENA_PATH } from "./Tournament/pageRoutes";
 import { Link } from "react-router-dom";
 import { useWallet } from "../../packages/provider";
@@ -21,7 +21,7 @@ const CARDS = [
     type: "GameFi",
     desc: " FTW Runes against each other with the victor earning a GAS prize.",
     img: "assets/arena-bg.jpeg",
-    link: ARENA_PATH,
+    link: TOURNAMENT_PATH,
   },
   {
     title: "FTW Smith",

@@ -10,7 +10,8 @@ import { TournamentContract } from "../../../../../packages/neo/contracts/ftw/to
 
 const Arena = (props) => {
   const location = useLocation();
-  const { arenaNo } = props.match.params;
+  let { arenaNo } = props.match.params;
+  arenaNo = arenaNo ? arenaNo : props.defaultArena;
   const [status, setStatus] = useState<{
     prize: number;
     gameNo: number;

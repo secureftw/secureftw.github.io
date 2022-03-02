@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   SWAP_PATH,
-  SWAP_PATH_FARM,
+  // SWAP_PATH_FARM,
   SWAP_PATH_HISTORY,
   SWAP_PATH_LIQUIDITY,
 } from "../../../../../consts";
@@ -30,15 +30,15 @@ const NavSwitch = (props) => {
         >
           <Link to={SWAP_PATH_LIQUIDITY}>Liquidity</Link>
         </li>
-        <li
-          className={
-            location.pathname.includes(SWAP_PATH_FARM)
-              ? "is-active"
-              : "has-background-white"
-          }
-        >
-          <Link to={SWAP_PATH_FARM}>Farm</Link>
-        </li>
+        {/*<li*/}
+        {/*  className={*/}
+        {/*    location.pathname.includes(SWAP_PATH_FARM)*/}
+        {/*      ? "is-active"*/}
+        {/*      : "has-background-white"*/}
+        {/*  }*/}
+        {/*>*/}
+        {/*  <Link to={SWAP_PATH_FARM}>Farm</Link>*/}
+        {/*</li>*/}
         {/*<li*/}
         {/*  className={*/}
         {/*    location.pathname === SWAP_PATH_HISTORY*/}

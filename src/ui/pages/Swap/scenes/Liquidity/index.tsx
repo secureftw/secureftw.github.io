@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Input from "../../components/Input";
-import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
 import { useWallet } from "../../../../../packages/provider";
-import {
-  FTW_SCRIPT_HASH,
-  SwapContract,
-} from "../../../../../packages/neo/contracts";
+import { SwapContract } from "../../../../../packages/neo/contracts";
 import AssetListModal from "../../components/AssetListModal";
 import { toast } from "react-hot-toast";
 import { getEstimate } from "../../../../../packages/neo/contracts/ftw/swap/helpers";
 // tslint:disable-next-line:no-submodule-imports
 import { FaExchangeAlt } from "react-icons/all";
-import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import { useLocation } from "react-router-dom";
@@ -26,10 +21,13 @@ const Liquidity = (props) => {
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
   >("");
-  const [tokenA, setTokenA] = useState<any>(params.tokenA ? params.tokenA : "");
+
+  const [tokenA, setTokenA] = useState<any>("");
+  const [tokenB, setTokenB] = useState<any>("");
   const [amountA, setAmountA] = useState("");
-  const [tokenB, setTokenB] = useState<any>(params.tokenB ? params.tokenB : "");
   const [amountB, setAmountB] = useState("");
+  const [symbolA, setSymbolA] = useState("");
+  const [symbolB, setSymbolB] = useState("");
   const [reserve, setReserve] = useState<any>();
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
@@ -40,11 +38,13 @@ const Liquidity = (props) => {
     }
   };
 
-  const onAssetClick = (assetHash) => {
+  const onAssetClick = (assetHash, symbol) => {
     if (isAssetChangeModalActive === "A") {
       setTokenA(assetHash);
+      setSymbolA(symbol);
     } else {
       setTokenB(assetHash);
+      setSymbolB(symbol);
     }
     setAssetChangeModalActive("");
   };
@@ -116,6 +116,8 @@ const Liquidity = (props) => {
     setTokenA(tokenB ? tokenB : "");
     setAmountB(amountA);
     setAmountA(amountB);
+    setSymbolA(symbolB);
+    setSymbolB(symbolA);
   };
 
   useEffect(() => {
@@ -153,7 +155,6 @@ const Liquidity = (props) => {
           setAmountA(estimated.toString());
         }
       } catch (e: any) {
-        console.log(e);
         // setError(e.message);
       }
     }
@@ -172,11 +173,10 @@ const Liquidity = (props) => {
       <hr />
       {noLiquidity && (
         <div className="notification is-info">
-          <strong>Liquidity Provider Rewards</strong>
+          <strong>You are providing liquidity into the pool</strong>
           <br />
-          Liquidity providers earn a 0.25% fee on all trades proportional to
-          their share of the pool. Fees are added to the pool, accrue in real
-          time and can be claimed by withdrawing your liquidity.
+          FTW Swap is not the same as traditional DeFi swap protocols. You
+          cannot withdraw your liquidity back.
         </div>
       )}
 
@@ -187,7 +187,7 @@ const Liquidity = (props) => {
             onAssetChange("A");
           }}
           contractHash={tokenA}
-          asset={tokenA ? ASSET_LIST[network][tokenA] : undefined}
+          symbol={symbolA}
           val={amountA}
           setValue={(val, e) => onTokenAAmountChange("A", val)}
           userBalance={reserve ? reserve.balances[tokenA] : undefined}
@@ -204,7 +204,7 @@ const Liquidity = (props) => {
             onAssetChange("B");
           }}
           contractHash={tokenB}
-          asset={tokenB ? ASSET_LIST[network][tokenB] : undefined}
+          symbol={symbolB}
           val={amountB}
           setValue={(val, e) => onTokenAAmountChange("B", val)}
           userBalance={reserve && tokenB ? reserve.balances[tokenB] : undefined}

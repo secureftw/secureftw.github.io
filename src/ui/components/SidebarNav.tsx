@@ -20,13 +20,40 @@ const SidebarNav = (props) => {
             if (!route.network.includes(network)) return false;
             return (
               <li key={`${route.label}${i}`}>
-                <NavLink
-                  onClick={toggleSidebar}
-                  activeClassName={"is-active"}
-                  to={route.path}
-                >
-                  {route.label}
-                </NavLink>
+                {route.category ? (
+                  <>
+                    <div
+                      onClick={toggleSidebar}
+                      // activeClassName={"is-active"}
+                      // to={route.path}
+                    >
+                      {route.label}
+                    </div>
+                    <ul>
+                      {route.category.map((item) => {
+                        return (
+                          <li>
+                            <NavLink
+                              key={`category-${item.label}`}
+                              activeClassName={"is-active"}
+                              to={item.path}
+                            >
+                              {item.label}
+                            </NavLink>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </>
+                ) : (
+                  <NavLink
+                    onClick={toggleSidebar}
+                    activeClassName={"is-active"}
+                    to={route.path}
+                  >
+                    {route.label}
+                  </NavLink>
+                )}
               </li>
             );
           })}

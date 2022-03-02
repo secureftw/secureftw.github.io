@@ -2,21 +2,27 @@ import React, { useEffect, useState } from "react";
 // tslint:disable-next-line:no-implicit-dependencies
 import queryString from "query-string";
 import Pagination from "bulma-pagination-react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { SwapContract } from "../../../../../../../packages/neo/contracts";
 import { useWallet } from "../../../../../../../packages/provider";
 import { ASSET_LIST } from "../../../../../../../packages/neo/contracts/ftw/swap/consts";
+import { SWAP_PATH } from "../../../../../../../consts";
+import { FaAngleLeft } from "react-icons/all";
 
 const History = () => {
   const location = useLocation();
   const params = queryString.parse(location.search);
-  const { tokenA, tokenB, page } = params;
-
+  const { tokenA, tokenB, page, symbolA, symbolB } = params;
   const { network } = useWallet();
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [data, setData] = useState<any>();
   const [currentPage, setPage] = useState(page ? page : "1");
+
+  const assetObj = {
+    [tokenA]: symbolA,
+    [tokenB]: symbolB,
+  };
 
   useEffect(() => {
     async function fetch() {
@@ -27,7 +33,6 @@ const History = () => {
           tokenB,
           currentPage
         );
-        console.log(res);
         setLoading(false);
         setData(res);
       } catch (e: any) {
@@ -41,8 +46,14 @@ const History = () => {
   if (!data) return <div>Failed to load data from the chain</div>;
   return (
     <div>
-      <h1 className="title is-5">Swap history</h1>
+      <Link className="button is-white" to={SWAP_PATH}>
+        <span className="icon">
+          <FaAngleLeft />
+        </span>
+        <span>Pools</span>
+      </Link>
       <hr />
+      <h1 className="title is-5">Swap history</h1>
       {data.totalItems === "0" ? (
         <p className="subtitle is-6">No data</p>
       ) : (
@@ -56,12 +67,8 @@ const History = () => {
             </thead>
             <tbody>
               {data.items.map((swap, i) => {
-                const symbolIn = ASSET_LIST[network][swap.tokenIn]
-                  ? ASSET_LIST[network][swap.tokenIn].symbol
-                  : swap.tokenIn;
-                const symbolOut = ASSET_LIST[network][swap.tokenOut]
-                  ? ASSET_LIST[network][swap.tokenOut].symbol
-                  : swap.tokenOut;
+                const symbolIn = assetObj[swap.tokenIn];
+                const symbolOut = assetObj[swap.tokenOut];
                 return (
                   <tr key={`swap-${i}`}>
                     <td>

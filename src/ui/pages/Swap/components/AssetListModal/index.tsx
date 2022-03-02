@@ -6,11 +6,12 @@ import { ASSETS } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import { FaPlus } from "react-icons/all";
 import { wallet } from "@cityofzion/neon-core";
 import { toast } from "react-hot-toast";
+import { SwapContract } from "../../../../../packages/neo/contracts/ftw/swap";
 interface IAssetListModalProps {
   tokenA?: string;
   tokenB?: string;
   onClose: () => void;
-  onAssetClick: (assetHash: string) => void;
+  onAssetClick: (assetHash: string, symbol: string) => void;
 }
 const AssetListModal = ({
   tokenA,
@@ -20,20 +21,29 @@ const AssetListModal = ({
 }: IAssetListModalProps) => {
   const { network } = useWallet();
   const [isCustomInputMode, setCustomInputMode] = useState(false);
-  const [contractHash, setContractHash] = useState("");
+  const [customContractHash, setContractHash] = useState("");
   const assets = ASSETS(network).filter((asset) => {
     return asset.contractHash !== tokenA && asset.contractHash !== tokenB;
   });
-  const onAddContractHash = () => {
-    let hash = contractHash;
-    const ox = contractHash.substring(0, 2);
+  const onAddContractHash = async () => {
+    let hash = customContractHash;
+    const ox = customContractHash.substring(0, 2);
     if (ox === "0x") {
-      hash = contractHash.substring(2);
+      hash = customContractHash.substring(2);
     }
     if (wallet.isScriptHash(hash)) {
-      onAssetClick(hash);
+      try {
+        const res = await new SwapContract(network).getContractSymbol(hash);
+        if (res) {
+          onAssetClick(hash, res);
+        } else {
+          toast.error("We cannot find token info with the given hash.");
+        }
+      } catch (e: any) {
+        toast.error(e.message);
+      }
     } else {
-      toast.error("Not valid hash.");
+      toast.error("Please enter a valid contract script hash.");
     }
   };
   return (
@@ -44,13 +54,13 @@ const AssetListModal = ({
             <label className="label">Enter a contract hash</label>
             <input
               className="input"
-              value={contractHash}
+              value={customContractHash}
               onChange={(e) => setContractHash(e.target.value)}
             />
           </div>
           <button
             onClick={onAddContractHash}
-            disabled={!contractHash}
+            disabled={!customContractHash}
             className="button is-primary"
           >
             Submit
@@ -73,7 +83,7 @@ const AssetListModal = ({
               assets.map(({ contractHash, logo, symbol }) => {
                 return (
                   <a
-                    onClick={() => onAssetClick(contractHash)}
+                    onClick={() => onAssetClick(contractHash, symbol)}
                     className="panel-block"
                     key={contractHash}
                   >

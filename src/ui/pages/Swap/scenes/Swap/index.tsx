@@ -8,12 +8,12 @@ import { toast } from "react-hot-toast";
 import Input from "../../components/Input";
 import AssetListModal from "../../components/AssetListModal";
 // tslint:disable-next-line:no-submodule-imports
-import { FaExchangeAlt } from "react-icons/all";
+import { FaAngleLeft, FaExchangeAlt } from "react-icons/all";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import { Link, useLocation } from "react-router-dom";
-import { SWAP_PATH_LIQUIDITY } from "../../../../../consts";
+import { SWAP_PATH, SWAP_PATH_LIQUIDITY } from "../../../../../consts";
 // tslint:disable-next-line:no-implicit-dependencies
 import queryString from "query-string";
 import { LocalStorage } from "../../../../../packages/neo/local-storage";
@@ -22,18 +22,26 @@ import PairSelect from "../../components/PairSelect";
 const Swap = () => {
   const location = useLocation();
   const params = queryString.parse(location.search);
+
   const { network, connectedWallet, openWalletModal } = useWallet();
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
   >("");
   // Temporary disabled
   // const cachedTokenA = LocalStorage.getSwapTokenA();
+  // const cachedTokenB = LocalStorage.getSwapTokenB();
+
   const [tokenA, setTokenA] = useState<any>(
     params.tokenA ? params.tokenA : undefined
   );
-  const cachedTokenB = LocalStorage.getSwapTokenB();
   const [tokenB, setTokenB] = useState<any>(
     params.tokenB ? params.tokenB : undefined
+  );
+  const [symbolA, setSymbolA] = useState<any>(
+    params.symbolA ? params.symbolA : undefined
+  );
+  const [symbolB, setSymbolB] = useState<any>(
+    params.symbolB ? params.symbolB : undefined
   );
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
@@ -112,6 +120,8 @@ const Swap = () => {
     setTokenA(tokenB ? tokenB : "");
     setAmountB(amountA);
     setAmountA(amountB);
+    setSymbolA(symbolB);
+    setSymbolB(symbolA);
     if (tokenB && amountB && amountB !== "0" && tokenA) {
       const estimated = await new SwapContract(network).getEstimate(
         tokenB,
@@ -122,7 +132,7 @@ const Swap = () => {
       setTokenB(tokenA);
       setTokenA(tokenB ? tokenB : "");
       setAmountA(amountB);
-      setAmountB(estimated ? estimated.toString() : "0");
+      setAmountB(estimated ? estimated.toString() : "");
     } else {
       setTokenB(tokenA);
       setTokenA(tokenB ? tokenB : "");
@@ -145,9 +155,9 @@ const Swap = () => {
       );
       // @ts-ignore
       // const estimated = getEstimate(amountA, res[A], res[B]);
-      setAmountB(estimated ? estimated.toString() : "0");
+      setAmountB(estimated ? estimated.toString() : "");
     } else {
-      setAmountB("0");
+      setAmountB("");
     }
   };
 
@@ -161,6 +171,13 @@ const Swap = () => {
     reserve && reserve.pair[tokenA] === 0 && reserve.pair[tokenB] === 0;
   return (
     <div>
+      <Link className="button is-white" to={SWAP_PATH}>
+        <span className="icon">
+          <FaAngleLeft />
+        </span>
+        <span>Pools</span>
+      </Link>
+      <hr />
       <>
         {noLiquidity && (
           <div className="notification is-info">
@@ -176,9 +193,10 @@ const Swap = () => {
         {tokenA && tokenB ? (
           <>
             <Input
+              contractHash={tokenA}
+              symbol={symbolA}
               heading="Swap From"
               onClickAsset={() => onAssetChange("A")}
-              asset={tokenA ? ASSET_LIST[network][tokenA] : undefined}
               val={amountA}
               setValue={(val, e) => onTokenAAmountChange(val)}
               userBalance={
@@ -193,13 +211,14 @@ const Swap = () => {
               </button>
             </div>
             <Input
+              contractHash={tokenB}
+              symbol={symbolB}
               isReadOnly={true}
               heading="Swap To"
               isLoading={isPairLoading}
               onClickAsset={() => {
                 onAssetChange("B");
               }}
-              asset={tokenB ? ASSET_LIST[network][tokenB] : undefined}
               val={amountB}
               // setValue={(val, e) => onTokenAAmountChange("B", val, e)}
               setValue={(val, e) => {
