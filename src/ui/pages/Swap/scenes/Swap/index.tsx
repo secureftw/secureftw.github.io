@@ -18,6 +18,7 @@ import { SWAP_PATH, SWAP_PATH_LIQUIDITY } from "../../../../../consts";
 import queryString from "query-string";
 import { LocalStorage } from "../../../../../packages/neo/local-storage";
 import PairSelect from "../../components/PairSelect";
+import { IPairInfo } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
 
 const Swap = () => {
   const location = useLocation();
@@ -45,7 +46,7 @@ const Swap = () => {
   );
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
-  const [reserve, setReserve] = useState<any>();
+  const [data, setData] = useState<IPairInfo | undefined>();
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
   const onAssetChange = (type: "A" | "B" | "") => {
@@ -144,7 +145,7 @@ const Swap = () => {
   const loadPair = async (A, B) => {
     setPairLoading(true);
     const res = await new SwapContract(network).getPair(A, B, connectedWallet);
-    setReserve(res);
+    setData(res);
     setPairLoading(false);
     if (amountA && res.pair[tokenA] !== 0) {
       const estimated = await new SwapContract(network).getEstimate(
@@ -168,7 +169,11 @@ const Swap = () => {
   }, [location]);
 
   const noLiquidity =
-    reserve && reserve.pair[tokenA] === 0 && reserve.pair[tokenB] === 0;
+    data && data.pair[tokenA] === 0 && data.pair[tokenB] === 0;
+
+  const priceImpact =
+    data && amountB ? (parseFloat(amountB) / data.pair[tokenB]) * 100 : 0;
+  console.log(priceImpact);
   return (
     <div>
       <Link className="button is-white" to={SWAP_PATH}>
@@ -200,9 +205,7 @@ const Swap = () => {
               val={amountA}
               setValue={(val, e) => onTokenAAmountChange(val)}
               userBalance={
-                connectedWallet && reserve
-                  ? reserve.balances[tokenA]
-                  : undefined
+                connectedWallet && data ? data.balances[tokenA] : undefined
               }
             />
             <div className="pt-3 pb-3">
@@ -225,9 +228,7 @@ const Swap = () => {
                 return false;
               }}
               userBalance={
-                connectedWallet && reserve
-                  ? reserve.balances[tokenB]
-                  : undefined
+                connectedWallet && data ? data.balances[tokenB] : undefined
               }
             />
             {connectedWallet ? (
@@ -241,13 +242,16 @@ const Swap = () => {
                   <hr />
                   <button
                     disabled={
-                      reserve.balances[tokenA] < parseFloat(amountA) ||
-                      reserve.pair[tokenB] < parseFloat(amountB)
+                      (data && data.balances[tokenA] < parseFloat(amountA)) ||
+                      (data && data.pair[tokenB] < parseFloat(amountB)) ||
+                      priceImpact > 10
                     }
                     onClick={onSwap}
-                    className="button is-fullwidth is-primary"
+                    className={`button is-fullwidth is-primary ${
+                      priceImpact > 10 ? "is-danger" : ""
+                    }`}
                   >
-                    Swap
+                    {priceImpact > 10 ? "Price impact is too high" : "Swap"}
                   </button>
                 </>
               ) : (

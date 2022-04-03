@@ -56,8 +56,7 @@ const History = ({ arenaNo }: IHistoryProps) => {
         <div>{error}</div>
       ) : (
         <>
-          <div className="box">
-            <h3 className="title">History</h3>
+          <div className="">
             {history.items && history.items.length > 0 ? (
               history.items.map((game) => {
                 return (

@@ -43,7 +43,7 @@ const Arena = (props) => {
       <Banner pathname={location.pathname} status={status} arenaNo={arenaNo} />
       {React.useMemo(() => {
         return (
-          <PageLayout>
+          <>
             {isLoading ? (
               <div>Loading..</div>
             ) : (
@@ -64,7 +64,7 @@ const Arena = (props) => {
                 />
               </>
             )}
-          </PageLayout>
+          </>
         );
       }, [status, isLoading])}
     </div>

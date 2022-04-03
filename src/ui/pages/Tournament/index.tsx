@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { ARENA_PATH } from "./pageRoutes";
 import { Link, NavLink, Route, useLocation } from "react-router-dom";
-import ArenaMenu from "./scenes/Home";
 import Arena from "./scenes/Arena";
 import { TOURNAMENT_PATH } from "../../../consts";
 import { useWallet } from "../../../packages/provider";

@@ -19,25 +19,13 @@ const RegisterButton = ({ arenaNo, playerCount }: IRegisterButtonProps) => {
   };
   return (
     <>
-      <div className="level">
-        <div className="level-left">
-          <div className="level-item">
-            <h1 className="title">Players</h1>
-          </div>
-        </div>
-
-        <div className="level-right">
-          <div className="level-item">
-            <button
-              disabled={playerCount === parseFloat(arenaNo)}
-              className="button is-primary press-font"
-              onClick={onPickModal}
-            >
-              Register ({playerCount}/{arenaNo})
-            </button>
-          </div>
-        </div>
-      </div>
+      <button
+        disabled={playerCount === parseFloat(arenaNo)}
+        className="button is-primary is-fullwidth"
+        onClick={onPickModal}
+      >
+        Register ({playerCount}/{arenaNo})
+      </button>
       {modalActive && connectedWallet && (
         <NFTListModal arenaNo={arenaNo} onClose={() => setModalActive(false)} />
       )}

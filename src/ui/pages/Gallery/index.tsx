@@ -73,6 +73,7 @@ const Gallery = () => {
         </PageLayout>
       ) : (
         <div
+          className="container"
           style={{
             display: "flex",
             flexFlow: "wrap",
@@ -80,7 +81,7 @@ const Gallery = () => {
         >
           {tokens.map((token) => (
             <figure
-              style={{ width: "10%" }}
+              style={{ width: "5%" }}
               key={token.tokenId}
               className="image rune"
               onClick={() => onPropertiesModalActive(token.tokenId.toString())}

@@ -33,76 +33,52 @@ const Banner = ({ arenaNo, status, pathname }: IBanner) => {
     hasPermissionToPlay = true;
   }
   return (
-    <section className="hero is-white">
-      <div className="hero-body">
-        <div className="container">
-          <div className="level">
-            <div className="level-left">
-              <div className="level-item  has-text-centered">
-                <div>
-                  <p className="heading">Round</p>
-                  <p className="title is-5">#{status ? status.gameNo : ""}</p>
-                </div>
-              </div>
-            </div>
+    <>
+      <div className="level">
+        <div className="level-left">
+          <div className="level-item">
+            <h1 className="title is-4">ARENA {arenaNo}</h1>
+          </div>
+        </div>
 
-            <div className="level-left">
-              <div className="level-item">
-                <div>
-                  <h1 className="title mb-3">ARENA {arenaNo}</h1>
-                  {hasPermissionToPlay && (
-                    <div className="has-text-centered">
-                      <PlayButton
-                        onSubmitted={setPlayTxid}
-                        arenaNo={arenaNo}
-                        status={status}
-                      />
-                    </div>
-                  )}
-                </div>
+        <div className="level-right">
+          <div className="level-item">
+            Round: #{status ? status.gameNo : ""}
+            <br />
+            Prize: {status ? status.prize + " GAS" : ""}
+            {hasPermissionToPlay && (
+              <div className="has-text-centered">
+                <PlayButton
+                  onSubmitted={setPlayTxid}
+                  arenaNo={arenaNo}
+                  status={status}
+                />
               </div>
-            </div>
-
-            <div className="level-left">
-              <div className="level-item has-text-centered">
-                <div>
-                  <p className="heading">Prize</p>
-                  <p className="title is-5">
-                    {status ? status.prize + " GAS" : ""}
-                  </p>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
-      <div className="hero-foot">
-        <nav className="tabs is-boxed is-fullwidth">
-          <div className="container">
-            <ul>
-              <li
-                className={
-                  pathname === TOURNAMENT_PATH + "/" + arenaNo
-                    ? "is-active"
-                    : ""
-                }
-              >
-                <Link to={TOURNAMENT_PATH + "/" + arenaNo}>Players</Link>
-              </li>
-              <li
-                className={
-                  pathname === TOURNAMENT_PATH + "/" + arenaNo + "/history"
-                    ? "is-active"
-                    : ""
-                }
-              >
-                <Link to={TOURNAMENT_PATH + "/" + arenaNo + "/history"}>
-                  Champions
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
+      <div className="tabs is-boxed">
+        <ul>
+          <li
+            className={
+              pathname === TOURNAMENT_PATH + "/" + arenaNo ? "is-active" : ""
+            }
+          >
+            <Link to={TOURNAMENT_PATH + "/" + arenaNo}>Players</Link>
+          </li>
+          <li
+            className={
+              pathname === TOURNAMENT_PATH + "/" + arenaNo + "/history"
+                ? "is-active"
+                : ""
+            }
+          >
+            <Link to={TOURNAMENT_PATH + "/" + arenaNo + "/history"}>
+              History
+            </Link>
+          </li>
+        </ul>
       </div>
 
       {playTxid && (
@@ -115,7 +91,7 @@ const Banner = ({ arenaNo, status, pathname }: IBanner) => {
           />
         </Modal>
       )}
-    </section>
+    </>
   );
 };
 

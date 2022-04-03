@@ -88,7 +88,18 @@ export class FusionContract {
           value: tokenId,
         },
       ],
-      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+      signers: [
+        {
+          account: senderHash,
+          scopes: tx.WitnessScope.CustomContracts,
+          allowedContracts: [
+            this.contractHash,
+            RUNE_SCRIPT_HASH[this.network],
+            TTM_SCRIPT_HASH[this.network],
+            GAS_SCRIPT_HASH,
+          ],
+        },
+      ],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
@@ -110,7 +121,7 @@ export class FusionContract {
       ],
     };
 
-    const res = await Network.read(this.network, [script]);
+    const res = await Network.read(this.network, [script], true);
     return parseProperties(res.stack[0]);
   };
 

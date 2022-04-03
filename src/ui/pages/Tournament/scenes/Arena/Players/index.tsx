@@ -39,38 +39,44 @@ const Players = ({ arenaNo, gameNo }: { arenaNo: string; gameNo?: number }) => {
       ) : error ? (
         <div>{error}</div>
       ) : (
-        <div className="box">
-          <RegisterButton playerCount={players.length} arenaNo={arenaNo} />
-          {players.length > 0 ? (
-            <div className="columns is-multiline is-mobile">
-              {players.map(({ tokenId, owner }) => {
-                return (
-                  <div
-                    key={tokenId}
-                    className="column is-1-desktop is-3-mobile"
-                  >
-                    <DisplayRuneWithProperties
-                      key={tokenId}
-                      width={"100%"}
-                      height={"100%"}
-                      tokenId={tokenId}
-                      network={network}
-                      isOwner={
-                        connectedWallet
-                          ? connectedWallet.account.address === owner
-                          : false
-                      }
-                      onClick={(obj: any) =>
-                        onPlayerModalActive({ ...obj, gameOwner: owner })
-                      }
-                    />
-                  </div>
-                );
-              })}
+        <div className="">
+          <div className="columns">
+            <div className="column is-10">
+              {players.length > 0 ? (
+                <div className="columns is-multiline is-mobile">
+                  {players.map(({ tokenId, owner }) => {
+                    return (
+                      <div
+                        key={tokenId}
+                        className="column is-1-desktop is-3-mobile"
+                      >
+                        <DisplayRuneWithProperties
+                          key={tokenId}
+                          width={"100%"}
+                          height={"100%"}
+                          tokenId={tokenId}
+                          network={network}
+                          isOwner={
+                            connectedWallet
+                              ? connectedWallet.account.address === owner
+                              : false
+                          }
+                          onClick={(obj: any) =>
+                            onPlayerModalActive({ ...obj, gameOwner: owner })
+                          }
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div>No players</div>
+              )}
             </div>
-          ) : (
-            <div>No players</div>
-          )}
+            <div className="column is-2">
+              <RegisterButton playerCount={players.length} arenaNo={arenaNo} />
+            </div>
+          </div>
         </div>
       )}
       {playerModalActive && (

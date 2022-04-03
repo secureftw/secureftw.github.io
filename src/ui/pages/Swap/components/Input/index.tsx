@@ -15,7 +15,7 @@ interface IInputProps {
   setValue: (val: string, e: any) => void;
   onClickAsset: () => void;
   isReadOnly?: boolean;
-  userBalance?: string;
+  userBalance?: number;
 }
 const Input = ({
   contractHash,

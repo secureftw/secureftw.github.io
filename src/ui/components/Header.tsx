@@ -135,7 +135,7 @@ const Header = () => {
                     to={route.path}
                     className="navbar-item"
                   >
-                    <strong>{route.label}</strong>
+	                  {route.label}
                   </NavLink>
                 );
               }

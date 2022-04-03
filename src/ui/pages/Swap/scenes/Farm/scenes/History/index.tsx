@@ -5,7 +5,6 @@ import Pagination from "bulma-pagination-react";
 import { Link, useLocation } from "react-router-dom";
 import { SwapContract } from "../../../../../../../packages/neo/contracts";
 import { useWallet } from "../../../../../../../packages/provider";
-import { ASSET_LIST } from "../../../../../../../packages/neo/contracts/ftw/swap/consts";
 import { SWAP_PATH } from "../../../../../../../consts";
 import { FaAngleLeft } from "react-icons/all";
 
