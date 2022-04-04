@@ -4,7 +4,9 @@ import { base64ToAddress, base64ToString } from "../../../utils";
 export const parseProperties = (stackItem) => {
   const obj = {};
   stackItem.value.map((item) => {
+    console.log(item);
     const key = u.base642utf8(item.key.value);
+    console.log(key);
     let value;
     switch (key) {
       case "owner":
@@ -14,7 +16,7 @@ export const parseProperties = (stackItem) => {
         value = parseProperties(item.value);
         break;
       default:
-        if (item.value.type === "Integer") {
+        if (item.value.type === "Integer" || item.value.type === "Boolean") {
           value = item.value.value;
         } else {
           value = base64ToString(item.value.value);
