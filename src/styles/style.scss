@@ -9,6 +9,7 @@ $submenu-bg-color-collapsed: $light !important;
 $submenu-bg-color: $light !important;
 $sidebar-width: 230px !important;
 @import "../../node_modules/react-pro-sidebar/dist/scss/styles";
+@import "../../node_modules/react-datepicker/dist/react-datepicker.css";
 
 /* html */
 html {

@@ -3,10 +3,14 @@ import { base64ToAddress, base64ToString } from "../../../utils";
 /* Parse properties from rpc. */
 export const parseProperties = (stackItem) => {
   const obj = {};
+  console.log(stackItem)
   stackItem.value.map((item) => {
-    console.log(item);
+  	// if(!item) {
+	  //
+		//   console.log(1)
+		//   return false
+	  // }
     const key = u.base642utf8(item.key.value);
-    console.log(key);
     let value;
     switch (key) {
       case "owner":

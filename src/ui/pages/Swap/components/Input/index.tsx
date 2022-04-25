@@ -90,25 +90,28 @@ const Input = ({
               allowLeadingZeros={false}
               // format={(val) => {} }
             />
-            {userBalance ? (
-              <div className="level is-mobile mt-1">
-                <div className="level-left">
-                  <small className="is-size-7">
-                    <div className="level-item">Your balance</div>
-                  </small>
-                </div>
-
-                <div className="level-right">
-                  <div className="level-item">
-                    <small className="is-size-7">
-                      {userBalance} {symbol}
-                    </small>
-                  </div>
+            <div className="level is-mobile mt-1">
+              <div className="level-left">
+                <div className="level-item">
+                  <small className="is-size-7">Your balance</small>
                 </div>
               </div>
-            ) : (
-              <div></div>
-            )}
+              <div className="level-right">
+                <div className="level-item">
+                  <small
+                    onClick={(e) => {
+                      if (userBalance) {
+                        // @ts-ignore
+                        setValue(userBalance, e);
+                      }
+                    }}
+                    className={`is-size-7 ${userBalance ? "is-clickable" : ""}`}
+                  >
+                    {userBalance ? userBalance : 0} {symbol}
+                  </small>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

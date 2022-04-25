@@ -6,6 +6,7 @@ import { sc } from "@cityofzion/neon-core";
 import { WalletAPI } from "../neo/wallet";
 import toast from "react-hot-toast";
 import { INetworkType } from "../neo/network";
+import { TESTNET } from "../neo/consts";
 
 // tslint:disable-next-line:no-object-literal-type-assertion
 export const WalletContext = createContext({} as IWalletStates);
@@ -13,7 +14,12 @@ export const WalletContextProvider = (props: {
   options: ContextOptions;
   children: any;
 }) => {
-  const [network, setNetwork] = useState(LocalStorage.getNetwork());
+  let initNetwork = LocalStorage.getNetwork();
+  if (window.location.href.indexOf("network=testnet") !== -1) {
+    initNetwork = TESTNET;
+    LocalStorage.setNetwork(TESTNET);
+  }
+  const [network, setNetwork] = useState(initNetwork);
   const [totalTxSubmit, setTotalTxSubmit] = useState(0);
 
   const [isWalletModalActive, setWalletModalActive] = useState(false);

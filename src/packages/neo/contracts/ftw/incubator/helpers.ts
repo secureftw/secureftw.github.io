@@ -84,7 +84,6 @@ export const parsePoolInfoPaginate = (stackItem: any) => {
 };
 
 const parsePoolInfo = (stackItem) => {
-  console.log(stackItem);
   return stackItem.map((item) => {
     return {
       totalSupply: toDecimal(item.value[0].value),

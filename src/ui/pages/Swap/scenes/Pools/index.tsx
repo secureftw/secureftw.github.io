@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { ASSET_LIST } from "../../../../../../../packages/neo/contracts/ftw/swap/consts";
+import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import { Link } from "react-router-dom";
 import {
   SWAP_PATH_HISTORY,
-  SWAP_PATH_LIQUIDITY,
+  SWAP_PATH_LIQUIDITY_ADD,
+  SWAP_PATH_LIQUIDITY_REMOVE,
   SWAP_PATH_TRADE,
-} from "../../../../../../../consts";
-import Modal from "../../../../../../components/Modal";
-import FarmDetail from "../Detail";
-import { useWallet } from "../../../../../../../packages/provider";
-import { SwapContract } from "../../../../../../../packages/neo/contracts";
-import CreatePool from "../CreatePool";
-import PoolCard from "../../../../components/PoolCard";
+} from "../../../../../consts";
+import Modal from "../../../../components/Modal";
+import FarmDetail from "../Farm/scenes/Detail";
+import { useWallet } from "../../../../../packages/provider";
+import { SwapContract } from "../../../../../packages/neo/contracts";
+import CreatePool from "../Farm/scenes/CreatePool";
+import PoolCard from "../../components/PoolCard";
+import { FaMinus, FaPlus } from "react-icons/all";
 
 const PairList = (props) => {
   const { network, connectedWallet } = useWallet();
@@ -46,13 +48,22 @@ const PairList = (props) => {
         </div>
         <div className="level-right">
           <div className="level-item">
-            <Link
-              to={SWAP_PATH_LIQUIDITY}
-              // onClick={() => setCreateModalActive(true)}
-              className="button is-light"
-            >
-              Create
-            </Link>
+            <div className="buttons">
+              <Link
+                to={SWAP_PATH_LIQUIDITY_ADD}
+                // onClick={() => setCreateModalActive(true)}
+                className="button is-light is-small"
+              >
+                <FaPlus />
+              </Link>
+              <Link
+                to={SWAP_PATH_LIQUIDITY_REMOVE}
+                // onClick={() => setCreateModalActive(true)}
+                className="button is-light is-small"
+              >
+                <FaMinus />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

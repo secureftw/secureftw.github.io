@@ -7,6 +7,7 @@ import { useWallet } from "../../packages/provider";
 import { FaMedium, FaTwitter } from "react-icons/all";
 // tslint:disable-next-line:no-submodule-imports
 import { FaGithub } from "react-icons/fa";
+import SocialLinkGroup from "./SocialLinkGroup";
 
 const SidebarNav = (props) => {
   const { network } = useWallet();
@@ -32,7 +33,7 @@ const SidebarNav = (props) => {
                     <ul>
                       {route.category.map((item) => {
                         return (
-                          <li>
+                          <li key={item.label}>
                             <NavLink
                               key={`category-${item.label}`}
                               activeClassName={"is-active"}
@@ -61,27 +62,7 @@ const SidebarNav = (props) => {
       </aside>
       <div className="p-5" style={{ position: "absolute", bottom: "40px" }}>
         <div className="buttons">
-          <a
-            target="_blank"
-            href="https://twitter.com/N3_FTW_NETWORK"
-            className="button is-white is-small "
-          >
-            <FaTwitter />
-          </a>
-          <a
-            target="_blank"
-            href="https://github.com/ForTheWinn"
-            className="button is-white is-small"
-          >
-            <FaGithub />
-          </a>
-          <a
-            target="_blank"
-            href="https://medium.com/@Forthewin_network"
-            className="button is-white is-small"
-          >
-            <FaMedium />
-          </a>
+          <SocialLinkGroup />
         </div>
       </div>
     </>

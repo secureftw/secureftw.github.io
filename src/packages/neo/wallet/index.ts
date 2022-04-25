@@ -198,7 +198,7 @@ export class WalletAPI {
         contractHash: invokeScript.scriptHash,
         method: invokeScript.operation,
         args: invokeScript.args,
-        createdAt: moment().format("MMMM Do YYYY, h:mm:ss a"),
+        createdAt: moment().format("lll"),
       };
       LocalStorage.addTransaction(submittedTx);
       return res.txid;

@@ -1,11 +1,14 @@
 import { u } from "@cityofzion/neon-core";
 import {
+  base64ToAddress,
   base64ToDate,
   base64ToFixed8,
   base64ToHash160,
+  base64ToString,
   toDecimal,
 } from "../../../utils";
 import { IPair } from "./interfaces";
+import moment from "moment";
 
 export const getEstimate = (
   amount: string,
@@ -64,10 +67,25 @@ export const parseSwapPaginate = (stackItem: any) => {
 const parseSwap = (stackItem) => {
   return stackItem.map((item) => {
     return {
-      tokenIn: base64ToHash160(item.value[0].value),
-      tokenOut: base64ToHash160(item.value[1].value), // NEO amount
-      tokenInAmount: toDecimal(item.value[2].value), // NEO amount
-      tokenOutAmount: toDecimal(item.value[3].value),
+      account: base64ToAddress(item.value[0].value),
+      tokenIn: base64ToHash160(item.value[1].value),
+      tokenOut: base64ToHash160(item.value[2].value), // NEO amount
+      tokenInAmount: toDecimal(item.value[3].value), // NEO amount
+      tokenOutAmount: toDecimal(item.value[4].value),
     };
   });
 };
+
+export const parseLP = (stackItem) => {
+  console.log(stackItem);
+  return {
+    owner: base64ToAddress(stackItem[0].value),
+    tokenIn: base64ToString(stackItem[1].value),
+    // tokenOut: base64ToHash160(stackItem.value[2].value), // NEO amount
+    amount: toDecimal(stackItem[3].value), // NEO amount
+    lockUntil: stackItem[4].value === "0" ? "None" :base64ToDate(stackItem[4].value),
+  };
+};
+
+export const defaultDeadLine = () =>
+  moment().utc().add("10", "minutes").valueOf();

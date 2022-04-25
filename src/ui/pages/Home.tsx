@@ -9,6 +9,13 @@ import { TESTNET } from "../../packages/neo/consts";
 import toast from "react-hot-toast";
 
 const CARDS = [
+	{
+		title: "FTW Smith",
+		type: "Utility",
+		desc: "FTW Smith helps users to create and deploy fungible/Non-fungible token smart contracts without any codes.",
+		img: "assets/smith.png",
+		link: SMITH_PATH,
+	},
   {
     title: "FTW Rune",
     type: "NFT",
@@ -22,13 +29,6 @@ const CARDS = [
     desc: " FTW Runes against each other with the victor earning a GAS prize.",
     img: "assets/arena-bg.jpeg",
     link: TOURNAMENT_PATH,
-  },
-  {
-    title: "FTW Smith",
-    type: "Utility",
-    desc: "FTW Smith helps users to create and deploy fungible/Non-fungible token smart contracts without any codes.",
-    img: "assets/smith.png",
-    link: SMITH_PATH,
   },
   {
     title: "FTW Swap",
@@ -73,7 +73,7 @@ const Home = () => {
         <div className="columns is-multiline">
           {CARDS.map((card) => {
             return (
-              <div key={card.title} className="column is-4">
+              <div key={card.title} className="column is-3">
                 <div className="card">
                   <div className="card-image is-clickable">
                     <Link to={card.link}>
@@ -101,7 +101,7 @@ const Home = () => {
               </div>
             );
           })}
-          <div className="column is-4">
+          <div className="column is-3">
             <div className="card">
               <div
                 className="card-image is-clickable"

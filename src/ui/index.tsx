@@ -25,7 +25,6 @@ import Home from "./pages/Home";
 import Smith from "./pages/Smith";
 import Tournament from "./pages/Tournament";
 import Swap from "./pages/Swap";
-import Incubator from "./pages/Incubator";
 import Fusion from "./pages/Fusion";
 import Migration from "./pages/Migration";
 import ReactGa from "./components/ReactGa";
@@ -49,7 +48,6 @@ const App = () => {
         <Route path={SMITH_PATH} component={Smith} />
         <Route path={FARM_PATH} component={Farm} />
         <Route path={COLLECTION_PATH} component={MyCollection} />
-        <Route path={INCUBATOR_PATH} component={Incubator} />
         <Route path={SWAP_PATH} component={Swap} />
         <Route path={FUSION_PATH} component={Fusion} />
         <Route exact path={MIGRATION_PATH} component={Migration} />

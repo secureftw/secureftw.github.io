@@ -3,6 +3,12 @@ import { SMITH_PATH, SMITH_PATH_NEP11, TOURNAMENT_PATH } from "../../../consts";
 import { Link, useLocation } from "react-router-dom";
 import NEP17FormModal from "./NEP17FormModal";
 import NEP11FormModal from "./NEP11FormModal";
+import {
+  BiCoinStack,
+  BsLightbulb,
+  FaCoins,
+  HiOutlinePhotograph,
+} from "react-icons/all";
 
 const Banner = () => {
   const location = useLocation();
@@ -12,33 +18,42 @@ const Banner = () => {
     <section className="hero is-white">
       <div className="hero-body">
         <div className="container">
-          <h1 className="title">Forthewin Smith</h1>
+          <h1 className="title">Smith</h1>
           <p className="subtitle">
-            Create your own NEP11 and NEP17 smart contracts without any codes
+            Create your token smart contracts without codes
           </p>
           <br />
-          <div className="content">
-            <h5>What is NEP17?</h5>
-            <p>Neo blockchain's token standard. Like ERC20 Shiba Inu.</p>
-            <button
-              onClick={() => setNep17FormModalActive(true)}
-              className="button is-primary"
-            >
-              Create Token Contract
-            </button>
+          <div className="columns">
+            <div className="column">
+              <div className="box content has-background-info has-text-white">
+                <h5 className="has-text-light">Token</h5>
+                <p>
+                  Neo blockchain's token smart contract. Like ERC20 Shiba Inu.
+                </p>
+                <button
+                  onClick={() => setNep17FormModalActive(true)}
+                  className="button is-light"
+                >
+                  Create Token Contract
+                </button>
+              </div>
+            </div>
+            <div className="column">
+              <div className="box content has-background-info  has-text-white">
+                <h5 className="has-text-white">NFT</h5>
+                <p>
+                  Neo blockchain's NFT smart contract. Like ERC721 Cryptopunk
+                  NFT.
+                </p>
+                <button
+                  onClick={() => setNep11FormModalActive(true)}
+                  className="button  is-light"
+                >
+                  Create NFT Contract
+                </button>
+              </div>
+            </div>
           </div>
-
-          <div className="content">
-            <h5>What is NEP11?</h5>
-            <p>Neo blockchain's NFT standard. Like ERC721 Cryptopunk NFT.</p>
-          </div>
-
-          <button
-            onClick={() => setNep11FormModalActive(true)}
-            className="button  is-primary is-outlined"
-          >
-            Create NFT Contract
-          </button>
         </div>
       </div>
       <div className="hero-foot">
@@ -48,14 +63,20 @@ const Banner = () => {
               <li
                 className={location.pathname === SMITH_PATH ? "is-active" : ""}
               >
-                <Link to={SMITH_PATH}>NEP17 Showcase</Link>
+                <Link to={SMITH_PATH}>
+                  <FaCoins />
+                  &nbsp; Token Showcase
+                </Link>
               </li>
               <li
                 className={
                   location.pathname === SMITH_PATH_NEP11 ? "is-active" : ""
                 }
               >
-                <Link to={SMITH_PATH_NEP11}>NEP11 Showcase</Link>
+                <Link to={SMITH_PATH_NEP11}>
+                  <BsLightbulb />
+                  &nbsp; NFT Showcase
+                </Link>
               </li>
             </ul>
           </div>

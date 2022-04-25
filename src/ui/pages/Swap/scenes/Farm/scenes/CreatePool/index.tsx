@@ -8,7 +8,7 @@ import {
 } from "../../../../../../../packages/neo/contracts";
 import { useWallet } from "../../../../../../../packages/provider";
 import { useHistory } from "react-router-dom";
-import { SWAP_PATH_LIQUIDITY } from "../../../../../../../consts";
+import { SWAP_PATH_LIQUIDITY_ADD } from "../../../../../../../consts";
 
 const CreatePool = (props) => {
   const { network } = useWallet();
@@ -50,7 +50,9 @@ const CreatePool = (props) => {
     }
 
     if (_errors.length === 0) {
-      history.push(`${SWAP_PATH_LIQUIDITY}?tokenA=${tokenA}&tokenB=${tokenB}`);
+      history.push(
+        `${SWAP_PATH_LIQUIDITY_ADD}?tokenA=${tokenA}&tokenB=${tokenB}`
+      );
     } else {
       setLoading(false);
       setErrors(_errors);

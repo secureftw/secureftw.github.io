@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "../../components/Modal";
 import { useWallet } from "../../../packages/provider";
 import { toast } from "react-hot-toast";
@@ -7,6 +7,7 @@ import { DEPLOY_FEE } from "../../../packages/neo/contracts/ftw/smith/consts";
 import { detectEmojiInString } from "./helpers";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
 import { balanceCheck } from "../../../packages/neo/utils";
+import SmithModalHeader from "./components/Header";
 
 interface IActionModal {
   onClose: () => void;
@@ -57,6 +58,13 @@ const NEP11FormModal = ({ onClose }: IActionModal) => {
       }
     }
   };
+  const firstInput = useRef(null);
+
+  useEffect(() => {
+    // @ts-ignore
+    firstInput.current.focus();
+  }, []);
+
   return (
     <Modal onClose={onClose}>
       {txid ? (
@@ -68,30 +76,13 @@ const NEP11FormModal = ({ onClose }: IActionModal) => {
         />
       ) : (
         <>
-          <h1 className="title">Create NEP11 Contract</h1>
-          <div className="field is-grouped is-grouped-multiline">
-            <div className="control">
-              <div className="tags has-addons">
-                <span className="tag is-dark">Deploy fee</span>
-                <span className="tag is-primary">10 GAS</span>
-              </div>
-            </div>
-
-            <div className="control">
-              <div className="tags has-addons">
-                <span className="tag is-dark">System fee</span>
-                <span className="tag is-primary">
-                  {DEPLOY_FEE[network]} GAS
-                </span>
-              </div>
-            </div>
-          </div>
-          <small>NOTE: Please do not use EMOJI or Unicode.</small>
+          <SmithModalHeader title={"NFT Smart Contract"} />
           <hr />
           <div className="field">
             <label className="label">NFT Contract Name</label>
             <div className="control">
               <input
+                ref={firstInput}
                 value={values.name}
                 onChange={(e) => handleValueChange("name", e.target.value)}
                 className="input"

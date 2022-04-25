@@ -27,8 +27,7 @@ const FarmDetail = ({ connectedWallet, tokenA, tokenB }: IFarmDetailProps) => {
       try {
         const res = await new SwapContract(network).remove(
           connectedWallet,
-          tokenA,
-          tokenB
+          tokenA
         );
         setTxid(res);
       } catch (e: any) {
@@ -60,26 +59,26 @@ const FarmDetail = ({ connectedWallet, tokenA, tokenB }: IFarmDetailProps) => {
     setReloadCnt(reloadCnt + 1);
     setTxid("");
   };
-
-  useEffect(() => {
-    async function fetch() {
-      setLoading(true);
-      const res1 = await new SwapContract(network).getUserStake(
-        connectedWallet,
-        tokenA,
-        tokenB
-      );
-      const res2 = await new SwapContract(network).getClaimAble(
-        connectedWallet,
-        tokenA,
-        tokenB
-      );
-      setLoading(false);
-      setData(res1);
-      setClaimable(res2);
-    }
-    fetch();
-  }, [reloadCnt]);
+  //
+  // useEffect(() => {
+  //   async function fetch() {
+  //     setLoading(true);
+  //     const res1 = await new SwapContract(network).getUserStake(
+  //       connectedWallet,
+  //       tokenA,
+  //       tokenB
+  //     );
+  //     const res2 = await new SwapContract(network).getClaimAble(
+  //       connectedWallet,
+  //       tokenA,
+  //       tokenB
+  //     );
+  //     setLoading(false);
+  //     setData(res1);
+  //     setClaimable(res2);
+  //   }
+  //   fetch();
+  // }, [reloadCnt]);
 
   if (isLoading) return <div>Loading..</div>;
 

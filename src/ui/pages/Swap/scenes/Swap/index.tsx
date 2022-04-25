@@ -13,7 +13,7 @@ import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/const
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import { Link, useLocation } from "react-router-dom";
-import { SWAP_PATH, SWAP_PATH_LIQUIDITY } from "../../../../../consts";
+import { SWAP_PATH, SWAP_PATH_LIQUIDITY_ADD } from "../../../../../consts";
 // tslint:disable-next-line:no-implicit-dependencies
 import queryString from "query-string";
 import { LocalStorage } from "../../../../../packages/neo/local-storage";
@@ -144,7 +144,11 @@ const Swap = () => {
 
   const loadPair = async (A, B) => {
     setPairLoading(true);
-    const res = await new SwapContract(network).getPair(A, B, connectedWallet);
+    const res = await new SwapContract(network).getReserve(
+      A,
+      B,
+      connectedWallet
+    );
     setData(res);
     setPairLoading(false);
     if (amountA && res.pair[tokenA] !== 0) {
@@ -173,7 +177,6 @@ const Swap = () => {
 
   const priceImpact =
     data && amountB ? (parseFloat(amountB) / data.pair[tokenB]) * 100 : 0;
-  console.log(priceImpact);
   return (
     <div>
       <Link className="button is-white" to={SWAP_PATH}>
@@ -189,7 +192,14 @@ const Swap = () => {
             No liquidity with the pairs. Provide liquidity and earn fees.
             <br />
             <br />
-            <Link className="button is-small is-light" to={SWAP_PATH_LIQUIDITY}>
+            <Link
+              className="button is-small is-light"
+              to={
+                tokenA && tokenB && symbolA && symbolB
+                  ? `${SWAP_PATH_LIQUIDITY_ADD}?tokenA=${tokenA}&tokenB=${tokenB}&symbolA=${symbolA}&symbolB=${symbolB}`
+                  : SWAP_PATH_LIQUIDITY_ADD
+              }
+            >
               Go to liquidity page
             </Link>
           </div>
@@ -208,8 +218,11 @@ const Swap = () => {
                 connectedWallet && data ? data.balances[tokenA] : undefined
               }
             />
-            <div className="pt-3 pb-3">
-              <button onClick={onSwitch} className="button is-white">
+            <div className="pt-4 pb-4">
+              <button
+                onClick={onSwitch}
+                className="button is-white is-fullwidth"
+              >
                 <FaExchangeAlt />
               </button>
             </div>

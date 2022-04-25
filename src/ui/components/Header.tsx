@@ -15,6 +15,7 @@ import NetworkSwitch2 from "./NetworkSwitch2";
 import { FaMedium, FaTwitter } from "react-icons/all";
 import { MAINNET, TESTNET } from "../../packages/neo/consts";
 import toast from "react-hot-toast";
+import SocialLinkGroup from "./SocialLinkGroup";
 
 const Header = () => {
   const { toggleSidebar, toggleWalletSidebar } = useApp();
@@ -109,7 +110,10 @@ const Header = () => {
               if (!route.network.includes(network)) return false;
               if (route.category) {
                 return (
-                  <div className="navbar-item has-dropdown is-hoverable">
+                  <div
+                    key={`header-${route.label}${i}`}
+                    className="navbar-item has-dropdown is-hoverable"
+                  >
                     <div className="navbar-link">{route.label}</div>
                     <div className="navbar-dropdown is-boxed">
                       {route.category.map((item, index) => {
@@ -135,7 +139,7 @@ const Header = () => {
                     to={route.path}
                     className="navbar-item"
                   >
-	                  {route.label}
+                    {route.label}
                   </NavLink>
                 );
               }
@@ -144,27 +148,7 @@ const Header = () => {
         </div>
         <div className="navbar-end is-hidden-touch">
           <div className="navbar-item">
-            <a
-              target="_blank"
-              href="https://twitter.com/N3_FTW_NETWORK"
-              className="button is-white is-small "
-            >
-              <FaTwitter />
-            </a>
-            <a
-              target="_blank"
-              href="https://github.com/ForTheWinn"
-              className="button is-white is-small"
-            >
-              <FaGithub />
-            </a>
-            <a
-              target="_blank"
-              href="https://medium.com/@Forthewin_network"
-              className="button is-white is-small"
-            >
-              <FaMedium />
-            </a>
+            <SocialLinkGroup />
           </div>
           <div className="navbar-item">
             <NetworkSwitch />

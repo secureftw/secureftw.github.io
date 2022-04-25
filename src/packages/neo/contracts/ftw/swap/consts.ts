@@ -11,7 +11,7 @@ import { INetworkType } from "../../../network";
 export const SWAP_SCRIPT_HASH = {
   [CONST.PRIVATENET]: "aeac82f7830f4083b98089baa51060e621febb10",
   // [CONST.TESTNET]: "428783fccfb6b194f7d33cd421e9f56f48efbde5", // With WMOON
-  [CONST.TESTNET]: "46d42416e99b4304f02259794737865af10ad74b",
+  [CONST.TESTNET]: "9773f6d3faa8d016856bddcb39777bc8d64dec5b",
   [CONST.MAINNET]: "",
 };
 
