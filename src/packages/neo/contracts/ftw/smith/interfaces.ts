@@ -1,7 +1,3 @@
-export interface ISmithContractStatus {
-  records: ISmithRecordPaginate;
-}
-
 export interface ISmithRecordPaginate {
   totalItems: string;
   totalPages: string;

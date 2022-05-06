@@ -11,7 +11,6 @@ export const truncateAddress = (address: string) => {
  * @param param
  */
 export const convertContractCallParam = (param: any) => {
-	// console.log(wallet.getScriptHashFromAddress(param.value))
   switch (param.type) {
     case "Address":
       return sc.ContractParam.hash160(

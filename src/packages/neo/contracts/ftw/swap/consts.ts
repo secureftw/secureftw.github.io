@@ -1,17 +1,22 @@
 import { CONST } from "../../../index";
 import {
-  DOGE_SCRIPT_HASH,
+  BNEO_SCRIPT_HASH,
   FTW_SCRIPT_HASH,
-  MOON_SCRIPT_HASH,
+  MAXI_SCRIPT_HASH,
   NUDES_SCRIPT_HASH,
+  TTM_SCRIPT_HASH,
 } from "../nep17";
 import { GAS_SCRIPT_HASH, MAINNET, PRIVATENET, TESTNET } from "../../../consts";
 import { INetworkType } from "../../../network";
 
+export const SWAP_FEE = 0.25;
+
 export const SWAP_SCRIPT_HASH = {
   [CONST.PRIVATENET]: "aeac82f7830f4083b98089baa51060e621febb10",
   // [CONST.TESTNET]: "428783fccfb6b194f7d33cd421e9f56f48efbde5", // With WMOON
-  [CONST.TESTNET]: "9773f6d3faa8d016856bddcb39777bc8d64dec5b",
+  // [CONST.TESTNET]: "9773f6d3faa8d016856bddcb39777bc8d64dec5b",
+  [CONST.TESTNET]: "50ae712ccb2760ad3f2ec3edebb25dbacc627fe2", // real
+  // [CONST.TESTNET]: "b50b3f0469794c04c0eb73f8b7df8e8b38ce2cd6", // real
   [CONST.MAINNET]: "",
 };
 
@@ -34,6 +39,11 @@ export const ASSET_LIST = {
     },
   },
   [TESTNET]: {
+    [BNEO_SCRIPT_HASH[TESTNET]]: {
+      contractHash: BNEO_SCRIPT_HASH[TESTNET],
+      symbol: "bNEO",
+      logo: "/symbols/bneo.jpeg",
+    },
     [GAS_SCRIPT_HASH]: {
       contractHash: GAS_SCRIPT_HASH,
       symbol: "GAS",
@@ -44,23 +54,38 @@ export const ASSET_LIST = {
       symbol: "FTW",
       logo: "/symbols/ftw.svg",
     },
-    // [NUDES_SCRIPT_HASH[TESTNET]]: {
-    //   contractHash: NUDES_SCRIPT_HASH[TESTNET],
-    //   symbol: "NUDES",
-    //   logo: "/symbols/nudes.png",
-    // },
-    // [DOGE_SCRIPT_HASH[TESTNET]]: {
-    //   contractHash: DOGE_SCRIPT_HASH[TESTNET],
-    //   symbol: "DOGE",
-    //   logo: "/symbols/unknown.png",
-    // },
-    // [MOON_SCRIPT_HASH[TESTNET]]: {
-    //   contractHash: MOON_SCRIPT_HASH[TESTNET],
-    //   symbol: "WMOON",
-    //   logo: "/symbols/unknown.png",
-    // },
+    "7e7a84abff782e9f0c60c2fe1cd6b550a32d5cee": {
+      contractHash: "7e7a84abff782e9f0c60c2fe1cd6b550a32d5cee",
+      symbol: "FRANK",
+      logo: "/symbols/frank.png",
+    },
+    [MAXI_SCRIPT_HASH[TESTNET]]: {
+      contractHash: MAXI_SCRIPT_HASH[TESTNET],
+      symbol: "MAXI",
+      logo: "/symbols/maxi.png",
+    },
+    [NUDES_SCRIPT_HASH[TESTNET]]: {
+      contractHash: NUDES_SCRIPT_HASH[TESTNET],
+      symbol: "NUDES",
+      logo: "/symbols/nudes.png",
+    },
+    [TTM_SCRIPT_HASH[TESTNET]]: {
+      contractHash: TTM_SCRIPT_HASH[TESTNET],
+      symbol: "TTM",
+      logo: "/symbols/ttm.png",
+    },
+    "37fc2612dfe80a20b97470e57de60ffe81a8a0c0": {
+      contractHash: "37fc2612dfe80a20b97470e57de60ffe81a8a0c0",
+      symbol: "NPRZ",
+      logo: "/symbols/prezel.png",
+    },
   },
   [MAINNET]: {
+    [BNEO_SCRIPT_HASH[MAINNET]]: {
+      contractHash: BNEO_SCRIPT_HASH[MAINNET],
+      symbol: "bNEO",
+      logo: "/symbols/bneo.jpeg",
+    },
     [GAS_SCRIPT_HASH]: {
       contractHash: GAS_SCRIPT_HASH,
       symbol: "GAS",
@@ -75,6 +100,26 @@ export const ASSET_LIST = {
       contractHash: NUDES_SCRIPT_HASH[MAINNET],
       symbol: "NUDES",
       logo: "/symbols/nudes.png",
+    },
+    [TTM_SCRIPT_HASH[MAINNET]]: {
+      contractHash: TTM_SCRIPT_HASH[MAINNET],
+      symbol: "TTM",
+      logo: "/symbols/ttm.png",
+    },
+    "461c3689e56a1d0c72ffeac3584af481d7642e7f": {
+      contractHash: "461c3689e56a1d0c72ffeac3584af481d7642e7f",
+      symbol: "MNGA",
+      logo: "/symbols/mnga.png",
+    },
+    "50b41a55c1d746eec2b86b8f0405fb49fbb96492": {
+      contractHash: "50b41a55c1d746eec2b86b8f0405fb49fbb96492",
+      symbol: "TEDS",
+      logo: "/symbols/ted.jpg",
+    },
+    [MAXI_SCRIPT_HASH[MAINNET]]: {
+      contractHash: MAXI_SCRIPT_HASH[MAINNET],
+      symbol: "MAXI",
+      logo: "/symbols/maxi.png",
     },
   },
 };

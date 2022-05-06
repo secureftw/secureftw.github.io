@@ -17,13 +17,16 @@ import HeaderBetween from "../../../../components/HeaderBetween";
 import Switch from "react-switch";
 import DatePicker from "react-datepicker";
 import moment from "moment";
+import { useApp } from "../../../../../common/hooks/use-app";
+import { SWAP_FEE } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 // import "react-datepicker/dist/react-datepicker.css";
 
 const Liquidity = (props) => {
+  const { toggleWalletSidebar } = useApp();
   const location = useLocation();
   const params = queryString.parse(location.search);
   const isNewPoolMode = !params.tokenA && !params.tokenB;
-  const { network, connectedWallet, openWalletModal } = useWallet();
+  const { network, connectedWallet } = useWallet();
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
   >("");
@@ -49,6 +52,7 @@ const Liquidity = (props) => {
   const [reserve, setReserve] = useState<any>();
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
+  const [refresh, setRefresh] = useState(0);
 
   const onAssetChange = (type: "A" | "B" | "") => {
     if (isNewPoolMode) {
@@ -70,6 +74,7 @@ const Liquidity = (props) => {
   const onSuccess = () => {
     setAmountA("");
     setAmountB("");
+    setRefresh(refresh + 1);
     setTxid("");
   };
 
@@ -182,7 +187,7 @@ const Liquidity = (props) => {
     if (tokenA && tokenB) {
       fetchPair(tokenA, tokenB);
     }
-  }, [tokenA, tokenB]);
+  }, [connectedWallet, tokenA, tokenB, refresh]);
 
   const noLiquidity =
     reserve && reserve.pair[tokenA] === 0 && reserve.pair[tokenB] === 0;
@@ -197,14 +202,15 @@ const Liquidity = (props) => {
         <div className="notification is-info">
           <strong>Liquidity Provider Rewards</strong>
           <br />
-          Liquidity providers earn a 0.25% fee on all trades proportional to
-          their share of the pool. Fees are added to the pool, accrue in real
+          Liquidity providers earn a {SWAP_FEE}% fee on all trades proportional
+          to their share of the pool. Fees are added to the pool, accrue in real
           time and can be claimed by withdrawing your liquidity.
         </div>
       )}
 
       <div className="is-relative">
         <Input
+          isDisable={!tokenA}
           heading="Pair A"
           onClickAsset={() => {
             onAssetChange("A");
@@ -221,6 +227,7 @@ const Liquidity = (props) => {
           </button>
         </div>
         <Input
+          isDisable={!tokenA}
           heading="Pair B"
           isLoading={isPairLoading}
           onClickAsset={() => {
@@ -284,7 +291,7 @@ const Liquidity = (props) => {
           <>
             <hr />
             <button
-              onClick={openWalletModal}
+              onClick={toggleWalletSidebar}
               className="button is-fullwidth is-primary"
             >
               Connect wallet

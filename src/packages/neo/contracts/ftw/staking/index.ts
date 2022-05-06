@@ -1,0 +1,256 @@
+import { INetworkType, Network } from "../../../network";
+import { SWAP_SCRIPT_HASH } from "../swap/consts";
+import { IConnectedWallet } from "../../../wallet/interfaces";
+import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
+import { wallet } from "../../../index";
+import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
+import { FARM_SCRIPT_HASH } from "./consts";
+import { SwapContract } from "../swap";
+import { IClaimableRewards, ILPTokens, IStakingPairs } from "./interfaces";
+import {
+  parseClaimableMap,
+  parsePairsMap,
+  parseStakedLPTokensMap,
+} from "./helpers";
+
+export class StakingContract {
+  network: INetworkType;
+  contractHash: string;
+
+  constructor(networkType: INetworkType) {
+    this.network = networkType;
+    this.contractHash = FARM_SCRIPT_HASH[networkType];
+  }
+
+  stake = async (
+    connectedWallet: IConnectedWallet,
+    tokenId: string
+  ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
+    const invokeScript = {
+      operation: "stake",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "Hash160",
+          value: senderHash,
+        },
+        {
+          type: "Hash160",
+          value: SWAP_SCRIPT_HASH[this.network],
+        },
+        {
+          type: "String",
+          value: tokenId,
+        },
+      ],
+      signers: [
+        {
+          account: senderHash,
+          scopes: tx.WitnessScope.CustomContracts,
+          allowedContracts: [this.contractHash, SWAP_SCRIPT_HASH[this.network]],
+        },
+      ],
+    };
+    return new wallet.WalletAPI(connectedWallet.key).invoke(
+      this.network,
+      invokeScript,
+      undefined,
+      undefined
+    );
+  };
+
+  remove = async (
+    connectedWallet: IConnectedWallet,
+    tokenId: string
+  ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
+    const invokeScript = {
+      operation: "withdraw",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "Hash160",
+          value: senderHash,
+        },
+        {
+          type: "String",
+          value: tokenId,
+        },
+      ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+    };
+    return new wallet.WalletAPI(connectedWallet.key).invoke(
+      this.network,
+      invokeScript,
+      undefined,
+      undefined
+    );
+  };
+
+  claim = async (
+    connectedWallet: IConnectedWallet,
+    tokenA: string,
+    tokenB: string
+  ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
+    const invokeScript = {
+      operation: "claim",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "Hash160",
+          value: senderHash,
+        },
+        {
+          type: "Hash160",
+          value: tokenA,
+        },
+        {
+          type: "Hash160",
+          value: tokenB,
+        },
+      ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+    };
+    return new wallet.WalletAPI(connectedWallet.key).invoke(
+      this.network,
+      invokeScript,
+      undefined,
+      undefined
+    );
+  };
+
+  claimMulti = async (
+    connectedWallet: IConnectedWallet,
+    batch: IClaimableRewards[]
+  ) => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
+    const invokeScript = {
+      operation: "claimMulti",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "Hash160",
+          value: senderHash,
+        },
+        {
+          type: "Array",
+          value: batch.map((item) => {
+            return {
+              type: "Array",
+              value: [
+                {
+                  type: "Hash160",
+                  value: item.tokenA,
+                },
+                {
+                  type: "Hash160",
+                  value: item.tokenB,
+                },
+              ],
+            };
+          }),
+        },
+      ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+    };
+    return new wallet.WalletAPI(connectedWallet.key).invoke(
+      this.network,
+      invokeScript,
+      undefined,
+      undefined
+    );
+  };
+
+  getStakingPairs = async (): Promise<IStakingPairs[]> => {
+    const script = {
+      scriptHash: this.contractHash,
+      operation: "getPairs",
+      args: [],
+    };
+    const res = await Network.read(this.network, [script], true);
+    if (res.state !== "FAULT") {
+      return parsePairsMap(res as any);
+    } else {
+      console.error(res.exception);
+      return [];
+    }
+  };
+
+  getLPTokens = async (connectedWallet: IConnectedWallet, symbolA, symbolB) => {
+    const swapContract = new SwapContract(this.network);
+    const scripts = [
+      {
+        scriptHash: swapContract.contractHash,
+        operation: "tokensOf",
+        args: [{ type: "Address", value: connectedWallet.account.address }],
+      },
+    ];
+    const tokens: object[] = [];
+
+    const res = await Network.read(this.network, scripts, true);
+    if (res.state !== "FAULT") {
+      // @ts-ignore
+      for await (const item of res.stack[0].iterator) {
+        const tokenId = u.HexString.fromBase64(item.value as string).toAscii();
+        if (tokenId.includes(`${symbolA}-${symbolB}`)) {
+          const properties = await swapContract.getProperties(tokenId);
+          if (properties) {
+            tokens.push({ tokenId, ...properties });
+          }
+        }
+      }
+    } else {
+      console.error(res.exception);
+    }
+    return tokens;
+  };
+
+  getStakedLPTokens = async (
+    connectedWallet: IConnectedWallet
+  ): Promise<ILPTokens[]> => {
+    const scripts = [
+      {
+        scriptHash: this.contractHash,
+        operation: "getLPTokens",
+        args: [{ type: "Address", value: connectedWallet.account.address }],
+      },
+    ];
+    const res = await Network.read(this.network, scripts, true);
+    if (res.state !== "FAULT") {
+      return parseStakedLPTokensMap(res as any);
+    } else {
+      console.error(res.exception);
+      return [];
+    }
+  };
+
+  getClaimable = async (
+    connectedWallet: IConnectedWallet
+  ): Promise<IClaimableRewards[]> => {
+    const scripts = [
+      {
+        scriptHash: this.contractHash,
+        operation: "getClaimable",
+        args: [{ type: "Address", value: connectedWallet.account.address }],
+      },
+    ];
+    const res = await Network.read(this.network, scripts, true);
+    // @ts-ignore
+    if (res.state !== "FAULT") {
+      return parseClaimableMap(res as any);
+    } else {
+      console.error(res.exception);
+      return [];
+    }
+  };
+}

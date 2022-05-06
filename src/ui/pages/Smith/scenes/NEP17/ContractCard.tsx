@@ -3,18 +3,38 @@ import { ISmithRecord } from "../../../../../packages/neo/contracts/ftw/smith/in
 import { MAINNET } from "../../../../../packages/neo/consts";
 import { useWallet } from "../../../../../packages/provider";
 import { FaExternalLinkAlt } from "react-icons/all";
+import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 
 interface IContractCardProps {
   data: ISmithRecord;
 }
 const ContractCard = ({ data }: IContractCardProps) => {
   const { network } = useWallet();
+  const logo = ASSET_LIST[network][data.contractHash]
+    ? ASSET_LIST[network][data.contractHash].logo
+    : undefined;
   return (
     <div className="media">
+
       <div className="media-content">
-        <h5 className="title is-5">
-          #{data.no} {data.name}
-        </h5>
+        <div className="level">
+          <div className="level-left">
+            {logo && (
+              <div className="level-item">
+                <div className="image is-64x64">
+                  <img src={logo} />
+                </div>
+              </div>
+            )}
+
+            <div className="level-item">
+              <h5 className="title is-5 is-marginless">
+                #{data.no} {data.name}
+              </h5>
+            </div>
+          </div>
+        </div>
+
         <div className="content">
           <strong>Contract Hash</strong>
           <br />

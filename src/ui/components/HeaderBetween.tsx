@@ -14,7 +14,7 @@ const HeaderBetween = (props: IHeaderBetweenProps) => {
           <span className="icon">
             <FaAngleLeft />
           </span>
-          <span>Pools</span>
+          <span>Main</span>
         </Link>
       </div>
 

@@ -15,3 +15,20 @@ export interface IPair {
   amountB: number;
   totalShare: number;
 }
+
+export interface ILPTokens {
+  name: string;
+  tokenId: string;
+  lockUntil: string;
+  amount: string;
+}
+
+export interface IReserve {
+  tokenA: string;
+  tokenB: string;
+  amountA: string;
+  amountB: string;
+  totalShare: number;
+  tokenASymbol: string;
+  tokenBSymbol: string;
+}

@@ -7,8 +7,6 @@ import { SwapContract } from "../../../../../packages/neo/contracts";
 import { useWallet } from "../../../../../packages/provider";
 import { SWAP_PATH } from "../../../../../consts";
 import HeaderBetween from "../../../../components/HeaderBetween";
-import { truncate } from "fs";
-import { truncateAddress } from "../../../../../packages/neo/utils";
 import TruncatedAddress from "../../../../components/TruncatedAddress";
 
 const History = () => {
@@ -17,7 +15,6 @@ const History = () => {
   const { tokenA, tokenB, page, symbolA, symbolB } = params;
   const { network } = useWallet();
   const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
   const [data, setData] = useState<any>();
   const [currentPage, setPage] = useState(page ? page : "1");
 
@@ -36,10 +33,10 @@ const History = () => {
           currentPage
         );
         setData(res);
-        setLoading(false);
+	      setLoading(false);
       } catch (e: any) {
+        console.error(e.message);
         setLoading(false);
-        setError(e.message);
       }
     }
     fetch();

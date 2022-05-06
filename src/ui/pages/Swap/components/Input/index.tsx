@@ -16,9 +16,11 @@ interface IInputProps {
   onClickAsset: () => void;
   isReadOnly?: boolean;
   userBalance?: number;
+  isDisable?: boolean;
 }
 const Input = ({
   contractHash,
+  isDisable,
   symbol,
   val,
   heading,
@@ -74,12 +76,14 @@ const Input = ({
         <div className="column">
           <div className={`control ${isLoading ? "is-loading" : ""}`}>
             <NumberFormat
+              disabled={isDisable}
               readOnly={isReadOnly}
               // ref={this.props, inputRef}
               // decimalScale={0}
               inputMode="decimal"
               className="input"
               value={val}
+              allowNegative={false}
               onValueChange={(value, e) => {
                 if (e.source === "event") {
                   setValue(value.value, e.event);

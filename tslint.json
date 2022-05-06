@@ -9,6 +9,7 @@
   "rules": {
     "prettier": true,
     "interface-name": false,
-    "no-console": false
+    "no-console": false,
+    "no-submodule-imports": false
   }
 }

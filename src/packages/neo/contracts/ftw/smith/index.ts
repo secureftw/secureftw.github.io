@@ -2,8 +2,8 @@ import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH } from "../../../consts";
-import { DEPLOY_FEE, SMITH_SCRIPT_HASH } from "./consts";
-import { ISmithContractStatus, ISmithNEP11RecordPaginate } from "./interfaces";
+import { SMITH_SCRIPT_HASH } from "./consts";
+import { ISmithNEP11RecordPaginate, ISmithRecordPaginate } from "./interfaces";
 import {
   parseNEP11RecordPaginate,
   parsePaginate,
@@ -11,8 +11,6 @@ import {
 } from "./helpers";
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { IRuneMeta } from "../nft/interfaces";
-import { RUNE_SCRIPT_HASH } from "../nft";
-import { TTM_SCRIPT_HASH } from "../../ttm/nft";
 
 export class SmithContract {
   network: INetworkType;
@@ -176,14 +174,14 @@ export class SmithContract {
     );
   };
 
-  getStatus = async (): Promise<ISmithContractStatus> => {
+  getStatus = async (page: number): Promise<ISmithRecordPaginate> => {
     const records = {
       operation: "getRecords",
       scriptHash: this.contractHash,
       args: [
         {
           type: "Integer",
-          value: 1,
+          value: page,
         },
       ],
     };
@@ -191,9 +189,7 @@ export class SmithContract {
     const scripts = [records];
 
     const res = await Network.read(this.network, scripts);
-    return {
-      records: parsePaginate(res.stack[0].value),
-    };
+    return parsePaginate(res.stack[0].value);
   };
 
   getNEP11Records = async (): Promise<ISmithNEP11RecordPaginate> => {

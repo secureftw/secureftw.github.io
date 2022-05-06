@@ -9,6 +9,8 @@ import {
 } from "../../../utils";
 import { IPair } from "./interfaces";
 import moment from "moment";
+import { StackItemMapLike } from "@cityofzion/neon-core/lib/sc";
+import { parseMapValue } from "../staking/helpers";
 
 export const getEstimate = (
   amount: string,
@@ -45,15 +47,7 @@ export const parseUserStake = (stackItem) => {
   };
 };
 
-export const parsePair = (stackItem): IPair => {
-  return {
-    tokenA: base64ToHash160(stackItem.value[0].value as string),
-    tokenB: base64ToHash160(stackItem.value[1].value as string),
-    amountA: toDecimal(stackItem.value[2].value),
-    amountB: toDecimal(stackItem.value[3].value),
-    totalShare: toDecimal(stackItem.value[4].value),
-  };
-};
+export const parseReserve = (map): IPair => parseMapValue(map);
 
 export const parseSwapPaginate = (stackItem: any) => {
   return {
@@ -74,17 +68,6 @@ const parseSwap = (stackItem) => {
       tokenOutAmount: toDecimal(item.value[4].value),
     };
   });
-};
-
-export const parseLP = (stackItem) => {
-  console.log(stackItem);
-  return {
-    owner: base64ToAddress(stackItem[0].value),
-    tokenIn: base64ToString(stackItem[1].value),
-    // tokenOut: base64ToHash160(stackItem.value[2].value), // NEO amount
-    amount: toDecimal(stackItem[3].value), // NEO amount
-    lockUntil: stackItem[4].value === "0" ? "None" :base64ToDate(stackItem[4].value),
-  };
 };
 
 export const defaultDeadLine = () =>

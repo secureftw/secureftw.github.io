@@ -2,7 +2,7 @@ import { MAINNET, PRIVATENET, TESTNET } from "../packages/neo/consts";
 
 export const HOME_PATH = "/";
 export const MIGRATION_PATH = "/migration";
-export const FARM_PATH = "/gas";
+export const GASFI_PATH = "/gas";
 export const GALLERY_PATH = "/NFT/gallery";
 export const TOURNAMENT_PATH = "/arena";
 export const SMITH_PATH = "/smith";
@@ -16,15 +16,21 @@ export const SWAP_PATH_LP_LIST = "/swap/providers";
 export const SWAP_PATH_LIQUIDITY_ADD = "/swap/liquidity/add";
 export const SWAP_PATH_LIQUIDITY_REMOVE = "/swap/liquidity/remove";
 export const SWAP_PATH_TRADE = "/swap/trade";
+export const FARM_PATH = "/farm";
+export const FARM_STAKE_PATH = "/farm/stake";
+export const FARM_STAKE_POSITIONS_PATH = "/farm/stake/positions";
 export const FUSION_PATH = "/fusion";
 export const INCUBATOR_PATH = "/incubator";
-export const INCUBATOR_POOL_PATH = "/incubator/pool";
-export const INCUBATOR_REGISTER_PATH = "/incubator/register";
 
 export const MENU = [
   {
     label: "Swap",
     path: SWAP_PATH,
+    network: [PRIVATENET, TESTNET],
+  },
+  {
+    label: "Farm",
+    path: FARM_PATH,
     network: [PRIVATENET, TESTNET],
   },
   {
@@ -51,7 +57,7 @@ export const MENU = [
   },
   {
     label: "GAS-FI",
-    path: FARM_PATH,
+    path: GASFI_PATH,
     network: [PRIVATENET],
   },
   {

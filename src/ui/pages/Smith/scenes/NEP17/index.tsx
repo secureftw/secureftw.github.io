@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useWallet } from "../../../../../packages/provider";
 import { SmithContract } from "../../../../../packages/neo/contracts/ftw/smith";
 import ContractCard from "./ContractCard";
+import Pagination from "bulma-pagination-react";
 
 const NEP17Smith = (props) => {
+  const [page, setPage] = useState(1);
   const [isLoading, setLoading] = useState(true);
   const [status, setStatus] = useState<any>([]);
   const [error, setError] = useState("");
@@ -13,7 +15,7 @@ const NEP17Smith = (props) => {
     async function fetchContractStatus() {
       setError("");
       try {
-        const res = await new SmithContract(network).getStatus();
+        const res = await new SmithContract(network).getStatus(page);
         setStatus(res);
         setLoading(false);
       } catch (e: any) {
@@ -21,7 +23,7 @@ const NEP17Smith = (props) => {
       }
     }
     fetchContractStatus();
-  }, [connectedWallet, network]);
+  }, [connectedWallet, network, page]);
 
   return (
     <>
@@ -31,14 +33,25 @@ const NEP17Smith = (props) => {
         <div>{error}</div>
       ) : (
         <div className="box">
-          {status && status.records.items.length > 0 ? (
-            status.records.items.map((item, i) => (
+          {status && status.items.length > 0 ? (
+            status.items.map((item, i) => (
               <ContractCard key={"contact17" + i} data={item} />
             ))
           ) : (
             <div></div>
           )}
         </div>
+      )}
+      {status.totalItems > 1 && (
+        <Pagination
+          pages={status.totalPages}
+          currentPage={page}
+          onChange={(v) => {
+            if (page !== v) {
+              setPage(v);
+            }
+          }}
+        />
       )}
       {/*{isActionModalActive && (*/}
       {/*  <ActionModal onClose={() => setActionModalActive(false)} />*/}

@@ -2,18 +2,13 @@ import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { SWAP_SCRIPT_HASH } from "./consts";
-import { base64ToHash160, base64ToString, toDecimal } from "../../../utils";
+import { base64ToString, toDecimal } from "../../../utils";
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
-import {
-  defaultDeadLine,
-  parsePair,
-  parseSwapPaginate,
-  parseUserStake,
-  parseLP,
-} from "./helpers";
+import { defaultDeadLine, parseSwapPaginate, parseReserve } from "./helpers";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
-import { IPairInfo } from "./interfaces";
+import {IPair, IPairInfo, IReserve} from "./interfaces";
 import { parseProperties } from "../../ttm/nft/helpers";
+import { parseMapValue } from "../staking/helpers";
 
 export class SwapContract {
   network: INetworkType;
@@ -239,15 +234,13 @@ export class SwapContract {
       scripts.push(script2);
     }
     const res = await Network.read(this.network, scripts, true);
-    const pair = parsePair(res.stack[0]);
+    const pair: any = parseReserve(res.stack[0]);
     const obj = {
       reserve: pair,
       pair: {
         [pair.tokenA]: pair.amountA,
         [pair.tokenB]: pair.amountB,
       },
-      // [pair.tokenA]: pair.amountA,
-      // [pair.tokenB]: pair.amountB,
       balances: {
         [tokenA]: 0,
         [tokenB]: 0,
@@ -260,28 +253,18 @@ export class SwapContract {
     return obj;
   };
 
-  getPairs = async () => {
+  getPairs = async (): Promise<IReserve[]> => {
     const script = {
       scriptHash: this.contractHash,
       operation: "getPairs",
       args: [],
     };
-    try {
-      const res = await Network.read(this.network, [script], true);
+    const res = await Network.read(this.network, [script], true);
+    if (res.state !== "FAULT") {
       // @ts-ignore
-      return res.stack[0].iterator.map((item) => {
-        const tokenA = base64ToHash160(item.value[0].value as string);
-        const tokenB = base64ToHash160(item.value[1].value as string);
-        const amountA = item.value[2].value;
-        const amountB = item.value[3].value;
-        return {
-          tokenA,
-          tokenB,
-          amountA: toDecimal(amountA),
-          amountB: toDecimal(amountB),
-        };
-      });
-    } catch (e) {
+      return res.stack[0].value.map((item) => parseMapValue(item));
+    } else {
+      console.error(res.exception);
       return [];
     }
   };
@@ -307,61 +290,6 @@ export class SwapContract {
       return undefined;
     }
   };
-  //
-  // getUserStake = async (
-  //   connectedWallet: IConnectedWallet,
-  //   tokenA: string,
-  //   tokenB: string
-  // ) => {
-  //   const script = {
-  //     scriptHash: this.contractHash,
-  //     operation: "getUserStake",
-  //     args: [
-  //       { type: "Address", value: connectedWallet.account.address },
-  //       { type: "Hash160", value: tokenA },
-  //       { type: "Hash160", value: tokenB },
-  //     ],
-  //   };
-  //   const script1 = {
-  //     scriptHash: this.contractHash,
-  //     operation: "getPair",
-  //     args: [
-  //       { type: "Hash160", value: tokenA },
-  //       { type: "Hash160", value: tokenB },
-  //     ],
-  //   };
-  //   try {
-  //     const res = await Network.read(this.network, [script, script1], true);
-  //     return {
-  //       stake: parseUserStake(res.stack[0]),
-  //       pair: parsePair(res.stack[1]),
-  //     };
-  //   } catch (e) {
-  //     return undefined;
-  //   }
-  // };
-
-  // getClaimAble = async (
-  //   connectedWallet: IConnectedWallet,
-  //   tokenA: string,
-  //   tokenB: string
-  // ) => {
-  //   const script = {
-  //     scriptHash: this.contractHash,
-  //     operation: "getClaimableFee",
-  //     args: [
-  //       { type: "Hash160", value: tokenA },
-  //       { type: "Hash160", value: tokenB },
-  //       { type: "Address", value: connectedWallet.account.address },
-  //     ],
-  //   };
-  //   try {
-  //     const res = await Network.read(this.network, [script], true);
-  //     return parseUserStake(res.stack[0]);
-  //   } catch (e) {
-  //     return undefined;
-  //   }
-  // };
 
   getSwapHistory = async (tokenA: string, tokenB: string, page: string) => {
     const script = {
@@ -381,21 +309,22 @@ export class SwapContract {
     }
   };
 
-  getLPList = async (tokenA: string, tokenB: string, page: string) => {
+  getLPList = async (tokenA: string, tokenB: string): Promise<IPair[]> => {
     const script = {
       scriptHash: this.contractHash,
-      operation: "getAllLP",
+      operation: "getLPTokensByPair",
       args: [
         { type: "Hash160", value: tokenA },
         { type: "Hash160", value: tokenB },
       ],
     };
-    try {
-      const res = await Network.read(this.network, [script]);
+    const res = await Network.read(this.network, [script], true);
+    if (res.state !== "FAULT") {
       // @ts-ignore
-      return res.stack[0].iterator.map((item) => parseLP(item.value));
-    } catch (e) {
-      return undefined;
+      return res.stack[0].value.map((item) => parseMapValue(item));
+    } else {
+      console.error(res.exception);
+      return [];
     }
   };
 
@@ -444,7 +373,7 @@ export class SwapContract {
         symbol: base64ToString(res.stack[2].value as string),
         decimals: res.stack[3].value,
       },
-      reserve: parsePair(res.stack[4]),
+      reserve: parseReserve(res.stack[4]),
     };
   };
 
@@ -485,26 +414,17 @@ export class SwapContract {
     const scripts = [
       {
         scriptHash: this.contractHash,
-        operation: "tokensOf",
+        operation: "getLPTokensByUser",
         args: [{ type: "Address", value: connectedWallet.account.address }],
       },
     ];
-    const tokens: object[] = [];
-
     const res = await Network.read(this.network, scripts, true);
-
     if (res.state !== "FAULT") {
       // @ts-ignore
-      for await (const item of res.stack[0].iterator) {
-        const tokenId = u.HexString.fromBase64(item.value as string).toAscii();
-        const properties = await this.getProperties(tokenId);
-        if (properties) {
-          tokens.push({ tokenId, ...properties });
-        }
-      }
+      return res.stack[0].value.map((item) => parseMapValue(item));
     } else {
       console.error(res.exception);
+      return [];
     }
-    return tokens;
   };
 }

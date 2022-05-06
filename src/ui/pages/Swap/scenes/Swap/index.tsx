@@ -9,7 +9,6 @@ import Input from "../../components/Input";
 import AssetListModal from "../../components/AssetListModal";
 // tslint:disable-next-line:no-submodule-imports
 import { FaAngleLeft, FaExchangeAlt } from "react-icons/all";
-import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import { Link, useLocation } from "react-router-dom";
@@ -19,12 +18,13 @@ import queryString from "query-string";
 import { LocalStorage } from "../../../../../packages/neo/local-storage";
 import PairSelect from "../../components/PairSelect";
 import { IPairInfo } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
+import { useApp } from "../../../../../common/hooks/use-app";
 
 const Swap = () => {
   const location = useLocation();
   const params = queryString.parse(location.search);
-
-  const { network, connectedWallet, openWalletModal } = useWallet();
+  const { toggleWalletSidebar } = useApp();
+  const { network, connectedWallet } = useWallet();
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
   >("");
@@ -49,6 +49,7 @@ const Swap = () => {
   const [data, setData] = useState<IPairInfo | undefined>();
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
+  const [refresh, setRefresh] = useState(0);
   const onAssetChange = (type: "A" | "B" | "") => {
     // Temporary disable
     // setAssetChangeModalActive(type);
@@ -85,8 +86,9 @@ const Swap = () => {
   };
 
   const onSuccess = () => {
-    setAmountA("0");
-    setAmountB("0");
+    setAmountA("");
+    setAmountB("");
+    setRefresh(refresh + 1);
     setTxid("");
   };
 
@@ -170,7 +172,7 @@ const Swap = () => {
     if (params.tokenA && params.tokenB) {
       loadPair(params.tokenA, params.tokenB);
     }
-  }, [location]);
+  }, [location, refresh]);
 
   const noLiquidity =
     data && data.pair[tokenA] === 0 && data.pair[tokenB] === 0;
@@ -274,7 +276,7 @@ const Swap = () => {
               <>
                 <hr />
                 <button
-                  onClick={openWalletModal}
+                  onClick={toggleWalletSidebar}
                   className="button is-fullwidth is-primary"
                 >
                   Connect wallet

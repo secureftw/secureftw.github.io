@@ -1,8 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  SWAP_PATH,
-} from "../../../../../consts";
+import { SWAP_PATH } from "../../../../../consts";
 
 const NavSwitch = (props) => {
   const location = useLocation();

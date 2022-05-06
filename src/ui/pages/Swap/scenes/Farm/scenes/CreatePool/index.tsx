@@ -9,6 +9,7 @@ import {
 import { useWallet } from "../../../../../../../packages/provider";
 import { useHistory } from "react-router-dom";
 import { SWAP_PATH_LIQUIDITY_ADD } from "../../../../../../../consts";
+import { SWAP_FEE } from "../../../../../../../packages/neo/contracts/ftw/swap/consts";
 
 const CreatePool = (props) => {
   const { network } = useWallet();
@@ -75,8 +76,8 @@ const CreatePool = (props) => {
         <div className="notification is-info">
           <strong>Liquidity Provider Rewards</strong>
           <br />
-          Liquidity providers earn a 0.25% fee on all trades proportional to
-          their share of the pool. Fees are added to the pool, accrue in real
+          Liquidity providers earn a {SWAP_FEE}% fee on all trades proportional
+          to their share of the pool. Fees are added to the pool, accrue in real
           time and can be claimed by withdrawing your liquidity.
         </div>
       )}

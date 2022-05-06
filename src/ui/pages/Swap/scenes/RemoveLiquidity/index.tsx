@@ -8,11 +8,12 @@ import LPTokenList from "./LPTokenList";
 import HeaderBetween from "../../../../components/HeaderBetween";
 import { SWAP_PATH } from "../../../../../consts";
 
-const RemoveLiquidity = (props) => {
+const RemoveLiquidity = () => {
   const { network, connectedWallet } = useWallet();
   const [isLoading, setLoading] = useState<any>(true);
   const [tokens, setTokens] = useState<any>([]);
   const [txid, setTxid] = useState("");
+  const [refresh, setRefresh] = useState(0);
 
   const onRemoveLiquidity = async (tokenId) => {
     if (connectedWallet) {
@@ -31,6 +32,7 @@ const RemoveLiquidity = (props) => {
   };
 
   const onSuccess = () => {
+    setRefresh(refresh + 1);
     setTxid("");
   };
 
@@ -43,7 +45,7 @@ const RemoveLiquidity = (props) => {
     if (connectedWallet) {
       fetchTokens(connectedWallet);
     }
-  }, [connectedWallet]);
+  }, [connectedWallet, refresh]);
 
   return (
     <>

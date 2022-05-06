@@ -58,6 +58,16 @@ const SidebarNav = (props) => {
               </li>
             );
           })}
+          <li>
+            {" "}
+            <a
+              target={"_blank"}
+              className="navbar-item"
+              href={"http://docs.forthewin.network/"}
+            >
+	            Documentation
+            </a>
+          </li>
         </ul>
       </aside>
       <div className="p-5" style={{ position: "absolute", bottom: "40px" }}>
