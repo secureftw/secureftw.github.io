@@ -9,13 +9,8 @@ import {
   TESTNET_CONFIG_2,
   MAINNET_CONFIG_2,
 } from "../consts";
-// tslint:disable-next-line:no-submodule-imports
 import { InvokeResult } from "@cityofzion/neon-core/lib/rpc";
-import {
-  ApplicationLogJson,
-  GetRawTransactionResult,
-  // tslint:disable-next-line:no-submodule-imports
-} from "@cityofzion/neon-core/lib/rpc/Query";
+import { ApplicationLogJson } from "@cityofzion/neon-core/lib/rpc/Query";
 import { convertContractCallParam } from "../utils";
 
 export type INetworkType = typeof PRIVATENET | typeof MAINNET | typeof TESTNET;
@@ -109,8 +104,8 @@ export class Network {
 
   static read = async (
     network: INetworkType,
-    scripts: sc.ContractCallJson[],
-    passFaultCheck?: boolean
+    scripts: sc.ContractCallJson[]
+    // passFaultCheck?: boolean
   ): Promise<InvokeResult> => {
     const rpcClient = Network.getRPCClient(network);
     const sb = new sc.ScriptBuilder();
@@ -121,12 +116,45 @@ export class Network {
       }
       sb.emitAppCall(script.scriptHash, script.operation, params);
     });
+    return rpcClient.invokeScript(u.HexString.fromHex(sb.build()));
+    // if (res.state === "FAULT") {
+    //   console.error(res.exception);
+    //   return null;
+    // }
+    // if (!passFaultCheck && res.state === "FAULT") {
+    //   console.error("RPC read error" + res.exception);
+    //   throw new Error(res.exception ? res.exception : "Network error");
+    // }
+  };
+
+  static readOnly = async (
+    network: INetworkType,
+    scripts: sc.ContractCallJson[],
+    parser: (res: InvokeResult) => any
+  ): Promise<any | undefined> => {
+    const rpcClient = Network.getRPCClient(network);
+    const sb = new sc.ScriptBuilder();
+    scripts.map((script) => {
+      let params: unknown[] = [];
+      if (script.args) {
+        params = script.args.map((arg) => convertContractCallParam(arg));
+      }
+      sb.emitAppCall(script.scriptHash, script.operation, params);
+    });
     const res = await rpcClient.invokeScript(u.HexString.fromHex(sb.build()));
-    if (!passFaultCheck && res.state === "FAULT") {
-      console.error("RPC read error" + res);
-      throw new Error(res.exception ? res.exception : "Network error");
+    if (res.state === "FAULT") {
+      console.error(res.exception);
+      return undefined;
     }
-    return res;
+    return parser(res);
+    // if (res.state === "FAULT") {
+    //   console.error(res.exception);
+    //   return null;
+    // }
+    // if (!passFaultCheck && res.state === "FAULT") {
+    //   console.error("RPC read error" + res.exception);
+    //   throw new Error(res.exception ? res.exception : "Network error");
+    // }
   };
 
   static sleep = (duration: number) => {

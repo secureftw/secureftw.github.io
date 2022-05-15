@@ -1,46 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PageLayout from "../../components/PageLayout";
-import { useWallet } from "../../../packages/provider";
-import { SwapContract } from "../../../packages/neo/contracts";
-import { StakingContract } from "../../../packages/neo/contracts/ftw/staking";
-import { Link, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import {
   FARM_PATH,
   FARM_STAKE_PATH,
   FARM_STAKE_POSITIONS_PATH,
-  SWAP_PATH_LIQUIDITY_ADD,
-  SWAP_PATH_LIQUIDITY_REMOVE,
 } from "../../../consts";
-import { FaMinus, FaPlus } from "react-icons/all";
-import StakingPairCard from "./components/StakingPairCard";
 import StakingMain from "./scenes/Main";
 import Stake from "./scenes/Stake";
 import MyPositions from "./scenes/MyPositions";
 import ClaimRewards from "./scenes/ClaimRewards";
 
-const Farm = (props) => {
-  // const { network, connectedWallet } = useWallet();
-  // const [list, setList] = useState<any[]>([]);
-  // const [detail, setDetail] = useState();
-  // const [isCreateModalActive, setCreateModalActive] = useState(false);
-  // const [isLoading, setLoading] = useState(true);
-  // const [error, setError] = useState(false);
-  //
-  // useEffect(() => {
-  //   async function fetch() {
-  //     setLoading(true);
-  //     try {
-  //       const res = await new StakingContract(network).getPairs();
-  //       console.log(res);
-  //       setLoading(false);
-  //       setList(res);
-  //     } catch (e: any) {
-  //       setLoading(false);
-  //       setError(e.message);
-  //     }
-  //   }
-  //   fetch();
-  // }, []);
+const Farm = () => {
   return (
     <PageLayout>
       <div className="columns">

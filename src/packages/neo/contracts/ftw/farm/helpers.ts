@@ -1,5 +1,5 @@
 import { IFarmDepositRecord } from "./interfaces";
-import { base64ToDate, base64ToFixed8, base64ToString } from "../../../utils";
+import { base64ToDate, toDecimal } from "../../../utils";
 
 export const parseDeposit = (
   stackItem: any
@@ -29,8 +29,8 @@ export const parseClaim = (stackItem) => {
       no: item.value[0].value,
       from: item.value[1].value,
       end: item.value[2].value,
-      GAS: base64ToFixed8(item.value[3].value),
-      FTW: base64ToFixed8(item.value[4].value),
+      GAS: toDecimal(item.value[3].value),
+      FTW: toDecimal(item.value[4].value),
       createdAt: base64ToDate(item.value[5].value),
     };
   });
@@ -51,10 +51,10 @@ const parseSnapshotItem = (stackItem) => {
       no: item.value[0].value,
       totalPositionPool: item.value[1].value, // NEO amount
       totalNeo: item.value[2].value, // NEO amount
-      totalGas: base64ToFixed8(item.value[3].value),
-      range: base64ToFixed8(item.value[4].value),
+      totalGas: toDecimal(item.value[3].value),
+      range: toDecimal(item.value[4].value),
       winPosition: item.value[5].value,
-      createdAt: base64ToDate(item.value[6].value),
+      createdAt: toDecimal(item.value[6].value),
     };
   });
 };

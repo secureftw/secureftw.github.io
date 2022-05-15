@@ -16,6 +16,7 @@ Deploy, Mint, Swap, Farm and NFT
 
 ## Smart contracts
 
+Most our smart contracts are in private repos. However, you can see some of our public smart contracts at [this repo](https://github.com/ForTheWinn/public-contracts)
 
 
 ## License

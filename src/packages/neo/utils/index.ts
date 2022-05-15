@@ -1,9 +1,15 @@
 import { sc, u, wallet } from "@cityofzion/neon-core";
 import moment from "moment";
 import { IBalance } from "../wallet/interfaces";
+import {
+  StackItemLike,
+  StackItemMap,
+} from "@cityofzion/neon-core/lib/sc/StackItem";
 
 export const truncateAddress = (address: string) => {
-  return `${address.substring(0, 4)}...${address.substr(address.length - 2)}`;
+  return address
+    ? `${address.substring(0, 4)}...${address.substr(address.length - 2)}`
+    : "";
 };
 
 /**
@@ -35,41 +41,25 @@ export const convertContractCallParam = (param: any) => {
   }
 };
 
-export const base64ToAddress = (str: string) =>
+export const base64ToAddress = (str: string): string =>
   wallet.getAddressFromScriptHash(base64ToHash160(str));
 
-export const base64ToHash160 = (str: string) => u.reverseHex(u.base642hex(str));
+export const base64ToHash160 = (str: string): string =>
+  u.reverseHex(u.base642hex(str));
 
-export const base64ToString = (str: string) =>
+export const base64ToString = (str: string): string =>
   u.HexString.fromBase64(str).toAscii().toString();
 
-export const base64ToFixed8 = (str: string) => {
-  const no = u.BigInteger.fromNumber(str).toDecimal(8);
-  return no;
-};
+export const base64ToDate = (str: string): string =>
+  moment.unix(parseFloat(str) / 1000).format("lll");
 
-export const toDecimal = (val: string): number => {
+export const toDecimal = (val: string | number): number => {
   try {
-    const amount = parseFloat(
-      u.BigInteger.fromNumber(parseFloat(val)).toDecimal(8).toString()
-    );
-    return amount;
+    return parseFloat(u.BigInteger.fromNumber(val).toDecimal(8));
   } catch (e) {
     return 0;
   }
 };
-
-// export const toNumber = () => {
-//
-// }
-
-export const base64ToDate = (str: string) =>
-  moment.unix(parseFloat(str) / 1000).format("lll");
-
-export function truncateDecimal(v, p) {
-  const s = Math.pow(10, p || 0);
-  return Math.trunc(s * v) / s;
-}
 
 export const balanceCheck = (
   balances: IBalance[],
@@ -84,4 +74,69 @@ export const balanceCheck = (
     }
   });
   return hasBalance;
+};
+
+export const parseMapValue = (v: StackItemLike): any => {
+  const obj = {};
+  const root = v.value as StackItemMap[];
+  root.forEach(({ key, value }) => {
+    const k = u.base642utf8(key.value as string);
+    let val;
+    switch (k) {
+      case "owner":
+        val = base64ToAddress(value.value as string);
+        break;
+      case "contractHash":
+        val = base64ToHash160(value.value as string);
+        break;
+      case "tokenA":
+        val = base64ToHash160(value.value as string);
+        break;
+      case "tokenB":
+        val = base64ToHash160(value.value as string);
+        break;
+      case "name":
+        val = base64ToString(value.value as string);
+        break;
+      case "tokenId":
+        val = base64ToString(value.value as string);
+        break;
+      case "tokenASymbol":
+        val = base64ToString(value.value as string);
+        break;
+      case "tokenBSymbol":
+        val = base64ToString(value.value as string);
+        break;
+      case "symbolA":
+        val = base64ToString(value.value as string);
+        break;
+      case "symbolB":
+        val = base64ToString(value.value as string);
+        break;
+      case "amountA":
+        val = toDecimal(value.value as string);
+        break;
+      case "amountB":
+        val = toDecimal(value.value as string);
+        break;
+      case "totalShare":
+        val = toDecimal(value.value as string);
+        break;
+      case "claimable":
+        val = toDecimal(value.value as string);
+        break;
+      case "dailyReward":
+        val = toDecimal(value.value as string);
+        break;
+      case "amount":
+        val = toDecimal(value.value as string);
+        break;
+      case "lockUntil":
+        val =
+          value.value === "0" ? "None" : base64ToDate(value.value as string);
+        break;
+    }
+    obj[k] = val;
+  });
+  return obj;
 };

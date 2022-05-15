@@ -1,28 +1,23 @@
 import React, { useEffect, useState } from "react";
-import Input from "../../components/Input";
 import { useWallet } from "../../../../../packages/provider";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import AssetListModal from "../../components/AssetListModal";
 import { toast } from "react-hot-toast";
-import { getEstimate } from "../../../../../packages/neo/contracts/ftw/swap/helpers";
-// tslint:disable-next-line:no-submodule-imports
-import { FaAngleLeft, FaExchangeAlt } from "react-icons/all";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 // tslint:disable-next-line:no-implicit-dependencies
 import queryString from "query-string";
 import { SWAP_PATH } from "../../../../../consts";
 import HeaderBetween from "../../../../components/HeaderBetween";
-import Switch from "react-switch";
-import DatePicker from "react-datepicker";
 import moment from "moment";
-import { useApp } from "../../../../../common/hooks/use-app";
-import { SWAP_FEE } from "../../../../../packages/neo/contracts/ftw/swap/consts";
-// import "react-datepicker/dist/react-datepicker.css";
+import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
+import TimeLockInput from "./TimeLockInput";
+import LPRewardInfo from "./LPRewardInfo";
+import ConnectWalletButton from "../../../../components/ConnectWalletButton";
+import LPInputs from "./LPInputs";
 
 const Liquidity = (props) => {
-  const { toggleWalletSidebar } = useApp();
   const location = useLocation();
   const params = queryString.parse(location.search);
   const isNewPoolMode = !params.tokenA && !params.tokenB;
@@ -49,24 +44,25 @@ const Liquidity = (props) => {
 
   const [selectedLock, setSelectedLock] = useState(false);
   const [lockUntil, setUntil] = useState(new Date());
-  const [reserve, setReserve] = useState<any>();
+  const [data, setData] = useState<any>();
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
+  const [error, setError] = useState<string | undefined>();
 
   const onAssetChange = (type: "A" | "B" | "") => {
-    if (isNewPoolMode) {
-      setAssetChangeModalActive(type);
-    }
+    setAssetChangeModalActive(type);
   };
 
   const onAssetClick = (assetHash, symbol) => {
     if (isAssetChangeModalActive === "A") {
       setTokenA(assetHash);
       setSymbolA(symbol);
+      setAmountA("");
     } else {
       setTokenB(assetHash);
       setSymbolB(symbol);
+      setAmountB("");
     }
     setAssetChangeModalActive("");
   };
@@ -101,41 +97,6 @@ const Liquidity = (props) => {
     }
   };
 
-  const onTokenAAmountChange = (type: "A" | "B", val: string) => {
-    if (type === "A") {
-      if (
-        tokenB &&
-        reserve &&
-        reserve.pair[tokenA] !== 0 &&
-        reserve.pair[tokenB] !== 0
-      ) {
-        const estimated = getEstimate(
-          val,
-          reserve.pair[tokenA],
-          reserve.pair[tokenB]
-        );
-        setAmountB(estimated.toString());
-      }
-      setAmountA(val);
-    } else {
-      if (
-        tokenA &&
-        tokenB &&
-        reserve &&
-        reserve.pair[tokenA] !== 0 &&
-        reserve.pair[tokenB] !== 0
-      ) {
-        const estimated = getEstimate(
-          val,
-          reserve.pair[tokenB],
-          reserve.pair[tokenA]
-        );
-        setAmountA(estimated.toString());
-      }
-      setAmountB(val);
-    }
-  };
-
   const onSwitch = () => {
     setTokenB(tokenA);
     setTokenA(tokenB ? tokenB : "");
@@ -145,138 +106,88 @@ const Liquidity = (props) => {
     setSymbolB(symbolA);
   };
 
+  const onRefresh = () => {
+    setRefresh(refresh + 1);
+  };
+
+  const getReserve = async () => {
+    try {
+      setError(undefined);
+      setPairLoading(true);
+      const res = await new SwapContract(network).getReserve(
+        tokenA,
+        tokenB,
+        connectedWallet
+      );
+      setData(res);
+      setSymbolA(res.reserve.tokenASymbol);
+      setSymbolB(res.reserve.tokenBSymbol);
+      setPairLoading(false);
+    } catch (e: any) {
+      setError(e.message);
+      setPairLoading(false);
+    }
+  };
+
   useEffect(() => {
-    async function fetchPair(A, B) {
-      try {
-        setPairLoading(true);
-        const res = await new SwapContract(network).getReserve(
-          A,
-          B,
-          connectedWallet
-        );
-        setPairLoading(false);
-        setReserve(res);
-        if (
-          tokenA &&
-          tokenB &&
-          amountA &&
-          !amountB &&
-          res[tokenA] !== 0 &&
-          res[tokenB] !== 0
-        ) {
-          const estimated = getEstimate(amountA, res[tokenA], res[tokenB]);
-          setAmountB(estimated.toString());
-        }
-        if (
-          tokenA &&
-          tokenB &&
-          amountB &&
-          !amountA &&
-          res[tokenA] !== 0 &&
-          res[tokenB] !== 0
-        ) {
-          // @ts-ignore
-          const estimated = getEstimate(amountB, res[tokenB], res[tokenA]);
-          setAmountA(estimated.toString());
-        }
-      } catch (e: any) {
-        console.error(e);
-        // setError(e.message);
-      }
+    async function load() {
+      await getReserve();
     }
     if (tokenA && tokenB) {
-      fetchPair(tokenA, tokenB);
+      load();
     }
-  }, [connectedWallet, tokenA, tokenB, refresh]);
-
+  }, [connectedWallet, refresh, tokenA, tokenB]);
   const noLiquidity =
-    reserve && reserve.pair[tokenA] === 0 && reserve.pair[tokenB] === 0;
+    (data && data.pair[tokenA] === 0) || (data && data.pair[tokenB] === 0);
   return (
     <>
       <HeaderBetween
         path={SWAP_PATH}
         title={noLiquidity ? "Create a new pool" : "Provide liquidity"}
+        isLoading={isPairLoading}
       />
       <hr />
-      {noLiquidity && (
-        <div className="notification is-info">
-          <strong>Liquidity Provider Rewards</strong>
-          <br />
-          Liquidity providers earn a {SWAP_FEE}% fee on all trades proportional
-          to their share of the pool. Fees are added to the pool, accrue in real
-          time and can be claimed by withdrawing your liquidity.
-        </div>
+      {noLiquidity && <LPRewardInfo />}
+      {error && (
+        <ErrorNotificationWithRefresh onRefresh={onRefresh} error={error} />
       )}
-
       <div className="is-relative">
-        <Input
-          isDisable={!tokenA}
-          heading="Pair A"
-          onClickAsset={() => {
-            onAssetChange("A");
-          }}
-          contractHash={tokenA}
-          symbol={symbolA}
-          val={amountA}
-          setValue={(val, e) => onTokenAAmountChange("A", val)}
-          userBalance={reserve ? reserve.balances[tokenA] : undefined}
+        <LPInputs
+          noLiquidity={noLiquidity}
+          network={network}
+          tokenA={tokenA}
+          tokenB={tokenB}
+          symbolA={symbolA}
+          symbolB={symbolB}
+          amountA={amountA}
+          amountB={amountB}
+          onAssetChange={onAssetChange}
+          userTokenABalance={
+            connectedWallet && data ? data.balances[tokenA] : undefined
+          }
+          userTokenBBalance={
+            connectedWallet && data ? data.balances[tokenB] : undefined
+          }
+          onSwitch={onSwitch}
+          setAmountA={setAmountA}
+          setAmountB={setAmountB}
+          reserve={data}
         />
-        <div className="pt-4 pb-4">
-          <button onClick={onSwitch} className="button is-white is-fullwidth">
-            <FaExchangeAlt />
-          </button>
-        </div>
-        <Input
-          isDisable={!tokenA}
-          heading="Pair B"
-          isLoading={isPairLoading}
-          onClickAsset={() => {
-            onAssetChange("B");
-          }}
-          contractHash={tokenB}
-          symbol={symbolB}
-          val={amountB}
-          setValue={(val, e) => onTokenAAmountChange("B", val)}
-          userBalance={reserve && tokenB ? reserve.balances[tokenB] : undefined}
-        />
+
         {connectedWallet ? (
           tokenA && tokenB && amountA && amountB ? (
             <>
               <hr />
-              <div className="mb-4">
-                <div className="level is-mobile">
-                  <div className="level-left">
-                    <div className="level-item">
-                      <label style={{ display: "flex", alignItems: "center" }}>
-                        <span className="mr-3">Lock liquidity</span>
-                        <Switch
-                          onChange={() => setSelectedLock(!selectedLock)}
-                          checked={selectedLock}
-                        />
-                      </label>
-                    </div>
-                  </div>
-                  {selectedLock && (
-                    <div className="level-right">
-                      <div className="level-item">
-                        <DatePicker
-                          selected={lockUntil}
-                          onChange={(date) => setUntil(date)}
-                          timeInputLabel="Time:"
-                          dateFormat="MM/dd/yyyy h:mm aa"
-                          showTimeInput
-                          minDate={lockUntil}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
+              <TimeLockInput
+                setLockUntil={setUntil}
+                lockUntil={lockUntil}
+                toggleSwitch={() => setSelectedLock(!selectedLock)}
+                isActive={selectedLock}
+              />
               <button
                 disabled={
-                  reserve.balances[tokenA] < parseFloat(amountA) ||
-                  reserve.balances[tokenB] < parseFloat(amountB)
+                  data.balances[tokenA] < parseFloat(amountA) ||
+                  data.balances[tokenB] < parseFloat(amountB)
                 }
                 onClick={onAddLiquidity}
                 className="button is-fullwidth is-primary"
@@ -290,12 +201,7 @@ const Liquidity = (props) => {
         ) : (
           <>
             <hr />
-            <button
-              onClick={toggleWalletSidebar}
-              className="button is-fullwidth is-primary"
-            >
-              Connect wallet
-            </button>
+            <ConnectWalletButton className="is-primary is-fullwidth" />
           </>
         )}
       </div>

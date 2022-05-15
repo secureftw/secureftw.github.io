@@ -1,39 +1,48 @@
-import moment from "moment";
 import React from "react";
-import { toDecimal } from "../../../../../packages/neo/utils";
-import {
-  ILPTokens,
-  IPair,
-} from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
-interface ILPTokenListProps extends ILPTokens {
-  onRemove: (tokenId: string) => void;
+import { SwapContract } from "../../../../../packages/neo/contracts";
+import LPTokenItem from "./LPTokenItem";
+import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
+import { IConnectedWallet } from "../../../../../packages/neo/wallet/interfaces";
+import { INetworkType } from "../../../../../packages/neo/network";
+
+interface ILPTokenListProps {
+  connectedWallet: IConnectedWallet;
+  network: INetworkType;
+  refresh: number;
+  onRemoveLiquidity: (tokenId: string) => void;
 }
 const LPTokenList = ({
-  name,
-  amount,
-  lockUntil,
-  onRemove,
-  tokenId,
+  network,
+  connectedWallet,
+  refresh,
+  onRemoveLiquidity,
 }: ILPTokenListProps) => {
-  const now = moment.utc().valueOf();
-  const expired = lockUntil === "None" ? 0 : moment(lockUntil).valueOf();
+  const { isLoaded, error, data } = useOnChainData(() => {
+    return new SwapContract(network).getLPTokens(connectedWallet);
+  }, [connectedWallet, refresh]);
+
   return (
-    <div className="media">
-      <div className="media-content">
-        {name} / {amount}
-        <br />
-        {lockUntil}
-      </div>
-      <div className="media-right">
-        <button
-          disabled={now < expired}
-          onClick={() => onRemove(tokenId)}
-          className="button is-light is-small"
-        >
-          Withdraw
-        </button>
-      </div>
-    </div>
+    <>
+      {!isLoaded ? (
+        <div>Loading..</div>
+      ) : error ? (
+        <div>{error}</div>
+      ) : (
+        <div>
+          {data && data.length > 0 ? (
+            data.map((item, i) => (
+              <LPTokenItem
+                {...item}
+                onRemove={onRemoveLiquidity}
+                key={`${item.name}-${i}`}
+              />
+            ))
+          ) : (
+            <div>You don't have LP tokens in your wallet</div>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

@@ -135,6 +135,7 @@ const NEP17FormModal = ({ onClose }: IActionModal) => {
             <label className="label">Total supply</label>
             <div className="control">
               <NumberFormat
+                thousandSeparator={true}
                 allowNegative={false}
                 decimalScale={0}
                 inputMode="decimal"

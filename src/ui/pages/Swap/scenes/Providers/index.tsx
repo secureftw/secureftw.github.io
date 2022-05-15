@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 // tslint:disable-next-line:no-implicit-dependencies
 import queryString from "query-string";
 import { useLocation } from "react-router-dom";
@@ -7,35 +7,22 @@ import { useWallet } from "../../../../../packages/provider";
 import { SWAP_PATH } from "../../../../../consts";
 import HeaderBetween from "../../../../components/HeaderBetween";
 import TruncatedAddress from "../../../../components/TruncatedAddress";
+import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 
 const Providers = () => {
   const location = useLocation();
   const params = queryString.parse(location.search);
-  const { tokenA, tokenB, symbolA, symbolB } = params;
+  const { tokenA, tokenB } = params;
   const { network } = useWallet();
-  const [isLoading, setLoading] = useState(false);
-  const [data, setData] = useState<any>([]);
 
-  useEffect(() => {
-    async function fetch() {
-      setLoading(true);
-      try {
-        const res = await new SwapContract(network).getLPList(tokenA, tokenB);
-        setLoading(false);
-        setData(res);
-      } catch (e: any) {
-        console.error(e);
-        setLoading(false);
-      }
-    }
-    fetch();
-  }, [location]);
+  const { isLoaded, error, data } = useOnChainData(() => {
+    return new SwapContract(network).getLPList(tokenA, tokenB);
+  }, [network]);
 
   return (
     <div>
       <HeaderBetween path={SWAP_PATH} title={"LP list"} />
       <hr />
-
       <div className="table-container is-small">
         <table className="table is-fullwidth is-small">
           <thead>
@@ -46,11 +33,13 @@ const Providers = () => {
             </tr>
           </thead>
           <tbody>
-            {isLoading ? (
+            {!isLoaded ? (
               <tr>
                 <td>Loading..</td>
               </tr>
-            ) : data.length === 0 ? (
+            ) : error ? (
+              <div>{error}</div>
+            ) : data && data.length === 0 ? (
               <tr>
                 <td>No NP</td>
               </tr>

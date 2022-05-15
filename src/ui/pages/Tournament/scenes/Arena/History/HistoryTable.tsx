@@ -32,13 +32,11 @@ const HistoryTable = ({
   const [token, setToken] = useState<IRuneMeta>();
   useEffect(() => {
     async function fetchContractStatus() {
-      try {
-        const res = await new NFTContract(network).getProperties(
-          history.champion
-        );
+      const res = await new NFTContract(network).getProperties(
+        history.champion
+      );
+      if (res) {
         setToken(res);
-      } catch (e: any) {
-        // setError(e.message);
       }
     }
     fetchContractStatus();

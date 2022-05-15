@@ -121,7 +121,7 @@ export class FusionContract {
       ],
     };
 
-    const res = await Network.read(this.network, [script], true);
+    const res = await Network.read(this.network, [script]);
     return parseProperties(res.stack[0]);
   };
 

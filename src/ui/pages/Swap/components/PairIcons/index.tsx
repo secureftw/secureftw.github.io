@@ -3,24 +3,24 @@ import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/const
 
 interface IPairIconsProps {
   network: string;
-  tokenA?: string;
-  tokenB?: string;
+  token: string;
+  tokenSymbol: string;
 }
-const PairIcons = ({ network, tokenA, tokenB }: IPairIconsProps) => {
-  const tokenALogo = ASSET_LIST[network][tokenA]
-    ? ASSET_LIST[network][tokenA].logo
+const PairIcons = ({ network, token, tokenSymbol }: IPairIconsProps) => {
+  const tokenALogo = ASSET_LIST[network][token]
+    ? ASSET_LIST[network][token].logo
     : "/symbols/unknown.png";
-  const tokenBLogo = ASSET_LIST[network][tokenB]
-    ? ASSET_LIST[network][tokenB].logo
-    : "/symbols/unknown.png";
+
   return (
-    <div id="PairIcons">
-      <div className="circular--portrait" style={{ zIndex: 1 }}>
+    <div
+      id="PairIcons"
+      className="is-centered"
+      style={{ display: "flex", alignItems: "center" }}
+    >
+      <div className="circular--portrait mr-2">
         <img src={tokenALogo} />
       </div>
-      <div className="circular--portrait" style={{ left: "-5px" }}>
-        <img src={tokenBLogo} />
-      </div>
+      {tokenSymbol}
     </div>
   );
 };

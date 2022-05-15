@@ -14,7 +14,7 @@ export class TTMNFTContract {
 
   static owner = TTM_SCRIPT_HASH;
 
-  getProperties = async (tokenId: string): Promise<object> => {
+  getProperties = async (tokenId: string): Promise<object | null> => {
     const script = {
       scriptHash: this.contractHash,
       operation: "properties",
@@ -25,10 +25,12 @@ export class TTMNFTContract {
         },
       ],
     };
-
     const res = await Network.read(this.network, [script]);
-    const properties = parseProperties(res.stack[0]);
-    return properties;
+    if (res.state === "FAULT") {
+      console.error(res.exception);
+      return null;
+    }
+    return parseProperties(res.stack[0]);
   };
 
   getTokensOf = async (ownerAddress: string): Promise<object[]> => {
@@ -43,14 +45,20 @@ export class TTMNFTContract {
       ],
     };
     const res = await Network.read(this.network, [script]);
+    if (res.state === "FAULT") {
+      console.error(res.exception);
+      return [];
+    }
+
     const metaList: object[] = [];
     // @ts-ignore
     for await (const item of res.stack[0].iterator) {
       const tokenId = u.HexString.fromBase64(item.value as string).toAscii();
       if (CRYPTONAUT_REGEX.test(tokenId)) {
         const meta = await this.getProperties(tokenId);
-        // @ts-ignore
-        metaList.push({ tokenId, ...meta });
+        if (meta) {
+          metaList.push({ tokenId, ...meta });
+        }
       }
     }
     return metaList;

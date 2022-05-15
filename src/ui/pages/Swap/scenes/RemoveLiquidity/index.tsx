@@ -4,18 +4,18 @@ import { SwapContract } from "../../../../../packages/neo/contracts";
 import { toast } from "react-hot-toast";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
-import LPTokenList from "./LPTokenList";
 import HeaderBetween from "../../../../components/HeaderBetween";
 import { SWAP_PATH } from "../../../../../consts";
+import LPTokenList from "./LPTokenList";
+import { useApp } from "../../../../../common/hooks/use-app";
+import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 
 const RemoveLiquidity = () => {
   const { network, connectedWallet } = useWallet();
-  const [isLoading, setLoading] = useState<any>(true);
-  const [tokens, setTokens] = useState<any>([]);
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
 
-  const onRemoveLiquidity = async (tokenId) => {
+  const onRemoveLiquidity = async (tokenId: string) => {
     if (connectedWallet) {
       try {
         const res = await new SwapContract(network).remove(
@@ -36,44 +36,21 @@ const RemoveLiquidity = () => {
     setTxid("");
   };
 
-  useEffect(() => {
-    async function fetchTokens(w) {
-      const res = await new SwapContract(network).getLPTokens(w);
-      setLoading(false);
-      setTokens(res);
-    }
-    if (connectedWallet) {
-      fetchTokens(connectedWallet);
-    }
-  }, [connectedWallet, refresh]);
-
   return (
     <>
       <HeaderBetween path={SWAP_PATH} title={"Remove liquidity"} />
       <hr />
       {connectedWallet ? (
-        <div>
-          {isLoading ? (
-            <div>Loading your LP tokens</div>
-          ) : (
-            <div>
-              {tokens.length > 0 ? (
-                tokens.map((item, i) => (
-                  <LPTokenList
-                    {...item}
-                    onRemove={onRemoveLiquidity}
-                    key={`${item.name}-${i}`}
-                  />
-                ))
-              ) : (
-                <div>You don't have LP tokens in your wallet</div>
-              )}
-            </div>
-          )}
-        </div>
+        <LPTokenList
+          connectedWallet={connectedWallet}
+          network={network}
+          refresh={refresh}
+          onRemoveLiquidity={onRemoveLiquidity}
+        />
       ) : (
-        <div>Please connect your wallet to see your LP tokens.</div>
+        <ConnectWalletButton />
       )}
+
       {txid && (
         <Modal onClose={() => setTxid("")}>
           <AfterTransactionSubmitted

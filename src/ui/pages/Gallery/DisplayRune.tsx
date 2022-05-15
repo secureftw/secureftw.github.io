@@ -19,15 +19,21 @@ const DisplayRune = ({
   network,
   onClick,
 }: IDisplayRuneProps) => {
-  const [token, setToken] = useState<IRuneMeta>();
+  const [token, setToken] = useState<IRuneMeta | undefined>();
   useEffect(() => {
     async function fetchContractStatus() {
-      try {
-        const res = await new NFTContract(network).getProperties(tokenId);
+      const res = await new NFTContract(network).getProperties(tokenId);
+      if (res) {
         setToken(res);
-      } catch (e: any) {
-        // setError(e.message);
       }
+      // try {
+      //   const res = await new NFTContract(network).getProperties(tokenId);
+      //   if (res) {
+      //     setToken(res);
+      //   }
+      // } catch (e: any) {
+      //   // setError(e.message);
+      // }
     }
     fetchContractStatus();
   }, [tokenId]);

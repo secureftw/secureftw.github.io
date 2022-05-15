@@ -3,19 +3,30 @@ import {
   base64ToDate,
   base64ToHash160,
   base64ToString,
+  toDecimal,
 } from "../../../utils";
 import { u } from "@cityofzion/neon-core";
+import { InvokeResult } from "@cityofzion/neon-core/lib/rpc";
+import {
+  ISmithNEP11Info,
+  ISmithNEP17Info,
+  ISmithNEP17Record,
+  ISmithNEP17RecordPaginate,
+} from "./interfaces";
 
-export const parsePaginate = (stackItem: any) => {
+export const parseNEP17RecordsPaginate = (
+  res: InvokeResult
+): ISmithNEP17RecordPaginate => {
+  const stack = res.stack[0].value as any;
   return {
-    totalItems: stackItem[0].value,
-    totalPages: stackItem[1].value,
-    page: stackItem[2].value,
-    items: parseRecord(stackItem[3].value),
+    totalItems: parseFloat(stack[0].value),
+    totalPages: parseFloat(stack[1].value),
+    page: parseFloat(stack[2].value),
+    items: parseNEP17Record(stack[3].value),
   };
 };
 
-const parseRecord = (stackItem) => {
+const parseNEP17Record = (stackItem): ISmithNEP17Record[] => {
   return stackItem.map((item) => {
     return {
       no: item.value[0].value,
@@ -76,4 +87,30 @@ export const parseSmithProperties = (stackItem) => {
     obj[key] = value;
   });
   return obj;
+};
+
+export const parseSmithNEP17Info = (res: InvokeResult): ISmithNEP17Info => {
+  return {
+    owner: base64ToAddress(res.stack[0].value as string),
+    name: base64ToString(res.stack[1].value as string),
+    totalSupply: toDecimal(res.stack[2].value as string),
+    symbol: base64ToString(res.stack[3].value as string),
+    decimals: res.stack[4].value as string,
+    author: base64ToString(res.stack[5].value as string),
+    description: base64ToString(res.stack[6].value as string),
+    website: res.stack[7].value
+      ? base64ToString(res.stack[7].value as string)
+      : "",
+    logo: res.stack[8].value
+      ? base64ToString(res.stack[8].value as string)
+      : "",
+  };
+};
+
+export const parseSmithNEP11Info = (res: InvokeResult): ISmithNEP11Info => {
+  return {
+    owner: base64ToAddress(res.stack[0].value as string),
+    symbol: base64ToString(res.stack[1].value as string),
+    totalSupply: res.stack[2].value as string,
+  };
 };

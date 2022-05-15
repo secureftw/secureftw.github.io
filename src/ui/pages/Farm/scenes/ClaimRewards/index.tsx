@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StakingContract } from "../../../../../packages/neo/contracts/ftw/staking";
 import { useWallet } from "../../../../../packages/provider";
 import { IClaimableRewards } from "../../../../../packages/neo/contracts/ftw/staking/interfaces";
-import { FaStar } from "react-icons/all";
+import { FaCoins, FaStar } from "react-icons/all";
 import ClaimModal from "./ClaimModal";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
@@ -59,11 +59,12 @@ const ClaimRewards = () => {
       setItems([]);
     }
   }, [connectedWallet, network, refresh]);
+
   return (
     <div>
       <h3 className="title is-6">
         <span className="icon">
-          <FaStar />
+          <FaCoins />
         </span>
         <span>Rewards</span>
       </h3>
@@ -87,9 +88,8 @@ const ClaimRewards = () => {
             toggleWalletSidebar();
           }
         }}
-        className="button is-fullwidth is-warning mt-4"
+        className="button is-fullwidth is-primary mt-4"
       >
-        {/*Claim*/}
         {connectedWallet ? "Claim" : "Connect wallet"}
       </button>
       {isClaimModalOpen && (

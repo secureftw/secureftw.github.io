@@ -4,7 +4,6 @@ import { FaAngleDown, FaQuestionCircle } from "react-icons/all";
 import NumberFormat from "react-number-format";
 import { useWallet } from "../../../../../packages/provider";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
-import { SwapContract } from "../../../../../packages/neo/contracts";
 
 interface IInputProps {
   contractHash: string;
@@ -78,8 +77,7 @@ const Input = ({
             <NumberFormat
               disabled={isDisable}
               readOnly={isReadOnly}
-              // ref={this.props, inputRef}
-              // decimalScale={0}
+              decimalScale={8}
               inputMode="decimal"
               className="input"
               value={val}
@@ -94,28 +92,34 @@ const Input = ({
               allowLeadingZeros={false}
               // format={(val) => {} }
             />
-            <div className="level is-mobile mt-1">
-              <div className="level-left">
-                <div className="level-item">
-                  <small className="is-size-7">Your balance</small>
+            {userBalance !== undefined ? (
+              <div className="level is-mobile mt-1">
+                <div className="level-left">
+                  <div className="level-item">
+                    <small className="is-size-7">Your balance</small>
+                  </div>
+                </div>
+                <div className="level-right">
+                  <div className="level-item">
+                    <small
+                      onClick={(e) => {
+                        if (userBalance) {
+                          // @ts-ignore
+                          setValue(userBalance, e);
+                        }
+                      }}
+                      className={`is-size-7 ${
+                        userBalance ? "is-clickable" : ""
+                      }`}
+                    >
+                      {userBalance ? userBalance : 0} {symbol}
+                    </small>
+                  </div>
                 </div>
               </div>
-              <div className="level-right">
-                <div className="level-item">
-                  <small
-                    onClick={(e) => {
-                      if (userBalance) {
-                        // @ts-ignore
-                        setValue(userBalance, e);
-                      }
-                    }}
-                    className={`is-size-7 ${userBalance ? "is-clickable" : ""}`}
-                  >
-                    {userBalance ? userBalance : 0} {symbol}
-                  </small>
-                </div>
-              </div>
-            </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>

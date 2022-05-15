@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { ISmithNEP11Record } from "../../../../../packages/neo/contracts/ftw/smith/interfaces";
 import { MAINNET } from "../../../../../packages/neo/consts";
 import { useWallet } from "../../../../../packages/provider";
-import NEP11MintFormModal from "../../NEP11MintFormModal";
-// tslint:disable-next-line:no-submodule-imports
+import NEP11MintFormModal from "../PageView/NEP11MintFormModal";
 import { FaExternalLinkAlt } from "react-icons/all";
 import Tokens from "./Tokens";
+import { SMITH_CONTRACT_NEP11_PATH } from "../../../../../consts";
+import { Link } from "react-router-dom";
 
 interface IContractCardProps {
   data: ISmithNEP11Record;
@@ -41,26 +42,14 @@ const ContractCard = ({ data }: IContractCardProps) => {
           <Tokens contractHash={data.contractHash} />
         </div>
       </div>
-      {connectedWallet &&
-        connectedWallet.account.address === data.contractOwner && (
-          <div className="media-right">
-            <div className="block">
-              <button
-                onClick={() => setMintModalActive(data.contractHash)}
-                className="button is-primary press-font"
-              >
-                Mint
-              </button>
-            </div>
-          </div>
-        )}
-
-      {isMintModalActive && (
-        <NEP11MintFormModal
-          contractHash={isMintModalActive}
-          onClose={() => setMintModalActive("")}
-        />
-      )}
+      <div className="media-right">
+        <Link
+          to={`${SMITH_CONTRACT_NEP11_PATH}/${data.contractHash}`}
+          className="button is-light"
+        >
+          Info
+        </Link>
+      </div>
     </div>
   );
 };

@@ -1,11 +1,11 @@
-export interface ISmithRecordPaginate {
-  totalItems: string;
-  totalPages: string;
-  page: string;
-  items: ISmithRecord[];
+export interface ISmithNEP17RecordPaginate {
+  totalItems: number;
+  totalPages: number;
+  page: number;
+  items: ISmithNEP17Record[];
 }
 
-export interface ISmithRecord {
+export interface ISmithNEP17Record {
   no: string;
   contractOwner: string;
   contractHash: string;
@@ -35,4 +35,22 @@ export interface ISmithNEP11Record {
   author: string;
   email: string;
   createdAt: string;
+}
+
+export interface ISmithNEP17Info {
+  owner: string;
+  name: string;
+  totalSupply: number;
+  symbol: string;
+  decimals: string;
+  author: string;
+  description: string;
+  website: string;
+  logo: string;
+}
+
+export interface ISmithNEP11Info {
+  owner: string;
+  symbol: string;
+  totalSupply: string;
 }

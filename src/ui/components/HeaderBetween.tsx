@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-// tslint:disable-next-line:no-submodule-imports
 import { FaAngleLeft } from "react-icons/all";
 interface IHeaderBetweenProps {
   path: string;
   title: string;
+  isLoading?: boolean;
 }
 const HeaderBetween = (props: IHeaderBetweenProps) => {
   return (
@@ -18,10 +18,15 @@ const HeaderBetween = (props: IHeaderBetweenProps) => {
         </Link>
       </div>
 
-      <h1 className="title is-5 has-text-centered is-marginless">
-        {props.title}
-      </h1>
-      <div style={{ width: "50px" }} />
+      <h1 className="is-size-5 has-text-weight-bold">{props.title}</h1>
+      <div className="is-relative" style={{ width: "50px" }}>
+        {props.isLoading && (
+          <div
+            className="button is-white is-loading"
+            style={{ position: "absolute", right: 0 }}
+          />
+        )}
+      </div>
     </div>
   );
 };

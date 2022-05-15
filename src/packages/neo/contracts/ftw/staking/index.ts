@@ -177,13 +177,11 @@ export class StakingContract {
       operation: "getPairs",
       args: [],
     };
-    const res = await Network.read(this.network, [script], true);
-    if (res.state !== "FAULT") {
-      return parsePairsMap(res as any);
-    } else {
-      console.error(res.exception);
-      return [];
+    const res = await Network.read(this.network, [script]);
+    if (res.state === "FAULT") {
+      throw new Error(res.exception as string);
     }
+    return parsePairsMap(res as any);
   };
 
   getLPTokens = async (connectedWallet: IConnectedWallet, symbolA, symbolB) => {
@@ -195,22 +193,21 @@ export class StakingContract {
         args: [{ type: "Address", value: connectedWallet.account.address }],
       },
     ];
-    const tokens: object[] = [];
 
-    const res = await Network.read(this.network, scripts, true);
-    if (res.state !== "FAULT") {
-      // @ts-ignore
-      for await (const item of res.stack[0].iterator) {
-        const tokenId = u.HexString.fromBase64(item.value as string).toAscii();
-        if (tokenId.includes(`${symbolA}-${symbolB}`)) {
-          const properties = await swapContract.getProperties(tokenId);
-          if (properties) {
-            tokens.push({ tokenId, ...properties });
-          }
+    const res = await Network.read(this.network, scripts);
+    if (res.state === "FAULT") {
+      throw new Error(res.exception as string);
+    }
+    const tokens: object[] = [];
+    // @ts-ignore
+    for await (const item of res.stack[0].iterator) {
+      const tokenId = u.HexString.fromBase64(item.value as string).toAscii();
+      if (tokenId.includes(`${symbolA}-${symbolB}`)) {
+        const properties = await swapContract.getProperties(tokenId);
+        if (properties) {
+          tokens.push({ tokenId, ...properties });
         }
       }
-    } else {
-      console.error(res.exception);
     }
     return tokens;
   };
@@ -225,13 +222,11 @@ export class StakingContract {
         args: [{ type: "Address", value: connectedWallet.account.address }],
       },
     ];
-    const res = await Network.read(this.network, scripts, true);
-    if (res.state !== "FAULT") {
-      return parseStakedLPTokensMap(res as any);
-    } else {
-      console.error(res.exception);
-      return [];
+    const res = await Network.read(this.network, scripts);
+    if (res.state === "FAULT") {
+      throw new Error(res.exception as string);
     }
+    return parseStakedLPTokensMap(res as any);
   };
 
   getClaimable = async (
@@ -244,8 +239,7 @@ export class StakingContract {
         args: [{ type: "Address", value: connectedWallet.account.address }],
       },
     ];
-    const res = await Network.read(this.network, scripts, true);
-    // @ts-ignore
+    const res = await Network.read(this.network, scripts);
     if (res.state !== "FAULT") {
       return parseClaimableMap(res as any);
     } else {

@@ -1,6 +1,6 @@
 export interface IFarmContractStatus {
   neoBalance: string;
-  ftwBalance: string;
+  ftwBalance: number;
   timeLeft: string;
   interval: string;
   range: string;

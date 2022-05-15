@@ -20,18 +20,33 @@ const PoolCard = ({
   tokenBSymbol,
 }: IReserve) => {
   const { network } = useWallet();
+  const ratioAB = (amountB / amountA).toFixed(8);
+  const ratioBA = (amountA / amountB).toFixed(8);
   return (
     <div style={{ alignItems: "center" }} className="media">
-      <div className="media-left">
-        <PairIcons network={network} tokenA={tokenA} tokenB={tokenB} />
-      </div>
-      <div className="media-content is-vcentered">
-        <div className="content">
-          {tokenASymbol} / {tokenBSymbol}
+      <div className="media-content">
+        <div className="level is-mobile">
+          <div className="level-left">
+            <div className="level-item">
+              <PairIcons
+                network={network}
+                token={tokenA}
+                tokenSymbol={tokenASymbol}
+              />
+            </div>
+            <div className="level-item">
+              <PairIcons
+                network={network}
+                token={tokenB}
+                tokenSymbol={tokenBSymbol}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="content is-small mb-5">
+          {`1 ${tokenASymbol}: ${ratioAB} ${tokenBSymbol}`}
           <br />
-          <small>
-            {amountA.toLocaleString()} / {amountB.toLocaleString()}
-          </small>
+          {`1 ${tokenBSymbol}: ${ratioBA} ${tokenASymbol}`}
         </div>
 
         <div className="level is-mobile">
@@ -42,7 +57,7 @@ const PoolCard = ({
                   className="has-text-grey"
                   to={{
                     pathname: `${SWAP_PATH_HISTORY}`,
-                    search: `?tokenA=${tokenA}&tokenB=${tokenB}&symbolA=${tokenASymbol}&symbolB=${tokenBSymbol}`,
+                    search: `?tokenA=${tokenA}&tokenB=${tokenB}`,
                   }}
                 >
                   <FaHistory />
@@ -56,7 +71,7 @@ const PoolCard = ({
                   className="has-text-grey"
                   to={{
                     pathname: `${SWAP_PATH_LIQUIDITY_ADD}`,
-                    search: `?tokenA=${tokenA}&tokenB=${tokenB}&symbolA=${tokenASymbol}&symbolB=${tokenBSymbol}`,
+                    search: `?tokenA=${tokenA}&tokenB=${tokenB}`,
                   }}
                 >
                   <FaPlusSquare />
@@ -70,7 +85,7 @@ const PoolCard = ({
                   className="has-text-grey"
                   to={{
                     pathname: `${SWAP_PATH_LP_LIST}`,
-                    search: `?tokenA=${tokenA}&tokenB=${tokenB}&symbolA=${tokenASymbol}&symbolB=${tokenBSymbol}`,
+                    search: `?tokenA=${tokenA}&tokenB=${tokenB}`,
                   }}
                 >
                   <RiHandCoinFill />
@@ -84,7 +99,7 @@ const PoolCard = ({
         <Link
           to={{
             pathname: `${SWAP_PATH_TRADE}`,
-            search: `?tokenA=${tokenA}&tokenB=${tokenB}&symbolA=${tokenASymbol}&symbolB=${tokenBSymbol}`,
+            search: `?tokenA=${tokenA}&tokenB=${tokenB}`,
           }}
           className="button is-primary"
         >

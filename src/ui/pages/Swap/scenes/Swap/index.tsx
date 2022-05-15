@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useWallet } from "../../../../../packages/provider";
-import {
-  FTW_SCRIPT_HASH,
-  SwapContract,
-} from "../../../../../packages/neo/contracts";
+import { SwapContract } from "../../../../../packages/neo/contracts";
 import { toast } from "react-hot-toast";
 import Input from "../../components/Input";
 import AssetListModal from "../../components/AssetListModal";
-// tslint:disable-next-line:no-submodule-imports
-import { FaAngleLeft, FaExchangeAlt } from "react-icons/all";
+import { FaExchangeAlt } from "react-icons/all";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
-import { Link, useLocation } from "react-router-dom";
-import { SWAP_PATH, SWAP_PATH_LIQUIDITY_ADD } from "../../../../../consts";
+import { useHistory, useLocation } from "react-router-dom";
+import { SWAP_PATH } from "../../../../../consts";
 // tslint:disable-next-line:no-implicit-dependencies
 import queryString from "query-string";
 import { LocalStorage } from "../../../../../packages/neo/local-storage";
-import PairSelect from "../../components/PairSelect";
 import { IPairInfo } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
 import { useApp } from "../../../../../common/hooks/use-app";
+import NoLPInfo from "./NoLPInfo";
+import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
+import HeaderBetween from "../../../../components/HeaderBetween";
+import ConnectWalletButton from "../../../../components/ConnectWalletButton";
+import SwapInputs from "./SwapInputs";
 
 const Swap = () => {
   const location = useLocation();
+  const history = useHistory();
   const params = queryString.parse(location.search);
-  const { toggleWalletSidebar } = useApp();
   const { network, connectedWallet } = useWallet();
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
@@ -38,51 +38,36 @@ const Swap = () => {
   const [tokenB, setTokenB] = useState<any>(
     params.tokenB ? params.tokenB : undefined
   );
-  const [symbolA, setSymbolA] = useState<any>(
-    params.symbolA ? params.symbolA : undefined
-  );
-  const [symbolB, setSymbolB] = useState<any>(
-    params.symbolB ? params.symbolB : undefined
-  );
-  const [amountA, setAmountA] = useState("");
-  const [amountB, setAmountB] = useState("");
+  const [amountA, setAmountA] = useState<string>("");
+  const [amountB, setAmountB] = useState<string>("");
   const [data, setData] = useState<IPairInfo | undefined>();
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
+  const [error, setError] = useState(undefined);
+
   const onAssetChange = (type: "A" | "B" | "") => {
     // Temporary disable
-    // setAssetChangeModalActive(type);
+    setAssetChangeModalActive(type);
   };
 
-  const onAssetClick = (assetHash) => {
+  const onAssetClick = (assetHash, symbol) => {
     if (isAssetChangeModalActive === "A") {
       LocalStorage.setSwapTokenA(assetHash);
+      history.push(location.search.replace(tokenA, assetHash));
       setTokenA(assetHash);
-      if (tokenB) {
-        loadPair(assetHash, tokenB);
-      }
     } else {
       LocalStorage.setSwapTokenB(assetHash);
+      history.push(location.search.replace(tokenB, assetHash));
       setTokenB(assetHash);
-      if (tokenA) {
-        loadPair(tokenA, assetHash);
-      }
     }
+    setAmountA("");
+    setAmountB("");
     setAssetChangeModalActive("");
   };
 
-  const onTokenAAmountChange = async (val: string) => {
-    setAmountA(val);
-    if (tokenB) {
-      const res = await new SwapContract(network).getEstimate(
-        tokenA,
-        tokenB,
-        tokenA,
-        val
-      );
-      setAmountB(res as any);
-    }
+  const onRefresh = () => {
+    setRefresh(refresh + 1);
   };
 
   const onSuccess = () => {
@@ -90,12 +75,6 @@ const Swap = () => {
     setAmountB("");
     setRefresh(refresh + 1);
     setTxid("");
-  };
-
-  const onPairSelect = (pair: { tokenA: string; tokenB: string }) => {
-    loadPair(pair.tokenA, pair.tokenB);
-    setTokenA(pair.tokenA);
-    setTokenB(pair.tokenB);
   };
 
   const onSwap = async () => {
@@ -118,176 +97,122 @@ const Swap = () => {
       toast.error("Please connect wallet");
     }
   };
+
   const onSwitch = async () => {
     setTokenB(tokenA);
     setTokenA(tokenB ? tokenB : "");
     setAmountB(amountA);
     setAmountA(amountB);
-    setSymbolA(symbolB);
-    setSymbolB(symbolA);
-    if (tokenB && amountB && amountB !== "0" && tokenA) {
-      const estimated = await new SwapContract(network).getEstimate(
-        tokenB,
-        tokenA,
-        tokenB,
-        amountB
-      );
-      setTokenB(tokenA);
-      setTokenA(tokenB ? tokenB : "");
-      setAmountA(amountB);
-      setAmountB(estimated ? estimated.toString() : "");
-    } else {
-      setTokenB(tokenA);
-      setTokenA(tokenB ? tokenB : "");
-      setAmountB(amountA);
-      setAmountA(amountB);
-    }
   };
 
-  const loadPair = async (A, B) => {
-    setPairLoading(true);
-    const res = await new SwapContract(network).getReserve(
-      A,
-      B,
-      connectedWallet
-    );
-    setData(res);
-    setPairLoading(false);
-    if (amountA && res.pair[tokenA] !== 0) {
-      const estimated = await new SwapContract(network).getEstimate(
-        A,
-        B,
-        A,
-        amountA
+  const getReserve = async () => {
+    try {
+      setError(undefined);
+      setPairLoading(true);
+      const res = await new SwapContract(network).getReserve(
+        tokenA,
+        tokenB,
+        connectedWallet
       );
-      // @ts-ignore
-      // const estimated = getEstimate(amountA, res[A], res[B]);
-      setAmountB(estimated ? estimated.toString() : "");
-    } else {
-      setAmountB("");
+      setData(res);
+      setPairLoading(false);
+    } catch (e: any) {
+      setError(e.message);
+      setPairLoading(false);
     }
   };
 
   useEffect(() => {
-    if (params.tokenA && params.tokenB) {
-      loadPair(params.tokenA, params.tokenB);
+    async function load() {
+      await getReserve();
     }
-  }, [location, refresh]);
-
+    if (tokenA && tokenB) {
+      load();
+    }
+  }, [location, refresh, tokenA, tokenB]);
   const noLiquidity =
-    data && data.pair[tokenA] === 0 && data.pair[tokenB] === 0;
+    (data && data.pair[tokenA] === 0) || (data && data.pair[tokenB] === 0);
 
   const priceImpact =
     data && amountB ? (parseFloat(amountB) / data.pair[tokenB]) * 100 : 0;
+
+  const symbolA = data ? data.reserve.tokenASymbol : "";
+  const symbolB = data ? data.reserve.tokenBSymbol : "";
   return (
     <div>
-      <Link className="button is-white" to={SWAP_PATH}>
-        <span className="icon">
-          <FaAngleLeft />
-        </span>
-        <span>Pools</span>
-      </Link>
+      <HeaderBetween
+        path={SWAP_PATH}
+        title={"Swap"}
+        isLoading={isPairLoading}
+      />
       <hr />
       <>
         {noLiquidity && (
-          <div className="notification is-info">
-            No liquidity with the pairs. Provide liquidity and earn fees.
-            <br />
-            <br />
-            <Link
-              className="button is-small is-light"
-              to={
-                tokenA && tokenB && symbolA && symbolB
-                  ? `${SWAP_PATH_LIQUIDITY_ADD}?tokenA=${tokenA}&tokenB=${tokenB}&symbolA=${symbolA}&symbolB=${symbolB}`
-                  : SWAP_PATH_LIQUIDITY_ADD
-              }
-            >
-              Go to liquidity page
-            </Link>
-          </div>
+          <NoLPInfo
+            tokenA={tokenA}
+            tokenB={tokenB}
+            // symbolA={symbolA}
+            // symbolB={symbolB}
+          />
         )}
 
-        {tokenA && tokenB ? (
-          <>
-            <Input
-              contractHash={tokenA}
-              symbol={symbolA}
-              heading="Swap From"
-              onClickAsset={() => onAssetChange("A")}
-              val={amountA}
-              setValue={(val, e) => onTokenAAmountChange(val)}
-              userBalance={
-                connectedWallet && data ? data.balances[tokenA] : undefined
-              }
-            />
-            <div className="pt-4 pb-4">
+        {error && (
+          <ErrorNotificationWithRefresh onRefresh={onRefresh} error={error} />
+        )}
+
+        <SwapInputs
+          noLiquidity={noLiquidity}
+          network={network}
+          tokenA={tokenA}
+          tokenB={tokenB}
+          symbolA={symbolA}
+          symbolB={symbolB}
+          amountA={amountA}
+          amountB={amountB}
+          onAssetChange={onAssetChange}
+          userTokenABalance={
+            connectedWallet && data ? data.balances[tokenA] : undefined
+          }
+          userTokenBBalance={
+            connectedWallet && data ? data.balances[tokenB] : undefined
+          }
+          onSwitch={onSwitch}
+          setAmountA={setAmountA}
+          setAmountB={setAmountB}
+          reserve={data}
+        />
+
+        {connectedWallet ? (
+          tokenA && tokenB && amountA && amountB ? (
+            <>
+              <hr />
+              <div>
+                {`1 ${symbolB} = ${(
+                  parseFloat(amountA) / parseFloat(amountB)
+                ).toFixed(8)} ${symbolA}`}
+              </div>
+              <hr />
               <button
-                onClick={onSwitch}
-                className="button is-white is-fullwidth"
+                disabled={
+                  (data && data.balances[tokenA] < parseFloat(amountA)) ||
+                  (data && data.pair[tokenB] < parseFloat(amountB)) ||
+                  priceImpact > 10
+                }
+                onClick={onSwap}
+                className={`button is-fullwidth is-primary ${
+                  priceImpact > 10 ? "is-danger" : ""
+                }`}
               >
-                <FaExchangeAlt />
+                {priceImpact > 10 ? "Price impact is too high" : "Swap"}
               </button>
-            </div>
-            <Input
-              contractHash={tokenB}
-              symbol={symbolB}
-              isReadOnly={true}
-              heading="Swap To"
-              isLoading={isPairLoading}
-              onClickAsset={() => {
-                onAssetChange("B");
-              }}
-              val={amountB}
-              // setValue={(val, e) => onTokenAAmountChange("B", val, e)}
-              setValue={(val, e) => {
-                return false;
-              }}
-              userBalance={
-                connectedWallet && data ? data.balances[tokenB] : undefined
-              }
-            />
-            {connectedWallet ? (
-              tokenA && tokenB && amountA && amountB ? (
-                <>
-                  {/*<div className="box">*/}
-                  {/*  {`${tokenBofA} ${ASSET_LIST[tokenB].symbol} per ${ASSET_LIST[tokenA].symbol}`}*/}
-                  {/*  /!*<br />*!/*/}
-                  {/*  /!*{`${tokenAofB} ${ASSET_LIST[tokenA].symbol} per ${ASSET_LIST[tokenB].symbol}`}*!/*/}
-                  {/*</div>*/}
-                  <hr />
-                  <button
-                    disabled={
-                      (data && data.balances[tokenA] < parseFloat(amountA)) ||
-                      (data && data.pair[tokenB] < parseFloat(amountB)) ||
-                      priceImpact > 10
-                    }
-                    onClick={onSwap}
-                    className={`button is-fullwidth is-primary ${
-                      priceImpact > 10 ? "is-danger" : ""
-                    }`}
-                  >
-                    {priceImpact > 10 ? "Price impact is too high" : "Swap"}
-                  </button>
-                </>
-              ) : (
-                <div />
-              )
-            ) : (
-              <>
-                <hr />
-                <button
-                  onClick={toggleWalletSidebar}
-                  className="button is-fullwidth is-primary"
-                >
-                  Connect wallet
-                </button>
-              </>
-            )}
-          </>
+            </>
+          ) : (
+            <div />
+          )
         ) : (
           <>
-            <label className="label">Select a pair</label>
-            <PairSelect onSelect={onPairSelect} />
+            <hr />
+            <ConnectWalletButton />
           </>
         )}
       </>

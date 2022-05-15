@@ -5,7 +5,7 @@ import {
   MAXI_SCRIPT_HASH,
   NUDES_SCRIPT_HASH,
   TTM_SCRIPT_HASH,
-} from "../nep17";
+} from "../nep17/consts";
 import { GAS_SCRIPT_HASH, MAINNET, PRIVATENET, TESTNET } from "../../../consts";
 import { INetworkType } from "../../../network";
 
@@ -78,6 +78,21 @@ export const ASSET_LIST = {
       contractHash: "37fc2612dfe80a20b97470e57de60ffe81a8a0c0",
       symbol: "NPRZ",
       logo: "/symbols/prezel.png",
+    },
+    "7fd7b284cef510b017bca4d2e2e656d9a7b570ce": {
+      contractHash: "7fd7b284cef510b017bca4d2e2e656d9a7b570ce",
+      symbol: "NJC",
+      logo: "/symbols/njc.png",
+    },
+    aeb697166d5cb3376757983b23df1be8292364d0: {
+      contractHash: "aeb697166d5cb3376757983b23df1be8292364d0",
+      symbol: "FOXES",
+      logo: "/symbols/FOXES.png",
+    },
+    f987b060e05aeb3e58db27c409b82fc2d764e3ff: {
+      contractHash: "f987b060e05aeb3e58db27c409b82fc2d764e3ff",
+      symbol: "SAFERUST",
+      logo: "/symbols/saferust.png",
     },
   },
   [MAINNET]: {

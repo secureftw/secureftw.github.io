@@ -1,12 +1,14 @@
 import React from "react";
-import { ISmithRecord } from "../../../../../packages/neo/contracts/ftw/smith/interfaces";
+import { ISmithNEP17Record } from "../../../../../packages/neo/contracts/ftw/smith/interfaces";
 import { MAINNET } from "../../../../../packages/neo/consts";
 import { useWallet } from "../../../../../packages/provider";
 import { FaExternalLinkAlt } from "react-icons/all";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
+import { Link } from "react-router-dom";
+import { SMITH_CONTRACT_NEP17_PATH } from "../../../../../consts";
 
 interface IContractCardProps {
-  data: ISmithRecord;
+  data: ISmithNEP17Record;
 }
 const ContractCard = ({ data }: IContractCardProps) => {
   const { network } = useWallet();
@@ -15,7 +17,6 @@ const ContractCard = ({ data }: IContractCardProps) => {
     : undefined;
   return (
     <div className="media">
-
       <div className="media-content">
         <div className="level">
           <div className="level-left">
@@ -84,6 +85,15 @@ const ContractCard = ({ data }: IContractCardProps) => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="media-right">
+        <Link
+          to={`${SMITH_CONTRACT_NEP17_PATH}/${data.contractHash}`}
+          className="button is-light"
+        >
+          Info
+        </Link>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { sc, u, wallet as NeonWallet } from "@cityofzion/neon-core";
+import { u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH } from "../../../consts";
 import { INetworkType, Network } from "../../../network";
 import { RUNE_SCRIPT_HASH, RUNE_PRICE } from "./consts";
@@ -44,7 +44,7 @@ export class NFTContract {
           value: "1",
         },
       ],
-	    signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
@@ -61,7 +61,7 @@ export class NFTContract {
       operation: "withdrawFund",
       scriptHash: this.contractHash,
       args: [],
-	    signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return new wallet.WalletAPI(connectedWallet.key).invoke(
       this.network,
@@ -69,16 +69,8 @@ export class NFTContract {
     );
   };
 
-  getTotalSupplyScript = (): sc.ContractCallJson => {
-    return {
-      scriptHash: this.contractHash,
-      operation: "totalSupply",
-      args: [],
-    };
-  };
-
-  getPropertiesScript = (tokenId: string) => {
-    return {
+  getProperties = async (tokenId: string): Promise<IRuneMeta | null> => {
+    const script = {
       scriptHash: this.contractHash,
       operation: "properties",
       args: [
@@ -88,17 +80,29 @@ export class NFTContract {
         },
       ],
     };
-  };
-
-  getProperties = async (tokenId: string): Promise<IRuneMeta> => {
-    const script = this.getPropertiesScript(tokenId);
     const res = await Network.read(this.network, [script]);
-    // @ts-ignore
-    return parseProperties(res.stack);
+    if (res.state === "FAULT") {
+      console.error(res.exception);
+      return null;
+    }
+    return parseProperties(res.stack) as IRuneMeta;
   };
 
-  getTokensOfScript = (ownerAddress: string) => {
-    return {
+  // getTokensOfScript = (ownerAddress: string) => {
+  //   return {
+  //     scriptHash: this.contractHash,
+  //     operation: "tokensOf",
+  //     args: [
+  //       {
+  //         type: "Address",
+  //         value: ownerAddress,
+  //       },
+  //     ],
+  //   };
+  // };
+
+  getTokensOf = async (ownerAddress: string): Promise<object[]> => {
+    const script = {
       scriptHash: this.contractHash,
       operation: "tokensOf",
       args: [
@@ -108,18 +112,19 @@ export class NFTContract {
         },
       ],
     };
-  };
-
-  getTokensOf = async (ownerAddress: string): Promise<object[]> => {
-    const script = this.getTokensOfScript(ownerAddress);
     const res = await Network.read(this.network, [script]);
+    if (res.state === "FAULT") {
+      console.error(res.exception);
+      return [];
+    }
     const metaList: object[] = [];
     // @ts-ignore
     for await (const item of res.stack[0].iterator) {
       const tokenId = u.HexString.fromBase64(item.value as string).toAscii();
       const meta = await this.getProperties(tokenId);
-      // @ts-ignore
-      metaList.push({ tokenId, ...meta });
+      if (meta) {
+        metaList.push({ tokenId, ...meta });
+      }
     }
     return metaList;
   };
@@ -131,6 +136,10 @@ export class NFTContract {
       args: [],
     };
     const res = await Network.read(this.network, [script]);
+    if (res.state === "FAULT") {
+      console.error(res.exception);
+      return [];
+    }
     // @ts-ignore
     return res.stack[0].iterator.map((item) => {
       return u.HexString.fromBase64(item.value as string).toAscii();

@@ -1,4 +1,3 @@
-import moment from "moment";
 import React from "react";
 import { toDecimal } from "../../../../../packages/neo/utils";
 interface ILPTokenCardProps {
@@ -14,12 +13,6 @@ const LPTokenCard = (props: ILPTokenCardProps) => {
       <div className="media-content">
         {props.tokenId}
         <br /> {toDecimal(props.amount)}
-        {/*<br />*/}
-        {/*{props.lock && props.lock !== "0" ? (*/}
-        {/*  <div>Locked until {moment(parseFloat(props.lock)).format("lll")}</div>*/}
-        {/*) : (*/}
-        {/*  <div></div>*/}
-        {/*)}*/}
       </div>
       <div className="media-right">
         <button

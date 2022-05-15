@@ -210,4 +210,34 @@ export class WalletAPI {
       throw e;
     }
   };
+
+  invokeMulti = async (
+    currentNetwork: INetworkType,
+    invokeScript: any
+  ): Promise<any> => {
+    const { instance, network } = await this.init(currentNetwork);
+    if (network.defaultNetwork !== currentNetwork) {
+      throw new Error(
+        "Your wallet's network doesn't match with the app network setting."
+      );
+    }
+    try {
+      const res = await instance.invokeMultiple(invokeScript);
+      const submittedTx: ITransaction = {
+        network,
+        wallet: this.walletType,
+        txid: res.txid,
+        contractHash: "MultiInvoke",
+        method: "MultiInvoke",
+        args: invokeScript.invokeArgs,
+        createdAt: moment().format("lll"),
+      };
+      LocalStorage.addTransaction(submittedTx);
+      return res.txid;
+    } catch (e: any) {
+      if (e.description) {
+        throw new Error(e.description);
+      }
+    }
+  };
 }

@@ -9,8 +9,8 @@ import {
   parseDeposit,
   parseSnapshotPaginate,
 } from "./helpers";
-import { FTW_SCRIPT_HASH } from "../nep17";
-import { base64ToFixed8 } from "../../../utils";
+import { FTW_SCRIPT_HASH } from "../nep17/consts";
+import { toDecimal } from "../../../utils";
 import { wallet as NeonWallet } from "@cityofzion/neon-core";
 
 export class FarmContract {
@@ -250,7 +250,7 @@ export class FarmContract {
     const res = await Network.read(this.network, scripts);
     return {
       neoBalance: res.stack[0].value as string,
-      ftwBalance: base64ToFixed8(res.stack[1].value as string),
+      ftwBalance: toDecimal(res.stack[1].value as string),
       timeLeft: res.stack[2].value as string,
       interval: res.stack[3].value as string,
       range: res.stack[4].value as string,

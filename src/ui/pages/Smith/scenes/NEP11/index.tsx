@@ -1,42 +1,49 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useWallet } from "../../../../../packages/provider";
 import { SmithContract } from "../../../../../packages/neo/contracts/ftw/smith";
 import ContractCard from "./ContractCard";
-import { ISmithNEP11RecordPaginate } from "../../../../../packages/neo/contracts/ftw/smith/interfaces";
-
-const NEP11Smith = (props) => {
-  const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState<ISmithNEP11RecordPaginate>();
-  const [error, setError] = useState("");
+import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
+import Pagination from "bulma-pagination-react";
+const NEP11Smith = () => {
+  const [page, setPage] = useState(1);
   const { connectedWallet, network } = useWallet();
+  const { isLoaded, error, data } = useOnChainData(() => {
+    return new SmithContract(network).getNEP11Records();
+  }, [connectedWallet, network, page]);
 
-  useEffect(() => {
-    async function fetchContractStatus() {
-      setError("");
-      try {
-        const res = await new SmithContract(network).getNEP11Records();
-        setData(res);
-        setLoading(false);
-      } catch (e: any) {
-        setError(e.message);
-      }
-    }
-    fetchContractStatus();
-  }, [connectedWallet, network]);
   return (
     <>
-      {isLoading ? (
+      {!isLoaded ? (
         <div>Loading..</div>
       ) : error ? (
         <div>{error}</div>
       ) : (
         <div className="box">
-          {data && data.items.length > 0 ? (
-            data.items.map((item, i) => (
-              <ContractCard key={"contract" + i} data={item} />
-            ))
-          ) : (
-            <div>No contracts to display</div>
+          {data && (
+            <>
+              {data.items.length > 0 ? (
+                data.items.map((item, i) => (
+                  <ContractCard key={"contract" + i} data={item} />
+                ))
+              ) : (
+                <div>No contracts to display</div>
+              )}
+
+              {data.totalPages > 1 && (
+                <>
+                  <hr />
+                  <Pagination
+                    pages={data.totalPages}
+                    currentPage={page}
+                    onChange={(v) => {
+                      if (page !== v) {
+                        setPage(v);
+                      }
+                    }}
+                  />
+                </>
+              )}
+            </>
           )}
         </div>
       )}

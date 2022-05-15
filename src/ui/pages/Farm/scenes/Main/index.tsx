@@ -1,29 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FARM_STAKE_POSITIONS_PATH } from "../../../../../consts";
 import StakingPairCard from "../../components/StakingPairCard";
 import { useWallet } from "../../../../../packages/provider";
 import { StakingContract } from "../../../../../packages/neo/contracts/ftw/staking";
+import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
+import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
 
 const StakingMain = () => {
   const { network } = useWallet();
-  const [list, setList] = useState<any[]>([]);
-  const [isLoading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(0);
+  const handleRefresh = () => setRefresh(refresh + 1);
+  const { isLoaded, error, data } = useOnChainData(() => {
+    return new StakingContract(network).getStakingPairs();
+  }, [network, refresh]);
 
-  useEffect(() => {
-    async function fetch() {
-      setLoading(true);
-      try {
-        const res = await new StakingContract(network).getStakingPairs();
-        setLoading(false);
-        setList(res);
-      } catch (e: any) {
-        console.error(e.message);
-        setLoading(false);
-      }
-    }
-    fetch();
-  }, []);
   return (
     <div>
       <div className="level is-mobile">
@@ -37,7 +28,6 @@ const StakingMain = () => {
             <div className="buttons">
               <Link
                 to={FARM_STAKE_POSITIONS_PATH}
-                // onClick={() => setCreateModalActive(true)}
                 className="button is-primary is-small is-rounded"
               >
                 My positions
@@ -48,11 +38,16 @@ const StakingMain = () => {
       </div>
       <hr />
       <div>
-        {isLoading ? (
-          <div>Loading</div>
-        ) : list.length > 0 ? (
+        {!isLoaded ? (
+          <div>Loading..</div>
+        ) : error ? (
+          <ErrorNotificationWithRefresh
+            error={error}
+            onRefresh={handleRefresh}
+          />
+        ) : data && data.length > 0 ? (
           <div>
-            {list.map((item, i) => (
+            {data.map((item, i) => (
               <StakingPairCard key={"sc" + i} {...item} />
             ))}
           </div>

@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import HeaderBetween from "../../../../components/HeaderBetween";
 import { FARM_PATH } from "../../../../../consts";
 import { useWallet } from "../../../../../packages/provider";
-import { useLocation } from "react-router-dom";
-import queryString from "querystring";
 import { StakingContract } from "../../../../../packages/neo/contracts/ftw/staking";
 import { toast } from "react-hot-toast";
-import StakingPairCard from "../../components/StakingPairCard";
-import PositionCard from "./PositionCard";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
+import ConnectWalletButton from "../../../../components/ConnectWalletButton";
+import PositionList from "./PositionList";
 
 const MyPositions = () => {
   const { network, connectedWallet } = useWallet();
-  const [isLoading, setLoading] = useState<any>(!!connectedWallet);
-  const [tokens, setTokens] = useState<any>([]);
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
 
@@ -39,39 +35,22 @@ const MyPositions = () => {
     setTxid("");
   };
 
-  useEffect(() => {
-    async function fetchTokens(w) {
-      const res = await new StakingContract(network).getStakedLPTokens(w);
-      setLoading(false);
-      setTokens(res);
-    }
-    if (connectedWallet) {
-      fetchTokens(connectedWallet);
-    }
-  }, [connectedWallet, refresh]);
   return (
     <div>
       <HeaderBetween path={FARM_PATH} title={`My staking`} />
       <hr />
       {connectedWallet ? (
-        isLoading ? (
-          <div>Loading</div>
-        ) : tokens.length > 0 ? (
-          <div>
-            {tokens.map((item, i) => (
-              <PositionCard
-                key={"position" + i}
-                {...item}
-                onUnStake={onUnStake}
-              />
-            ))}
-          </div>
-        ) : (
-          <div>No staking found</div>
-        )
+        <PositionList
+          network={network}
+          connectedWallet={connectedWallet}
+          refresh={refresh}
+          onRefresh={() => setRefresh(refresh + 1)}
+          onUnStake={onUnStake}
+        />
       ) : (
-        <div>Connect your wallet to see your staking.</div>
+        <ConnectWalletButton />
       )}
+
       {txid && (
         <Modal onClose={() => setTxid("")}>
           <AfterTransactionSubmitted
