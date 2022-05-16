@@ -1,6 +1,6 @@
 import React from "react";
 // tslint:disable-next-line:no-submodule-imports
-import { FaQuestionCircle } from "react-icons/all";
+import { FaQuestionCircle } from "react-icons/fa";
 interface IFusionBoxProps {
   src: string;
 }

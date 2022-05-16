@@ -3,7 +3,7 @@ import { INetworkType, Network } from "../../neo/network";
 import RuneLoading from "./RuneLoading";
 import CheckMark from "../../../ui/pages/Tournament/scenes/Arena/Players/components/CheckMark";
 // tslint:disable-next-line:no-submodule-imports
-import { FaExclamationCircle } from "react-icons/all";
+import { FaExclamationCircle } from "react-icons/fa";
 import { TESTNET } from "../../neo/consts";
 
 interface IAfterTransactionSubmittedProps {

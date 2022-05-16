@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useWallet } from "../../../../../packages/provider";
 import { SmithContract } from "../../../../../packages/neo/contracts/ftw/smith";
 import { MAINNET } from "../../../../../packages/neo/consts";
-import { FaExternalLinkAlt } from "react-icons/all";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import { toast } from "react-hot-toast";
 import Modal from "../../../../components/Modal";

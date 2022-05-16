@@ -579,7 +579,7 @@ var ToastIcon = function ToastIcon(_ref) {
 };
 
 function _templateObject2$4() {
-  var data = _taggedTemplateLiteralLoose(["\n  display: flex;\n  justify-content: center;\n  margin: 4px 10px;\n  color: inherit;\n  flex: 1 1 auto;\n"]);
+  var data = _taggedTemplateLiteralLoose(["\n  display: flex;\n  justify-content: center;\n  margin: 4px 10px;\n  color: inherit;\n  flex: 1 1 auto;\n  white-space: pre-line;\n"]);
 
   _templateObject2$4 = function _templateObject2() {
     return data;

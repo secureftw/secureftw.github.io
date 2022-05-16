@@ -5,10 +5,9 @@ import AssetListModal from "../../components/AssetListModal";
 import { toast } from "react-hot-toast";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
-import { useLocation } from "react-router-dom";
-// tslint:disable-next-line:no-implicit-dependencies
+import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
-import { SWAP_PATH } from "../../../../../consts";
+import { SWAP_PATH, SWAP_PATH_LIQUIDITY_ADD } from "../../../../../consts";
 import HeaderBetween from "../../../../components/HeaderBetween";
 import moment from "moment";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
@@ -19,7 +18,9 @@ import LPInputs from "./LPInputs";
 
 const Liquidity = (props) => {
   const location = useLocation();
+  const history = useHistory();
   const params = queryString.parse(location.search);
+
   const isNewPoolMode = !params.tokenA && !params.tokenB;
   const { network, connectedWallet } = useWallet();
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
@@ -59,10 +60,18 @@ const Liquidity = (props) => {
       setTokenA(assetHash);
       setSymbolA(symbol);
       setAmountA("");
+      if (tokenB) {
+        let search = `?tokenA=${assetHash}&tokenB=${tokenB}`;
+        history.push(search);
+      }
     } else {
       setTokenB(assetHash);
       setSymbolB(symbol);
       setAmountB("");
+      if (tokenA) {
+        let search = `?tokenA=${tokenA}&tokenB=${assetHash}`;
+        history.push(search);
+      }
     }
     setAssetChangeModalActive("");
   };
@@ -98,12 +107,18 @@ const Liquidity = (props) => {
   };
 
   const onSwitch = () => {
-    setTokenB(tokenA);
-    setTokenA(tokenB ? tokenB : "");
-    setAmountB(amountA);
-    setAmountA(amountB);
-    setSymbolA(symbolB);
-    setSymbolB(symbolA);
+    if (tokenA || tokenB) {
+      if (tokenA && tokenB) {
+        let search = `?tokenA=${tokenB}&tokenB=${tokenA}`;
+        history.push(search);
+      }
+      setTokenB(tokenA);
+      setTokenA(tokenB ? tokenB : "");
+      setAmountB(amountA);
+      setAmountA(amountB);
+      setSymbolA(symbolB);
+      setSymbolB(symbolA);
+    }
   };
 
   const onRefresh = () => {
@@ -142,7 +157,10 @@ const Liquidity = (props) => {
   return (
     <>
       <HeaderBetween
-        path={SWAP_PATH}
+        path={{
+          pathname: `${SWAP_PATH}`,
+          search: tokenA && tokenB ? `?tokenA=${tokenA}&tokenB=${tokenB}` : "",
+        }}
         title={noLiquidity ? "Create a new pool" : "Provide liquidity"}
         isLoading={isPairLoading}
       />

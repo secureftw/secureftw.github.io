@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-// tslint:disable-next-line:no-implicit-dependencies
-import queryString from "query-string";
 import Pagination from "bulma-pagination-react";
-import { useLocation } from "react-router-dom";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { useWallet } from "../../../../../packages/provider";
 import { SWAP_PATH } from "../../../../../consts";
@@ -10,23 +7,29 @@ import HeaderBetween from "../../../../components/HeaderBetween";
 import TruncatedAddress from "../../../../components/TruncatedAddress";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 
-const History = () => {
+interface IHistoryProps {
+  tokenA: string;
+  tokenB: string;
+}
+const History = ({ tokenA, tokenB }: IHistoryProps) => {
   const { network } = useWallet();
-  const location = useLocation();
-  const params = queryString.parse(location.search);
-  const { tokenA, tokenB, page, symbolA, symbolB } = params;
-  const [currentPage, setPage] = useState(page ? page : "1");
+  // const location = useLocation();
+  // const params = queryString.parse(location.search);
+  // const { tokenA, tokenB, page } = params;
+  // const [currentPage, setPage] = useState(page ? (page as string) : "1");
+  const [currentPage, setPage] = useState("1");
 
   const { isLoaded, error, data } = useOnChainData(() => {
     return new SwapContract(network).getSwapHistory(
-      tokenA,
-      tokenB,
+      tokenA as string,
+      tokenB as string,
       currentPage
     );
   }, [network, currentPage]);
   return (
     <div>
-      <HeaderBetween path={SWAP_PATH} title={"Swap history"} />
+	    <h1 className="is-size-5 has-text-weight-bold">Swap History</h1>
+      {/*<HeaderBetween path={SWAP_PATH} title={"Swap history"} />*/}
       <hr />
       <div className="table-container">
         <table className="table is-fullwidth">

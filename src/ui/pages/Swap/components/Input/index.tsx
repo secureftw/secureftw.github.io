@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // tslint:disable-next-line:no-submodule-imports
-import { FaAngleDown, FaQuestionCircle } from "react-icons/all";
+import { FaAngleDown, FaQuestionCircle } from "react-icons/fa";
 import NumberFormat from "react-number-format";
 import { useWallet } from "../../../../../packages/provider";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Modal from "../../../../components/Modal";
 import { useWallet } from "../../../../../packages/provider";
 import { ASSETS } from "../../../../../packages/neo/contracts/ftw/swap/consts";
-import { FaPlus } from "react-icons/all";
+import { FaPlus } from "react-icons/fa";
 import { wallet } from "@cityofzion/neon-core";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { INetworkType } from "../../../../../packages/neo/network";

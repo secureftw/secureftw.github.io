@@ -2,32 +2,47 @@ import React, { useEffect, useState } from "react";
 import { useWallet } from "../../../../../packages/provider";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { toast } from "react-hot-toast";
-import Input from "../../components/Input";
 import AssetListModal from "../../components/AssetListModal";
-import { FaExchangeAlt } from "react-icons/all";
+import {
+  FaHistory,
+  FaListAlt,
+  FaMinus,
+  FaPlus,
+  FaUserAlt,
+} from "react-icons/fa";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
-import { useHistory, useLocation } from "react-router-dom";
-import { SWAP_PATH } from "../../../../../consts";
-// tslint:disable-next-line:no-implicit-dependencies
+import { Link, useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { LocalStorage } from "../../../../../packages/neo/local-storage";
 import { IPairInfo } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
-import { useApp } from "../../../../../common/hooks/use-app";
 import NoLPInfo from "./NoLPInfo";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
-import HeaderBetween from "../../../../components/HeaderBetween";
-import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 import SwapInputs from "./SwapInputs";
+import Pools from "../Pools";
+import {
+  SWAP_PATH_HISTORY,
+  SWAP_PATH_LIQUIDITY_ADD,
+  SWAP_PATH_LIQUIDITY_REMOVE,
+  SWAP_PATH_LP_LIST,
+} from "../../../../../consts";
+import ReactTooltip from "react-tooltip";
+import { useApp } from "../../../../../common/hooks/use-app";
+import Providers from "../Providers";
+import History from "../History";
 
 const Swap = () => {
   const location = useLocation();
   const history = useHistory();
   const params = queryString.parse(location.search);
   const { network, connectedWallet } = useWallet();
+  const { toggleWalletSidebar } = useApp();
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
   >("");
+  const [isPoolListModalActive, setPoolListModalActive] = useState(false);
+  const [isSwapHistoryModalActive, setSwapHistoryModalActive] = useState(false);
+  const [isLPListModalActive, setLPListModalActive] = useState(false);
   // Temporary disabled
   // const cachedTokenA = LocalStorage.getSwapTokenA();
   // const cachedTokenB = LocalStorage.getSwapTokenB();
@@ -37,6 +52,12 @@ const Swap = () => {
   );
   const [tokenB, setTokenB] = useState<any>(
     params.tokenB ? params.tokenB : undefined
+  );
+  const [symbolA, setSymbolA] = useState<any>(
+    params.symbolA ? params.symbolA : undefined
+  );
+  const [symbolB, setSymbolB] = useState<any>(
+    params.symbolB ? params.symbolB : undefined
   );
   const [amountA, setAmountA] = useState<string>("");
   const [amountB, setAmountB] = useState<string>("");
@@ -54,12 +75,20 @@ const Swap = () => {
   const onAssetClick = (assetHash, symbol) => {
     if (isAssetChangeModalActive === "A") {
       LocalStorage.setSwapTokenA(assetHash);
-      history.push(location.search.replace(tokenA, assetHash));
       setTokenA(assetHash);
+      setSymbolA(symbol);
+      if (tokenB) {
+        let search = `?tokenA=${assetHash}&tokenB=${tokenB}`;
+        history.push(search);
+      }
     } else {
       LocalStorage.setSwapTokenB(assetHash);
-      history.push(location.search.replace(tokenB, assetHash));
       setTokenB(assetHash);
+      setSymbolB(symbol);
+      if (tokenA) {
+        let search = `?tokenA=${tokenA}&tokenB=${assetHash}`;
+        history.push(search);
+      }
     }
     setAmountA("");
     setAmountB("");
@@ -99,10 +128,28 @@ const Swap = () => {
   };
 
   const onSwitch = async () => {
-    setTokenB(tokenA);
-    setTokenA(tokenB ? tokenB : "");
-    setAmountB(amountA);
-    setAmountA(amountB);
+    if (tokenA || tokenB) {
+      if (tokenA && tokenB) {
+        let search = `?tokenA=${tokenB}&tokenB=${tokenA}`;
+        history.push(search);
+      }
+      setTokenB(tokenA);
+      setTokenA(tokenB ? tokenB : "");
+      setAmountB(amountA);
+      setAmountA(amountB);
+      setSymbolA(symbolB);
+      setSymbolB(symbolA);
+    }
+  };
+
+  const onPairClick = (_tokenA, _tokenB) => {
+    let search = `?tokenA=${_tokenA}&tokenB=${_tokenB}`;
+    history.push(search);
+    setTokenA(_tokenA);
+    setTokenB(_tokenB);
+    setAmountA("");
+    setAmountB("");
+    setPoolListModalActive(false);
   };
 
   const getReserve = async () => {
@@ -115,6 +162,8 @@ const Swap = () => {
         connectedWallet
       );
       setData(res);
+      setSymbolA(res.reserve.tokenASymbol);
+      setSymbolB(res.reserve.tokenBSymbol);
       setPairLoading(false);
     } catch (e: any) {
       setError(e.message);
@@ -136,86 +185,222 @@ const Swap = () => {
   const priceImpact =
     data && amountB ? (parseFloat(amountB) / data.pair[tokenB]) * 100 : 0;
 
-  const symbolA = data ? data.reserve.tokenASymbol : "";
-  const symbolB = data ? data.reserve.tokenBSymbol : "";
+  // const symbolA = data ? data.reserve.tokenASymbol : "";
+  // const symbolB = data ? data.reserve.tokenBSymbol : "";
   return (
     <div>
-      <HeaderBetween
+      {/* <HeaderBetween
         path={SWAP_PATH}
         title={"Swap"}
         isLoading={isPairLoading}
-      />
+      /> */}
+      <div className="level">
+        <div className="level-left">
+          <div className="level-item">
+            <h1 className="title is-5 is-marginless">Swap</h1>
+          </div>
+        </div>
+        <div className="level-right">
+          <div className="level-item">
+            <div className="buttons">
+              <div className="level-item">
+                <Link
+                  // to={SWAP_PATH_LIQUIDITY_ADD}
+                  to={{
+                    pathname: `${SWAP_PATH_LIQUIDITY_ADD}`,
+                    search:
+                      tokenA && tokenB
+                        ? `?tokenA=${tokenA}&tokenB=${tokenB}`
+                        : "",
+                  }}
+                  // onClick={() => setCreateModalActive(true)}
+                  data-tip
+                  data-for="addLiquidity"
+                  className="button is-small is-white"
+                >
+                  <ReactTooltip
+                    id="addLiquidity"
+                    type="info"
+                    effect="solid"
+                    place="bottom"
+                  >
+                    <span>Add liquidity</span>
+                  </ReactTooltip>
+                  <FaPlus />
+                </Link>
+                <Link
+                  to={SWAP_PATH_LIQUIDITY_REMOVE}
+                  data-tip
+                  data-for="removeLiquidity"
+                  className="button is-small is-white"
+                >
+                  <ReactTooltip
+                    id="removeLiquidity"
+                    type="info"
+                    effect="solid"
+                    place="bottom"
+                  >
+                    <span>Remove liquidity</span>
+                  </ReactTooltip>
+                  <FaMinus />
+                </Link>
+              </div>
+              <button
+                onClick={() => setPoolListModalActive(true)}
+                data-tip
+                data-for="showPools"
+                className="button is-small is-white"
+              >
+                <ReactTooltip
+                  id="showPools"
+                  type="info"
+                  effect="solid"
+                  place="bottom"
+                >
+                  <span>Show pools</span>
+                </ReactTooltip>
+                <FaListAlt />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <hr />
-      <>
-        {noLiquidity && (
-          <NoLPInfo
-            tokenA={tokenA}
-            tokenB={tokenB}
-            // symbolA={symbolA}
-            // symbolB={symbolB}
-          />
-        )}
 
-        {error && (
-          <ErrorNotificationWithRefresh onRefresh={onRefresh} error={error} />
-        )}
-
-        <SwapInputs
-          noLiquidity={noLiquidity}
-          network={network}
+      {noLiquidity && (
+        <NoLPInfo
           tokenA={tokenA}
           tokenB={tokenB}
-          symbolA={symbolA}
-          symbolB={symbolB}
-          amountA={amountA}
-          amountB={amountB}
-          onAssetChange={onAssetChange}
-          userTokenABalance={
-            connectedWallet && data ? data.balances[tokenA] : undefined
-          }
-          userTokenBBalance={
-            connectedWallet && data ? data.balances[tokenB] : undefined
-          }
-          onSwitch={onSwitch}
-          setAmountA={setAmountA}
-          setAmountB={setAmountB}
-          reserve={data}
+          // symbolA={symbolA}
+          // symbolB={symbolB}
         />
+      )}
 
-        {connectedWallet ? (
-          tokenA && tokenB && amountA && amountB ? (
-            <>
-              <hr />
-              <div>
-                {`1 ${symbolB} = ${(
-                  parseFloat(amountA) / parseFloat(amountB)
-                ).toFixed(8)} ${symbolA}`}
+      {error && (
+        <ErrorNotificationWithRefresh onRefresh={onRefresh} error={error} />
+      )}
+
+      <SwapInputs
+        noLiquidity={noLiquidity}
+        network={network}
+        tokenA={tokenA}
+        tokenB={tokenB}
+        symbolA={symbolA}
+        symbolB={symbolB}
+        amountA={amountA}
+        amountB={amountB}
+        onAssetChange={onAssetChange}
+        userTokenABalance={
+          connectedWallet && data ? data.balances[tokenA] : undefined
+        }
+        userTokenBBalance={
+          connectedWallet && data ? data.balances[tokenB] : undefined
+        }
+        onSwitch={onSwitch}
+        setAmountA={setAmountA}
+        setAmountB={setAmountB}
+        reserve={data}
+      />
+
+      {tokenA && tokenB && data ? (
+        <>
+          <hr />
+          <div className="level">
+            <div className="level-left">
+              <div className="level-item">
+                {/*<div>*/}
+                {/*  {`1 ${symbolB} = ${(*/}
+                {/*    parseFloat(amountA) / parseFloat(amountB)*/}
+                {/*  ).toFixed(8)} ${symbolA}`}*/}
+                {/*</div>*/}
+                <div>
+                  {`1 ${symbolB} = ${(
+                    data.pair[tokenA] / data.pair[tokenB]
+                  ).toFixed(8)} ${symbolA}`}
+                </div>
               </div>
-              <hr />
-              <button
-                disabled={
-                  (data && data.balances[tokenA] < parseFloat(amountA)) ||
-                  (data && data.pair[tokenB] < parseFloat(amountB)) ||
-                  priceImpact > 10
-                }
-                onClick={onSwap}
-                className={`button is-fullwidth is-primary ${
-                  priceImpact > 10 ? "is-danger" : ""
-                }`}
-              >
-                {priceImpact > 10 ? "Price impact is too high" : "Swap"}
-              </button>
-            </>
-          ) : (
-            <div />
-          )
-        ) : (
-          <>
-            <hr />
-            <ConnectWalletButton />
-          </>
-        )}
-      </>
+            </div>
+
+            <div className="level-right">
+              <div className="level-item">
+                <div className="level is-mobile">
+                  <div className="level-left">
+                    <div className="level-item">
+                      <div className="buttons">
+                        <button
+                          onClick={() => setSwapHistoryModalActive(true)}
+                          className="button is-white is-small"
+                          data-tip
+                          data-for="swapHistory"
+                          // to={{
+                          //   pathname: `${SWAP_PATH_HISTORY}`,
+                          //   search: `?tokenA=${tokenA}&tokenB=${tokenB}`,
+                          // }}
+                        >
+	                        <ReactTooltip
+		                        id="swapHistory"
+		                        type="info"
+		                        effect="solid"
+		                        place="bottom"
+	                        >
+		                        <span>Swap history</span>
+	                        </ReactTooltip>
+                          <FaHistory />
+                        </button>
+
+                        <button
+                          onClick={() => setLPListModalActive(true)}
+                          className="button is-white is-small"
+                          data-tip
+                          data-for="LPList"
+                          // to={{
+                          //   pathname: `${SWAP_PATH_LP_LIST}`,
+                          //   search: `?tokenA=${tokenA}&tokenB=${tokenB}`,
+                          // }}
+                        >
+	                        <ReactTooltip
+		                        id="LPList"
+		                        type="info"
+		                        effect="solid"
+		                        place="bottom"
+	                        >
+		                        <span>LP list</span>
+	                        </ReactTooltip>
+                          <FaUserAlt />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
+
+      <hr />
+      <button
+        disabled={
+          !amountA ||
+          !amountB ||
+          (data && data.balances[tokenA] < parseFloat(amountA)) ||
+          (data && data.pair[tokenB] < parseFloat(amountB)) ||
+          priceImpact > 10
+        }
+        onClick={connectedWallet ? onSwap : toggleWalletSidebar}
+        className={`button is-fullwidth is-primary ${
+          priceImpact > 10 ? "is-danger" : ""
+        }`}
+      >
+        {connectedWallet
+          ? priceImpact > 10
+            ? "Price impact is too high"
+            : "Swap"
+          : "Connect wallet"}
+      </button>
 
       {txid && (
         <Modal onClose={() => setTxid("")}>
@@ -235,6 +420,29 @@ const Swap = () => {
           onAssetClick={onAssetClick}
           onClose={() => setAssetChangeModalActive("")}
         />
+      )}
+
+      {isPoolListModalActive && (
+        <Modal onClose={() => setPoolListModalActive(false)}>
+          <Pools onPairClick={onPairClick} />
+        </Modal>
+      )}
+
+      {isLPListModalActive && (
+        <Modal onClose={() => setLPListModalActive(false)}>
+          <Providers
+            tokenA={tokenA}
+            tokenB={tokenB}
+            // symbolA={symbolA}
+            // symbolB={symbolB}
+          />
+        </Modal>
+      )}
+
+      {isSwapHistoryModalActive && (
+        <Modal onClose={() => setSwapHistoryModalActive(false)}>
+          <History tokenA={tokenA} tokenB={tokenB} />
+        </Modal>
       )}
     </div>
   );

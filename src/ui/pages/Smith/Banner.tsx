@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-import { SMITH_PATH, SMITH_PATH_NEP11, TOURNAMENT_PATH } from "../../../consts";
+import { SMITH_PATH, SMITH_PATH_NEP11 } from "../../../consts";
 import { Link, useLocation } from "react-router-dom";
 import NEP17FormModal from "./NEP17FormModal";
 import NEP11FormModal from "./NEP11FormModal";
 import {
-  BiCoinStack,
-  BsLightbulb,
   FaCoins,
-  HiOutlinePhotograph,
-} from "react-icons/all";
+} from "react-icons/fa";
 
 const Banner = () => {
   const location = useLocation();
@@ -74,7 +71,7 @@ const Banner = () => {
                 }
               >
                 <Link to={SMITH_PATH_NEP11}>
-                  <BsLightbulb />
+                  {/*<BsLightbulb />*/}
                   &nbsp; NFT Showcase
                 </Link>
               </li>

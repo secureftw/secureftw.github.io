@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // tslint:disable-next-line:no-submodule-imports
-import { FaAngleDown } from "react-icons/all";
+import { FaAngleDown } from "react-icons/fa";
 import { useApp } from "../../../common/hooks/use-app";
 import { useWallet } from "../../provider";
 import { getWalletIcon } from "./helpers";

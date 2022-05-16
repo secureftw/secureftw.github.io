@@ -3,7 +3,7 @@ import { ISmithNEP11Record } from "../../../../../packages/neo/contracts/ftw/smi
 import { MAINNET } from "../../../../../packages/neo/consts";
 import { useWallet } from "../../../../../packages/provider";
 import NEP11MintFormModal from "../PageView/NEP11MintFormModal";
-import { FaExternalLinkAlt } from "react-icons/all";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import Tokens from "./Tokens";
 import { SMITH_CONTRACT_NEP11_PATH } from "../../../../../consts";
 import { Link } from "react-router-dom";

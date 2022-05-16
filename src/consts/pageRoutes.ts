@@ -13,6 +13,7 @@ export const COLLECTION_PATH = "/NFT/collection";
 // export const SWAP_PATH = "/swap";
 // export const SWAP_PATH_LIQUIDITY = "/swap/liquidity";
 export const SWAP_PATH = "/swap";
+export const SWAP_POOL_PATH = "/swap/pools";
 export const SWAP_PATH_HISTORY = "/swap/history";
 export const SWAP_PATH_LP_LIST = "/swap/providers";
 export const SWAP_PATH_LIQUIDITY_ADD = "/swap/liquidity/add";

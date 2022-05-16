@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Input from "../../components/Input";
-import { FaExchangeAlt } from "react-icons/all";
+import { FaExchangeAlt } from "react-icons/fa";
 import { INetworkType } from "../../../../../packages/neo/network";
 import { IPairInfo } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
 import { SwapContract } from "../../../../../packages/neo/contracts";

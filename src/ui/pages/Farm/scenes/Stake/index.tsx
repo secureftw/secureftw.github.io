@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FARM_PATH } from "../../../../../consts";
 import HeaderBetween from "../../../../components/HeaderBetween";
 import { useWallet } from "../../../../../packages/provider";
 import { toast } from "react-hot-toast";
 import { useLocation } from "react-router-dom";
-import * as queryString from "querystring";
 import { StakingContract } from "../../../../../packages/neo/contracts/ftw/staking";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
@@ -17,18 +16,14 @@ const Stake = () => {
   const [refresh, setRefresh] = useState(0);
 
   const location = useLocation();
-  const str =
-    location.search[0] === "?"
-      ? location.search.substr(1, location.search.length)
-      : location.search;
+	let params = new URLSearchParams(location.search);
 
-  const params = queryString.parse(str);
-
-  const [symbolA] = useState<any>(
-    params.tokenASymbol ? params.tokenASymbol : undefined
+  // @ts-ignore
+	const [symbolA] = useState<any>(
+    params.get("tokenASymbol") ? params.get("tokenASymbol") : undefined
   );
   const [symbolB] = useState<any>(
-    params.tokenBSymbol ? params.tokenBSymbol : undefined
+	  params.get("tokenBSymbol") ? params.get("tokenBSymbol") : undefined
   );
 
   const onStakeLP = async (tokenId) => {

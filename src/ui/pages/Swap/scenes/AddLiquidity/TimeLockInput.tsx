@@ -1,5 +1,5 @@
 import React from "react";
-import Switch from "react-switch";
+import ReactSwitch from "react-switch";
 import DatePicker from "react-datepicker";
 interface ITimeLockInputProps {
   toggleSwitch: () => void;
@@ -20,7 +20,7 @@ const TimeLockInput = ({
           <div className="level-item">
             <label style={{ display: "flex", alignItems: "center" }}>
               <span className="mr-3">Lock liquidity</span>
-              <Switch onChange={toggleSwitch} checked={isActive} />
+              <ReactSwitch onChange={toggleSwitch} checked={isActive} />
             </label>
           </div>
         </div>

@@ -1,7 +1,4 @@
 import React from "react";
-// tslint:disable-next-line:no-implicit-dependencies
-import queryString from "query-string";
-import { useLocation } from "react-router-dom";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { useWallet } from "../../../../../packages/provider";
 import { SWAP_PATH } from "../../../../../consts";
@@ -9,19 +6,27 @@ import HeaderBetween from "../../../../components/HeaderBetween";
 import TruncatedAddress from "../../../../components/TruncatedAddress";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 
-const Providers = () => {
-  const location = useLocation();
-  const params = queryString.parse(location.search);
-  const { tokenA, tokenB } = params;
+interface IProvidersProps {
+  tokenA: string;
+  tokenB: string;
+}
+const Providers = ({ tokenA, tokenB }: IProvidersProps) => {
+  // const location = useLocation();
+  // const params = queryString.parse(location.search);
+  // const { tokenA, tokenB } = params;
   const { network } = useWallet();
 
   const { isLoaded, error, data } = useOnChainData(() => {
-    return new SwapContract(network).getLPList(tokenA, tokenB);
+    return new SwapContract(network).getLPList(
+      tokenA as string,
+      tokenB as string
+    );
   }, [network]);
 
   return (
     <div>
-      <HeaderBetween path={SWAP_PATH} title={"LP list"} />
+	    <h1 className="is-size-5 has-text-weight-bold">LP List</h1>
+      {/*<HeaderBetween path={SWAP_PATH} title={"LP list"} />*/}
       <hr />
       <div className="table-container is-small">
         <table className="table is-fullwidth is-small">

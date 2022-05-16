@@ -4,7 +4,7 @@ import { useApp } from "../../common/hooks/use-app";
 import { MENU } from "../../consts";
 import { useWallet } from "../../packages/provider";
 // tslint:disable-next-line:no-submodule-imports
-import { FaMedium, FaTwitter } from "react-icons/all";
+import { FaMedium, FaTwitter } from "react-icons/fa";
 // tslint:disable-next-line:no-submodule-imports
 import { FaGithub } from "react-icons/fa";
 import SocialLinkGroup from "./SocialLinkGroup";

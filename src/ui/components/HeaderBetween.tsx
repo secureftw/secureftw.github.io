@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaAngleLeft } from "react-icons/all";
+import { FaAngleLeft } from "react-icons/fa";
 interface IHeaderBetweenProps {
-  path: string;
+  path: string | object;
   title: string;
   isLoading?: boolean;
 }

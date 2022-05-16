@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Input from "../../components/Input";
-import { FaExchangeAlt } from "react-icons/all";
+import { FaExchangeAlt } from "react-icons/fa";
 import { IPairInfo } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { INetworkType } from "../../../../../packages/neo/network";
@@ -78,9 +78,9 @@ const SwapInputs = ({
       <Input
         contractHash={tokenA}
         symbol={symbolA}
-        isDisable={noLiquidity}
-        isReadOnly={!tokenA}
-        heading="Swap From"
+        isDisable={!tokenA || !tokenB || noLiquidity}
+        // isReadOnly={!tokenA}
+        heading="Sell"
         onClickAsset={() => onAssetChange("A")}
         val={amountA}
         setValue={(value) => {
@@ -101,9 +101,9 @@ const SwapInputs = ({
       <Input
         contractHash={tokenB}
         symbol={symbolB}
-        isDisable={noLiquidity}
-        isReadOnly={!tokenB}
-        heading="Swap To"
+        isDisable={!tokenA || !tokenB || noLiquidity}
+        // isReadOnly={!tokenB}
+        heading="Buy"
         onClickAsset={() => {
           onAssetChange("B");
         }}

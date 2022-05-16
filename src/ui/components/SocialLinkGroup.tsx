@@ -1,5 +1,5 @@
 import React from "react";
-import { FaDiscord, FaMedium, FaTwitter, FaGithub } from "react-icons/all";
+import { FaDiscord, FaMedium, FaTwitter, FaGithub } from "react-icons/fa";
 
 const SocialLinkGroup = () => {
   return (

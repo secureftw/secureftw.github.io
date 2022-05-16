@@ -2,7 +2,7 @@ import React from "react";
 import { ISmithNEP17Record } from "../../../../../packages/neo/contracts/ftw/smith/interfaces";
 import { MAINNET } from "../../../../../packages/neo/consts";
 import { useWallet } from "../../../../../packages/provider";
-import { FaExternalLinkAlt } from "react-icons/all";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import { Link } from "react-router-dom";
 import { SMITH_CONTRACT_NEP17_PATH } from "../../../../../consts";

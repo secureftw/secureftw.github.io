@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-// tslint:disable-next-line:no-submodule-imports
-import { FaBars, FaFile, FaGithub, FaWallet } from "react-icons/fa";
+import { FaBars, FaWallet } from "react-icons/fa";
 import Logo from "./Logo";
 import { useApp } from "../../common/hooks/use-app";
 import { useWallet } from "../../packages/provider";
@@ -11,8 +10,6 @@ import WalletDropdown from "./WalletDropdown";
 import { getWalletIcon } from "../../packages/ui/Wallet/helpers";
 import NetworkSwitch from "./NetworkSwitch";
 import NetworkSwitch2 from "./NetworkSwitch2";
-// tslint:disable-next-line:no-submodule-imports
-import { FaMedium, FaTwitter, GrDocumentText } from "react-icons/all";
 import { MAINNET, TESTNET } from "../../packages/neo/consts";
 import toast from "react-hot-toast";
 import SocialLinkGroup from "./SocialLinkGroup";
@@ -152,7 +149,7 @@ const Header = () => {
             className="navbar-item"
             href={"http://docs.forthewin.network/"}
           >
-            <GrDocumentText />
+            {/*<GrDocumentText />*/}
             <span className="ml-1">Docs</span>
           </a>
           <div className="navbar-item">

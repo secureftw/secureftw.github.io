@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StakingContract } from "../../../../../packages/neo/contracts/ftw/staking";
 import { useWallet } from "../../../../../packages/provider";
 import { IClaimableRewards } from "../../../../../packages/neo/contracts/ftw/staking/interfaces";
-import { FaCoins, FaStar } from "react-icons/all";
+import { FaCoins } from "react-icons/fa";
 import ClaimModal from "./ClaimModal";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
