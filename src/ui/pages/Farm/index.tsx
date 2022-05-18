@@ -10,8 +10,19 @@ import StakingMain from "./scenes/Main";
 import Stake from "./scenes/Stake";
 import MyPositions from "./scenes/MyPositions";
 import ClaimRewards from "./scenes/ClaimRewards";
+import {useWallet} from "../../../packages/provider";
+import {MAINNET} from "../../../packages/neo/consts";
 
 const Farm = () => {
+	const { network } = useWallet();
+	if (network === MAINNET)
+		return (
+			<PageLayout>
+				<div className="notification is-info">
+					FTW Farm is not on Mainnet yet.
+				</div>
+			</PageLayout>
+		);
   return (
     <PageLayout>
       <div className="columns">
