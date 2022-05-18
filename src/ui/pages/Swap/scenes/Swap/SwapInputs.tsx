@@ -21,6 +21,8 @@ interface ISwapInputsProps {
   setAmountB: (val: string) => void;
   reserve?: IPairInfo;
   noLiquidity?: boolean;
+  isTokenAMaxGas?: any;
+  isTokenBMaxGas?: any;
 }
 
 interface ISearchTerm {
@@ -43,6 +45,8 @@ const SwapInputs = ({
   setAmountB,
   reserve,
   noLiquidity,
+  isTokenAMaxGas,
+  isTokenBMaxGas,
 }: ISwapInputsProps) => {
   const [searchTerm, setSearchTerm] = useState<ISearchTerm>();
   const [isAmountALoading, setAmountALoading] = useState(false);
@@ -92,6 +96,7 @@ const SwapInputs = ({
         }}
         userBalance={userTokenABalance}
         isLoading={isAmountALoading}
+        errorMessage={isTokenAMaxGas ? "You need to have GAS for transaction fee" : undefined}
       />
       <div className="pt-4 pb-4">
         <button onClick={onSwitch} className="button is-white is-fullwidth">
@@ -117,6 +122,7 @@ const SwapInputs = ({
         }}
         userBalance={userTokenBBalance}
         isLoading={isAmountBLoading}
+        errorMessage={isTokenBMaxGas ? "You need to have GAS for transaction fee" : undefined}
       />
     </>
   );

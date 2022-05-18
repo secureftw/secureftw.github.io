@@ -30,6 +30,8 @@ import ReactTooltip from "react-tooltip";
 import { useApp } from "../../../../../common/hooks/use-app";
 import Providers from "../Providers";
 import History from "../History";
+import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
+import { PRICE_IMPACT_LIMIT } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 
 const Swap = () => {
   const location = useLocation();
@@ -43,18 +45,19 @@ const Swap = () => {
   const [isPoolListModalActive, setPoolListModalActive] = useState(false);
   const [isSwapHistoryModalActive, setSwapHistoryModalActive] = useState(false);
   const [isLPListModalActive, setLPListModalActive] = useState(false);
-  // Temporary disabled
+
+  // TODO: Save pair history in local storage (Temporary disabled)
   // const cachedTokenA = LocalStorage.getSwapTokenA();
   // const cachedTokenB = LocalStorage.getSwapTokenB();
 
   const [tokenA, setTokenA] = useState<any>(
-    params.tokenA ? params.tokenA : undefined
+    params.tokenA ? params.tokenA : GAS_SCRIPT_HASH
   );
   const [tokenB, setTokenB] = useState<any>(
     params.tokenB ? params.tokenB : undefined
   );
   const [symbolA, setSymbolA] = useState<any>(
-    params.symbolA ? params.symbolA : undefined
+    params.symbolA ? params.symbolA : "GAS"
   );
   const [symbolB, setSymbolB] = useState<any>(
     params.symbolB ? params.symbolB : undefined
@@ -185,15 +188,22 @@ const Swap = () => {
   const priceImpact =
     data && amountB ? (parseFloat(amountB) / data.pair[tokenB]) * 100 : 0;
 
-  // const symbolA = data ? data.reserve.tokenASymbol : "";
-  // const symbolB = data ? data.reserve.tokenBSymbol : "";
+  const isTokenAMaxGas =
+    tokenA === GAS_SCRIPT_HASH &&
+    data &&
+    amountA &&
+	  data.balances[tokenA] > 0 &&
+    data.balances[tokenA] === parseFloat(amountA);
+
+	const isTokenBMaxGas =
+		tokenB === GAS_SCRIPT_HASH &&
+		data &&
+		amountB &&
+		data.balances[tokenB] > 0 &&
+		data.balances[tokenB] === parseFloat(amountB);
+
   return (
     <div>
-      {/* <HeaderBetween
-        path={SWAP_PATH}
-        title={"Swap"}
-        isLoading={isPairLoading}
-      /> */}
       <div className="level">
         <div className="level-left">
           <div className="level-item">
@@ -205,7 +215,6 @@ const Swap = () => {
             <div className="buttons">
               <div className="level-item">
                 <Link
-                  // to={SWAP_PATH_LIQUIDITY_ADD}
                   to={{
                     pathname: `${SWAP_PATH_LIQUIDITY_ADD}`,
                     search:
@@ -213,7 +222,6 @@ const Swap = () => {
                         ? `?tokenA=${tokenA}&tokenB=${tokenB}`
                         : "",
                   }}
-                  // onClick={() => setCreateModalActive(true)}
                   data-tip
                   data-for="addLiquidity"
                   className="button is-small is-white"
@@ -268,20 +276,15 @@ const Swap = () => {
 
       <hr />
 
-      {noLiquidity && (
-        <NoLPInfo
-          tokenA={tokenA}
-          tokenB={tokenB}
-          // symbolA={symbolA}
-          // symbolB={symbolB}
-        />
-      )}
+      {noLiquidity && <NoLPInfo tokenA={tokenA} tokenB={tokenB} />}
 
       {error && (
         <ErrorNotificationWithRefresh onRefresh={onRefresh} error={error} />
       )}
 
       <SwapInputs
+	      isTokenAMaxGas={isTokenAMaxGas}
+	      isTokenBMaxGas={isTokenBMaxGas}
         noLiquidity={noLiquidity}
         network={network}
         tokenA={tokenA}
@@ -333,19 +336,15 @@ const Swap = () => {
                           className="button is-white is-small"
                           data-tip
                           data-for="swapHistory"
-                          // to={{
-                          //   pathname: `${SWAP_PATH_HISTORY}`,
-                          //   search: `?tokenA=${tokenA}&tokenB=${tokenB}`,
-                          // }}
                         >
-	                        <ReactTooltip
-		                        id="swapHistory"
-		                        type="info"
-		                        effect="solid"
-		                        place="bottom"
-	                        >
-		                        <span>Swap history</span>
-	                        </ReactTooltip>
+                          <ReactTooltip
+                            id="swapHistory"
+                            type="info"
+                            effect="solid"
+                            place="bottom"
+                          >
+                            <span>Swap history</span>
+                          </ReactTooltip>
                           <FaHistory />
                         </button>
 
@@ -359,14 +358,14 @@ const Swap = () => {
                           //   search: `?tokenA=${tokenA}&tokenB=${tokenB}`,
                           // }}
                         >
-	                        <ReactTooltip
-		                        id="LPList"
-		                        type="info"
-		                        effect="solid"
-		                        place="bottom"
-	                        >
-		                        <span>LP list</span>
-	                        </ReactTooltip>
+                          <ReactTooltip
+                            id="LPList"
+                            type="info"
+                            effect="solid"
+                            place="bottom"
+                          >
+                            <span>LP list</span>
+                          </ReactTooltip>
                           <FaUserAlt />
                         </button>
                       </div>
@@ -384,19 +383,21 @@ const Swap = () => {
       <hr />
       <button
         disabled={
+          isTokenAMaxGas ||
+          isTokenBMaxGas ||
           !amountA ||
           !amountB ||
           (data && data.balances[tokenA] < parseFloat(amountA)) ||
           (data && data.pair[tokenB] < parseFloat(amountB)) ||
-          priceImpact > 10
+          priceImpact > PRICE_IMPACT_LIMIT
         }
         onClick={connectedWallet ? onSwap : toggleWalletSidebar}
         className={`button is-fullwidth is-primary ${
-          priceImpact > 10 ? "is-danger" : ""
+          priceImpact > PRICE_IMPACT_LIMIT ? "is-danger" : ""
         }`}
       >
         {connectedWallet
-          ? priceImpact > 10
+          ? priceImpact > PRICE_IMPACT_LIMIT
             ? "Price impact is too high"
             : "Swap"
           : "Connect wallet"}
@@ -430,12 +431,7 @@ const Swap = () => {
 
       {isLPListModalActive && (
         <Modal onClose={() => setLPListModalActive(false)}>
-          <Providers
-            tokenA={tokenA}
-            tokenB={tokenB}
-            // symbolA={symbolA}
-            // symbolB={symbolB}
-          />
+          <Providers tokenA={tokenA} tokenB={tokenB} />
         </Modal>
       )}
 

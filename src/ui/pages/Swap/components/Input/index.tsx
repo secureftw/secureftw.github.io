@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-// tslint:disable-next-line:no-submodule-imports
-import { FaAngleDown, FaQuestionCircle } from "react-icons/fa";
+import React from "react";
+import { FaAngleDown } from "react-icons/fa";
 import NumberFormat from "react-number-format";
 import { useWallet } from "../../../../../packages/provider";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
@@ -16,6 +15,7 @@ interface IInputProps {
   isReadOnly?: boolean;
   userBalance?: number;
   isDisable?: boolean;
+  errorMessage?: string;
 }
 const Input = ({
   contractHash,
@@ -28,6 +28,7 @@ const Input = ({
   isLoading,
   isReadOnly,
   userBalance,
+  errorMessage,
 }: IInputProps) => {
   const { network } = useWallet();
   const logo = ASSET_LIST[network][contractHash]
@@ -46,13 +47,15 @@ const Input = ({
                 <div
                   onClick={onClickAsset}
                   style={{
+                    maxWidth: "50px",
+                    maxHeight: "50px",
                     width: "50px",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                   className="image is-clickable is-flex"
                 >
-                  {logo ? <img src={logo} /> : <FaQuestionCircle size={35} />}
+                  <img src={logo ? logo : "/symbols/unknown.png"} />
                 </div>
               </div>
               <div
@@ -79,7 +82,7 @@ const Input = ({
               readOnly={isReadOnly}
               decimalScale={8}
               inputMode="decimal"
-              className="input"
+              className={`input ${errorMessage ? "is-danger" : ""}`}
               value={val}
               allowNegative={false}
               onValueChange={(value, e) => {
@@ -92,7 +95,9 @@ const Input = ({
               allowLeadingZeros={false}
               // format={(val) => {} }
             />
-            {userBalance !== undefined ? (
+            {errorMessage ? (
+              <p className="help is-danger">{errorMessage}</p>
+            ) : userBalance !== undefined ? (
               <div className="level is-mobile mt-1">
                 <div className="level-left">
                   <div className="level-item">

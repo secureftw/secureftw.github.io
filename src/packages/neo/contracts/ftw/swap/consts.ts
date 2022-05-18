@@ -11,6 +11,8 @@ import { INetworkType } from "../../../network";
 
 export const SWAP_FEE = 0.25;
 
+export const PRICE_IMPACT_LIMIT = 10;
+
 export const SWAP_SCRIPT_HASH = {
   [CONST.PRIVATENET]: "aeac82f7830f4083b98089baa51060e621febb10",
   // [CONST.TESTNET]: "428783fccfb6b194f7d33cd421e9f56f48efbde5", // With WMOON
