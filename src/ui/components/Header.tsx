@@ -10,8 +10,6 @@ import WalletDropdown from "./WalletDropdown";
 import { getWalletIcon } from "../../packages/ui/Wallet/helpers";
 import NetworkSwitch from "./NetworkSwitch";
 import NetworkSwitch2 from "./NetworkSwitch2";
-import { MAINNET, TESTNET } from "../../packages/neo/consts";
-import toast from "react-hot-toast";
 import SocialLinkGroup from "./SocialLinkGroup";
 
 const Header = () => {
@@ -22,13 +20,6 @@ const Header = () => {
   const handleDisconnectWallet = () => {
     setActive(false);
     disConnectWallet();
-  };
-
-  const handleSwitchNetwork = () => {
-    const targetNetwork = network === TESTNET ? MAINNET : TESTNET;
-    switchNetwork(targetNetwork);
-    setActive(false);
-    toast.success(`Network switched. You are on ${targetNetwork}`);
   };
 
   return (
