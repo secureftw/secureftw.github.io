@@ -192,15 +192,15 @@ const Swap = () => {
     tokenA === GAS_SCRIPT_HASH &&
     data &&
     amountA &&
-	  data.balances[tokenA] > 0 &&
+    data.balances[tokenA] > 0 &&
     data.balances[tokenA] === parseFloat(amountA);
 
-	const isTokenBMaxGas =
-		tokenB === GAS_SCRIPT_HASH &&
-		data &&
-		amountB &&
-		data.balances[tokenB] > 0 &&
-		data.balances[tokenB] === parseFloat(amountB);
+  const isTokenBMaxGas =
+    tokenB === GAS_SCRIPT_HASH &&
+    data &&
+    amountB &&
+    data.balances[tokenB] > 0 &&
+    data.balances[tokenB] === parseFloat(amountB);
 
   return (
     <div>
@@ -283,8 +283,8 @@ const Swap = () => {
       )}
 
       <SwapInputs
-	      isTokenAMaxGas={isTokenAMaxGas}
-	      isTokenBMaxGas={isTokenBMaxGas}
+        isTokenAMaxGas={isTokenAMaxGas}
+        isTokenBMaxGas={isTokenBMaxGas}
         noLiquidity={noLiquidity}
         network={network}
         tokenA={tokenA}
@@ -306,7 +306,7 @@ const Swap = () => {
         reserve={data}
       />
 
-      {tokenA && tokenB && data ? (
+      {tokenA && tokenB && data && !noLiquidity ? (
         <>
           <hr />
           <div className="level">
@@ -353,10 +353,6 @@ const Swap = () => {
                           className="button is-white is-small"
                           data-tip
                           data-for="LPList"
-                          // to={{
-                          //   pathname: `${SWAP_PATH_LP_LIST}`,
-                          //   search: `?tokenA=${tokenA}&tokenB=${tokenB}`,
-                          // }}
                         >
                           <ReactTooltip
                             id="LPList"
@@ -381,6 +377,7 @@ const Swap = () => {
       )}
 
       <hr />
+
       <button
         disabled={
           isTokenAMaxGas ||
