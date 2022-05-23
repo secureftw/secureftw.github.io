@@ -13,6 +13,7 @@ const AddChannel = ({ onAdd }: IAddChannelProps) => {
     minTokens: "",
   });
   const hasEmoji = detectEmojiInString(values) !== 0;
+
   const handleValueChange = (key: string, val: string) => {
     setValues({
       ...values,

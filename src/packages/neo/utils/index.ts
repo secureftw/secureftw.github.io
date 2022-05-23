@@ -80,63 +80,119 @@ export const parseMapValue = (v: StackItemLike): any => {
   const obj = {};
   const root = v.value as StackItemMap[];
   root.forEach(({ key, value }) => {
-    const k = u.base642utf8(key.value as string);
-    let val;
-    switch (k) {
-      case "owner":
-        val = base64ToAddress(value.value as string);
-        break;
-      case "contractHash":
-        val = base64ToHash160(value.value as string);
-        break;
-      case "tokenA":
-        val = base64ToHash160(value.value as string);
-        break;
-      case "tokenB":
-        val = base64ToHash160(value.value as string);
-        break;
-      case "name":
-        val = base64ToString(value.value as string);
-        break;
-      case "tokenId":
-        val = base64ToString(value.value as string);
-        break;
-      case "tokenASymbol":
-        val = base64ToString(value.value as string);
-        break;
-      case "tokenBSymbol":
-        val = base64ToString(value.value as string);
-        break;
-      case "symbolA":
-        val = base64ToString(value.value as string);
-        break;
-      case "symbolB":
-        val = base64ToString(value.value as string);
-        break;
-      case "amountA":
-        val = toDecimal(value.value as string);
-        break;
-      case "amountB":
-        val = toDecimal(value.value as string);
-        break;
-      case "totalShare":
-        val = toDecimal(value.value as string);
-        break;
-      case "claimable":
-        val = toDecimal(value.value as string);
-        break;
-      case "dailyReward":
-        val = toDecimal(value.value as string);
-        break;
-      case "amount":
-        val = toDecimal(value.value as string);
-        break;
-      case "lockUntil":
-        val =
-          value.value === "0" ? "None" : base64ToDate(value.value as string);
-        break;
+    if (value.value) {
+      const k = u.base642utf8(key.value as string);
+      let val;
+      switch (k) {
+        case "owner":
+          val = base64ToAddress(value.value as string);
+          break;
+        case "creator":
+          val = base64ToAddress(value.value as string);
+          break;
+        case "contractHash":
+          val = base64ToHash160(value.value as string);
+          break;
+        case "tokenA":
+          val = base64ToHash160(value.value as string);
+          break;
+        case "tokenB":
+          val = base64ToHash160(value.value as string);
+          break;
+        case "name":
+          val = base64ToString(value.value as string);
+          break;
+        case "meta":
+          val = base64ToString(value.value as string);
+          break;
+        case "tokenId":
+          val = base64ToString(value.value as string);
+          break;
+        case "tokenASymbol":
+          val = base64ToString(value.value as string);
+          break;
+        case "tokenBSymbol":
+          val = base64ToString(value.value as string);
+          break;
+        case "symbol":
+          val = base64ToString(value.value as string);
+          break;
+        case "symbolA":
+          val = base64ToString(value.value as string);
+          break;
+        case "symbolB":
+          val = base64ToString(value.value as string);
+          break;
+        case "title":
+          val = base64ToString(value.value as string);
+          break;
+        case "description":
+          val = base64ToString(value.value as string);
+          break;
+        case "options":
+	        // @ts-ignore
+	        val = value.value.map(v => {
+						return base64ToString(v.value as string);
+          })
+          break;
+        case "start":
+          val = parseFloat(value.value as string);
+          break;
+        case "end":
+          val = parseFloat(value.value as string);
+          break;
+        case "deposit":
+          val = value.value;
+          break;
+        case "totalItems":
+          val = value.value;
+          break;
+        case "totalPages":
+          val = value.value;
+          break;
+        case "no":
+          val = value.value;
+          break;
+        case "minTokens":
+          val = toDecimal(value.value as string);
+          break;
+        case "amountA":
+          val = toDecimal(value.value as string);
+          break;
+        case "amountB":
+          val = toDecimal(value.value as string);
+          break;
+        case "totalShare":
+          val = toDecimal(value.value as string);
+          break;
+        case "claimable":
+          val = toDecimal(value.value as string);
+          break;
+        case "dailyReward":
+          val = toDecimal(value.value as string);
+          break;
+        case "amount":
+          val = toDecimal(value.value as string);
+          break;
+        case "lockUntil":
+          val =
+            value.value === "0" ? "None" : base64ToDate(value.value as string);
+          break;
+        case "createdAt":
+          val = base64ToDate(value.value as string);
+          break;
+        case "items":
+          // @ts-ignore
+          val = value.value.map((item) => {
+            return parseMapValue(item);
+          });
+          break;
+        default:
+          val = value.value;
+					break;
+      }
+      obj[k] = val;
     }
-    obj[k] = val;
   });
   return obj;
 };
