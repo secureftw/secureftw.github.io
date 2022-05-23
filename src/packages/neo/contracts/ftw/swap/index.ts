@@ -406,17 +406,27 @@ export class SwapContract {
     };
   };
 
-  getContractSymbol = async (tokenA: string): Promise<any> => {
+  getContractInfo = async (
+    contractHash: string
+  ): Promise<{ symbol: string; decimals: string }> => {
     const script1 = {
-      scriptHash: tokenA,
+      scriptHash: contractHash,
       operation: "symbol",
       args: [],
     };
-    const res = await Network.read(this.network, [script1]);
+	  const script2 = {
+		  scriptHash: contractHash,
+		  operation: "decimals",
+		  args: [],
+	  };
+    const res = await Network.read(this.network, [script1, script2]);
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-    return base64ToString(res.stack[0].value as string);
+    return {
+      symbol: base64ToString(res.stack[0].value as string),
+      decimals: res.stack[1].value as string,
+    };
   };
 
   getProperties = async (tokenId: string): Promise<object | null> => {
