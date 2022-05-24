@@ -65,7 +65,7 @@ export const MENU = [
 	{
 		label: "Proposals",
 		path: DAO_PATH,
-		network: [PRIVATENET, TESTNET],
+		network: [PRIVATENET],
 	},
   {
     label: "GAS-FI",
@@ -75,7 +75,7 @@ export const MENU = [
   {
     label: "Fusion",
     path: FUSION_PATH,
-    network: [PRIVATENET, TESTNET],
+    network: [PRIVATENET],
   },
   {
     label: "Migration",

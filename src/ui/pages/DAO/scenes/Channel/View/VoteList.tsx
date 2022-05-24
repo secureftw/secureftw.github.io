@@ -20,7 +20,7 @@ const VoteList = ({
     return new DaoContract(network).getVotes(
       contractHash,
       proposalNo,
-      "10",
+      "5",
       "1"
     );
   }, []);
