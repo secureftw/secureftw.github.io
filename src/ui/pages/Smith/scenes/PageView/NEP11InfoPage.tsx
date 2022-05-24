@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useWallet } from "../../../../../packages/provider";
 import { SmithContract } from "../../../../../packages/neo/contracts/ftw/smith";
 import { MAINNET } from "../../../../../packages/neo/consts";
@@ -10,6 +10,8 @@ import NEP11MintFormModal from "./NEP11MintFormModal";
 import { toast } from "react-hot-toast";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import Modal from "../../../../components/Modal";
+import PageLayout from "../../../../components/PageLayout";
+import { SMITH_PATH, SMITH_PATH_NEP11 } from "../../../../../consts";
 
 const NEP11InfoPage = () => {
   const params = useParams();
@@ -63,58 +65,66 @@ const NEP11InfoPage = () => {
   if (!isLoaded) return <div>Loading contract info..</div>;
   if (error) return <div>{error}</div>;
   return (
-    <div className="box">
-      <div className="media">
-        <div className="media-content">
-          <div className="content">
-            {/*<h3>{data.contractHash}</h3>*/}
-            {/*<p>{data.description}</p>*/}
-            {/*{data.website ? <p>{data.website}</p> : <div></div>}*/}
-            {/*<br />*/}
-            <strong>Contract Hash</strong>
-            <br />
-            0x{contractHash}{" "}
-            <a
-              target="_blank"
-              href={`https://${
-                network === MAINNET
-                  ? "explorer.onegate.space"
-                  : "testnet.explorer.onegate.space"
-              }/contractinfo/0x${contractHash}`}
-            >
-              <FaExternalLinkAlt />
-            </a>
-            <br />
-            <strong>Contract Owner</strong>
-            <br />
-            {data.owner}
-            <br />
-            <Tokens contractHash={contractHash} />
-          </div>
-          <div className="field is-grouped is-grouped-multiline">
-            <div className="control">
-              <div className="tags has-addons">
-                <span className="tag is-dark">Symbol</span>
-                <span className="tag is-info">{data.symbol}</span>
+    <>
+      <PageLayout>
+        <Link to={SMITH_PATH_NEP11} className="button mb-3 is-rounded">
+          Back to Main
+        </Link>
+        <div className="box">
+          {!isLoaded ? (
+            <div>Loading</div>
+          ) : error ? (
+            <div>{error}</div>
+          ) : (
+            <div className="media">
+              <div className="media-content">
+                <div className="content">
+                  <strong>Contract Hash</strong>
+                  <br />
+                  0x{contractHash}{" "}
+                  <a
+                    target="_blank"
+                    href={`https://${
+                      network === MAINNET
+                        ? "explorer.onegate.space"
+                        : "testnet.explorer.onegate.space"
+                    }/contractinfo/0x${contractHash}`}
+                  >
+                    <FaExternalLinkAlt />
+                  </a>
+                  <br />
+                  <strong>Contract Owner</strong>
+                  <br />
+                  {data.owner}
+                  <br />
+                  <Tokens contractHash={contractHash} />
+                </div>
+                <div className="field is-grouped is-grouped-multiline">
+                  <div className="control">
+                    <div className="tags has-addons">
+                      <span className="tag is-dark">Symbol</span>
+                      <span className="tag is-info">{data.symbol}</span>
+                    </div>
+                  </div>
+                  <div className="control">
+                    <div className="tags has-addons">
+                      <span className="tag is-dark">Total supply</span>
+                      <span className="tag is-info">{data.totalSupply}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="media-right">
+                <div className="block">
+                  <button onClick={onClickMint} className="button is-primary">
+                    Mint
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="control">
-              <div className="tags has-addons">
-                <span className="tag is-dark">Total supply</span>
-                <span className="tag is-info">{data.totalSupply}</span>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
-        <div className="media-right">
-          <div className="block">
-            <button onClick={onClickMint} className="button is-primary">
-              Mint
-            </button>
-          </div>
-        </div>
-      </div>
-
+      </PageLayout>
       {isMintModalActive && (
         <NEP11MintFormModal
           onMint={onMint}
@@ -133,7 +143,7 @@ const NEP11InfoPage = () => {
           />
         </Modal>
       )}
-    </div>
+    </>
   );
 };
 

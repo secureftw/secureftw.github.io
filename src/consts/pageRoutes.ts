@@ -1,4 +1,4 @@
-import { MAINNET, PRIVATENET, TESTNET } from "../packages/neo/consts";
+import {MAINNET, PRIVATENET, TESTNET} from "../packages/neo/consts";
 
 export const HOME_PATH = "/";
 export const MIGRATION_PATH = "/migration";
@@ -6,6 +6,8 @@ export const GASFI_PATH = "/gas";
 export const GALLERY_PATH = "/NFT/gallery";
 export const TOURNAMENT_PATH = "/arena";
 export const SMITH_PATH = "/smith";
+export const SMITH_CREATE_NEP17_PATH = "/smith/create/nep17";
+export const SMITH_CREATE_NEP11_PATH = "/smith/create/nep11";
 export const SMITH_CONTRACT_NEP17_PATH = "/smith/nep17/contract";
 export const SMITH_CONTRACT_NEP11_PATH = "/smith/nep11/contract";
 export const SMITH_PATH_NEP11 = "/smith/nep11";
@@ -66,7 +68,7 @@ export const MENU = [
   {
     label: "Fusion",
     path: FUSION_PATH,
-    network: [PRIVATENET],
+    network: [PRIVATENET, TESTNET],
   },
   {
     label: "Migration",

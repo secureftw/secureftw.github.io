@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { ISmithNEP11Record } from "../../../../../packages/neo/contracts/ftw/smith/interfaces";
 import { MAINNET } from "../../../../../packages/neo/consts";
 import { useWallet } from "../../../../../packages/provider";
-import NEP11MintFormModal from "../PageView/NEP11MintFormModal";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Tokens from "./Tokens";
 import { SMITH_CONTRACT_NEP11_PATH } from "../../../../../consts";
@@ -12,8 +11,7 @@ interface IContractCardProps {
   data: ISmithNEP11Record;
 }
 const ContractCard = ({ data }: IContractCardProps) => {
-  const { network, connectedWallet } = useWallet();
-  const [isMintModalActive, setMintModalActive] = useState("");
+  const { network } = useWallet();
   return (
     <div className="media">
       <div className="media-content">

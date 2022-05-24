@@ -17,7 +17,7 @@ const Tokens = ({ contractHash }: ITokensProps) => {
 
   return (
     <>
-      <strong>Supply</strong>
+      <strong>Total Supply</strong>
       <br />
       {!isLoaded ? (
         <div>Loading..</div>
@@ -25,50 +25,46 @@ const Tokens = ({ contractHash }: ITokensProps) => {
         <div>{error}</div>
       ) : (
         <>
-          {data && (
+          {data > 0 ? (
             <>
-              {data > 0 ? (
-                <>
-                  <br />
-                  <strong>Showcase</strong>
-                  <div className="columns is-multiline is-mobile">
-                    {_.range(data > 12 ? 12 : data).map((i) => {
-                      const tokenId = i + 1;
-                      return (
-                        <div
-                          key={`token${i}`}
-                          className="column is-1-desktop is-3-mobile"
-                        >
-                          <DisplayNFT
-                            network={network}
-                            contractHash={contractHash}
-                            tokenId={tokenId.toString()}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                  {data > 12 && (
-                    <a
-                      className="button is-black"
-                      target="_blank"
-                      href={`https://${
-                        network === MAINNET
-                          ? "explorer.onegate.space"
-                          : "testnet.explorer.onegate.space"
-                      }/NFTtokeninfo/0x${contractHash}`}
+              <br />
+              <strong>Showcase</strong>
+              <div className="columns is-multiline is-mobile">
+                {_.range(data > 12 ? 12 : data).map((i) => {
+                  const tokenId = i + 1;
+                  return (
+                    <div
+                      key={`token${i}`}
+                      className="column is-1-desktop is-3-mobile"
                     >
-                      <span className="icon">
-                        <FaExternalLinkAlt />
-                      </span>
-                      <span>Browse more</span>
-                    </a>
-                  )}
-                </>
-              ) : (
-                <div></div>
+                      <DisplayNFT
+                        network={network}
+                        contractHash={contractHash}
+                        tokenId={tokenId.toString()}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              {data > 12 && (
+                <a
+                  className="button is-black"
+                  target="_blank"
+                  href={`https://${
+                    network === MAINNET
+                      ? "explorer.onegate.space"
+                      : "testnet.explorer.onegate.space"
+                  }/NFTtokeninfo/0x${contractHash}`}
+                >
+                  <span className="icon">
+                    <FaExternalLinkAlt />
+                  </span>
+                  <span>Browse more</span>
+                </a>
               )}
             </>
+          ) : (
+            <div>None</div>
           )}
         </>
       )}

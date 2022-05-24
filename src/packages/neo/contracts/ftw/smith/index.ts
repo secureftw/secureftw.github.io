@@ -28,6 +28,80 @@ export class SmithContract {
     this.contractHash = SMITH_SCRIPT_HASH[networkType];
   }
 
+  createNEP17V2 = async (
+    connectedWallet: IConnectedWallet,
+    totalSupply: string,
+    decimals: string,
+    symbol: string,
+    contractName: string,
+    author: string,
+    description: string,
+    email: string,
+    website: string,
+    logo: string
+  ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
+    const invokeScript = {
+      operation: "deployNEP17V2",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "Hash160",
+          value: senderHash,
+        },
+        {
+          type: "Integer",
+          value: totalSupply,
+        },
+        {
+          type: "Integer",
+          value: decimals,
+        },
+        {
+          type: "String",
+          value: symbol,
+        },
+        {
+          type: "String",
+          value: contractName,
+        },
+        {
+          type: "String",
+          value: author,
+        },
+        {
+          type: "String",
+          value: description,
+        },
+        {
+          type: "String",
+          value: email,
+        },
+        {
+          type: "String",
+          value: website,
+        },
+        {
+          type: "String",
+          value: logo,
+        },
+      ],
+      signers: [
+        {
+          account: senderHash,
+          scopes: tx.WitnessScope.CustomContracts,
+          allowedContracts: [this.contractHash, GAS_SCRIPT_HASH],
+        },
+      ],
+    };
+    return new wallet.WalletAPI(connectedWallet.key).invoke(
+      this.network,
+      invokeScript
+    );
+  };
+
   createNEP17 = async (
     connectedWallet: IConnectedWallet,
     contractName: string,

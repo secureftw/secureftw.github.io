@@ -1,16 +1,15 @@
-import React, { useState } from "react";
-import { SMITH_PATH, SMITH_PATH_NEP11 } from "../../../consts";
-import { Link, useLocation } from "react-router-dom";
-import NEP17FormModal from "./NEP17FormModal";
-import NEP11FormModal from "./NEP11FormModal";
+import React from "react";
 import {
-  FaCoins,
-} from "react-icons/fa";
+  SMITH_CREATE_NEP11_PATH,
+  SMITH_CREATE_NEP17_PATH,
+  SMITH_PATH,
+  SMITH_PATH_NEP11,
+} from "../../../consts";
+import { Link, useLocation } from "react-router-dom";
+import { FaCoins } from "react-icons/fa";
 
 const Banner = () => {
   const location = useLocation();
-  const [isNep11FormModalActive, setNep11FormModalActive] = useState(false);
-  const [isNep17FormModalActive, setNep17FormModalActive] = useState(false);
   return (
     <section className="hero is-white">
       <div className="hero-body">
@@ -27,12 +26,9 @@ const Banner = () => {
                 <p>
                   Neo blockchain's token smart contract. Like ERC20 Shiba Inu.
                 </p>
-                <button
-                  onClick={() => setNep17FormModalActive(true)}
-                  className="button is-light"
-                >
+                <Link to={SMITH_CREATE_NEP17_PATH} className="button is-light">
                   Create Token Contract
-                </button>
+                </Link>
               </div>
             </div>
             <div className="column">
@@ -42,12 +38,9 @@ const Banner = () => {
                   Neo blockchain's NFT smart contract. Like ERC721 Cryptopunk
                   NFT.
                 </p>
-                <button
-                  onClick={() => setNep11FormModalActive(true)}
-                  className="button  is-light"
-                >
+                <Link to={SMITH_CREATE_NEP11_PATH} className="button  is-light">
                   Create NFT Contract
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -79,12 +72,12 @@ const Banner = () => {
           </div>
         </nav>
       </div>
-      {isNep11FormModalActive && (
-        <NEP11FormModal onClose={() => setNep11FormModalActive(false)} />
-      )}
-      {isNep17FormModalActive && (
-        <NEP17FormModal onClose={() => setNep17FormModalActive(false)} />
-      )}
+      {/*{isNep11FormModalActive && (*/}
+      {/*  <NEP11FormModal onClose={() => setNep11FormModalActive(false)} />*/}
+      {/*)}*/}
+      {/*{isNep17FormModalActive && (*/}
+      {/*  <NEP17FormModal />*/}
+      {/*)}*/}
     </section>
   );
 };

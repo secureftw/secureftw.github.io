@@ -3,7 +3,7 @@ import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { parseProperties } from "../../ttm/nft/helpers";
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
-import { DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH } from "../../../consts";
+import {  GAS_SCRIPT_HASH } from "../../../consts";
 import { RUNE_SCRIPT_HASH } from "../nft";
 import { TTM_SCRIPT_HASH } from "../../ttm/nft";
 

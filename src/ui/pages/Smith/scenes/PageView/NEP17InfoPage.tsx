@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import { useWallet } from "../../../../../packages/provider";
 import { SmithContract } from "../../../../../packages/neo/contracts/ftw/smith";
 import { MAINNET } from "../../../../../packages/neo/consts";
@@ -9,6 +9,8 @@ import { toast } from "react-hot-toast";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import NEP17UpdateFormModal from "./NEP17UpdateFormModal";
+import PageLayout from "../../../../components/PageLayout";
+import {SMITH_PATH, SMITH_PATH_NEP11} from "../../../../../consts";
 
 const NEP17InfoPage = () => {
   const params = useParams();
@@ -57,90 +59,96 @@ const NEP17InfoPage = () => {
     }
   };
   return (
-    <div className="box">
-      {!isLoaded ? (
-        <div>Loading..</div>
-      ) : error ? (
-        <div className="content">
-          <h3>Failed to load contract</h3>
-          <p>Contract may have been updated.</p>
-          <p>{error}</p>
-        </div>
-      ) : (
-        <div className="media">
-          <div className="media-left">
-            <figure className="image is-64x64">
-              <img src={data.logo ? data.logo : "/symbols/unknown.png"} />
-            </figure>
-          </div>
-          <div className="media-content">
+    <>
+      <PageLayout>
+	      <Link to={SMITH_PATH} className="button mb-3 is-rounded">
+		      Back to Main
+	      </Link>
+        <div className="box">
+          {!isLoaded ? (
+            <div>Loading..</div>
+          ) : error ? (
             <div className="content">
-              <h3>{data.name}</h3>
-              <p>{data.description}</p>
-              {data.website ? <p>{data.website}</p> : <div></div>}
-              <br />
-              <strong>Contract Hash</strong>
-              <br />
-              0x{contractHash}{" "}
-              <a
-                target="_blank"
-                href={`https://${
-                  network === MAINNET
-                    ? "explorer.onegate.space"
-                    : "testnet.explorer.onegate.space"
-                }/contractinfo/0x${contractHash}`}
-              >
-                <FaExternalLinkAlt />
-              </a>
-              <br />
-              <strong>Contract Owner</strong>
-              <br />
-              {data.owner}
-              <br />
-              <strong>Website</strong>
-              <br />
-              {data.website ? data.website : "None"}
+              <h3>Failed to load contract</h3>
+              <p>Contract may have been updated.</p>
+              <p>{error}</p>
             </div>
-
-            <div className="field is-grouped is-grouped-multiline">
-              <div className="control">
-                <div className="tags has-addons">
-                  <span className="tag is-dark">Symbol</span>
-                  <span className="tag is-info">{data.symbol}</span>
-                </div>
+          ) : (
+            <div className="media">
+              <div className="media-left">
+                <figure className="image is-64x64">
+                  <img src={data.logo ? data.logo : "/symbols/unknown.png"} />
+                </figure>
               </div>
+              <div className="media-content">
+                <div className="content">
+                  <h3>{data.name}</h3>
+                  <p>{data.description}</p>
+                  <br />
 
-              <div className="control">
-                <div className="tags has-addons">
-                  <span className="tag is-dark">Decimals</span>
-                  <span className="tag is-info">{data.decimals}</span>
-                </div>
-              </div>
+                  <h6>Contract Hash</h6>
+                  <p>
+                    0x{contractHash}{" "}
+                    <a
+                      target="_blank"
+                      href={`https://${
+                        network === MAINNET
+                          ? "explorer.onegate.space"
+                          : "testnet.explorer.onegate.space"
+                      }/contractinfo/0x${contractHash}`}
+                    >
+                      <FaExternalLinkAlt />
+                    </a>
+                  </p>
+                  <h6>Contract Owner</h6>
+                  <p>{data.owner}</p>
 
-              <div className="control">
-                <div className="tags has-addons">
-                  <span className="tag is-dark">Total supply</span>
-                  <span className="tag is-info">
-                    {parseFloat(data.totalSupply).toLocaleString()}
-                  </span>
+                  <h6>Author</h6>
+	                <p>{data.author ? data.author : "Unknown"}</p>
+
+	                <h6>Email</h6>
+	                <p>{data.email ? data.email : "Unknown"}</p>
+
+	                <h6>Website</h6>
+	                <p>{data.website ? data.website : "Unknown"}</p>
+
                 </div>
+
+                <div className="field is-grouped is-grouped-multiline">
+                  <div className="control">
+                    <div className="tags has-addons">
+                      <span className="tag is-dark">Symbol</span>
+                      <span className="tag is-info">{data.symbol}</span>
+                    </div>
+                  </div>
+
+                  <div className="control">
+                    <div className="tags has-addons">
+                      <span className="tag is-dark">Decimals</span>
+                      <span className="tag is-info">{data.decimals}</span>
+                    </div>
+                  </div>
+
+                  <div className="control">
+                    <div className="tags has-addons">
+                      <span className="tag is-dark">Total supply</span>
+                      <span className="tag is-info">
+                        {parseFloat(data.totalSupply).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
-              <div className="control">
-                <div className="tags has-addons">
-                  <span className="tag is-dark">Author</span>
-                  <span className="tag is-info">{data.author}</span>
-                </div>
+              <div className="media-right">
+                <button onClick={onClickUpdate} className="button is-primary">
+                  Update
+                </button>
               </div>
             </div>
-          </div>
-          <div className="media-right">
-            <button onClick={onClickUpdate} className="button is-primary">
-              Update
-            </button>
-          </div>
+          )}
         </div>
-      )}
-
+      </PageLayout>
       {isUpdateModalActive && (
         <NEP17UpdateFormModal
           onUpdate={onUpdate}
@@ -158,7 +166,7 @@ const NEP17InfoPage = () => {
           />
         </Modal>
       )}
-    </div>
+    </>
   );
 };
 

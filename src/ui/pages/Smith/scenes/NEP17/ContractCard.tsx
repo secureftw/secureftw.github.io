@@ -78,12 +78,6 @@ const ContractCard = ({ data }: IContractCardProps) => {
               </span>
             </div>
           </div>
-          <div className="control">
-            <div className="tags has-addons">
-              <span className="tag is-dark">Author</span>
-              <span className="tag is-info">{data.author}</span>
-            </div>
-          </div>
         </div>
       </div>
 

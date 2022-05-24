@@ -4,6 +4,8 @@ import { SmithContract } from "../../../../../packages/neo/contracts/ftw/smith";
 import ContractCard from "./ContractCard";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import Pagination from "bulma-pagination-react";
+import Banner from "../../Banner";
+import PageLayout from "../../../../components/PageLayout";
 const NEP11Smith = () => {
   const [page, setPage] = useState(1);
   const { connectedWallet, network } = useWallet();
@@ -13,40 +15,43 @@ const NEP11Smith = () => {
 
   return (
     <>
-      {!isLoaded ? (
-        <div>Loading..</div>
-      ) : error ? (
-        <div>{error}</div>
-      ) : (
-        <div className="box">
-          {data && (
-            <>
-              {data.items.length > 0 ? (
-                data.items.map((item, i) => (
-                  <ContractCard key={"contract" + i} data={item} />
-                ))
-              ) : (
-                <div>No contracts to display</div>
-              )}
+      <Banner />
+      <PageLayout>
+        {!isLoaded ? (
+          <div>Loading..</div>
+        ) : error ? (
+          <div>{error}</div>
+        ) : (
+          <div className="box">
+            {data && (
+              <>
+                {data.items.length > 0 ? (
+                  data.items.map((item, i) => (
+                    <ContractCard key={"contract" + i} data={item} />
+                  ))
+                ) : (
+                  <div>No contracts to display</div>
+                )}
 
-              {data.totalPages > 1 && (
-                <>
-                  <hr />
-                  <Pagination
-                    pages={data.totalPages}
-                    currentPage={page}
-                    onChange={(v) => {
-                      if (page !== v) {
-                        setPage(v);
-                      }
-                    }}
-                  />
-                </>
-              )}
-            </>
-          )}
-        </div>
-      )}
+                {data.totalPages > 1 && (
+                  <>
+                    <hr />
+                    <Pagination
+                      pages={data.totalPages}
+                      currentPage={page}
+                      onChange={(v) => {
+                        if (page !== v) {
+                          setPage(v);
+                        }
+                      }}
+                    />
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        )}
+      </PageLayout>
     </>
   );
 };
