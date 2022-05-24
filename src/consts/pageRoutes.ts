@@ -68,7 +68,7 @@ export const MENU = [
   {
     label: "Fusion",
     path: FUSION_PATH,
-    network: [PRIVATENET, TESTNET],
+    network: [PRIVATENET],
   },
   {
     label: "Migration",
