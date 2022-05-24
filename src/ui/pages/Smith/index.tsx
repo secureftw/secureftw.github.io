@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import PageLayout from "../../components/PageLayout";
 import {
   SMITH_CONTRACT_NEP11_PATH,
   SMITH_CONTRACT_NEP17_PATH,
@@ -9,13 +8,17 @@ import {
   SMITH_PATH_NEP11,
 } from "../../../consts";
 import { Route } from "react-router-dom";
-import Banner from "./Banner";
 import NEP17Smith from "./scenes/NEP17";
 import NEP11Smith from "./scenes/NEP11";
 import NEP17InfoPage from "./scenes/PageView/NEP17InfoPage";
 import NEP11InfoPage from "./scenes/PageView/NEP11InfoPage";
 import CreateNEP17 from "./scenes/CreateNEP17";
-import CreateNEP11 from "./scenes/CreateNEP11";
+
+class CreateNEP11 extends React.Component {
+	render() {
+		return null;
+	}
+}
 
 const Smith = () => {
   useEffect(() => {
