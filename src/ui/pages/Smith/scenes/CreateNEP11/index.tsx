@@ -38,22 +38,18 @@ const NEP11FormModal = () => {
       );
     } else {
       if (connectedWallet) {
-        if (balanceCheck(connectedWallet.balances, 20)) {
-          try {
-            const res = await new SmithContract(network).createNEP11(
-              connectedWallet,
-              values.name,
-              values.symbol,
-              values.author,
-              values.description,
-              values.email
-            );
-            setTxid(res);
-          } catch (e: any) {
-            toast.error(e.message);
-          }
-        } else {
-          toast.error("You must have more than 20 GAS.");
+        try {
+          const res = await new SmithContract(network).createNEP11(
+            connectedWallet,
+            values.name,
+            values.symbol,
+            values.author,
+            values.description,
+            values.email
+          );
+          setTxid(res);
+        } catch (e: any) {
+          toast.error(e.message);
         }
       } else {
         toast.error("Please connect wallet.");
