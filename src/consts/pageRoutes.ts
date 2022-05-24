@@ -12,8 +12,6 @@ export const SMITH_CONTRACT_NEP17_PATH = "/smith/nep17/contract";
 export const SMITH_CONTRACT_NEP11_PATH = "/smith/nep11/contract";
 export const SMITH_PATH_NEP11 = "/smith/nep11";
 export const COLLECTION_PATH = "/NFT/collection";
-// export const SWAP_PATH = "/swap";
-// export const SWAP_PATH_LIQUIDITY = "/swap/liquidity";
 export const SWAP_PATH = "/swap";
 export const SWAP_POOL_PATH = "/swap/pools";
 export const SWAP_PATH_HISTORY = "/swap/history";
@@ -25,7 +23,11 @@ export const FARM_PATH = "/farm";
 export const FARM_STAKE_PATH = "/farm/stake";
 export const FARM_STAKE_POSITIONS_PATH = "/farm/stake/positions";
 export const FUSION_PATH = "/fusion";
-export const INCUBATOR_PATH = "/incubator";
+export const DAO_PATH = "/dao";
+export const DAO_CHANNEL_PATH = "/dao/channel";
+// export const PROPOSALS_PATH = "/proposals";
+// export const PROPOSALS_CREATE_PATH = "/proposals/new";
+// export const PROPOSALS_ABOUT_PATH = "/proposals/about";
 
 export const MENU = [
   {
@@ -60,6 +62,11 @@ export const MENU = [
       },
     ],
   },
+	{
+		label: "Proposals",
+		path: DAO_PATH,
+		network: [PRIVATENET, TESTNET],
+	},
   {
     label: "GAS-FI",
     path: GASFI_PATH,
@@ -68,7 +75,7 @@ export const MENU = [
   {
     label: "Fusion",
     path: FUSION_PATH,
-    network: [PRIVATENET],
+    network: [PRIVATENET, TESTNET],
   },
   {
     label: "Migration",

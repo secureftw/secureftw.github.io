@@ -3,16 +3,17 @@ import ReactGA from "react-ga";
 import { HashRouter as Router, Route } from "react-router-dom";
 import Header from "./components/Header";
 import {
-  COLLECTION_PATH,
-  GASFI_PATH,
-  FUSION_PATH,
-  GALLERY_PATH,
-  HOME_PATH,
-  MIGRATION_PATH,
-  SMITH_PATH,
-  SWAP_PATH,
-  TOURNAMENT_PATH,
-  FARM_PATH,
+	COLLECTION_PATH,
+	GASFI_PATH,
+	FUSION_PATH,
+	GALLERY_PATH,
+	HOME_PATH,
+	MIGRATION_PATH,
+	SMITH_PATH,
+	SWAP_PATH,
+	TOURNAMENT_PATH,
+	FARM_PATH,
+    DAO_PATH,
 } from "../consts";
 import { WalletContextProvider } from "../packages/provider";
 import WalletSidebar from "./components/WalletSidebar";
@@ -29,6 +30,7 @@ import Fusion from "./pages/Fusion";
 import Migration from "./pages/Migration";
 import ReactGa from "./components/ReactGa";
 import Farm from "./pages/Farm";
+import DAO from "./pages/DAO";
 
 ReactGA.initialize("UA-114435339-1");
 
@@ -51,8 +53,8 @@ const App = () => {
         <Route path={COLLECTION_PATH} component={MyCollection} />
         <Route path={SWAP_PATH} component={Swap} />
         <Route path={FARM_PATH} component={Farm} />
-        <Route path={GASFI_PATH} component={GASFI} />
         <Route path={FUSION_PATH} component={Fusion} />
+        <Route path={DAO_PATH} component={DAO} />
         <Route exact path={MIGRATION_PATH} component={Migration} />
         <MobileMenuSlider />
         <WalletSidebar />

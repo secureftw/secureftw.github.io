@@ -34,6 +34,7 @@
     "react-simple-sidenav": "^2.0.0",
     "react-spinners": "^0.11.0",
     "react-switch": "^6.0.0",
+    "react-text-truncate": "^0.18.0",
     "react-tooltip": "^4.2.21",
     "store2": "^2.12.0",
     "three": "^0.135.0",
