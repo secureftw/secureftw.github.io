@@ -1,4 +1,5 @@
 import React from "react";
+import { UNKNOWN_TOKEN_IMAGE } from "../../../../../packages/neo/consts";
 interface IChannelCardProps {
   logo?: string;
   symbol: string;
@@ -8,7 +9,13 @@ const ChannelCard = ({ logo, symbol }: IChannelCardProps) => {
     <div className="box is-shadowless has-text-centered">
       <div className="circular--portrait">
         <div className="image is-64x64 mb-2" style={{ margin: "auto" }}>
-          <img src={logo ? logo : "/symbols/unknown.png"} />
+          <img
+            onError={(e) => {
+              // @ts-ignore
+              e.target.src = UNKNOWN_TOKEN_IMAGE;
+            }}
+            src={logo ? logo : UNKNOWN_TOKEN_IMAGE}
+          />
         </div>
       </div>
       <strong>{symbol}</strong>

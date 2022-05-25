@@ -18,14 +18,14 @@ const List = ({ isLoaded, error, data }: IListProps) => {
       ) : error ? (
         <div>{error}</div>
       ) : (
-        <div className="columns">
+        <div className="columns is-multiline">
           {data.items.map((item) => {
             const metadata = DaoContract.getMetadata(item.meta);
+            if (!metadata.logo) return <></>;
             return (
               <div key={item.contractHash} className="column is-6">
                 <Link
                   to={`${DAO_CHANNEL_PATH}/${item.contractHash}`}
-                  className="d"
                 >
                   <ChannelCard symbol={item.symbol} logo={metadata.logo} />
                 </Link>

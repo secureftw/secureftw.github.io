@@ -1,4 +1,5 @@
 import React from "react";
+import { UNKNOWN_TOKEN_IMAGE } from "../../../../../packages/neo/consts";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 
 interface IPairIconsProps {
@@ -9,7 +10,7 @@ interface IPairIconsProps {
 const PairIcons = ({ network, token, tokenSymbol }: IPairIconsProps) => {
   const tokenALogo = ASSET_LIST[network][token]
     ? ASSET_LIST[network][token].logo
-    : "/symbols/unknown.png";
+    : UNKNOWN_TOKEN_IMAGE;
 
   return (
     <div

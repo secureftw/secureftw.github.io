@@ -3,6 +3,7 @@ import { FaAngleDown } from "react-icons/fa";
 import NumberFormat from "react-number-format";
 import { useWallet } from "../../../../../packages/provider";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
+import {UNKNOWN_TOKEN_IMAGE} from "../../../../../packages/neo/consts";
 
 interface IInputProps {
   contractHash: string;
@@ -55,7 +56,7 @@ const Input = ({
                   }}
                   className="image is-clickable is-flex"
                 >
-                  <img src={logo ? logo : "/symbols/unknown.png"} />
+                  <img src={logo ? logo : UNKNOWN_TOKEN_IMAGE} />
                 </div>
               </div>
               <div

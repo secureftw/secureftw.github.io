@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {Link, useParams} from "react-router-dom";
 import { useWallet } from "../../../../../packages/provider";
 import { SmithContract } from "../../../../../packages/neo/contracts/ftw/smith";
-import { MAINNET } from "../../../../../packages/neo/consts";
+import {MAINNET, UNKNOWN_TOKEN_IMAGE} from "../../../../../packages/neo/consts";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import { toast } from "react-hot-toast";
@@ -77,7 +77,7 @@ const NEP17InfoPage = () => {
             <div className="media">
               <div className="media-left">
                 <figure className="image is-64x64">
-                  <img src={data.logo ? data.logo : "/symbols/unknown.png"} />
+                  <img src={data.logo ? data.logo : UNKNOWN_TOKEN_IMAGE} />
                 </figure>
               </div>
               <div className="media-content">

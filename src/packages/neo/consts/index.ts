@@ -77,3 +77,5 @@ export const DEFAULT_WITNESS_SCOPE = (senderHash: string) => {
     scopes: tx.WitnessScope.CalledByEntry,
   };
 };
+
+export const UNKNOWN_TOKEN_IMAGE = "/symbols/unknown.png";
