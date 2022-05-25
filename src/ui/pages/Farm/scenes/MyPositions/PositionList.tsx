@@ -22,7 +22,7 @@ const PositionList = ({
 }: IPositionListProps) => {
   const { isLoaded, error, data } = useOnChainData(() => {
     return new StakingContract(network).getStakedLPTokens(connectedWallet);
-  }, [connectedWallet, refresh]);
+  }, [connectedWallet, refresh, network]);
   return (
     <div>
       {!isLoaded ? (

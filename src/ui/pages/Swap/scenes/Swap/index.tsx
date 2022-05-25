@@ -21,10 +21,8 @@ import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificati
 import SwapInputs from "./SwapInputs";
 import Pools from "../Pools";
 import {
-  SWAP_PATH_HISTORY,
   SWAP_PATH_LIQUIDITY_ADD,
   SWAP_PATH_LIQUIDITY_REMOVE,
-  SWAP_PATH_LP_LIST,
 } from "../../../../../consts";
 import ReactTooltip from "react-tooltip";
 import { useApp } from "../../../../../common/hooks/use-app";

@@ -10,6 +10,7 @@ import NumberFormat from "react-number-format";
 import toast from "react-hot-toast";
 import AfterTransactionSubmitted from "../../../../../../packages/ui/AfterTransactionSubmitted";
 import VoteList from "./VoteList";
+import { toDecimal } from "../../../../../../packages/neo/utils";
 
 const ProposalView = () => {
   const params = useParams();
@@ -62,98 +63,106 @@ const ProposalView = () => {
   };
 
   const { isLoaded, error, data } = useOnChainData(() => {
-    return new DaoContract(network).getProposal(contractHash, proposalNo);
-  }, []);
+    return new DaoContract(network).getProposal(
+      contractHash,
+      proposalNo,
+      connectedWallet
+    );
+  }, [refresh, network, connectedWallet]);
 
   if (!isLoaded) return <div></div>;
   if (error) return <div></div>;
   return (
-    <div>
-      <Link
-        to={`${DAO_CHANNEL_PATH}/${contractHash}`}
-        className="button is-rounded is-small mb-3"
-      >
-        Back to list
-      </Link>
-      <div className="columns">
-        <div className="column is-9 ">
-          <div className="box is-shadowless">
-            <div>
-              <h5 className="title is-5">
-                #{data.proposal.no} {data.proposal.title}
-              </h5>
-              <p>{data.proposal.description}</p>
+    <div className="columns">
+      <div className="column is-8 is-offset-2">
+        <Link
+          to={`${DAO_CHANNEL_PATH}/${contractHash}`}
+          className="button is-rounded is-small mb-3"
+        >
+          Back to list
+        </Link>
+        <div className="columns">
+          <div className="column is-8">
+            <div className="box is-shadowless">
+              <div>
+                <h5 className="title is-5">
+                  #{data.proposal.no} {data.proposal.title}
+                </h5>
+                <p>{data.proposal.description}</p>
+              </div>
             </div>
-          </div>
-          <div className="box is-shadowless">
-            {data.proposal.options.map((op, i) => {
-              return (
-                <div
-                  key={`op-btn--${i}`}
-                  className={
-                    data.proposal.options.length - 1 !== i ? "mb-2" : ""
-                  }
-                  onClick={() => {
-                    onVoteOptionClick(op, i);
-                  }}
-                >
-                  <button className="button is-fullwidth is-rounded">
-                    {op}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-          <div className="box is-shadowless">
-            <VoteList
-              contractHash={contractHash}
-              proposalNo={proposalNo}
-              network={network}
-              options={data.proposal.options}
-            />
-          </div>
-        </div>
-
-        <div className="column is-4">
-          <div className="box is-shadowless">
-            <div className="content">
-              <strong>Start date</strong>
-              <br />
-              <small>{moment(data.proposal.start).format("LLL")}</small>
-              <br />
-              <strong>End date</strong>
-              <br />
-              <small>{moment(data.proposal.end).format("LLL")}</small>
-              <br />
-            </div>
-            <hr />
-            <div>
+            <div className="box is-shadowless">
               {data.proposal.options.map((op, i) => {
-                const percent =
-                  (data.proposal[`option${i}`] / data.proposal.totalVotes) *
-                  100;
                 return (
-                  <div key={`option-${i}`} className="mb-3">
-                    <div className="level is-marginless">
-                      <div className="level-left">
-                        <div className="level-item">{op}</div>
-                      </div>
-                      <div className="level-right">
-                        <div className="level-item">
-                          {data.proposal[`option${i}`]}
-                        </div>
-                      </div>
-                    </div>
-                    <progress
-                      className="progress is-info"
-                      value={percent}
-                      max="100"
-                    >
-                      {percent}%
-                    </progress>
+                  <div
+                    key={`op-btn--${i}`}
+                    className={
+                      data.proposal.options.length - 1 !== i ? "mb-2" : ""
+                    }
+                    onClick={() => {
+                      onVoteOptionClick(op, i);
+                    }}
+                  >
+                    <button className="button is-fullwidth is-rounded">
+                      {op}
+                    </button>
                   </div>
                 );
               })}
+            </div>
+            <div className="box is-shadowless">
+              <VoteList
+                contractHash={contractHash}
+                symbol={data.channel.symbol}
+                proposalNo={proposalNo}
+                network={network}
+                options={data.proposal.options}
+              />
+            </div>
+          </div>
+
+          <div className="column is-4">
+            <div className="box is-shadowless">
+              <div className="content">
+                <strong>Start date</strong>
+                <br />
+                <small>{moment(data.proposal.start).format("LLL")}</small>
+                <br />
+                <strong>End date</strong>
+                <br />
+                <small>{moment(data.proposal.end).format("LLL")}</small>
+                <br />
+              </div>
+              <hr />
+              <div>
+                {data.proposal.options.map((op, i) => {
+                  const percent =
+                    (data.proposal[`option${i}`] / data.proposal.totalVotes) *
+                    100;
+                  return (
+                    <div key={`option-${i}`} className="mb-3">
+                      <div className="level is-marginless">
+                        <div className="level-left">
+                          <div className="level-item">{op}</div>
+                        </div>
+                        <div className="level-right">
+                          <div className="level-item">
+                            {toDecimal(data.proposal[`option${i}`])}{" "}
+                            {data.channel.symbol}
+                          </div>
+                        </div>
+                      </div>
+                      <progress
+                        className="progress is-info"
+                        value={percent}
+                        max="100"
+                      >
+                        {percent}%
+                      </progress>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -172,6 +181,7 @@ const ProposalView = () => {
               <label className="label">Vote Amount</label>
               <div className="control">
                 <NumberFormat
+                  allowLeadingZeros={false}
                   suffix={" " + data.channel.symbol}
                   thousandSeparator={true}
                   allowNegative={false}
@@ -183,11 +193,29 @@ const ProposalView = () => {
                   onValueChange={(value) => {
                     handleVoteAmount(value.value);
                   }}
-                  allowLeadingZeros={false}
                 />
               </div>
+              <div className="level is-mobile mt-1">
+                <div className="level-left">
+                  <div className="level-item">
+                    <small className="is-size-7">Your balance</small>
+                  </div>
+                </div>
+                <div className="level-right">
+                  <div className="level-item">
+                    <small>
+                      {data.balance} {data.channel.symbol}
+                    </small>
+                  </div>
+                </div>
+              </div>
             </div>
-            <button onClick={handleVote} className="button is-primary">
+            <hr />
+            <button
+              disabled={vote.amount === "" || vote.amount === "0" || parseFloat(vote.amount) > data.balance}
+              onClick={handleVote}
+              className="button is-primary"
+            >
               Vote
             </button>
           </div>

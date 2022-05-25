@@ -5,7 +5,6 @@ import { toast } from "react-hot-toast";
 import { SmithContract } from "../../../../../packages/neo/contracts/ftw/smith";
 import { detectEmojiInString } from "../../helpers";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
-import { balanceCheck } from "../../../../../packages/neo/utils";
 import { useHistory } from "react-router-dom";
 import { SMITH_PATH_NEP11 } from "../../../../../consts";
 import PageLayout from "../../../../components/PageLayout";

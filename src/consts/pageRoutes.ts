@@ -1,4 +1,4 @@
-import {MAINNET, PRIVATENET, TESTNET} from "../packages/neo/consts";
+import { MAINNET, PRIVATENET, TESTNET } from "../packages/neo/consts";
 
 export const HOME_PATH = "/";
 export const MIGRATION_PATH = "/migration";
@@ -24,6 +24,7 @@ export const FARM_STAKE_PATH = "/farm/stake";
 export const FARM_STAKE_POSITIONS_PATH = "/farm/stake/positions";
 export const FUSION_PATH = "/fusion";
 export const DAO_PATH = "/dao";
+export const DAO_CHANNEL_CREATE_PATH = "/dao/create";
 export const DAO_CHANNEL_PATH = "/dao/channel";
 // export const PROPOSALS_PATH = "/proposals";
 // export const PROPOSALS_CREATE_PATH = "/proposals/new";
@@ -46,6 +47,11 @@ export const MENU = [
     network: [PRIVATENET, TESTNET, MAINNET],
   },
   {
+    label: "DAO",
+    path: DAO_PATH,
+    network: [PRIVATENET, TESTNET],
+  },
+  {
     label: "NFT",
     path: GALLERY_PATH,
     network: [PRIVATENET, TESTNET, MAINNET],
@@ -63,18 +69,13 @@ export const MENU = [
     ],
   },
 	{
-		label: "Proposals",
-		path: DAO_PATH,
+		label: "Fusion",
+		path: FUSION_PATH,
 		network: [PRIVATENET],
 	},
   {
     label: "GAS-FI",
     path: GASFI_PATH,
-    network: [PRIVATENET],
-  },
-  {
-    label: "Fusion",
-    path: FUSION_PATH,
     network: [PRIVATENET],
   },
   {

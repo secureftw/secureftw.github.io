@@ -7,6 +7,7 @@ import TruncatedAddress from "../../../../../components/TruncatedAddress";
 interface IVoteListProps {
   network: INetworkType;
   contractHash: string;
+  symbol: string;
   proposalNo: string;
   options: string[];
 }
@@ -15,6 +16,7 @@ const VoteList = ({
   contractHash,
   proposalNo,
   options,
+	symbol
 }: IVoteListProps) => {
   const { isLoaded, error, data } = useOnChainData(() => {
     return new DaoContract(network).getVotes(
@@ -23,26 +25,35 @@ const VoteList = ({
       "5",
       "1"
     );
-  }, []);
-  console.log(error);
-  console.log(data);
-
+  }, [network]);
   return (
     <div className="table-container">
-      <table className="table is-fullwidth">
-        {isLoaded &&
-          data.items.map((item, i) => {
-            return (
-              <tr key={`vote-${i}`}>
-                <td>
-                  <TruncatedAddress address={item.creator} />
-                </td>
-                <td>{options[parseFloat(item.optionIndex)]}</td>
-                <td>{item.weight}</td>
-              </tr>
-            );
-          })}
-      </table>
+      <h1 className="title is-6">
+        Votes {data && <span className="tag">{data.totalItems}</span>}{" "}
+      </h1>
+      {isLoaded ? (
+        data.items.length > 0 ? (
+          <div className="table-container">
+            <table className="table is-fullwidth">
+              {data.items.map((item, i) => {
+                return (
+                  <tr key={`vote-${i}`}>
+                    <td>
+                      <TruncatedAddress address={item.creator} />
+                    </td>
+                    <td>{options[parseFloat(item.optionIndex)]}</td>
+                    <td>{item.amount} {symbol}</td>
+                  </tr>
+                );
+              })}
+            </table>
+          </div>
+        ) : (
+          <div>No votes yet</div>
+        )
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 };

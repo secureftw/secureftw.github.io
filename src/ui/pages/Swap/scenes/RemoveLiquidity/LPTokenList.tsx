@@ -19,7 +19,7 @@ const LPTokenList = ({
 }: ILPTokenListProps) => {
   const { isLoaded, error, data } = useOnChainData(() => {
     return new SwapContract(network).getLPTokens(connectedWallet);
-  }, [connectedWallet, refresh]);
+  }, [connectedWallet, network, refresh]);
 
   return (
     <>

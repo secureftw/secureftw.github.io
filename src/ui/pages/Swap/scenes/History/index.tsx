@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import Pagination from "bulma-pagination-react";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { useWallet } from "../../../../../packages/provider";
-import { SWAP_PATH } from "../../../../../consts";
-import HeaderBetween from "../../../../components/HeaderBetween";
 import TruncatedAddress from "../../../../components/TruncatedAddress";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 
