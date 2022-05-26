@@ -25,13 +25,6 @@ export interface IReserve {
   tokenBSymbol: string;
 }
 
-export interface ISwapHistory {
-  totalItems: string;
-  totalPages: string;
-  page: string;
-  items: ISwap[];
-}
-
 export interface ISwap {
   account: string;
   tokenIn: string;

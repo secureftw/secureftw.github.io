@@ -24,6 +24,7 @@ const History = ({ tokenA, tokenB }: IHistoryProps) => {
       currentPage
     );
   }, [network, currentPage]);
+	console.log(data)
   return (
     <div>
 	    <h1 className="is-size-5 has-text-weight-bold">Swap History</h1>

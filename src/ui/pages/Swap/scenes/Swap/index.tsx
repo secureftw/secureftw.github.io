@@ -4,11 +4,11 @@ import { SwapContract } from "../../../../../packages/neo/contracts";
 import { toast } from "react-hot-toast";
 import AssetListModal from "../../components/AssetListModal";
 import {
-  FaHistory,
+  FaCaretDown,
+  FaCaretUp,
   FaListAlt,
   FaMinus,
   FaPlus,
-  FaUserAlt,
 } from "react-icons/fa";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
@@ -29,7 +29,13 @@ import { useApp } from "../../../../../common/hooks/use-app";
 import Providers from "../Providers";
 import History from "../History";
 import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
-import { PRICE_IMPACT_LIMIT } from "../../../../../packages/neo/contracts/ftw/swap/consts";
+import {
+  DEFAULT_SLIPPAGE,
+  PRICE_IMPACT_LIMIT,
+} from "../../../../../packages/neo/contracts/ftw/swap/consts";
+import PriceRatio from "./components/PriceRatio";
+import HistoryButtons from "./components/HistoryButtons";
+import { getAfterSlippage } from "../../../../../packages/neo/contracts/ftw/swap/helpers";
 
 const Swap = () => {
   const location = useLocation();
@@ -63,6 +69,8 @@ const Swap = () => {
   const [amountA, setAmountA] = useState<string>("");
   const [amountB, setAmountB] = useState<string>("");
   const [data, setData] = useState<IPairInfo | undefined>();
+  const [fee, setFee] = useState<number | undefined>();
+  const [isSwapDetailActive, setSwapDetailActive] = useState(false);
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
@@ -199,7 +207,7 @@ const Swap = () => {
     amountB &&
     data.balances[tokenB] > 0 &&
     data.balances[tokenB] === parseFloat(amountB);
-
+  console.log(fee);
   return (
     <div>
       <div className="level">
@@ -281,6 +289,7 @@ const Swap = () => {
       )}
 
       <SwapInputs
+        setFee={(fee) => setFee(fee)}
         isTokenAMaxGas={isTokenAMaxGas}
         isTokenBMaxGas={isTokenBMaxGas}
         noLiquidity={noLiquidity}
@@ -310,65 +319,85 @@ const Swap = () => {
           <div className="level">
             <div className="level-left">
               <div className="level-item">
-                {/*<div>*/}
-                {/*  {`1 ${symbolB} = ${(*/}
-                {/*    parseFloat(amountA) / parseFloat(amountB)*/}
-                {/*  ).toFixed(8)} ${symbolA}`}*/}
-                {/*</div>*/}
-                <div>
-                  {`1 ${symbolB} = ${(
-                    data.pair[tokenA] / data.pair[tokenB]
-                  ).toFixed(8)} ${symbolA}`}
-                </div>
+                {amountA && amountB && (
+                  <>
+                    <button
+                      onClick={() => setSwapDetailActive(!isSwapDetailActive)}
+                      className={"button is-white is-small"}
+                    >
+                      {isSwapDetailActive ? <FaCaretUp /> : <FaCaretDown />}
+                    </button>
+                    <PriceRatio
+                      symbolA={symbolA}
+                      symbolB={symbolB}
+                      amountA={amountA}
+                      amountB={amountB}
+                    />
+                  </>
+                )}
               </div>
             </div>
 
             <div className="level-right">
               <div className="level-item">
-                <div className="level is-mobile">
+                <HistoryButtons
+                  onSwapHistory={setSwapHistoryModalActive}
+                  onLPHistory={setLPListModalActive}
+                />
+              </div>
+            </div>
+          </div>
+
+          {isSwapDetailActive && amountA && amountB && (
+            <div className="message content is-small">
+              <div className="message-body">
+                <div className="level mb-1">
+                  <div className="level-left">
+                    <div className="level-item">Expected output</div>
+                  </div>
+
+                  <div className="level-right">
+                    <div className="level-item has-text-right">
+                      <span className="has-text-weight-semibold">
+                        {amountB} {symbolB}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="level mb-5">
+                  <div className="level-left">
+                    <div className="level-item">Price impact</div>
+                  </div>
+                  <div className="level-right">
+                    <div className="level-item">
+	                    {priceImpact.toFixed(2)}%
+                    </div>
+                  </div>
+                </div>
+
+                <div className="level mb-1">
                   <div className="level-left">
                     <div className="level-item">
-                      <div className="buttons">
-                        <button
-                          onClick={() => setSwapHistoryModalActive(true)}
-                          className="button is-white is-small"
-                          data-tip
-                          data-for="swapHistory"
-                        >
-                          <ReactTooltip
-                            id="swapHistory"
-                            type="info"
-                            effect="solid"
-                            place="bottom"
-                          >
-                            <span>Swap history</span>
-                          </ReactTooltip>
-                          <FaHistory />
-                        </button>
-
-                        <button
-                          onClick={() => setLPListModalActive(true)}
-                          className="button is-white is-small"
-                          data-tip
-                          data-for="LPList"
-                        >
-                          <ReactTooltip
-                            id="LPList"
-                            type="info"
-                            effect="solid"
-                            place="bottom"
-                          >
-                            <span>LP list</span>
-                          </ReactTooltip>
-                          <FaUserAlt />
-                        </button>
-                      </div>
+                      Minimum received after slippage (3%)
                     </div>
+                  </div>
+                  <div className="level-right">
+                    <div className="level-item has-text-right">
+                      {getAfterSlippage(amountB)} {symbolB}
+                    </div>
+                  </div>
+                </div>
+                <div className="level mb-1">
+                  <div className="level-left">
+                    <div className="level-item">Liquidity provider fee</div>
+                  </div>
+                  <div className="level-right">
+                    <div className="level-item">0.25%</div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </>
       ) : (
         <></>

@@ -11,6 +11,8 @@ import { INetworkType } from "../../../network";
 
 export const SWAP_FEE = 0.25;
 
+export const DEFAULT_SLIPPAGE = 3;
+
 export const PRICE_IMPACT_LIMIT = 10;
 
 export const SWAP_SCRIPT_HASH = {

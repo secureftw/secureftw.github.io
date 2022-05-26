@@ -87,6 +87,9 @@ export const parseMapValue = (v: StackItemLike): any => {
         case "owner":
           val = base64ToAddress(value.value as string);
           break;
+	      case "account":
+		      val = base64ToAddress(value.value as string);
+		      break;
         case "creator":
           val = base64ToAddress(value.value as string);
           break;
@@ -99,6 +102,12 @@ export const parseMapValue = (v: StackItemLike): any => {
         case "tokenB":
           val = base64ToHash160(value.value as string);
           break;
+	      case "tokenIn":
+		      val = base64ToHash160(value.value as string);
+		      break;
+	      case "tokenOut":
+		      val = base64ToHash160(value.value as string);
+		      break;
         case "name":
           val = base64ToString(value.value as string);
           break;
@@ -162,6 +171,12 @@ export const parseMapValue = (v: StackItemLike): any => {
         case "amountB":
           val = toDecimal(value.value as string);
           break;
+	      case "amountIn":
+		      val = toDecimal(value.value as string);
+		      break;
+	      case "amountOut":
+		      val = toDecimal(value.value as string);
+		      break;
         case "totalShare":
           val = toDecimal(value.value as string);
           break;

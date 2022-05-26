@@ -23,12 +23,14 @@ interface ISwapInputsProps {
   noLiquidity?: boolean;
   isTokenAMaxGas?: any;
   isTokenBMaxGas?: any;
+  setFee: (fee: number) => void;
 }
 
 interface ISearchTerm {
   type: "A" | "B";
   value: string;
 }
+
 const SwapInputs = ({
   network,
   tokenA,
@@ -47,30 +49,39 @@ const SwapInputs = ({
   noLiquidity,
   isTokenAMaxGas,
   isTokenBMaxGas,
+  setFee,
 }: ISwapInputsProps) => {
   const [searchTerm, setSearchTerm] = useState<ISearchTerm>();
   const [isAmountALoading, setAmountALoading] = useState(false);
   const [isAmountBLoading, setAmountBLoading] = useState(false);
+
   useEffect(() => {
     const delayDebounceFn = setTimeout(async () => {
       if (searchTerm) {
-        if (searchTerm.type === "A") {
-          setAmountBLoading(true);
-        } else {
-          setAmountALoading(true);
-        }
-        const estimated = await new SwapContract(network).getEstimate(
-          searchTerm.type === "A" ? tokenA : tokenB,
-          searchTerm.type === "A" ? tokenB : tokenA,
-          searchTerm.type === "A" ? tokenA : tokenB,
-          searchTerm.value
-        );
-        if (searchTerm.type === "A") {
-          setAmountBLoading(false);
-          setAmountB(estimated.toString());
-        } else {
-          setAmountALoading(false);
-          setAmountA(estimated.toString());
+        const no = parseFloat(searchTerm.value);
+        if (no > 0) {
+          if (searchTerm.type === "A") {
+            setAmountBLoading(true);
+          } else {
+            setAmountALoading(true);
+          }
+          const { estimated, fee } = await new SwapContract(
+            network
+          ).getSwapEstimate(
+            searchTerm.type === "A" ? tokenA : tokenB,
+            searchTerm.type === "A" ? tokenB : tokenA,
+            searchTerm.type === "A" ? tokenA : tokenB,
+            searchTerm.value
+          );
+          if (searchTerm.type === "A") {
+            setAmountBLoading(false);
+            setAmountB(estimated.toString());
+            setFee(fee);
+          } else {
+            setAmountALoading(false);
+            setAmountA(estimated.toString());
+            setFee(fee);
+          }
         }
       }
     }, 500);
@@ -96,7 +107,11 @@ const SwapInputs = ({
         }}
         userBalance={userTokenABalance}
         isLoading={isAmountALoading}
-        errorMessage={isTokenAMaxGas ? "You need to have GAS for transaction fee" : undefined}
+        errorMessage={
+          isTokenAMaxGas
+            ? "You need to have GAS for transaction fee"
+            : undefined
+        }
       />
       <div className="pt-4 pb-4">
         <button onClick={onSwitch} className="button is-white is-fullwidth">
@@ -122,7 +137,11 @@ const SwapInputs = ({
         }}
         userBalance={userTokenBBalance}
         isLoading={isAmountBLoading}
-        errorMessage={isTokenBMaxGas ? "You need to have GAS for transaction fee" : undefined}
+        errorMessage={
+          isTokenBMaxGas
+            ? "You need to have GAS for transaction fee"
+            : undefined
+        }
       />
     </>
   );

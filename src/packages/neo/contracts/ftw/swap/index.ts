@@ -4,7 +4,7 @@ import { wallet } from "../../../index";
 import { SWAP_SCRIPT_HASH } from "./consts";
 import { base64ToString, parseMapValue, toDecimal } from "../../../utils";
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
-import { defaultDeadLine, parseSwapPaginate, parseReserve } from "./helpers";
+import { defaultDeadLine } from "./helpers";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
 import { IPairInfo, IReserve } from "./interfaces";
 import { parseProperties } from "../../ttm/nft/helpers";
@@ -211,7 +211,7 @@ export class SwapContract {
     const scripts: any = [];
     const script = {
       scriptHash: this.contractHash,
-      operation: "getReserveData",
+      operation: "getReserve",
       args: [
         { type: "Hash160", value: tokenA },
         { type: "Hash160", value: tokenB },
@@ -236,7 +236,7 @@ export class SwapContract {
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-    const pair: any = parseReserve(res.stack[0]);
+    const pair: any = parseMapValue(res.stack[0] as any);
     const obj = {
       reserve: pair,
       pair: {
@@ -270,10 +270,15 @@ export class SwapContract {
   };
 
   // Swap estimate
-  getEstimate = async (tokenA, tokenB, swapToken, amount): Promise<number> => {
+  getSwapEstimate = async (
+    tokenA,
+    tokenB,
+    swapToken,
+    amount
+  ): Promise<{ estimated: number; fee: number }> => {
     const script = {
       scriptHash: this.contractHash,
-      operation: "getEstimate",
+      operation: "getSwapEstimate",
       args: [
         { type: "Hash160", value: tokenA },
         { type: "Hash160", value: tokenB },
@@ -286,9 +291,16 @@ export class SwapContract {
     };
     const res = await Network.read(this.network, [script]);
     if (res.state === "FAULT") {
-      return 0;
+      return {
+        estimated: 0,
+        fee: 0,
+      };
     } else {
-      return toDecimal(res.stack[0].value as string);
+      const { estimated, fee } = parseMapValue(res.stack[0] as any);
+      return {
+        estimated: toDecimal(estimated),
+        fee,
+      };
     }
   };
 
@@ -308,10 +320,11 @@ export class SwapContract {
   getSwapHistory = async (tokenA: string, tokenB: string, page: string) => {
     const script = {
       scriptHash: this.contractHash,
-      operation: "getSwaps",
+      operation: "getSwapsPaginate",
       args: [
         { type: "Hash160", value: tokenA },
         { type: "Hash160", value: tokenB },
+        { type: "Integer", value: "20" },
         { type: "Integer", value: page },
       ],
     };
@@ -329,9 +342,8 @@ export class SwapContract {
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-    const paginate = parseSwapPaginate(res.stack[0].value);
     return {
-      ...paginate,
+      ...parseMapValue(res.stack[0] as any),
       [tokenA]: base64ToString(res.stack[1].value as string),
       [tokenB]: base64ToString(res.stack[2].value as string),
     };
@@ -354,58 +366,6 @@ export class SwapContract {
     return res.stack[0].value.map((item) => parseMapValue(item));
   };
 
-  getContractHashes = async (tokenA: string, tokenB: string): Promise<any> => {
-    const script1 = {
-      scriptHash: tokenA,
-      operation: "symbol",
-      args: [],
-    };
-    const script2 = {
-      scriptHash: tokenA,
-      operation: "decimals",
-      args: [],
-    };
-    const script3 = {
-      scriptHash: tokenB,
-      operation: "symbol",
-      args: [],
-    };
-    const script4 = {
-      scriptHash: tokenB,
-      operation: "decimals",
-      args: [],
-    };
-    const script5 = {
-      scriptHash: this.contractHash,
-      operation: "getReserve",
-      args: [
-        { type: "Hash160", value: tokenA },
-        { type: "Hash160", value: tokenB },
-      ],
-    };
-    const res = await Network.read(this.network, [
-      script1,
-      script2,
-      script3,
-      script4,
-      script5,
-    ]);
-    if (res.state === "FAULT") {
-      throw new Error(res.exception as string);
-    }
-    return {
-      tokenA: {
-        symbol: base64ToString(res.stack[0].value as string),
-        decimals: res.stack[1].value,
-      },
-      tokenB: {
-        symbol: base64ToString(res.stack[2].value as string),
-        decimals: res.stack[3].value,
-      },
-      reserve: parseReserve(res.stack[4]),
-    };
-  };
-
   getContractInfo = async (
     contractHash: string
   ): Promise<{ symbol: string; decimals: string }> => {
@@ -414,11 +374,11 @@ export class SwapContract {
       operation: "symbol",
       args: [],
     };
-	  const script2 = {
-		  scriptHash: contractHash,
-		  operation: "decimals",
-		  args: [],
-	  };
+    const script2 = {
+      scriptHash: contractHash,
+      operation: "decimals",
+      args: [],
+    };
     const res = await Network.read(this.network, [script1, script2]);
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
