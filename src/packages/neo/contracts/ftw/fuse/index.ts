@@ -10,7 +10,7 @@ import { TTM_SCRIPT_HASH } from "../../ttm/nft";
 export const FUSE_SCRIPT_HASH = {
   [CONST.PRIVATENET]: "f88481099b58a7ddff6693098037b23476a9dcee",
   [CONST.TESTNET]: "f88481099b58a7ddff6693098037b23476a9dcee",
-  [CONST.MAINNET]: "",
+  [CONST.MAINNET]: "76bf3b30bf85ad21f8650cf54963b872072b8bc0",
 };
 
 export class FusionContract {

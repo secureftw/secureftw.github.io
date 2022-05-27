@@ -5,6 +5,7 @@ export const MIGRATION_PATH = "/migration";
 export const GASFI_PATH = "/gas";
 export const GALLERY_PATH = "/NFT/gallery";
 export const TOURNAMENT_PATH = "/arena";
+export const IDO_PATH = "/ido";
 export const SMITH_PATH = "/smith";
 export const SMITH_CREATE_NEP17_PATH = "/smith/create/nep17";
 export const SMITH_CREATE_NEP11_PATH = "/smith/create/nep11";
@@ -31,6 +32,11 @@ export const DAO_CHANNEL_PATH = "/dao/channel";
 // export const PROPOSALS_ABOUT_PATH = "/proposals/about";
 
 export const MENU = [
+	{
+		label: "IDO",
+		path: IDO_PATH,
+		network: [PRIVATENET, TESTNET],
+	},
   {
     label: "Swap",
     path: SWAP_PATH,

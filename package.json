@@ -6,6 +6,7 @@
   "dependencies": {
     "@cityofzion/neon-core": "^5.0.0-next.16",
     "@neongd/neo-dapi": "^1.0.1",
+    "@ramonak/react-progress-bar": "^4.4.0",
     "bulma": "^0.9.3",
     "bulma-pagination-react": "^0.1.1",
     "husky": "^8.0.1",
@@ -21,6 +22,7 @@
     "react-device-detect": "^2.0.1",
     "react-dom": "^18.1.0",
     "react-ga": "^3.3.0",
+    "react-google-charts": "^4.0.0",
     "react-hot-toast": "^2.1.1",
     "react-icons": "^4.3.1",
     "react-number-format": "^4.8.0",
