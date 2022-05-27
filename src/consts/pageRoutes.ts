@@ -27,16 +27,13 @@ export const FUSION_PATH = "/fusion";
 export const DAO_PATH = "/dao";
 export const DAO_CHANNEL_CREATE_PATH = "/dao/create";
 export const DAO_CHANNEL_PATH = "/dao/channel";
-// export const PROPOSALS_PATH = "/proposals";
-// export const PROPOSALS_CREATE_PATH = "/proposals/new";
-// export const PROPOSALS_ABOUT_PATH = "/proposals/about";
 
 export const MENU = [
-	{
-		label: "IDO",
-		path: IDO_PATH,
-		network: [PRIVATENET, TESTNET],
-	},
+  {
+    label: "IDO",
+    path: IDO_PATH,
+    network: [PRIVATENET],
+  },
   {
     label: "Swap",
     path: SWAP_PATH,
@@ -74,11 +71,11 @@ export const MENU = [
       },
     ],
   },
-	{
-		label: "Fusion",
-		path: FUSION_PATH,
-		network: [PRIVATENET],
-	},
+  {
+    label: "Fusion",
+    path: FUSION_PATH,
+    network: [PRIVATENET],
+  },
   {
     label: "GAS-FI",
     path: GASFI_PATH,

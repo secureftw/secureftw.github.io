@@ -2,10 +2,11 @@ import React from "react";
 import PageLayout from "../../components/PageLayout";
 import ProgressBar from "@ramonak/react-progress-bar";
 import {
-	GAS_NEP, LAUNCH_AT,
-	NEP_GAS,
-	NEP_PRICE,
-	TOTAL_TOKENS_FOR_SALE,
+  GAS_NEP,
+  LAUNCH_AT,
+  NEP_GAS,
+  NEP_PRICE,
+  TOTAL_TOKENS_FOR_SALE,
 } from "../../../packages/neo/contracts/ftw/ido/consts";
 import { Chart } from "react-google-charts";
 import Countdown from "react-countdown";
@@ -25,7 +26,7 @@ export const options = {
 };
 
 const IDO = () => {
-	const launchDate = moment.unix(LAUNCH_AT).toDate();
+  const launchDate = moment.unix(LAUNCH_AT).toDate();
 
   return (
     <div>
@@ -65,9 +66,9 @@ const IDO = () => {
                 </div>
               </div>
               <button className="button is-fullwidth is-primary">
-	              <Countdown date={launchDate}>
-		              <div>Good to go</div>
-	              </Countdown>
+                <Countdown date={launchDate}>
+                  <div>Good to go</div>
+                </Countdown>
               </button>
             </div>
 
