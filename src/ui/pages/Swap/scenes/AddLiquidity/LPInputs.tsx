@@ -1,70 +1,80 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Input from "../../components/Input";
-import { FaExchangeAlt } from "react-icons/fa";
+import { FaPlusSquare } from "react-icons/fa";
 import { INetworkType } from "../../../../../packages/neo/network";
-import { IPairInfo } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
+import { IReserveData } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
 import { SwapContract } from "../../../../../packages/neo/contracts";
+import { ITokenState } from "./index";
+import { IConnectedWallet } from "../../../../../packages/neo/wallet/interfaces";
 
 interface ILPInputsProps {
   network: INetworkType;
-  tokenA: string;
-  tokenB: string;
-  symbolA: string;
-  symbolB: string;
-  amountA: string;
-  amountB: string;
+  tokenA?: ITokenState;
+  tokenB?: ITokenState;
+  amountA?: number;
+  amountB?: number;
   onAssetChange: (type: "A" | "B") => void;
-  userTokenABalance: any;
-  userTokenBBalance: any;
   onSwitch: () => void;
-  setAmountA: (val: string) => void;
-  setAmountB: (val: string) => void;
-  reserve?: IPairInfo;
+  setAmountA: (val?: number) => void;
+  setAmountB: (val?: number) => void;
+  data?: IReserveData;
   noLiquidity?: boolean;
-}
-
-interface ISearchTerm {
-  type: "A" | "B";
-  value: string;
+  connectedWallet?: IConnectedWallet;
+  isTokenAMaxGas?: any;
+  isTokenBMaxGas?: any;
 }
 
 const LPInputs = ({
   network,
   tokenA,
   tokenB,
-  symbolA,
-  symbolB,
   onAssetChange,
   amountA,
   amountB,
-  onSwitch,
-  userTokenABalance,
-  userTokenBBalance,
   setAmountA,
   setAmountB,
-  reserve,
   noLiquidity,
+  data,
+  connectedWallet,
+  isTokenAMaxGas,
+  isTokenBMaxGas,
 }: ILPInputsProps) => {
   const handleChangeAmountA = (val) => {
     setAmountA(val);
-    if (!noLiquidity && reserve) {
-      const estimated = new SwapContract(network).getLPEstimate(
-        val,
-        reserve.pair[tokenA],
-        reserve.pair[tokenB]
-      );
-      setAmountB(estimated);
+    if (val !== undefined) {
+      if (!noLiquidity && data && tokenA && tokenB) {
+        const estimated = new SwapContract(network).getLPEstimate(
+          val,
+          tokenA.decimals,
+          tokenB.decimals,
+          data.pair[tokenA.hash].reserveAmount,
+          data.pair[tokenB.hash].reserveAmount
+        );
+        setAmountB(parseFloat(estimated));
+      }
+    } else {
+      if (!noLiquidity) {
+        setAmountB(undefined);
+      }
     }
   };
   const handleChangeAmountB = (val) => {
     setAmountB(val);
-    if (!noLiquidity && reserve) {
-      const estimated = new SwapContract(network).getLPEstimate(
-        val,
-        reserve.pair[tokenB],
-        reserve.pair[tokenA]
-      );
-      setAmountA(estimated);
+    if (val !== undefined) {
+      if (!noLiquidity && data && tokenA && tokenB) {
+        const estimated = new SwapContract(network).getLPEstimate(
+          val,
+          tokenB.decimals,
+          tokenA.decimals,
+          data.pair[tokenB.hash].reserveAmount,
+          data.pair[tokenA.hash].reserveAmount
+        );
+        setAmountA(parseFloat(estimated));
+      }
+    } else {
+      if (!noLiquidity) {
+        setAmountA(undefined);
+      }
     }
   };
 
@@ -76,16 +86,24 @@ const LPInputs = ({
         onClickAsset={() => {
           onAssetChange("A");
         }}
-        contractHash={tokenA}
-        symbol={symbolA}
+        contractHash={tokenA ? tokenA.hash : ""}
+        symbol={tokenA ? tokenA.symbol : ""}
+        decimals={tokenA ? tokenA.decimals : undefined}
         val={amountA}
         setValue={handleChangeAmountA}
-        userBalance={userTokenABalance}
+        userBalance={
+          connectedWallet && tokenA && data
+            ? data.userBalances[tokenA.hash]
+            : undefined
+        }
+        errorMessage={
+          isTokenAMaxGas
+            ? "You need to have GAS for transaction fee"
+            : undefined
+        }
       />
-      <div className="pt-4 pb-4">
-        <button onClick={onSwitch} className="button is-white is-fullwidth">
-          <FaExchangeAlt />
-        </button>
+      <div className="pt-4 pb-4 has-text-centered">
+        <FaPlusSquare size={16} />
       </div>
       <Input
         isDisable={!tokenB}
@@ -93,11 +111,21 @@ const LPInputs = ({
         onClickAsset={() => {
           onAssetChange("B");
         }}
-        contractHash={tokenB}
-        symbol={symbolB}
+        contractHash={tokenB ? tokenB.hash : ""}
+        symbol={tokenB ? tokenB.symbol : ""}
+        decimals={tokenB ? tokenB.decimals : undefined}
         val={amountB}
         setValue={handleChangeAmountB}
-        userBalance={userTokenBBalance}
+        userBalance={
+          connectedWallet && tokenB && data
+            ? data.userBalances[tokenB.hash]
+            : undefined
+        }
+        errorMessage={
+          isTokenBMaxGas
+            ? "You need to have GAS for transaction fee"
+            : undefined
+        }
       />
     </>
   );

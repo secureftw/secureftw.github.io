@@ -1,37 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { useWallet } from "../../../../../packages/provider";
-import { SWAP_PATH } from "../../../../../consts";
-import HeaderBetween from "../../../../components/HeaderBetween";
 import TruncatedAddress from "../../../../components/TruncatedAddress";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
-
+import Pagination from "bulma-pagination-react";
+import { numberTrim } from "../../../../../packages/neo/utils";
 interface IProvidersProps {
   tokenA: string;
   tokenB: string;
+  totalShare?: number;
 }
-const Providers = ({ tokenA, tokenB }: IProvidersProps) => {
-  // const location = useLocation();
-  // const params = queryString.parse(location.search);
-  // const { tokenA, tokenB } = params;
+
+const Providers = ({ tokenA, tokenB, totalShare }: IProvidersProps) => {
+  const [currentPage, setPage] = useState(1);
   const { network } = useWallet();
 
   const { isLoaded, error, data } = useOnChainData(() => {
     return new SwapContract(network).getLPList(
       tokenA as string,
-      tokenB as string
+      tokenB as string,
+      currentPage
     );
   }, [network]);
-
   return (
     <div>
-	    <h1 className="is-size-5 has-text-weight-bold">LP List</h1>
-      {/*<HeaderBetween path={SWAP_PATH} title={"LP list"} />*/}
-      <hr />
+      {/*<h1 className="is-size-5 has-text-weight-bold">LP History</h1>*/}
+      {/*<hr />*/}
       <div className="table-container is-small">
-        <table className="table is-fullwidth is-small">
+        <table className="table is-fullwidth is-bordered is-striped is-narrow">
           <thead>
             <tr>
+              <th>Status</th>
               <th>Amount</th>
               <th>Lock</th>
               <th>Owner</th>
@@ -40,20 +39,25 @@ const Providers = ({ tokenA, tokenB }: IProvidersProps) => {
           <tbody>
             {!isLoaded ? (
               <tr>
-                <td>Loading..</td>
+                <td colSpan={4}>Loading..</td>
               </tr>
             ) : error ? (
               <div>{error}</div>
-            ) : data && data.length === 0 ? (
+            ) : data && data.items.length === 0 ? (
               <tr>
-                <td>No NP</td>
+                <td>No LP History</td>
               </tr>
             ) : (
-              data.map((lp, i) => {
+              data.items.map((lp, i) => {
+                const owership =
+                  totalShare && totalShare > 0
+                    ? numberTrim((lp.amount / totalShare) * 100)
+                    : "";
                 return (
                   <tr key={`lp-${i}`}>
-                    <td>{lp.amount}</td>
-                    <td>{lp.lockUntil}</td>
+                    <td>{lp.isActive ? "Active" : "Withdrawn"}</td>
+                    <td>{owership}%</td>
+                    <td>{lp.lock}</td>
                     <td>
                       <TruncatedAddress address={lp.owner} />
                     </td>
@@ -64,6 +68,21 @@ const Providers = ({ tokenA, tokenB }: IProvidersProps) => {
           </tbody>
         </table>
       </div>
+      {data && data.totalPages > 1 && (
+        <div className="media">
+          <div className="media-content">
+            <Pagination
+              pages={data.totalPages}
+              currentPage={currentPage}
+              onChange={(_page) => {
+                if (currentPage !== _page) {
+                  setPage(_page);
+                }
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

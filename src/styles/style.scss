@@ -11,11 +11,32 @@ $sidebar-width: 230px !important;
 @import "../../node_modules/react-pro-sidebar/dist/scss/styles";
 @import "../../node_modules/react-datepicker/dist/react-datepicker.css";
 
+@font-face {
+  font-family: "VCR";
+  src: local("VCR"),
+    url("../fonts/VCR/VCR_OSD_MONO_1.001 2.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  src: local("Inter"),
+    url("../fonts/Inter/Inter-VariableFont_slnt,wght.ttf") format("truetype");
+}
+
 /* html */
 html {
   @extend .has-navbar-fixed-top;
   background-color: $light;
   overflow-y: overlay;
+}
+
+.heading{
+  color: #000;
+  font-family: VCR, Arial, serif;
+}
+
+.title{
+  font-family: VCR, Arial, serif;
+  @extend .is-uppercase;
 }
 
 /**
@@ -141,20 +162,35 @@ For fixed top height
     stroke-dashoffset: 900;
   }
 }
-#PairIcons {
-  display: flex;
-  .circular--portrait {
-    position: relative;
-    width: 20px;
-    height: 20px;
-    overflow: hidden;
-    border-radius: 50%;
-    border: 1px solid #48c78e;
-    background: white;
-  }
-  .circular--portrait img {
-    width: 100%;
-    height: auto;
+
+
+.circular--portrait {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 1px solid #48c78e;
+  background: white;
+}
+.circular--portrait img {
+  width: 100%;
+  height: auto;
+}
+
+.box.is-hoverable {
+  @extend .is-clickable;
+
+  &:not(:hover) {
+    // Hover styling
+    @extend .is-shadowless;
   }
 }
 
+//#halo {
+//  width: 100%;
+//  height: 100vh;
+//  background-color:red; /*Cover use when the animation doesn't work. ex:mobile*/
+//  position:fixed;
+//  top:0;
+//}

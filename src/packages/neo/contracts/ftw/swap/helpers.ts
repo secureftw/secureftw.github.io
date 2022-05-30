@@ -37,8 +37,6 @@ import { DEFAULT_SLIPPAGE } from "./consts";
 export const defaultDeadLine = () =>
   moment().utc().add("10", "minutes").valueOf();
 
-export const getAfterSlippage = (amountB: string) => {
-  const amount = parseFloat(amountB);
-
-  return (amount - (amount * DEFAULT_SLIPPAGE) / 100).toFixed(2).replace(/[.,]00$/, "");
+export const getAfterSlippage = (amountB: number, slippage: number) => {
+  return amountB - (amountB * slippage) / 100;
 };

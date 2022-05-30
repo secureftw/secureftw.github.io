@@ -18,27 +18,27 @@ const CARDS = [
     title: "FTW Swap",
     type: "DeFi",
     desc: "Coming soon. Try on our Testnet.",
-    img: "assets/swap1.png",
+    img: "symbols/nep.png",
     link: SWAP_PATH,
   },
   {
     title: "FTW Smith",
     type: "Utility",
-    desc: "FTW Smith helps users to create and deploy fungible/Non-fungible token smart contracts without any codes.",
-    img: "assets/smith.png",
+    desc: "Deploy fungible/Non-fungible token smart contracts without any codes.",
+	  img: "symbols/smith.png",
     link: SMITH_PATH,
   },
   {
     title: "FTW Rune",
     type: "NFT",
-    desc: "FTW Rune is an algorithmically generated NFT created and stored onchain.",
+    desc: "An algorithmically generated NFT created and stored onchain.",
     img: "assets/runes.png",
     link: GALLERY_PATH,
   },
   {
     title: "FTW Arena",
     type: "GameFi",
-    desc: " FTW Runes against each other with the victor earning a GAS prize.",
+    desc: "FTW Runes against each other with the victor earning a GAS prize.",
     img: "assets/arena-bg.jpeg",
     link: TOURNAMENT_PATH,
   },
@@ -52,16 +52,6 @@ const CARDS = [
 ];
 
 const Home = () => {
-  const { network, switchNetwork } = useWallet();
-  const onSwitchNetwork = () => {
-    if (network !== TESTNET) {
-      // eslint-disable-next-line no-restricted-globals
-      if (confirm("Are you sure to switch network?")) {
-        switchNetwork(TESTNET);
-        toast.success("Network switched");
-      }
-    }
-  };
   return (
     <div>
       <section className="hero is-black">
@@ -78,19 +68,19 @@ const Home = () => {
         <div className="columns is-multiline">
           {CARDS.map((card) => {
             return (
-              <div key={card.title} className="column is-3">
+              <div key={card.title} className="column is-2">
                 <div className="card">
                   <div className="card-image is-clickable">
                     <Link to={card.link}>
                       <figure className="image">
-                        <BgContainer src={card.img} height="300px" />
+                        <BgContainer src={card.img} height="250px" />
                       </figure>
                     </Link>
                   </div>
                   <div className="card-content">
                     <div className="media">
                       <div className="media-content">
-                        <p className="title is-4">
+                        <p className="title is-6 heading">
                           <Link className={"has-text-dark"} to={card.link}>
                             {card.title}
                           </Link>

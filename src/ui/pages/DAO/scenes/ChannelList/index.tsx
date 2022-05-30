@@ -42,7 +42,9 @@ const DAOChannelList = () => {
               </div>
             </div>
           </div>
+
           <List isLoaded={isLoaded} data={data} error={error} />
+
         </div>
       </div>
     </PageLayout>

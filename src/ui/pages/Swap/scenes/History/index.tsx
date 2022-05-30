@@ -4,6 +4,7 @@ import { SwapContract } from "../../../../../packages/neo/contracts";
 import { useWallet } from "../../../../../packages/provider";
 import TruncatedAddress from "../../../../components/TruncatedAddress";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
+import { withDecimal } from "../../../../../packages/neo/utils";
 
 interface IHistoryProps {
   tokenA: string;
@@ -11,12 +12,7 @@ interface IHistoryProps {
 }
 const History = ({ tokenA, tokenB }: IHistoryProps) => {
   const { network } = useWallet();
-  // const location = useLocation();
-  // const params = queryString.parse(location.search);
-  // const { tokenA, tokenB, page } = params;
-  // const [currentPage, setPage] = useState(page ? (page as string) : "1");
-  const [currentPage, setPage] = useState("1");
-
+  const [currentPage, setPage] = useState(1);
   const { isLoaded, error, data } = useOnChainData(() => {
     return new SwapContract(network).getSwapHistory(
       tokenA as string,
@@ -24,14 +20,11 @@ const History = ({ tokenA, tokenB }: IHistoryProps) => {
       currentPage
     );
   }, [network, currentPage]);
-	console.log(data)
   return (
     <div>
-	    <h1 className="is-size-5 has-text-weight-bold">Swap History</h1>
-      {/*<HeaderBetween path={SWAP_PATH} title={"Swap history"} />*/}
-      <hr />
+      {/*<h1 className="is-size-5 has-text-weight-bold">Swap History</h1>*/}
       <div className="table-container">
-        <table className="table is-fullwidth">
+        <table className="table is-fullwidth is-bordered is-striped is-narrow">
           <thead>
             <tr>
               <th>In</th>
@@ -43,7 +36,7 @@ const History = ({ tokenA, tokenB }: IHistoryProps) => {
           <tbody>
             {!isLoaded ? (
               <tr>
-                <td>Loading..</td>
+                <td colSpan={4}>Loading..</td>
               </tr>
             ) : error ? (
               <div>{error}</div>
@@ -53,15 +46,25 @@ const History = ({ tokenA, tokenB }: IHistoryProps) => {
                   return (
                     <tr key={`swap-${i}`}>
                       <td>
-                        <strong>{data[swap.tokenIn]}</strong>&nbsp;
-                        {swap.amountIn}
+                        {withDecimal(
+                          swap.amountIn,
+                          data.pair[swap.tokenIn].decimals,
+                          true
+                        )}
+                        &nbsp;
+                        <strong>{data.pair[swap.tokenIn].symbol}</strong>
                       </td>
                       <td>
-                        <strong>{data[swap.tokenOut]}</strong>&nbsp;
-                        {swap.amountOut}
+                        {withDecimal(
+                          swap.amountOut,
+                          data.pair[swap.tokenOut].decimals,
+                          true
+                        )}
+                        &nbsp;
+                        <strong>{data.pair[swap.tokenOut].symbol}</strong>
                       </td>
                       <td>
-                        <TruncatedAddress address={swap.account} />
+                        <TruncatedAddress address={swap.owner} />
                       </td>
                       <td>{swap.createdAt}</td>
                     </tr>

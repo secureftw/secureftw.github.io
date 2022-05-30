@@ -20,7 +20,7 @@ const StakingMain = () => {
       <div className="level is-mobile">
         <div className="level-left">
           <div className="level-item">
-            <h1 className="title is-5">Farm</h1>
+            <h1 className="title is-5 ">Farm</h1>
           </div>
         </div>
         <div className="level-right">
@@ -28,7 +28,7 @@ const StakingMain = () => {
             <div className="buttons">
               <Link
                 to={FARM_STAKE_POSITIONS_PATH}
-                className="button is-primary is-small is-rounded"
+                className="button is-light is-small is-rounded"
               >
                 My positions
               </Link>

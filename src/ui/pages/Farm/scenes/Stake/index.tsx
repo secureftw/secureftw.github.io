@@ -63,6 +63,7 @@ const Stake = () => {
       ) : (
         <ConnectWalletButton />
       )}
+
       {txid && (
         <Modal onClose={() => setTxid("")}>
           <AfterTransactionSubmitted

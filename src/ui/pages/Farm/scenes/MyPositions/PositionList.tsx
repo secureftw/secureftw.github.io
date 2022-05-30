@@ -31,13 +31,13 @@ const PositionList = ({
         <ErrorNotificationWithRefresh error={error} onRefresh={onRefresh} />
       ) : data && data.length > 0 ? (
         <div>
-          {data.map((item, i) => (
-            <PositionCard
-              key={"position" + i}
-              {...item}
-              onUnStake={onUnStake}
-            />
-          ))}
+          {data.map((item, i) => {
+	          return <PositionCard
+		          key={"position" + i}
+		          {...item}
+		          onUnStake={onUnStake}
+	          />
+          })}
         </div>
       ) : (
         <div>No staking found</div>

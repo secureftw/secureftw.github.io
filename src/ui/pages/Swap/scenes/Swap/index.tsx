@@ -14,9 +14,8 @@ import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
-import { LocalStorage } from "../../../../../packages/neo/local-storage";
-import { IPairInfo } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
-import NoLPInfo from "./NoLPInfo";
+import { IReserveData } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
+import NoLPInfo from "./components/NoLPInfo";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
 import SwapInputs from "./SwapInputs";
 import Pools from "../Pools";
@@ -36,6 +35,13 @@ import {
 import PriceRatio from "./components/PriceRatio";
 import HistoryButtons from "./components/HistoryButtons";
 import { getAfterSlippage } from "../../../../../packages/neo/contracts/ftw/swap/helpers";
+import SwapDetails from "./components/SwapDetails";
+
+export interface ITokenState {
+  hash: string;
+  decimals: number;
+  symbol: string;
+}
 
 const Swap = () => {
   const location = useLocation();
@@ -54,22 +60,18 @@ const Swap = () => {
   // const cachedTokenA = LocalStorage.getSwapTokenA();
   // const cachedTokenB = LocalStorage.getSwapTokenB();
 
-  const [tokenA, setTokenA] = useState<any>(
-    params.tokenA ? params.tokenA : GAS_SCRIPT_HASH
+  const [tokenA, setTokenA] = useState<ITokenState | undefined>({
+    hash: GAS_SCRIPT_HASH,
+    symbol: "GAS",
+    decimals: 8,
+  });
+  const [tokenB, setTokenB] = useState<ITokenState | undefined>();
+  const [amountA, setAmountA] = useState<number | undefined>();
+  const [amountB, setAmountB] = useState<number | undefined>();
+  const [data, setData] = useState<IReserveData | undefined>();
+  const [slippage, setSlippage] = useState<number | undefined>(
+    DEFAULT_SLIPPAGE
   );
-  const [tokenB, setTokenB] = useState<any>(
-    params.tokenB ? params.tokenB : undefined
-  );
-  const [symbolA, setSymbolA] = useState<any>(
-    params.symbolA ? params.symbolA : "GAS"
-  );
-  const [symbolB, setSymbolB] = useState<any>(
-    params.symbolB ? params.symbolB : undefined
-  );
-  const [amountA, setAmountA] = useState<string>("");
-  const [amountB, setAmountB] = useState<string>("");
-  const [data, setData] = useState<IPairInfo | undefined>();
-  const [fee, setFee] = useState<number | undefined>();
   const [isSwapDetailActive, setSwapDetailActive] = useState(false);
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
@@ -77,30 +79,32 @@ const Swap = () => {
   const [error, setError] = useState(undefined);
 
   const onAssetChange = (type: "A" | "B" | "") => {
-    // Temporary disable
     setAssetChangeModalActive(type);
   };
 
-  const onAssetClick = (assetHash, symbol) => {
+  const onAssetClick = (hash, symbol, decimals) => {
+    const assetObj = {
+      hash,
+      symbol,
+      decimals,
+    };
     if (isAssetChangeModalActive === "A") {
-      LocalStorage.setSwapTokenA(assetHash);
-      setTokenA(assetHash);
-      setSymbolA(symbol);
+      // LocalStorage.setSwapTokenA(hash);
+      setTokenA(assetObj);
       if (tokenB) {
-        let search = `?tokenA=${assetHash}&tokenB=${tokenB}`;
+        let search = `?tokenA=${hash}&tokenB=${tokenB.hash}`;
         history.push(search);
       }
     } else {
-      LocalStorage.setSwapTokenB(assetHash);
-      setTokenB(assetHash);
-      setSymbolB(symbol);
+      // LocalStorage.setSwapTokenB(assetHash);
+      setTokenB(assetObj);
       if (tokenA) {
-        let search = `?tokenA=${tokenA}&tokenB=${assetHash}`;
+        let search = `?tokenA=${tokenA.hash}&tokenB=${hash}`;
         history.push(search);
       }
     }
-    setAmountA("");
-    setAmountB("");
+    setAmountB(undefined);
+    setAmountA(undefined);
     setAssetChangeModalActive("");
   };
 
@@ -109,22 +113,33 @@ const Swap = () => {
   };
 
   const onSuccess = () => {
-    setAmountA("");
-    setAmountB("");
+    setAmountA(undefined);
+    setAmountB(undefined);
     setRefresh(refresh + 1);
     setTxid("");
   };
 
   const onSwap = async () => {
     if (connectedWallet) {
-      if (tokenA && tokenB && amountA && amountB) {
+      if (
+        tokenA &&
+        tokenB &&
+        amountA &&
+        amountB &&
+        data &&
+        slippage &&
+        tokenA &&
+        tokenB
+      ) {
         try {
           const res = await new SwapContract(network).swap(
             connectedWallet,
-            tokenA,
+            tokenA.hash,
+            tokenA.decimals,
             amountA,
-            tokenB,
-            amountB
+            tokenB.hash,
+            tokenB.decimals,
+            getAfterSlippage(amountB, slippage)
           );
           setTxid(res);
         } catch (e: any) {
@@ -139,81 +154,89 @@ const Swap = () => {
   const onSwitch = async () => {
     if (tokenA || tokenB) {
       if (tokenA && tokenB) {
-        let search = `?tokenA=${tokenB}&tokenB=${tokenA}`;
+        let search = `?tokenA=${tokenB.hash}&tokenB=${tokenA.hash}`;
         history.push(search);
       }
-      setTokenB(tokenA);
-      setTokenA(tokenB ? tokenB : "");
-      setAmountB(amountA);
       setAmountA(amountB);
-      setSymbolA(symbolB);
-      setSymbolB(symbolA);
+      setAmountB(amountA);
+      // setTokenA(tokenB);
+      // setTokenB(tokenA);
     }
   };
 
-  const onPairClick = (_tokenA, _tokenB) => {
-    let search = `?tokenA=${_tokenA}&tokenB=${_tokenB}`;
+  const onPairClick = (tokenAHash, tokenBHash) => {
+    let search = `?tokenA=${tokenAHash}&tokenB=${tokenBHash}`;
     history.push(search);
-    setTokenA(_tokenA);
-    setTokenB(_tokenB);
-    setAmountA("");
-    setAmountB("");
+    setAmountA(undefined);
+    setAmountB(undefined);
     setPoolListModalActive(false);
   };
 
-  const getReserve = async () => {
-    try {
-      setError(undefined);
-      setPairLoading(true);
-      const res = await new SwapContract(network).getReserve(
-        tokenA,
-        tokenB,
-        connectedWallet
-      );
-      setData(res);
-      setSymbolA(res.reserve.tokenASymbol);
-      setSymbolB(res.reserve.tokenBSymbol);
-      setPairLoading(false);
-    } catch (e: any) {
-      setError(e.message);
-      setPairLoading(false);
-    }
-  };
-
   useEffect(() => {
-    async function load() {
-      await getReserve();
+    async function load(tokenAHash, tokenBHash) {
+      try {
+        setError(undefined);
+        setPairLoading(true);
+        const res = await new SwapContract(network).getReserve(
+          tokenAHash,
+          tokenBHash,
+          connectedWallet
+        );
+        setData(res);
+        setTokenA({
+          hash: tokenAHash,
+          symbol: res.pair[tokenAHash].symbol,
+          decimals: res.pair[tokenAHash].decimals,
+        });
+        setTokenB({
+          hash: tokenBHash,
+          symbol: res.pair[tokenBHash].symbol,
+          decimals: res.pair[tokenBHash].decimals,
+        });
+        setPairLoading(false);
+      } catch (e: any) {
+        setError(e.message);
+        setPairLoading(false);
+      }
     }
-    if (tokenA && tokenB) {
-      load();
+    if (params.tokenA && params.tokenB) {
+      load(params.tokenA, params.tokenB);
     }
-  }, [location, refresh, tokenA, tokenB]);
+  }, [location, refresh, params.tokenA, params.tokenB]);
+
   const noLiquidity =
-    (data && data.pair[tokenA] === 0) || (data && data.pair[tokenB] === 0);
+    (tokenA &&
+      tokenB &&
+      data &&
+      data.pair[tokenA.hash] &&
+      data.pair[tokenA.hash].reserveAmount === 0) ||
+    (tokenA &&
+      tokenB &&
+      data &&
+      data.pair[tokenB.hash] &&
+      data.pair[tokenB.hash].reserveAmount === 0);
 
   const priceImpact =
-    data && amountB ? (parseFloat(amountB) / data.pair[tokenB]) * 100 : 0;
+    tokenA && tokenB && data && amountB
+      ? (amountB / data.pair[tokenB.hash].reserveAmount) * 100
+      : 0;
 
   const isTokenAMaxGas =
-    tokenA === GAS_SCRIPT_HASH &&
+    tokenA &&
+    tokenA.hash === GAS_SCRIPT_HASH &&
     data &&
     amountA &&
-    data.balances[tokenA] > 0 &&
-    data.balances[tokenA] === parseFloat(amountA);
+    data.userBalances[tokenA.hash] > 0 &&
+    data.userBalances[tokenA.hash] <= amountA;
 
-  const isTokenBMaxGas =
-    tokenB === GAS_SCRIPT_HASH &&
-    data &&
-    amountB &&
-    data.balances[tokenB] > 0 &&
-    data.balances[tokenB] === parseFloat(amountB);
-  console.log(fee);
+  const isTokenBMaxGas = false;
+
   return (
     <div>
       <div className="level">
         <div className="level-left">
           <div className="level-item">
-            <h1 className="title is-5 is-marginless">Swap</h1>
+            <h1 className="title is-5 is-marginless ">Swap</h1>
           </div>
         </div>
         <div className="level-right">
@@ -225,7 +248,7 @@ const Swap = () => {
                     pathname: `${SWAP_PATH_LIQUIDITY_ADD}`,
                     search:
                       tokenA && tokenB
-                        ? `?tokenA=${tokenA}&tokenB=${tokenB}`
+                        ? `?tokenA=${tokenA.hash}&tokenB=${tokenB.hash}`
                         : "",
                   }}
                   data-tip
@@ -282,35 +305,39 @@ const Swap = () => {
 
       <hr />
 
-      {noLiquidity && <NoLPInfo tokenA={tokenA} tokenB={tokenB} />}
+      {noLiquidity && tokenA && tokenB ? (
+        <NoLPInfo tokenA={tokenA.hash} tokenB={tokenB.hash} />
+      ) : (
+        <></>
+      )}
 
       {error && (
         <ErrorNotificationWithRefresh onRefresh={onRefresh} error={error} />
       )}
 
       <SwapInputs
-        setFee={(fee) => setFee(fee)}
         isTokenAMaxGas={isTokenAMaxGas}
         isTokenBMaxGas={isTokenBMaxGas}
         noLiquidity={noLiquidity}
         network={network}
         tokenA={tokenA}
         tokenB={tokenB}
-        symbolA={symbolA}
-        symbolB={symbolB}
         amountA={amountA}
         amountB={amountB}
         onAssetChange={onAssetChange}
         userTokenABalance={
-          connectedWallet && data ? data.balances[tokenA] : undefined
+          connectedWallet && tokenA && data
+            ? data.userBalances[tokenA.hash]
+            : undefined
         }
         userTokenBBalance={
-          connectedWallet && data ? data.balances[tokenB] : undefined
+          connectedWallet && tokenB && data
+            ? data.userBalances[tokenB.hash]
+            : undefined
         }
         onSwitch={onSwitch}
         setAmountA={setAmountA}
         setAmountB={setAmountB}
-        reserve={data}
       />
 
       {tokenA && tokenB && data && !noLiquidity ? (
@@ -319,7 +346,7 @@ const Swap = () => {
           <div className="level">
             <div className="level-left">
               <div className="level-item">
-                {amountA && amountB && (
+                {amountA && amountB ? (
                   <>
                     <button
                       onClick={() => setSwapDetailActive(!isSwapDetailActive)}
@@ -328,12 +355,14 @@ const Swap = () => {
                       {isSwapDetailActive ? <FaCaretUp /> : <FaCaretDown />}
                     </button>
                     <PriceRatio
-                      symbolA={symbolA}
-                      symbolB={symbolB}
+                      symbolA={tokenA.symbol}
+                      symbolB={tokenB.symbol}
                       amountA={amountA}
                       amountB={amountB}
                     />
                   </>
+                ) : (
+                  <></>
                 )}
               </div>
             </div>
@@ -348,55 +377,22 @@ const Swap = () => {
             </div>
           </div>
 
-          {isSwapDetailActive && amountA && amountB && (
-            <div className="message content is-small">
-              <div className="message-body">
-                <div className="level mb-1">
-                  <div className="level-left">
-                    <div className="level-item">Expected output</div>
-                  </div>
-
-                  <div className="level-right">
-                    <div className="level-item has-text-right">
-                      <span className="has-text-weight-semibold">
-                        {amountB} {symbolB}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="level mb-5">
-                  <div className="level-left">
-                    <div className="level-item">Price impact</div>
-                  </div>
-                  <div className="level-right">
-                    <div className="level-item">
-	                    {priceImpact.toFixed(2)}%
-                    </div>
-                  </div>
-                </div>
-
-                <div className="level mb-1">
-                  <div className="level-left">
-                    <div className="level-item">
-                      Minimum received after slippage (3%)
-                    </div>
-                  </div>
-                  <div className="level-right">
-                    <div className="level-item has-text-right">
-                      {getAfterSlippage(amountB)} {symbolB}
-                    </div>
-                  </div>
-                </div>
-                <div className="level mb-1">
-                  <div className="level-left">
-                    <div className="level-item">Liquidity provider fee</div>
-                  </div>
-                  <div className="level-right">
-                    <div className="level-item">0.25%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {tokenA &&
+          tokenB &&
+          data &&
+          amountA &&
+          amountB &&
+          isSwapDetailActive ? (
+            <SwapDetails
+              symbolB={tokenB.symbol}
+              decimalsB={tokenB.decimals}
+              amountB={amountB}
+              priceImpact={priceImpact}
+              slippage={slippage ? slippage : 0}
+              setSlippage={setSlippage}
+            />
+          ) : (
+            <div></div>
           )}
         </>
       ) : (
@@ -411,8 +407,7 @@ const Swap = () => {
           isTokenBMaxGas ||
           !amountA ||
           !amountB ||
-          (data && data.balances[tokenA] < parseFloat(amountA)) ||
-          (data && data.pair[tokenB] < parseFloat(amountB)) ||
+          (tokenA && data && data.userBalances[tokenA.hash] < amountA) ||
           priceImpact > PRICE_IMPACT_LIMIT
         }
         onClick={connectedWallet ? onSwap : toggleWalletSidebar}
@@ -440,8 +435,8 @@ const Swap = () => {
 
       {isAssetChangeModalActive && (
         <AssetListModal
-          tokenA={tokenA}
-          tokenB={tokenB}
+          tokenAHash={tokenA ? tokenA.hash : undefined}
+          tokenBHash={tokenB ? tokenB.hash : undefined}
           onAssetClick={onAssetClick}
           onClose={() => setAssetChangeModalActive("")}
         />
@@ -453,16 +448,24 @@ const Swap = () => {
         </Modal>
       )}
 
-      {isLPListModalActive && (
+      {tokenA && tokenB && isLPListModalActive ? (
         <Modal onClose={() => setLPListModalActive(false)}>
-          <Providers tokenA={tokenA} tokenB={tokenB} />
+          <Providers
+            tokenA={tokenA.hash}
+            tokenB={tokenB.hash}
+            totalShare={data && data.totalShare ? data.totalShare : undefined}
+          />
         </Modal>
+      ) : (
+        <></>
       )}
 
-      {isSwapHistoryModalActive && (
+      {tokenA && tokenB && isSwapHistoryModalActive ? (
         <Modal onClose={() => setSwapHistoryModalActive(false)}>
-          <History tokenA={tokenA} tokenB={tokenB} />
+          <History tokenA={tokenA.hash} tokenB={tokenB.hash} />
         </Modal>
+      ) : (
+        <></>
       )}
     </div>
   );

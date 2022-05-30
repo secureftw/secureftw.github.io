@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import Modal from "../../../../components/Modal";
 import { useWallet } from "../../../../../packages/provider";
 import { ASSETS } from "../../../../../packages/neo/contracts/ftw/swap/consts";
@@ -6,23 +6,24 @@ import { FaPlus } from "react-icons/fa";
 
 import ContractSearchInput from "./ContractSearchInput";
 interface IAssetListModalProps {
-  tokenA?: string;
-  tokenB?: string;
+  tokenAHash?: string;
+  tokenBHash?: string;
   onClose: () => void;
-  onAssetClick: (assetHash: string, symbol: string) => void;
+  onAssetClick: (assetHash: string, symbol: string, decimals: number) => void;
 }
 
-
 const AssetListModal = ({
-  tokenA,
-  tokenB,
+  tokenAHash,
+  tokenBHash,
   onAssetClick,
   onClose,
 }: IAssetListModalProps) => {
   const { network } = useWallet();
   const [isCustomInputMode, setCustomInputMode] = useState(false);
   const assets = ASSETS(network).filter((asset) => {
-    return asset.contractHash !== tokenA && asset.contractHash !== tokenB;
+    return (
+      asset.contractHash !== tokenAHash && asset.contractHash !== tokenBHash
+    );
   });
 
   return (
@@ -31,15 +32,15 @@ const AssetListModal = ({
         <ContractSearchInput onAssetClick={onAssetClick} network={network} />
       ) : (
         <div>
-          <h5 className="title is-6">Select a token</h5>
+          <h5 className="title is-6 ">Select a token</h5>
           <nav className="panel">
             {assets.length > 0 ? (
-              assets.map(({ contractHash, logo, symbol }) => {
+              assets.map(({ contractHash, logo, symbol, decimals }) => {
                 return (
                   <a
-                    onClick={() => onAssetClick(contractHash, symbol)}
+                    onClick={() => onAssetClick(contractHash, symbol, decimals)}
                     className="panel-block"
-                    key={contractHash}
+                    key={`assets-${contractHash}`}
                   >
                     <div className="panel-icon">
                       <img src={logo} />
@@ -51,11 +52,7 @@ const AssetListModal = ({
             ) : (
               <div></div>
             )}
-            <a
-              onClick={() => setCustomInputMode(true)}
-              className="panel-block"
-              // key={contractHash}
-            >
+            <a onClick={() => setCustomInputMode(true)} className="panel-block">
               <div className="panel-icon">
                 <FaPlus />
               </div>

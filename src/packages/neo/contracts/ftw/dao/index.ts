@@ -6,6 +6,7 @@ import { wallet } from "../../../index";
 import { DAO_SCRIPT_HASH } from "./consts";
 import { base64ToString, parseMapValue, toDecimal } from "../../../utils";
 import { parseChannelsPaginate } from "./helpers";
+import { IChannel } from "./interfaces";
 
 export class DaoContract {
   network: INetworkType;
@@ -197,17 +198,25 @@ export class DaoContract {
     return parseChannelsPaginate(res.stack[0]);
   };
 
-  getChannel = async (contractHash: string) => {
-    const script = {
+  getChannel = async (contractHash: string): Promise<IChannel> => {
+    const script1 = {
       scriptHash: this.contractHash,
       operation: "getChannel",
       args: [{ type: "Hash160", value: contractHash }],
     };
-    const res = await Network.read(this.network, [script]);
+    const script2 = {
+      scriptHash: contractHash,
+      operation: "decimals",
+      args: [],
+    };
+    const res = await Network.read(this.network, [script1, script2]);
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-    return parseMapValue(res.stack[0] as any);
+    return {
+      ...parseMapValue(res.stack[0] as any),
+      decimals: parseFloat(res.stack[1].value as string),
+    };
   };
 
   getProposals = async (
@@ -257,8 +266,13 @@ export class DaoContract {
       operation: "getChannel",
       args: [{ type: "Hash160", value: contractHash }],
     };
+    const script3 = {
+      scriptHash: contractHash,
+      operation: "decimals",
+      args: [],
+    };
 
-    const scripts = [script1, script2];
+    const scripts = [script1, script2, script3];
 
     if (connectedWallet) {
       const senderHash = NeonWallet.getScriptHashFromAddress(
@@ -278,7 +292,8 @@ export class DaoContract {
     return {
       proposal: parseMapValue(res.stack[0] as any),
       channel: parseMapValue(res.stack[1] as any),
-      balance: connectedWallet ? toDecimal(res.stack[2].value as any) : 0,
+      decimals: parseFloat(res.stack[2].value as any),
+      balance: connectedWallet ? toDecimal(res.stack[3].value as any) : 0,
     };
   };
 
@@ -328,7 +343,6 @@ export class DaoContract {
     };
 
     const res = await Network.read(this.network, [script1, script2]);
-    console.log(res);
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }

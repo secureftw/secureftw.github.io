@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { IClaimableRewards } from "../../../../../packages/neo/contracts/ftw/staking/interfaces";
 import ModalCard from "../../../../components/Modal";
+import {toDecimal} from "../../../../../packages/neo/utils";
 
 const ClaimModal = (props: {
   items: IClaimableRewards[];
@@ -56,7 +57,7 @@ const ClaimModal = (props: {
                   <div className="media">
                     <div className="media-content content is-small">
                       {item.tokenASymbol}-{item.tokenBSymbol}
-                      <br /> {item.claimable} NEP
+                      <br /> {toDecimal(item.claimable)} NEP
                     </div>
                   </div>
                 </label>

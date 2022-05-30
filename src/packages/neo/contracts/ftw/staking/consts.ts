@@ -1,8 +1,10 @@
 import { CONST } from "../../../index";
 
 export const STAKING_COIN_SYMBOL = "NEP";
+export const NEP_LOGO = "/symbols/nep.png";
+
 export const FARM_SCRIPT_HASH = {
-  [CONST.PRIVATENET]: "d8659a335560a867a4c8074a4c6b5346b735f3b0",
-  [CONST.TESTNET]: "83b5d1377983d37e52ba02d673f0fc8e78ec4e6f",
+  [CONST.PRIVATENET]: "",
+  [CONST.TESTNET]: "2bc29c4174e3379aec71c92c9f2a52065820f9e1",
   [CONST.MAINNET]: "",
 };

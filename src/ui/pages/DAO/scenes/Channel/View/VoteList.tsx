@@ -1,3 +1,4 @@
+import { u } from "@cityofzion/neon-core";
 import React from "react";
 import { useOnChainData } from "../../../../../../common/hooks/use-onchain-data";
 import { DaoContract } from "../../../../../../packages/neo/contracts/ftw/dao";
@@ -8,6 +9,7 @@ interface IVoteListProps {
   network: INetworkType;
   contractHash: string;
   symbol: string;
+  decimals: number;
   proposalNo: string;
   options: string[];
 }
@@ -16,7 +18,8 @@ const VoteList = ({
   contractHash,
   proposalNo,
   options,
-	symbol
+  symbol,
+  decimals,
 }: IVoteListProps) => {
   const { isLoaded, error, data } = useOnChainData(() => {
     return new DaoContract(network).getVotes(
@@ -34,15 +37,20 @@ const VoteList = ({
       {isLoaded ? (
         data.items.length > 0 ? (
           <div className="table-container">
-            <table className="table is-fullwidth">
+            <table className="table is-fullwidth is-narrow is-bordered">
               {data.items.map((item, i) => {
+                const voteAmount = u.BigInteger.fromNumber(
+                  item.amount
+                ).toDecimal(decimals);
                 return (
                   <tr key={`vote-${i}`}>
                     <td>
                       <TruncatedAddress address={item.creator} />
                     </td>
                     <td>{options[parseFloat(item.optionIndex)]}</td>
-                    <td>{item.amount} {symbol}</td>
+                    <td>
+                      {parseFloat(voteAmount)} {symbol}
+                    </td>
                   </tr>
                 );
               })}

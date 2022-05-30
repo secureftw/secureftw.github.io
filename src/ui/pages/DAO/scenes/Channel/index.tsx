@@ -11,18 +11,9 @@ const DAOChannel = (props) => {
 
   return (
     <PageLayout>
-      {/*<div className="columns">*/}
-      {/*  <div className="column is-6 is-offset-3">*/}
-      {/*    <div>*/}
-            <Route exact={true} path={path} component={ProposalList} />
-            <Route path={`${path}/create`} component={Create} />
-            <Route
-              path={`${path}/proposal/:proposalNo`}
-              component={ProposalView}
-            />
-          {/*</div>*/}
-        {/*</div>*/}
-      {/*</div>*/}
+      <Route exact={true} path={path} component={ProposalList} />
+      <Route path={`${path}/create`} component={Create} />
+      <Route path={`${path}/proposal/:proposalNo`} component={ProposalView} />
     </PageLayout>
   );
 };

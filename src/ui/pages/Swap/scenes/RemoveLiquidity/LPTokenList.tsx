@@ -30,13 +30,16 @@ const LPTokenList = ({
       ) : (
         <div>
           {data && data.length > 0 ? (
-            data.map((item, i) => (
-              <LPTokenItem
-                {...item}
-                onRemove={onRemoveLiquidity}
-                key={`${item.name}-${i}`}
-              />
-            ))
+            data.map((item, i) => {
+              return (
+                <LPTokenItem
+                  {...item}
+	                network={network}
+                  onRemove={onRemoveLiquidity}
+                  key={`${item.name}-${i}`}
+                />
+              );
+            })
           ) : (
             <div>You don't have LP tokens in your wallet</div>
           )}

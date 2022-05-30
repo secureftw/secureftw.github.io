@@ -17,8 +17,7 @@ const HeaderBetween = (props: IHeaderBetweenProps) => {
           <span>Main</span>
         </Link>
       </div>
-
-      <h1 className="is-size-5 has-text-weight-bold">{props.title}</h1>
+	    <h1 className="title  is-5 is-marginless">{props.title}</h1>
       <div className="is-relative" style={{ width: "50px" }}>
         {props.isLoading && (
           <div

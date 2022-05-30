@@ -61,6 +61,25 @@ export const toDecimal = (val: string | number): number => {
   }
 };
 
+export const withDecimal = (
+  num: string | number,
+  decimals: number,
+  truncated?: boolean
+): string => {
+  let val = u.BigInteger.fromNumber(num).toDecimal(decimals);
+  if (truncated) {
+    return numberTrim(parseFloat(val));
+  }
+  return val;
+};
+
+export const numberTrim = (no: number, decimals = 2): string => {
+  return no
+    .toFixed(decimals)
+    .replace(/[.,]00$/, "")
+    .toString();
+};
+
 export const balanceCheck = (
   balances: IBalance[],
   requiredAmount: number
@@ -76,125 +95,90 @@ export const balanceCheck = (
   return hasBalance;
 };
 
-export const parseMapValue = (v: StackItemLike): any => {
+const stringList = [
+  "name",
+  "meta",
+  "tokenId",
+  "tokenASymbol",
+  "tokenBSymbol",
+  "symbol",
+  "symbolA",
+  "symbolB",
+  "title",
+  "description",
+];
+const addressList = ["owner", "account", "creator"];
+const hash160List = ["contractHash", "tokenA", "tokenB", "tokenIn", "tokenOut"];
+const dateList = ["createdAt"];
+const intList = [
+  "start",
+  "end",
+  "deposit",
+  "totalItems",
+  "totalPages",
+  "no",
+  "amount",
+  "amountA",
+  "amountB",
+  "amountIn",
+  "amountOut",
+  "totalShare",
+  "tokenADecimals",
+  "tokenBDecimals",
+  "minTokens",
+  "claimable",
+  "dailyReward",
+  "TVL",
+];
+
+const classify = (k: string): any => {
+  if (addressList.includes(k)) {
+    return "address";
+  } else if (stringList.includes(k)) {
+    return "string";
+  } else if (hash160List.includes(k)) {
+    return "hash160";
+  } else if (intList.includes(k)) {
+    return "int";
+  } else if (dateList.includes(k)) {
+    return "date";
+  } else {
+    return k;
+  }
+};
+
+export const parseMapValue = (stackItem: StackItemLike): any => {
   const obj = {};
-  const root = v.value as StackItemMap[];
+  const root = stackItem.value as StackItemMap[];
   root.forEach(({ key, value }) => {
     if (value.value) {
-      const k = u.base642utf8(key.value as string);
+      const _key = u.base642utf8(key.value as string);
       let val;
-      switch (k) {
-        case "owner":
+      switch (classify(_key)) {
+        case "address":
           val = base64ToAddress(value.value as string);
           break;
-	      case "account":
-		      val = base64ToAddress(value.value as string);
-		      break;
-        case "creator":
-          val = base64ToAddress(value.value as string);
+        case "string":
+          val = base64ToString(value.value as string);
           break;
-        case "contractHash":
+        case "hash160":
           val = base64ToHash160(value.value as string);
           break;
-        case "tokenA":
-          val = base64ToHash160(value.value as string);
+        case "int":
+          val = parseFloat(value.value as string);
           break;
-        case "tokenB":
-          val = base64ToHash160(value.value as string);
-          break;
-	      case "tokenIn":
-		      val = base64ToHash160(value.value as string);
-		      break;
-	      case "tokenOut":
-		      val = base64ToHash160(value.value as string);
-		      break;
-        case "name":
-          val = base64ToString(value.value as string);
-          break;
-        case "meta":
-          val = base64ToString(value.value as string);
-          break;
-        case "tokenId":
-          val = base64ToString(value.value as string);
-          break;
-        case "tokenASymbol":
-          val = base64ToString(value.value as string);
-          break;
-        case "tokenBSymbol":
-          val = base64ToString(value.value as string);
-          break;
-        case "symbol":
-          val = base64ToString(value.value as string);
-          break;
-        case "symbolA":
-          val = base64ToString(value.value as string);
-          break;
-        case "symbolB":
-          val = base64ToString(value.value as string);
-          break;
-        case "title":
-          val = base64ToString(value.value as string);
-          break;
-        case "description":
-          val = base64ToString(value.value as string);
+        case "date":
+          val = base64ToDate(value.value as string);
           break;
         case "options":
-	        // @ts-ignore
-	        val = value.value.map(v => {
-						return base64ToString(v.value as string);
-          })
+          // @ts-ignore
+          val = value.value.map((v) => {
+            return base64ToString(v.value as string);
+          });
           break;
-        case "start":
-          val = parseFloat(value.value as string);
-          break;
-        case "end":
-          val = parseFloat(value.value as string);
-          break;
-        case "deposit":
-          val = value.value;
-          break;
-        case "totalItems":
-          val = value.value;
-          break;
-        case "totalPages":
-          val = value.value;
-          break;
-        case "no":
-          val = value.value;
-          break;
-        case "minTokens":
-          val = toDecimal(value.value as string);
-          break;
-        case "amountA":
-          val = toDecimal(value.value as string);
-          break;
-        case "amountB":
-          val = toDecimal(value.value as string);
-          break;
-	      case "amountIn":
-		      val = toDecimal(value.value as string);
-		      break;
-	      case "amountOut":
-		      val = toDecimal(value.value as string);
-		      break;
-        case "totalShare":
-          val = toDecimal(value.value as string);
-          break;
-        case "claimable":
-          val = toDecimal(value.value as string);
-          break;
-        case "dailyReward":
-          val = toDecimal(value.value as string);
-          break;
-        case "amount":
-          val = toDecimal(value.value as string);
-          break;
-        case "lockUntil":
+        case "lock":
           val =
             value.value === "0" ? "None" : base64ToDate(value.value as string);
-          break;
-        case "createdAt":
-          val = base64ToDate(value.value as string);
           break;
         case "items":
           // @ts-ignore
@@ -204,9 +188,9 @@ export const parseMapValue = (v: StackItemLike): any => {
           break;
         default:
           val = value.value;
-					break;
+          break;
       }
-      obj[k] = val;
+      obj[_key] = val;
     }
   });
   return obj;

@@ -8,14 +8,17 @@ import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import { toast } from "react-hot-toast";
 import { useApp } from "../../../../../common/hooks/use-app";
+import { toDecimal } from "../../../../../packages/neo/utils";
+import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
+import { SwapContract } from "../../../../../packages/neo/contracts";
+import LogoIcon from "../../../../components/LogoIcon";
+import { NEP_LOGO } from "../../../../../packages/neo/contracts/ftw/staking/consts";
 
 const ClaimRewards = () => {
   const { toggleWalletSidebar } = useApp();
   const { network, connectedWallet } = useWallet();
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
-  const [items, setItems] = useState<IClaimableRewards[]>([]);
-  const [isLoading, setLoading] = useState(!!connectedWallet);
   const [isClaimModalOpen, setClaimModalOpen] = useState(false);
 
   const handleRefresh = () => {
@@ -41,46 +44,38 @@ const ClaimRewards = () => {
     }
   };
 
-  useEffect(() => {
-    async function fetch(w) {
-      setLoading(true);
-      try {
-        const res = await new StakingContract(network).getClaimable(w);
-        setLoading(false);
-        setItems(res);
-      } catch (e: any) {
-        console.error(e);
-        setLoading(false);
-      }
-    }
-    if (connectedWallet) {
-      fetch(connectedWallet);
-    } else {
-      setItems([]);
-    }
+  const { isLoaded, error, data } = useOnChainData(() => {
+    return new StakingContract(network).getClaimable(connectedWallet);
   }, [connectedWallet, network, refresh]);
 
   return (
     <div>
-      <h3 className="title is-6">
-        <span className="icon">
-          <FaCoins />
-        </span>
-        <span>Rewards</span>
-      </h3>
+      <div className="level is-mobile">
+        <div className="level-left">
+          <div className="level-item">
+            <LogoIcon img={NEP_LOGO} />
+          </div>
+          <div className="level-item">
+            <h1 className="title is-7 ">Rewards</h1>
+          </div>
+        </div>
+      </div>
+
       <div className="mb-3">
-        {items.map((item, i) => {
-          return (
-            <div key={`claim-${i}`} className="media">
-              <div className="media-content content is-small">
-                {item.tokenASymbol}-{item.tokenBSymbol}
-                <br /> {item.claimable}
+        {isLoaded &&
+          data.map((item, i) => {
+            return (
+              <div key={`claim-${i}`} className="media">
+                <div className="media-content content is-small">
+                  {item.tokenASymbol}-{item.tokenBSymbol}
+                  <br /> {toDecimal(item.claimable)} <strong>NEP</strong>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
       <button
+        disabled={isLoaded && data.length === 0}
         onClick={() => {
           if (connectedWallet) {
             setClaimModalOpen(true);
@@ -92,9 +87,10 @@ const ClaimRewards = () => {
       >
         {connectedWallet ? "Claim" : "Connect wallet"}
       </button>
+
       {isClaimModalOpen && (
         <ClaimModal
-          items={items}
+          items={data}
           onClose={() => setClaimModalOpen(false)}
           onClaim={onClaim}
         />

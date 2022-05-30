@@ -14,7 +14,7 @@ import SocialLinkGroup from "./SocialLinkGroup";
 
 const Header = () => {
   const { toggleSidebar, toggleWalletSidebar } = useApp();
-  const { connectedWallet, network, disConnectWallet, switchNetwork } =
+  const { connectedWallet, network, disConnectWallet } =
     useWallet();
   const [isActive, setActive] = useState(false);
   const handleDisconnectWallet = () => {
@@ -96,7 +96,7 @@ const Header = () => {
           <div className="navbar-start">
             {MENU.map((route, i) => {
               if (!route.network.includes(network)) return false;
-              if (route.category) {
+              if (route.category.length > 0) {
                 return (
                   <div
                     key={`header-${route.label}${i}`}

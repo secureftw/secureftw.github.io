@@ -1,8 +1,8 @@
 import React from "react";
 import PageLayout from "../../components/PageLayout";
 import {
+  SWAP_PAGE_ROUTE,
   SWAP_PATH,
-  
   SWAP_PATH_HISTORY,
   SWAP_PATH_LIQUIDITY_ADD,
   SWAP_PATH_LIQUIDITY_REMOVE,
@@ -23,14 +23,18 @@ import Main from "./scenes/Main";
 
 const Swap = () => {
   const { network } = useWallet();
-  if (network === MAINNET)
+  if (!SWAP_PAGE_ROUTE.network.includes(network)) {
     return (
       <PageLayout>
         <div className="notification is-info">
-          FTW Swap is not on Mainnet yet.{" "}
+          {SWAP_PAGE_ROUTE.label} is not on {network} yet.
+          <br />
+          Please stay tuned.
         </div>
       </PageLayout>
     );
+  }
+
   return (
     <div>
       <PageLayout>

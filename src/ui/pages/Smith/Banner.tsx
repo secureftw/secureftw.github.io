@@ -14,7 +14,7 @@ const Banner = () => {
     <section className="hero is-white">
       <div className="hero-body">
         <div className="container">
-          <h1 className="title">Smith</h1>
+          <h1 className="title ">Smith</h1>
           <p className="subtitle">
             Create your token smart contracts without codes
           </p>

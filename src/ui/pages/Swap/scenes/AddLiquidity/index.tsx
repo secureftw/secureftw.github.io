@@ -5,47 +5,45 @@ import AssetListModal from "../../components/AssetListModal";
 import { toast } from "react-hot-toast";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
-import { useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
-import { SWAP_PATH, SWAP_PATH_LIQUIDITY_ADD } from "../../../../../consts";
-import HeaderBetween from "../../../../components/HeaderBetween";
+import { SWAP_PATH } from "../../../../../consts";
 import moment from "moment";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
 import TimeLockInput from "./TimeLockInput";
 import LPRewardInfo from "./LPRewardInfo";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 import LPInputs from "./LPInputs";
+import { IReserveData } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
+import { FaAngleLeft } from "react-icons/fa";
+import SettingDropdown from "./SettingDropdown";
+import { DEFAULT_SLIPPAGE } from "../../../../../packages/neo/contracts/ftw/swap/consts";
+import PriceRatio from "../Swap/components/PriceRatio";
+import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
 
-const Liquidity = (props) => {
+export interface ITokenState {
+  hash: string;
+  decimals: number;
+  symbol: string;
+}
+
+const Liquidity = () => {
   const location = useLocation();
   const history = useHistory();
   const params = queryString.parse(location.search);
-
-  const isNewPoolMode = !params.tokenA && !params.tokenB;
   const { network, connectedWallet } = useWallet();
   const [isAssetChangeModalActive, setAssetChangeModalActive] = useState<
     "A" | "B" | ""
   >("");
 
-  const [tokenA, setTokenA] = useState<any>(
-    params.tokenA ? params.tokenA : undefined
-  );
-  const [tokenB, setTokenB] = useState<any>(
-    params.tokenB ? params.tokenB : undefined
-  );
-  const [symbolA, setSymbolA] = useState<any>(
-    params.symbolA ? params.symbolA : undefined
-  );
-  const [symbolB, setSymbolB] = useState<any>(
-    params.symbolB ? params.symbolB : undefined
-  );
-
-  const [amountA, setAmountA] = useState("");
-  const [amountB, setAmountB] = useState("");
-
+  const [tokenA, setTokenA] = useState<ITokenState | undefined>();
+  const [tokenB, setTokenB] = useState<ITokenState | undefined>();
+  const [amountA, setAmountA] = useState<number>();
+  const [amountB, setAmountB] = useState<number>();
+  const [slippage, setSlippage] = useState(DEFAULT_SLIPPAGE);
   const [selectedLock, setSelectedLock] = useState(false);
   const [lockUntil, setUntil] = useState(new Date());
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<IReserveData | undefined>();
   const [isPairLoading, setPairLoading] = useState(false);
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
@@ -55,46 +53,52 @@ const Liquidity = (props) => {
     setAssetChangeModalActive(type);
   };
 
-  const onAssetClick = (assetHash, symbol) => {
+  const onAssetClick = (hash, symbol, decimals) => {
+    const assetObj = {
+      hash,
+      symbol,
+      decimals,
+    };
     if (isAssetChangeModalActive === "A") {
-      setTokenA(assetHash);
-      setSymbolA(symbol);
-      setAmountA("");
+      setTokenA(assetObj);
       if (tokenB) {
-        let search = `?tokenA=${assetHash}&tokenB=${tokenB}`;
+        let search = `?tokenA=${hash}&tokenB=${tokenB.hash}`;
         history.push(search);
       }
     } else {
-      setTokenB(assetHash);
-      setSymbolB(symbol);
-      setAmountB("");
+      setTokenB(assetObj);
       if (tokenA) {
-        let search = `?tokenA=${tokenA}&tokenB=${assetHash}`;
+        let search = `?tokenA=${tokenA.hash}&tokenB=${hash}`;
         history.push(search);
       }
     }
+    setAmountA(undefined);
+    setAmountB(undefined);
     setAssetChangeModalActive("");
   };
 
   const onSuccess = () => {
-    setAmountA("");
-    setAmountB("");
+    setTokenA(undefined);
+    setTokenB(undefined);
     setRefresh(refresh + 1);
     setTxid("");
   };
 
   const onAddLiquidity = async () => {
     if (connectedWallet) {
-      if (tokenA && tokenB && amountA && amountB) {
+      if (tokenA && tokenB && amountA && amountB && data) {
         try {
-          const milliseconds = selectedLock ? moment(lockUntil).valueOf() : 0;
+          const deadlineMs = selectedLock ? moment(lockUntil).valueOf() : 0;
           const res = await new SwapContract(network).provide(
             connectedWallet,
-            tokenA,
+            tokenA.hash,
+            tokenA.decimals,
             amountA,
-            tokenB,
+            tokenB.hash,
+            tokenB.decimals,
             amountB,
-            milliseconds
+            deadlineMs,
+            slippage * 100
           );
           setTxid(res);
         } catch (e: any) {
@@ -109,15 +113,13 @@ const Liquidity = (props) => {
   const onSwitch = () => {
     if (tokenA || tokenB) {
       if (tokenA && tokenB) {
-        let search = `?tokenA=${tokenB}&tokenB=${tokenA}`;
+        let search = `?tokenA=${tokenA.hash}&tokenB=${tokenB.hash}`;
         history.push(search);
       }
       setTokenB(tokenA);
-      setTokenA(tokenB ? tokenB : "");
+      setTokenA(tokenB);
       setAmountB(amountA);
       setAmountA(amountB);
-      setSymbolA(symbolB);
-      setSymbolB(symbolA);
     }
   };
 
@@ -125,18 +127,30 @@ const Liquidity = (props) => {
     setRefresh(refresh + 1);
   };
 
-  const getReserve = async () => {
+  const getReserve = async (tokenAHash, tokenBHash) => {
     try {
       setError(undefined);
       setPairLoading(true);
       const res = await new SwapContract(network).getReserve(
-        tokenA,
-        tokenB,
+        tokenAHash,
+        tokenBHash,
         connectedWallet
       );
       setData(res);
-      setSymbolA(res.reserve.tokenASymbol);
-      setSymbolB(res.reserve.tokenBSymbol);
+      if (!tokenA) {
+        setTokenA({
+          hash: tokenAHash,
+          symbol: res.pair[tokenAHash].symbol,
+          decimals: res.pair[tokenAHash].decimals,
+        });
+      }
+      if (!tokenB) {
+        setTokenB({
+          hash: tokenBHash,
+          symbol: res.pair[tokenBHash].symbol,
+          decimals: res.pair[tokenBHash].decimals,
+        });
+      }
       setPairLoading(false);
     } catch (e: any) {
       setError(e.message);
@@ -145,25 +159,74 @@ const Liquidity = (props) => {
   };
 
   useEffect(() => {
-    async function load() {
-      await getReserve();
+    async function load(A, B) {
+      await getReserve(A, B);
     }
-    if (tokenA && tokenB) {
-      load();
+    if (params.tokenA && params.tokenB) {
+      load(params.tokenA, params.tokenB);
     }
-  }, [connectedWallet, refresh, tokenA, tokenB]);
+  }, [connectedWallet, refresh, params.tokenA, params.tokenB]);
+
   const noLiquidity =
-    (data && data.pair[tokenA] === 0) || (data && data.pair[tokenB] === 0);
+    (tokenA &&
+      tokenB &&
+      data &&
+      data.pair[tokenA.hash] &&
+      data.pair[tokenA.hash].reserveAmount === 0) ||
+    (tokenA &&
+      tokenB &&
+      data &&
+      data.pair[tokenB.hash] &&
+      data.pair[tokenB.hash].reserveAmount === 0);
+
+  const isTokenAMaxGas =
+    tokenA &&
+    tokenA.hash === GAS_SCRIPT_HASH &&
+    data &&
+    amountA &&
+    data.userBalances[tokenA.hash] > 0 &&
+    data.userBalances[tokenA.hash] <= amountA;
+
+  const isTokenBMaxGas =
+    tokenB &&
+    tokenB.hash === GAS_SCRIPT_HASH &&
+    data &&
+    amountB &&
+    data.userBalances[tokenB.hash] > 0 &&
+    data.userBalances[tokenB.hash] <= amountB;
+
+  const toMain = {
+    pathname: `${SWAP_PATH}`,
+    search:
+      tokenA && tokenB ? `?tokenA=${tokenA.hash}&tokenB=${tokenB.hash}` : "",
+  };
+  const title = noLiquidity ? "Create a new pool" : "Provide liquidity";
   return (
     <>
-      <HeaderBetween
-        path={{
-          pathname: `${SWAP_PATH}`,
-          search: tokenA && tokenB ? `?tokenA=${tokenA}&tokenB=${tokenB}` : "",
-        }}
-        title={noLiquidity ? "Create a new pool" : "Provide liquidity"}
-        isLoading={isPairLoading}
-      />
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div style={{ width: "50px" }}>
+          <Link className="button is-white is-small" to={toMain}>
+            <span className="icon">
+              <FaAngleLeft />
+            </span>
+            <span>Main</span>
+          </Link>
+        </div>
+        <h1 className="title  is-5 is-marginless">{title}</h1>
+        <div className="is-relative" style={{ width: "50px" }}>
+          <div className="is-pulled-right">
+            <SettingDropdown slippage={slippage} setSlippage={setSlippage} />
+          </div>
+
+          {/*{isPairLoading && (*/}
+          {/*  <div*/}
+          {/*    className="button is-white is-loading"*/}
+          {/*    style={{ position: "absolute", right: 0 }}*/}
+          {/*  />*/}
+          {/*)}*/}
+        </div>
+      </div>
+
       <hr />
       {noLiquidity && <LPRewardInfo />}
       {error && (
@@ -171,41 +234,63 @@ const Liquidity = (props) => {
       )}
       <div className="is-relative">
         <LPInputs
+          isTokenAMaxGas={isTokenAMaxGas}
+          isTokenBMaxGas={isTokenBMaxGas}
           noLiquidity={noLiquidity}
           network={network}
           tokenA={tokenA}
           tokenB={tokenB}
-          symbolA={symbolA}
-          symbolB={symbolB}
           amountA={amountA}
           amountB={amountB}
           onAssetChange={onAssetChange}
-          userTokenABalance={
-            connectedWallet && data ? data.balances[tokenA] : undefined
-          }
-          userTokenBBalance={
-            connectedWallet && data ? data.balances[tokenB] : undefined
-          }
           onSwitch={onSwitch}
           setAmountA={setAmountA}
           setAmountB={setAmountB}
-          reserve={data}
+          data={data}
+          connectedWallet={connectedWallet}
         />
 
         {connectedWallet ? (
           tokenA && tokenB && amountA && amountB ? (
             <>
               <hr />
-              <TimeLockInput
-                setLockUntil={setUntil}
-                lockUntil={lockUntil}
-                toggleSwitch={() => setSelectedLock(!selectedLock)}
-                isActive={selectedLock}
-              />
+
+              <div className="level">
+                <div className="level-left">
+                  <div className="level-item">
+                    <PriceRatio
+                      symbolA={tokenA.symbol}
+                      symbolB={tokenB.symbol}
+                      amountA={amountA}
+                      amountB={amountB}
+                    />
+                  </div>
+                </div>
+
+                <div className="level-right">
+                  <div className="level-item">
+                    <TimeLockInput
+                      setLockUntil={setUntil}
+                      lockUntil={lockUntil}
+                      toggleSwitch={() => setSelectedLock(!selectedLock)}
+                      isActive={selectedLock}
+                    />
+                  </div>
+                </div>
+              </div>
+
               <button
                 disabled={
-                  data.balances[tokenA] < parseFloat(amountA) ||
-                  data.balances[tokenB] < parseFloat(amountB)
+                  isTokenAMaxGas ||
+                  isTokenBMaxGas ||
+                  (tokenA &&
+                    tokenB &&
+                    data &&
+                    data.userBalances[tokenA.hash] < amountA) ||
+                  (tokenA &&
+                    tokenB &&
+                    data &&
+                    data.userBalances[tokenB.hash] < amountB)
                 }
                 onClick={onAddLiquidity}
                 className="button is-fullwidth is-primary"
@@ -237,8 +322,8 @@ const Liquidity = (props) => {
 
       {isAssetChangeModalActive && (
         <AssetListModal
-          tokenA={tokenA}
-          tokenB={tokenB}
+          tokenAHash={tokenA ? tokenA.hash : undefined}
+          tokenBHash={tokenB ? tokenB.hash : undefined}
           onAssetClick={onAssetClick}
           onClose={() => setAssetChangeModalActive("")}
         />

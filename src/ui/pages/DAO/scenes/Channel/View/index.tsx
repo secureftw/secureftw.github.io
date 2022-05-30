@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import AfterTransactionSubmitted from "../../../../../../packages/ui/AfterTransactionSubmitted";
 import VoteList from "./VoteList";
 import { toDecimal } from "../../../../../../packages/neo/utils";
+import { u } from "@cityofzion/neon-core";
 
 const ProposalView = () => {
   const params = useParams();
@@ -72,6 +73,10 @@ const ProposalView = () => {
 
   if (!isLoaded) return <div></div>;
   if (error) return <div></div>;
+
+  const now = moment().valueOf();
+  const end = data.proposal.end;
+  const isActive = now < end;
   return (
     <div className="columns">
       <div className="column is-8 is-offset-2">
@@ -84,10 +89,24 @@ const ProposalView = () => {
         <div className="columns">
           <div className="column is-8">
             <div className="box is-shadowless">
-              <div>
-                <h5 className="title is-5">
-                  #{data.proposal.no} {data.proposal.title}
-                </h5>
+              <div className="block">
+                <div className="media">
+                  <div className="media-content">
+                    <h5 className="title is-5">
+                      #{data.proposal.no} {data.proposal.title}
+                    </h5>
+                  </div>
+                  <div className="media-right">
+                    <div
+                      className={`tag ${isActive ? "is-success" : "is-light"}`}
+                    >
+                      {isActive ? "Active" : "End"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="block">
                 <p>{data.proposal.description}</p>
               </div>
             </div>
@@ -103,7 +122,10 @@ const ProposalView = () => {
                       onVoteOptionClick(op, i);
                     }}
                   >
-                    <button className="button is-fullwidth is-rounded">
+                    <button
+                      disabled={!isActive}
+                      className="button is-fullwidth is-rounded"
+                    >
                       {op}
                     </button>
                   </div>
@@ -114,6 +136,7 @@ const ProposalView = () => {
               <VoteList
                 contractHash={contractHash}
                 symbol={data.channel.symbol}
+                decimals={data.channel.decimals}
                 proposalNo={proposalNo}
                 network={network}
                 options={data.proposal.options}
@@ -139,6 +162,11 @@ const ProposalView = () => {
                   const percent =
                     (data.proposal[`option${i}`] / data.proposal.totalVotes) *
                     100;
+
+                  const voteAmount = u.BigInteger.fromNumber(
+                    data.proposal[`option${i}`]
+                  ).toDecimal(data.decimals);
+
                   return (
                     <div key={`option-${i}`} className="mb-3">
                       <div className="level is-marginless">
@@ -147,8 +175,7 @@ const ProposalView = () => {
                         </div>
                         <div className="level-right">
                           <div className="level-item">
-                            {toDecimal(data.proposal[`option${i}`])}{" "}
-                            {data.channel.symbol}
+                            {parseFloat(voteAmount)} {data.channel.symbol}
                           </div>
                         </div>
                       </div>
@@ -212,7 +239,11 @@ const ProposalView = () => {
             </div>
             <hr />
             <button
-              disabled={vote.amount === "" || vote.amount === "0" || parseFloat(vote.amount) > data.balance}
+              disabled={
+                vote.amount === "" ||
+                vote.amount === "0" ||
+                parseFloat(vote.amount) > data.balance
+              }
               onClick={handleVote}
               className="button is-primary"
             >

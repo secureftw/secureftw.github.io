@@ -1,42 +1,36 @@
 import React, { useEffect, useState } from "react";
 import Input from "../../components/Input";
 import { FaExchangeAlt } from "react-icons/fa";
-import { IPairInfo } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { INetworkType } from "../../../../../packages/neo/network";
+import { ITokenState } from ".";
 
 interface ISwapInputsProps {
   network: INetworkType;
-  tokenA: string;
-  tokenB: string;
-  symbolA: string;
-  symbolB: string;
-  amountA: string;
-  amountB: string;
+  tokenA?: ITokenState;
+  tokenB?: ITokenState;
+  amountA?: number;
+  amountB?: number;
   onAssetChange: (type: "A" | "B") => void;
-  userTokenABalance: any;
-  userTokenBBalance: any;
   onSwitch: () => void;
-  setAmountA: (val: string) => void;
-  setAmountB: (val: string) => void;
-  reserve?: IPairInfo;
+  setAmountA: (val?: number) => void;
+  setAmountB: (val?: number) => void;
   noLiquidity?: boolean;
   isTokenAMaxGas?: any;
   isTokenBMaxGas?: any;
-  setFee: (fee: number) => void;
+  userTokenABalance?: number;
+  userTokenBBalance?: number;
 }
 
 interface ISearchTerm {
   type: "A" | "B";
-  value: string;
+  value?: number;
 }
 
 const SwapInputs = ({
   network,
   tokenA,
   tokenB,
-  symbolA,
-  symbolB,
   onAssetChange,
   amountA,
   amountB,
@@ -45,11 +39,9 @@ const SwapInputs = ({
   userTokenBBalance,
   setAmountA,
   setAmountB,
-  reserve,
   noLiquidity,
   isTokenAMaxGas,
   isTokenBMaxGas,
-  setFee,
 }: ISwapInputsProps) => {
   const [searchTerm, setSearchTerm] = useState<ISearchTerm>();
   const [isAmountALoading, setAmountALoading] = useState(false);
@@ -57,44 +49,39 @@ const SwapInputs = ({
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(async () => {
-      if (searchTerm) {
-        const no = parseFloat(searchTerm.value);
-        if (no > 0) {
+      if (tokenA && tokenB && searchTerm && searchTerm.value) {
+        if (searchTerm.value > 0) {
           if (searchTerm.type === "A") {
             setAmountBLoading(true);
           } else {
             setAmountALoading(true);
           }
-          const { estimated, fee } = await new SwapContract(
-            network
-          ).getSwapEstimate(
-            searchTerm.type === "A" ? tokenA : tokenB,
-            searchTerm.type === "A" ? tokenB : tokenA,
-            searchTerm.type === "A" ? tokenA : tokenB,
+          const estimated = await new SwapContract(network).getSwapEstimate(
+            tokenA.hash,
+            tokenB.hash,
+            searchTerm.type === "A" ? tokenA.hash : tokenB.hash,
+            searchTerm.type === "A" ? tokenA.decimals : tokenB.decimals,
             searchTerm.value
           );
           if (searchTerm.type === "A") {
             setAmountBLoading(false);
-            setAmountB(estimated.toString());
-            setFee(fee);
+            setAmountB(+estimated);
           } else {
             setAmountALoading(false);
-            setAmountA(estimated.toString());
-            setFee(fee);
+            setAmountA(+estimated);
           }
         }
       }
-    }, 500);
+    }, 800);
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
   return (
     <>
       <Input
-        contractHash={tokenA}
-        symbol={symbolA}
+        contractHash={tokenA ? tokenA.hash : ""}
+        symbol={tokenA ? tokenA.symbol : undefined}
         isDisable={!tokenA || !tokenB || noLiquidity}
-        // isReadOnly={!tokenA}
         heading="Sell"
         onClickAsset={() => onAssetChange("A")}
         val={amountA}
@@ -105,6 +92,7 @@ const SwapInputs = ({
             value,
           });
         }}
+        decimals={tokenA ? tokenA.decimals : userTokenABalance}
         userBalance={userTokenABalance}
         isLoading={isAmountALoading}
         errorMessage={
@@ -119,10 +107,9 @@ const SwapInputs = ({
         </button>
       </div>
       <Input
-        contractHash={tokenB}
-        symbol={symbolB}
+        contractHash={tokenB ? tokenB.hash : ""}
+        symbol={tokenB ? tokenB.symbol : undefined}
         isDisable={!tokenA || !tokenB || noLiquidity}
-        // isReadOnly={!tokenB}
         heading="Buy"
         onClickAsset={() => {
           onAssetChange("B");
@@ -135,6 +122,7 @@ const SwapInputs = ({
             value,
           });
         }}
+        decimals={tokenB ? tokenB.decimals : undefined}
         userBalance={userTokenBBalance}
         isLoading={isAmountBLoading}
         errorMessage={

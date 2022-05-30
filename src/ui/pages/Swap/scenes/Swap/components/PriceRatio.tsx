@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { numberTrim } from "../../../../../../packages/neo/utils";
 interface IPriceRationProps {
-  amountA: string;
-  amountB: string;
-  symbolA: string;
-  symbolB: string;
+  amountA: number;
+  amountB: number;
+  symbolA?: string;
+  symbolB?: string;
 }
 const PriceRatio = ({
   amountA,
@@ -11,19 +12,17 @@ const PriceRatio = ({
   symbolA,
   symbolB,
 }: IPriceRationProps) => {
-  console.log(amountA);
-  console.log(amountB);
   const [isReversed, setReversed] = useState(false);
-  let ratio = parseFloat(amountA) / parseFloat(amountB);
+  let ratio = amountA / amountB;
   if (isReversed) {
-    ratio = parseFloat(amountB) / parseFloat(amountA);
+    ratio = amountA / amountB;
   }
   return (
     <p
       onClick={() => setReversed(!isReversed)}
       className="is-size-7 has-text-weight-semibold"
     >
-      {`1 ${isReversed ? symbolA : symbolB} = ${ratio.toFixed(2).replace(/[.,]00$/, "")} ${
+      {`1 ${isReversed ? symbolA : symbolB} = ${numberTrim(ratio)} ${
         isReversed ? symbolB : symbolA
       }`}
     </p>

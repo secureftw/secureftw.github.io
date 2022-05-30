@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { SWAP_PATH_LIQUIDITY_ADD } from "../../../../../consts";
-import {SWAP_FEE} from "../../../../../packages/neo/contracts/ftw/swap/consts";
+import { SWAP_PATH_LIQUIDITY_ADD } from "../../../../../../consts";
+import {SWAP_FEE} from "../../../../../../packages/neo/contracts/ftw/swap/consts";
 
 const NoLPInfo = ({ tokenA, tokenB }) => {
   return (

@@ -298,21 +298,18 @@ const NEP17FormModal = () => {
                   <li>
                     Deploy fee is <strong>10 GAS</strong>.
                   </li>
+                  <li>FTWSwap cannot support tokens with 0 decimals</li>
                   <li>
-                    In order to use FTWSwap or FTWDAO, use{" "}
-                    <strong>8 decimals</strong> (Most standard).
+                    Check contract source code at{" "}
+                    <a
+                      target="_blank"
+                      href={
+                        "https://github.com/ForTheWinn/public-contracts/blob/main/FTWSmithNep17-v2/FTWSmithNep17-v2.cs"
+                      }
+                    >
+                      here
+                    </a>
                   </li>
-	                <li>
-		                Check contract source code at{" "}
-		                <a
-			                target="_blank"
-			                href={
-				                "https://github.com/ForTheWinn/public-contracts/blob/main/FTWSmithNep17-v2/FTWSmithNep17-v2.cs"
-			                }
-		                >
-			                here
-		                </a>
-	                </li>
                 </div>
               </div>
             </div>

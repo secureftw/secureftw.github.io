@@ -8,8 +8,9 @@ import { DaoContract } from "../../../../../../packages/neo/contracts/ftw/dao";
 import toast from "react-hot-toast";
 import moment from "moment";
 import { DAO_CHANNEL_PATH } from "../../../../../../consts";
-import HeaderBetween from "../../../../../components/HeaderBetween";
 import { useOnChainData } from "../../../../../../common/hooks/use-onchain-data";
+import { withDecimal } from "../../../../../../packages/neo/utils";
+import ChannelCard from "../../../components/ChannelCard";
 
 const Create = (props) => {
   const params = useParams();
@@ -22,7 +23,6 @@ const Create = (props) => {
   const [start, setStart] = useState(new Date());
   const [end, setEnd] = useState(new Date(Date.now() + 3600 * 1000 * 24));
   const [txid, setTxid] = useState("");
-  // const [refresh, setRefresh] = useState(0);
 
   const handleOptionChange = (val, i) => {
     const array = [...options];
@@ -67,12 +67,13 @@ const Create = (props) => {
     return new DaoContract(network).getChannel(contractHash);
   }, []);
 
-	let hasEmptyOption = false;
-	options.forEach(op => {
-		if(op === ""){
-			hasEmptyOption = true;
-		}
-	})
+  let hasEmptyOption = false;
+  options.forEach((op) => {
+    if (op === "") {
+      hasEmptyOption = true;
+    }
+  });
+
   return (
     <div className="columns">
       <div className="column is-8 is-offset-2">
@@ -153,12 +154,14 @@ const Create = (props) => {
                   <div className="field-body">
                     <div className="field">
                       <div className="control">
-                        <button
-                          onClick={handleMoreOption}
-                          className="button is-small is-light"
-                        >
-                          Add more option
-                        </button>
+                        <div className="buttons">
+                          <button
+                            onClick={handleMoreOption}
+                            className="button is-small is-light"
+                          >
+                            Add more option
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -221,28 +224,36 @@ const Create = (props) => {
             </div>
           </div>
           <div className="column is-4">
-            <div className="box is-shadowless">
-              {data && (
-                <div className="content is-small">
-                  <li>
-                    You are making a new proposal of{" "}
-                    <strong>{data.symbol} channel</strong>.
-                  </li>
-                  <li>
-                    You will deposit{" "}
-                    <strong>
-                      {data.minTokens}
-                      {data.symbol}
-                    </strong>
-                    .
-                  </li>
-                  <li>
-                    You will get your tokens back after{" "}
-                    <strong>proposal expired</strong>.
-                  </li>
+            {data && (
+              <>
+                <div className="box is-shadowless">
+                  <ChannelCard
+                    symbol={data.symbol}
+                    logo={DaoContract.getMetadata(data.meta).logo}
+                  />
                 </div>
-              )}
-            </div>
+                <div className="box is-shadowless">
+                  <div className="content is-small">
+                    <li>
+                      You are making a new proposal of{" "}
+                      <strong>{data.symbol} channel</strong>.
+                    </li>
+                    <li>
+                      You will deposit{" "}
+                      <strong>
+                        {withDecimal(data.minTokens, data.decimals, true)}{" "}
+                        {data.symbol}
+                      </strong>
+                      .
+                    </li>
+                    <li>
+                      You will get your tokens back after{" "}
+                      <strong>proposal expired</strong>.
+                    </li>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

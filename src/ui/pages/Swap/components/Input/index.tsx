@@ -3,20 +3,21 @@ import { FaAngleDown } from "react-icons/fa";
 import NumberFormat from "react-number-format";
 import { useWallet } from "../../../../../packages/provider";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
-import {UNKNOWN_TOKEN_IMAGE} from "../../../../../packages/neo/consts";
+import { UNKNOWN_TOKEN_IMAGE } from "../../../../../packages/neo/consts";
 
 interface IInputProps {
   contractHash: string;
-  symbol: string;
-  val: string;
+  symbol?: string;
+  val?: number;
   heading?: string;
   isLoading?: boolean;
-  setValue: (val: string, e: any) => void;
+  setValue: (val?: number) => void;
   onClickAsset: () => void;
   isReadOnly?: boolean;
   userBalance?: number;
   isDisable?: boolean;
   errorMessage?: string;
+  decimals?: number;
 }
 const Input = ({
   contractHash,
@@ -30,11 +31,13 @@ const Input = ({
   isReadOnly,
   userBalance,
   errorMessage,
+  decimals,
 }: IInputProps) => {
   const { network } = useWallet();
   const logo = ASSET_LIST[network][contractHash]
     ? ASSET_LIST[network][contractHash].logo
     : undefined;
+  // const noFund = userBalance && val && val > userBalance
   return (
     <div className="">
       <div className="columns">
@@ -81,20 +84,20 @@ const Input = ({
             <NumberFormat
               disabled={isDisable}
               readOnly={isReadOnly}
-              decimalScale={8}
+              placeholder="0.00"
+              decimalScale={decimals !== undefined ? decimals : 8}
               inputMode="decimal"
               className={`input ${errorMessage ? "is-danger" : ""}`}
-              value={val}
+              value={val !== undefined ? val : ""}
               allowNegative={false}
               onValueChange={(value, e) => {
                 if (e.source === "event") {
-                  setValue(value.value, e.event);
+                  setValue(value.floatValue);
                 }
               }}
               thousandSeparator={true}
-              suffix={" " + symbol}
+              suffix={` ${symbol ? symbol : ""}`}
               allowLeadingZeros={false}
-              // format={(val) => {} }
             />
             {errorMessage ? (
               <p className="help is-danger">{errorMessage}</p>
@@ -111,14 +114,15 @@ const Input = ({
                       onClick={(e) => {
                         if (userBalance) {
                           // @ts-ignore
-                          setValue(userBalance, e);
+                          setValue(userBalance.toString(), e);
                         }
                       }}
                       className={`is-size-7 ${
-                        userBalance ? "is-clickable" : ""
+                        userBalance && userBalance > 0 ? "is-clickable" : ""
                       }`}
                     >
-                      {userBalance ? userBalance : 0} {symbol}
+                      {userBalance ? userBalance.toLocaleString() : 0}{" "}
+                      {symbol ? symbol : ""}
                     </small>
                   </div>
                 </div>

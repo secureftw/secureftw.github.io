@@ -1,17 +1,26 @@
 import React from "react";
+import { ILPToken } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
 
-interface IPositionCardProps {
-  tokenId: string;
-  amount: string;
+interface IPositionCardProps extends ILPToken {
+  TVL: number;
+  createdAt: string;
   onUnStake: (tokenId: string) => void;
 }
-const PositionCard = ({ tokenId, amount, onUnStake }: IPositionCardProps) => {
+const PositionCard = ({
+  tokenId,
+  amount,
+  onUnStake,
+  TVL,
+  createdAt,
+}: IPositionCardProps) => {
   return (
     <div className="media">
       <div className="media-content">
-        {tokenId}
+        <strong>{tokenId}</strong>
         <br />
-        {amount}
+        <small>Share of pool: {((amount / TVL) * 100).toFixed(2)}%</small>
+        <br />
+        <small>Staked at {createdAt}</small>
       </div>
       <div className="media-right">
         <button onClick={() => onUnStake(tokenId)} className="button is-light">

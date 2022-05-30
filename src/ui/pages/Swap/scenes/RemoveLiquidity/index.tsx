@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useWallet } from "../../../../../packages/provider";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { toast } from "react-hot-toast";
@@ -7,7 +7,6 @@ import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransacti
 import HeaderBetween from "../../../../components/HeaderBetween";
 import { SWAP_PATH } from "../../../../../consts";
 import LPTokenList from "./LPTokenList";
-import { useApp } from "../../../../../common/hooks/use-app";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 
 const RemoveLiquidity = () => {

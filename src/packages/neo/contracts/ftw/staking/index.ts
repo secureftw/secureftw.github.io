@@ -38,10 +38,6 @@ export class StakingContract {
           value: senderHash,
         },
         {
-          type: "Hash160",
-          value: SWAP_SCRIPT_HASH[this.network],
-        },
-        {
           type: "String",
           value: tokenId,
         },
@@ -230,21 +226,25 @@ export class StakingContract {
   };
 
   getClaimable = async (
-    connectedWallet: IConnectedWallet
+    connectedWallet?: IConnectedWallet
   ): Promise<IClaimableRewards[]> => {
-    const scripts = [
-      {
-        scriptHash: this.contractHash,
-        operation: "getClaimable",
-        args: [{ type: "Address", value: connectedWallet.account.address }],
-      },
-    ];
-    const res = await Network.read(this.network, scripts);
-    if (res.state !== "FAULT") {
-      return parseClaimableMap(res as any);
-    } else {
-      console.error(res.exception);
+    if (!connectedWallet) {
       return [];
+    } else {
+      const scripts = [
+        {
+          scriptHash: this.contractHash,
+          operation: "getClaimable",
+          args: [{ type: "Address", value: connectedWallet.account.address }],
+        },
+      ];
+      const res = await Network.read(this.network, scripts);
+      if (res.state !== "FAULT") {
+        return parseClaimableMap(res as any);
+      } else {
+        console.error(res.exception);
+        return [];
+      }
     }
   };
 }

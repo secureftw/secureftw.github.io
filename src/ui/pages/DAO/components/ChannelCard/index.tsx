@@ -7,16 +7,17 @@ interface IChannelCardProps {
 const ChannelCard = ({ logo, symbol }: IChannelCardProps) => {
   return (
     <div className="box is-shadowless has-text-centered">
-      <div className="circular--portrait">
-        <div className="image is-64x64 mb-2" style={{ margin: "auto" }}>
-          <img
-            onError={(e) => {
-              // @ts-ignore
-              e.target.src = UNKNOWN_TOKEN_IMAGE;
-            }}
-            src={logo ? logo : UNKNOWN_TOKEN_IMAGE}
-          />
-        </div>
+      <div
+        className="image is-64x64 mb-2"
+        style={{ margin: "auto", borderRadius: "50%" }}
+      >
+        <img
+          onError={(e) => {
+            // @ts-ignore
+            e.target.src = UNKNOWN_TOKEN_IMAGE;
+          }}
+          src={logo ? logo : UNKNOWN_TOKEN_IMAGE}
+        />
       </div>
       <strong>{symbol}</strong>
     </div>
