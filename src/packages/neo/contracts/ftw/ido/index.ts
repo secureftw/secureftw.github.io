@@ -1,5 +1,4 @@
 import { INetworkType, Network } from "../../../network";
-import { FUSE_SCRIPT_HASH } from "../fuse";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { wallet } from "../../../index";
@@ -71,6 +70,21 @@ export class IDOContract {
   getIDOStatus = async (
     connectedWallet?: IConnectedWallet
   ): Promise<IIDOStatus> => {
+    if (this.network === MAINNET) {
+      return {
+        available: 50_000_000_00000000,
+        launchDate: 0,
+        balances: {
+          [NEO_SCRIPT_HASH]: 0,
+          [GAS_SCRIPT_HASH]: 0,
+          [BNEO_SCRIPT_HASH[this.network]]: 0,
+          [FLM_SCRIPT_HASH[this.network]]: 0,
+          [GM_SCRIPT_HASH[this.network]]: 0,
+          [LRB_SCRIPT_HASH[this.network]]: 0,
+        },
+      };
+    }
+
     const script1 = {
       scriptHash: FARM_SCRIPT_HASH[this.network],
       operation: "balanceOf",
@@ -93,16 +107,16 @@ export class IDOContract {
       const senderHash = NeonWallet.getScriptHashFromAddress(
         connectedWallet.account.address
       );
-      const script3 = {
-        scriptHash: NEO_SCRIPT_HASH,
-        operation: "balanceOf",
-        args: [
-          {
-            type: "Hash160",
-            value: senderHash,
-          },
-        ],
-      };
+	    const script3 = {
+		    scriptHash: NEO_SCRIPT_HASH,
+		    operation: "balanceOf",
+		    args: [
+			    {
+				    type: "Hash160",
+				    value: senderHash,
+			    },
+		    ],
+	    };
       const script4 = {
         scriptHash: GAS_SCRIPT_HASH,
         operation: "balanceOf",

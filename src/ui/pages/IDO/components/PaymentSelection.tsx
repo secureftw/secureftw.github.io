@@ -14,6 +14,7 @@ const PaymentSelection = ({
 }: IPaymentSelectionProps) => {
   return (
     <>
+	    <h1 className="title is-5">Swap rates</h1>
       <div className="columns is-multiline">
         {payments(network).map((p, i) => {
           if (currentTokenHash && currentTokenHash === p.contractHash)
@@ -31,11 +32,9 @@ const PaymentSelection = ({
                 >
                   <img src={p.logo} />
                 </figure>
-                <small className="has-text-weight-medium">1 {p.symbol}</small>
-                <br />
-                <small>=</small>
-                <br />
-                <small className="has-text-weight-medium">{p.amount} NEP</small>
+                <div className="title is-7 is-marginless">1 {p.symbol}</div>
+                <div>=</div>
+                <div className="title is-7 is-marginless">{p.amount} NEP</div>
               </div>
             </div>
           );

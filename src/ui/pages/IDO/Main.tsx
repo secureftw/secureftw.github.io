@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import PageLayout from "../../components/PageLayout";
-import { TOTAL_TOKENS_FOR_SALE } from "../../../packages/neo/contracts/ftw/ido/consts";
+import {
+  LAUNCH_AT,
+  TOTAL_TOKENS_FOR_SALE,
+} from "../../../packages/neo/contracts/ftw/ido/consts";
 import { useWallet } from "../../../packages/provider";
 import { useOnChainData } from "../../../common/hooks/use-onchain-data";
 import { IDOContract } from "../../../packages/neo/contracts/ftw/ido";
@@ -15,11 +17,18 @@ import { withDecimal } from "../../../packages/neo/utils";
 import moment from "moment";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
 import toast from "react-hot-toast";
-import {NEP_SCRIPT_HASH} from "../../../packages/neo/contracts";
+import { NEP_SCRIPT_HASH } from "../../../packages/neo/contracts";
+import { MAINNET } from "../../../packages/neo/consts";
 
 const Main = () => {
   const { network, connectedWallet } = useWallet();
-  const [token, setToken] = useState<any>();
+  const [token, setToken] = useState<{
+    contractHash: string;
+    symbol: string;
+    logo: string;
+    decimals: number;
+    amount: number;
+  }>();
   const [amount, setAmount] = useState<number | undefined>();
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
@@ -28,8 +37,14 @@ const Main = () => {
     useState(false);
 
   const onTokenClick = (token) => {
-    setToken(token);
-    setTokenSelectionModalActive(false);
+    if (network === MAINNET) {
+      alert(
+        `Mainnet IDO is at ${moment.unix(LAUNCH_AT).utc().format("llll")} UTC`
+      );
+    } else {
+      setToken(token);
+      setTokenSelectionModalActive(false);
+    }
   };
 
   const handleExchange = async () => {
@@ -53,32 +68,36 @@ const Main = () => {
     setRefresh(refresh + 1);
     setTxid("");
   };
+	//
+  // const { isLoaded, error, data } = useOnChainData(() => {
+  //   return new IDOContract(network).getIDOStatus(connectedWallet);
+  // }, [network, connectedWallet, refresh]);
+	//
+  // if (!isLoaded) return <div></div>;
+	//
+  // const totalTokens = u.BigInteger.fromDecimal(TOTAL_TOKENS_FOR_SALE, 8);
+  // const totalSales = totalTokens.sub(data.available);
+  // const totalSalesInPercentage = totalSales.div(totalTokens).mul(100);
+	//
+  // const userBalanceForSwap =
+  //   token &&
+  //   data.balances[token.contractHash] &&
+  //   data.balances[token.contractHash] !== 0
+  //     ? parseFloat(
+  //         withDecimal(data.balances[token.contractHash], token.decimals)
+  //       )
+  //     : 0;
 
-  const { isLoaded, error, data } = useOnChainData(() => {
-    return new IDOContract(network).getIDOStatus(connectedWallet);
-  }, [network, connectedWallet, refresh]);
-
-  if (!isLoaded) return <div></div>;
-
-  const totalTokens = u.BigInteger.fromDecimal(TOTAL_TOKENS_FOR_SALE, 8);
-  const totalSales = totalTokens.sub(data.available);
-  const totalSalesInPercentage = totalSales.div(totalTokens).mul(100);
-
-  const userBalanceForSwap =
-    token && data.balances[token.contractHash] !== 0
-      ? parseFloat(
-          withDecimal(data.balances[token.contractHash], token.decimals)
-        )
-      : 0;
-
-  const nowMs = moment().valueOf();
+  // const nowMs = moment().valueOf();
 
   return (
     <>
       <IDOInfo
         isSwapActive={!!token}
-        totalSales={parseFloat(totalSales.toDecimal(8)).toLocaleString()}
-        totalSalesInPercentage={parseFloat(totalSalesInPercentage.toString())}
+        totalSales={"0"}
+        // totalSales={parseFloat(totalSales.toDecimal(8)).toLocaleString()}
+        totalSalesInPercentage={0}
+        // totalSalesInPercentage={parseFloat(totalSalesInPercentage.toString())}
         onClick={() => setTokenSelectionModalActive(true)}
       />
 
@@ -98,7 +117,8 @@ const Main = () => {
               setValue={(value) => {
                 setAmount(value);
               }}
-              userBalance={userBalanceForSwap}
+              logo={token.logo}
+              // userBalance={userBalanceForSwap}
             />
             <div className="pt-4 pb-4 has-text-centered">
               <FaArrowDown size={16} />
@@ -111,6 +131,7 @@ const Main = () => {
               }}
               contractHash={NEP_SCRIPT_HASH[network]}
               symbol={"NEP"}
+              logo={"/symbols/nep.png"}
               decimals={8}
               val={amount ? amount * token.amount : undefined}
               setValue={() => {}}
@@ -118,18 +139,22 @@ const Main = () => {
             />
           </div>
           <div className="block">
-            <button
-              onClick={handleExchange}
-              disabled={amount === undefined || amount > userBalanceForSwap}
-              className="button is-fullwidth is-primary"
-            >
-              Swap
-            </button>
+            {/*<button*/}
+            {/*  onClick={handleExchange}*/}
+            {/*  disabled={amount === undefined || amount > userBalanceForSwap}*/}
+            {/*  className="button is-fullwidth is-primary"*/}
+            {/*>*/}
+            {/*  Swap*/}
+            {/*</button>*/}
           </div>
         </div>
       ) : (
         <></>
       )}
+
+      <div className="box">
+        <PaymentSelection network={network} onClick={() => {}} />
+      </div>
 
       <Tokenomics />
 

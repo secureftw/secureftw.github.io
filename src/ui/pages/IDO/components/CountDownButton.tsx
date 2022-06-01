@@ -1,6 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { IDO_SWAP_PATH } from "../../../../consts";
 import ConnectWalletButton from "../../../components/ConnectWalletButton";
 
 const CountDownButton = ({ hours, minutes, seconds, completed ,connectedWallet, onClick }) => {
@@ -14,8 +12,8 @@ const CountDownButton = ({ hours, minutes, seconds, completed ,connectedWallet, 
   } else {
     // Render a countdown
     return (
-      <button className="button is-primary">
-        {hours}:{minutes}:{seconds}
+      <button className="button is-primary is-fullwidth">
+        {hours} Day : {minutes} Min : {seconds} Sec
       </button>
     );
   }

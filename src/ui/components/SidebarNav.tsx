@@ -17,7 +17,7 @@ const SidebarNav = (props) => {
             if (!route.network.includes(network)) return false;
             return (
               <li key={`${route.label}${i}`}>
-                {route.category ? (
+                {route.category.length > 0 ? (
                   <>
                     <div
                       onClick={toggleSidebar}

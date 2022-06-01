@@ -32,24 +32,6 @@ export const ASSET_LIST = {
     }
   },
   [TESTNET]: {
-	  // [GM_SCRIPT_HASH[TESTNET]]: {
-		//   contractHash: GM_SCRIPT_HASH[TESTNET],
-		//   symbol: "GM",
-		//   logo: "/symbols/gm.png",
-		//   decimals: 8
-	  // },
-	  // [LRB_SCRIPT_HASH[TESTNET]]: {
-		//   contractHash: LRB_SCRIPT_HASH[TESTNET],
-		//   symbol: "LRB",
-		//   logo: "/symbols/lrb.png",
-		//   decimals: 8
-	  // },
-	  // [FLM_SCRIPT_HASH[TESTNET]]: {
-		//   contractHash: FLM_SCRIPT_HASH[TESTNET],
-		//   symbol: "FLM",
-		//   logo: "/symbols/flm.png",
-		//   decimals: 8
-	  // },
     [BNEO_SCRIPT_HASH[TESTNET]]: {
       contractHash: BNEO_SCRIPT_HASH[TESTNET],
       symbol: "bNEO",
@@ -59,7 +41,7 @@ export const ASSET_LIST = {
     [GAS_SCRIPT_HASH]: {
       contractHash: GAS_SCRIPT_HASH,
       symbol: "GAS",
-      logo: "/symbols/neo.svg",
+      logo: "/symbols/gas.svg",
 	    decimals: 8
     },
     // [FTW_SCRIPT_HASH[TESTNET]]: {
@@ -160,12 +142,12 @@ export const ASSET_LIST = {
 		  logo: "/symbols/nep.png",
 		  decimals: 8
 	  },
-    [FTW_SCRIPT_HASH[MAINNET]]: {
-      contractHash: FTW_SCRIPT_HASH[MAINNET],
-      symbol: "FTW",
-      logo: "/symbols/ftw.svg",
-	    decimals: 8
-    },
+    // [FTW_SCRIPT_HASH[MAINNET]]: {
+    //   contractHash: FTW_SCRIPT_HASH[MAINNET],
+    //   symbol: "FTW",
+    //   logo: "/symbols/ftw.svg",
+	  //   decimals: 8
+    // },
     [NUDES_SCRIPT_HASH[MAINNET]]: {
       contractHash: NUDES_SCRIPT_HASH[MAINNET],
       symbol: "NUDES",

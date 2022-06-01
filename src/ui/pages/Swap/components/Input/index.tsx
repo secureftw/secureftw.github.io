@@ -8,6 +8,7 @@ import { UNKNOWN_TOKEN_IMAGE } from "../../../../../packages/neo/consts";
 interface IInputProps {
   contractHash: string;
   symbol?: string;
+  logo?: string;
   val?: number;
   heading?: string;
   isLoading?: boolean;
@@ -23,6 +24,7 @@ const Input = ({
   contractHash,
   isDisable,
   symbol,
+  logo,
   val,
   heading,
   setValue,
@@ -34,9 +36,15 @@ const Input = ({
   decimals,
 }: IInputProps) => {
   const { network } = useWallet();
-  const logo = ASSET_LIST[network][contractHash]
-    ? ASSET_LIST[network][contractHash].logo
-    : undefined;
+  let logoIcon;
+  if (logo) {
+    logoIcon = logo;
+  } else {
+    logoIcon = ASSET_LIST[network][contractHash]
+      ? ASSET_LIST[network][contractHash].logo
+      : undefined;
+  }
+
   // const noFund = userBalance && val && val > userBalance
   return (
     <div className="">
@@ -59,7 +67,7 @@ const Input = ({
                   }}
                   className="image is-clickable is-flex"
                 >
-                  <img src={logo ? logo : UNKNOWN_TOKEN_IMAGE} />
+                  <img src={logoIcon ? logoIcon : UNKNOWN_TOKEN_IMAGE} />
                 </div>
               </div>
               <div

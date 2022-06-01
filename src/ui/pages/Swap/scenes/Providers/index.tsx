@@ -21,7 +21,7 @@ const Providers = ({ tokenA, tokenB, totalShare }: IProvidersProps) => {
       tokenB as string,
       currentPage
     );
-  }, [network]);
+  }, [network, currentPage]);
   return (
     <div>
       {/*<h1 className="is-size-5 has-text-weight-bold">LP History</h1>*/}

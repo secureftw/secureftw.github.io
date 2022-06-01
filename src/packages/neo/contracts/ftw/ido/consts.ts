@@ -1,13 +1,16 @@
 import { CONST } from "../../../index";
-import { GAS_SCRIPT_HASH, MAINNET, NEO_SCRIPT_HASH } from "../../../consts";
+import {
+  GAS_SCRIPT_HASH,
+  MAINNET,
+  NEO_SCRIPT_HASH,
+} from "../../../consts";
 import {
   BNEO_SCRIPT_HASH,
   FLM_SCRIPT_HASH,
   GM_SCRIPT_HASH,
   LRB_SCRIPT_HASH,
 } from "../nep17/consts";
-import { ASSET_LIST } from "../swap/consts";
-import {INetworkType} from "../../../network";
+import { INetworkType } from "../../../network";
 
 export const LAUNCH_AT = 1655229600; // June 14th 6PM UTC (11AM LA)
 export const TOTAL_TOKENS_FOR_SALE = 50_000_000;
@@ -20,27 +23,45 @@ export const IDO_SCRIPT_HASH = {
 
 export const payments = (network: INetworkType) => [
   {
-    ...ASSET_LIST[network][NEO_SCRIPT_HASH],
+    contractHash: NEO_SCRIPT_HASH,
+    symbol: "NEO",
+    logo: "/symbols/neo.svg",
+    decimals: 8,
     amount: 1200,
   },
   {
-    ...ASSET_LIST[network][BNEO_SCRIPT_HASH[network]],
+    contractHash: BNEO_SCRIPT_HASH[network],
+    symbol: "bNEO",
+    logo: "/symbols/bneo.jpeg",
+    decimals: 8,
     amount: 1200,
   },
   {
-    ...ASSET_LIST[network][GAS_SCRIPT_HASH],
+    contractHash: GAS_SCRIPT_HASH,
+    symbol: "GAS",
+    logo: "/symbols/gas.svg",
+    decimals: 8,
     amount: 300,
   },
   {
-    ...ASSET_LIST[network][FLM_SCRIPT_HASH[network]],
+    contractHash: FLM_SCRIPT_HASH[network],
+    symbol: "FLM",
+    logo: "/symbols/flm.png",
+    decimals: 8,
     amount: 15,
   },
   {
-    ...ASSET_LIST[network][GM_SCRIPT_HASH[network]],
+    contractHash: LRB_SCRIPT_HASH[network],
+    symbol: "LRB",
+    logo: "/symbols/lrb.png",
+    decimals: 8,
     amount: 15,
   },
   {
-    ...ASSET_LIST[network][LRB_SCRIPT_HASH[network]],
+    contractHash: GM_SCRIPT_HASH[network],
+    symbol: "GM",
+    logo: "/symbols/gm.png",
+    decimals: 8,
     amount: 15,
   },
 ];
