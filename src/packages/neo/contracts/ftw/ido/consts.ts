@@ -48,20 +48,20 @@ export const payments = (network: INetworkType) => [
     symbol: "FLM",
     logo: "/symbols/flm.png",
     decimals: 8,
-    amount: 15,
+    amount: 10,
   },
   {
     contractHash: LRB_SCRIPT_HASH[network],
     symbol: "LRB",
     logo: "/symbols/lrb.png",
     decimals: 8,
-    amount: 15,
+    amount: 10,
   },
   {
     contractHash: GM_SCRIPT_HASH[network],
     symbol: "GM",
     logo: "/symbols/gm.png",
     decimals: 8,
-    amount: 15,
+    amount: 10,
   },
 ];

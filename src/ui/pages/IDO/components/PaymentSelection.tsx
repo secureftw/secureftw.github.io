@@ -14,7 +14,11 @@ const PaymentSelection = ({
 }: IPaymentSelectionProps) => {
   return (
     <>
-	    <h1 className="title is-5">Swap rates</h1>
+      <h1 className="title is-5">Swap rates</h1>
+      <p className="subtitle is-7">
+        Swap rates will be determined at the launch except{" "}
+        <strong>NEO/NEP</strong> and <strong>GAS/NEP</strong>.
+      </p>
       <div className="columns is-multiline">
         {payments(network).map((p, i) => {
           if (currentTokenHash && currentTokenHash === p.contractHash)
@@ -34,7 +38,20 @@ const PaymentSelection = ({
                 </figure>
                 <div className="title is-7 is-marginless">1 {p.symbol}</div>
                 <div>=</div>
-                <div className="title is-7 is-marginless">{p.amount} NEP</div>
+                <div className="title is-7 is-marginless">
+                  <span
+                    className={
+                      p.symbol === "NEO" ||
+                      p.symbol === "bNEO" ||
+                      p.symbol === "GAS"
+                        ? ""
+                        : "spoiler-blurred"
+                    }
+                  >
+                    {p.amount}
+                  </span>{" "}
+                  NEP
+                </div>
               </div>
             </div>
           );

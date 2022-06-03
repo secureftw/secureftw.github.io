@@ -187,6 +187,12 @@ For fixed top height
   }
 }
 
+.spoiler-blurred {
+  user-select: none;
+  -webkit-user-select: none;
+  filter: blur(0.5em);
+}
+
 //#halo {
 //  width: 100%;
 //  height: 100vh;

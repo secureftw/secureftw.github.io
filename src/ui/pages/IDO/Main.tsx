@@ -13,7 +13,6 @@ import Modal from "../../components/Modal";
 import IDOInfo from "./components/IDOInfo";
 import Input from "../Swap/components/Input";
 import { FaArrowDown } from "react-icons/fa";
-import { withDecimal } from "../../../packages/neo/utils";
 import moment from "moment";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
 import toast from "react-hot-toast";
