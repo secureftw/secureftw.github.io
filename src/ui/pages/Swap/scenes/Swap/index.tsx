@@ -36,6 +36,7 @@ import PriceRatio from "./components/PriceRatio";
 import HistoryButtons from "./components/HistoryButtons";
 import { getAfterSlippage } from "../../../../../packages/neo/contracts/ftw/swap/helpers";
 import SwapDetails from "./components/SwapDetails";
+import { u } from "@cityofzion/neon-core";
 
 export interface ITokenState {
   hash: string;
@@ -159,8 +160,6 @@ const Swap = () => {
       }
       setAmountA(amountB);
       setAmountB(amountA);
-      // setTokenA(tokenB);
-      // setTokenB(tokenA);
     }
   };
 
@@ -216,10 +215,32 @@ const Swap = () => {
       data.pair[tokenB.hash] &&
       data.pair[tokenB.hash].reserveAmount === 0);
 
-  const priceImpact =
-    tokenA && tokenB && data && amountB
-      ? (amountB / data.pair[tokenB.hash].reserveAmount) * 100
-      : 0;
+
+  let priceImpact = 0;
+
+  if (tokenA && tokenB && data && amountB) {
+    const reserve = u.BigInteger.fromNumber(
+      data.pair[tokenB.hash].reserveAmount
+    ).toDecimal(tokenB.decimals);
+    priceImpact = (amountB / parseFloat(reserve)) * 100;
+
+    console.log(u.BigInteger.fromDecimal(amountB, tokenB.decimals).toString());
+    console.log(
+      tokenA.symbol +
+        " reserve: " +
+        u.BigInteger.fromNumber(data.pair[tokenA.hash].reserveAmount).toDecimal(
+          tokenA.decimals
+        )
+    );
+    console.log(
+      tokenB.symbol +
+        " reserve: " +
+        u.BigInteger.fromNumber(data.pair[tokenB.hash].reserveAmount).toDecimal(
+          tokenB.decimals
+        )
+    );
+    console.log("Price impact" + priceImpact.toString());
+  }
 
   const isTokenAMaxGas =
     tokenA &&

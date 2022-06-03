@@ -3,6 +3,7 @@ import React from "react";
 import { getAfterSlippage } from "../../../../../../packages/neo/contracts/ftw/swap/helpers";
 import SettingDropdown from "./SettingDropdown";
 import { numberTrim } from "../../../../../../packages/neo/utils";
+import { priceImpactFormat } from "../helpers";
 
 interface ISwapDetailsProps {
   decimalsB: number;
@@ -43,7 +44,7 @@ const SwapDetails = ({
             <div className="level-item">Price impact</div>
           </div>
           <div className="level-right">
-            <div className="level-item">{priceImpact.toFixed(decimalsB)}%</div>
+            <div className="level-item">{priceImpactFormat(priceImpact)}</div>
           </div>
         </div>
 
