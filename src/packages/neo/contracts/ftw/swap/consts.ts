@@ -160,6 +160,12 @@ export const ASSET_LIST = {
       logo: "/symbols/ttm.png",
 	    decimals: 8
     },
+	  "979b839648d215fe895d559019dedde31fcf45a9": {
+		  contractHash: "979b839648d215fe895d559019dedde31fcf45a9",
+		  symbol: "N3F",
+		  logo: "/symbols/n3f.jpg",
+		  decimals: 8
+	  },
     "50b41a55c1d746eec2b86b8f0405fb49fbb96492": {
       contractHash: "50b41a55c1d746eec2b86b8f0405fb49fbb96492",
       symbol: "TEDS",
