@@ -62,8 +62,8 @@ const NEP11InfoPage = () => {
     setTxid("");
   };
 
-  if (!isLoaded) return <div>Loading contract info..</div>;
-  if (error) return <div>{error}</div>;
+  // if (!isLoaded) return <div>Loading contract info..</div>;
+  // if (error) return <div>{error}</div>;
   return (
     <>
       <PageLayout>
