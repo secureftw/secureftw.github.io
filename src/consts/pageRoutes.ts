@@ -32,7 +32,7 @@ export const DAO_CHANNEL_PATH = "/dao/channel";
 export const IDO_PAGE_ROUTE = {
   label: "IDO",
   path: IDO_PATH,
-  network: [PRIVATENET, TESTNET],
+  network: [PRIVATENET, TESTNET, MAINNET],
   category: [],
 };
 
