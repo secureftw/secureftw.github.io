@@ -22,9 +22,6 @@ const VoteModal = ({
   onVoteSubmit,
   onVoteAmountChange,
 }: IVoteModalProps) => {
-	console.log(data);
-	console.log(data.balance);
-	console.log(data.channel.decimals);
   const balanceWithDecimal =
   data.balance > 0
     ? parseFloat(withDecimal(data.balance, data.channel.decimals))

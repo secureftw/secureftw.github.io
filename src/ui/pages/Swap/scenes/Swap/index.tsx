@@ -239,7 +239,7 @@ const Swap = () => {
           tokenB.decimals
         )
     );
-    console.log("Price impact" + priceImpact.toString());
+    console.log("Price impact: " + priceImpact.toString());
   }
 
   const isTokenAMaxGas =

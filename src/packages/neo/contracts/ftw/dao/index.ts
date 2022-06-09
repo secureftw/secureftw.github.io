@@ -421,7 +421,6 @@ export class DaoContract {
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-    console.log(res);
     const proposal = parseMapValue(res.stack[0] as any);
     const channel = parseMapValue(res.stack[1] as any);
     const balance = connectedWallet
