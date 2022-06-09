@@ -19,19 +19,21 @@ const List = ({ isLoaded, error, data }: IListProps) => {
         <div>{error}</div>
       ) : (
         <div className="columns is-multiline">
-          {data.items.map((item) => {
-            const metadata = DaoContract.getMetadata(item.meta);
-            if (!metadata.logo) return <></>;
-            return (
-              <div key={item.contractHash} className="column is-6">
-                <Link
-                  to={`${DAO_CHANNEL_PATH}/${item.contractHash}`}
-                >
-                  <ChannelCard symbol={item.symbol} logo={metadata.logo} />
-                </Link>
-              </div>
-            );
-          })}
+          {data.items.length > 0 ? (
+            data.items.map((item) => {
+              const manifest = DaoContract.getMetadata(item.manifest);
+              if (!manifest.logo) return <></>;
+              return (
+                <div key={item.contractHash} className="column is-6">
+                  <Link to={`${DAO_CHANNEL_PATH}/${item.contractHash}`}>
+                    <ChannelCard symbol={item.symbol} logo={manifest.logo} />
+                  </Link>
+                </div>
+              );
+            })
+          ) : (
+	          <div className="column is-12"><div className="box is-shadowless">No channels</div></div>
+          )}
         </div>
       )}
     </div>

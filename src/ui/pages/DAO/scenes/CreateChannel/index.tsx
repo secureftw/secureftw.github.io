@@ -10,6 +10,7 @@ import { Link, useHistory } from "react-router-dom";
 import { DAO_PATH } from "../../../../../consts";
 import PageLayout from "../../../../components/PageLayout";
 import VerifyContract from "./VerifyContract";
+import ChannelForm from "../../components/ChannelForm";
 
 interface IAddChannelProps {
   onAdd: (values) => void;
@@ -21,6 +22,7 @@ const CreateChannel = ({ onAdd }: IAddChannelProps) => {
   const [values, setValues] = useState({
     symbol: "",
     contractHash: "",
+    decimals: "",
     minTokens: "",
     logo: "",
   });
@@ -34,11 +36,16 @@ const CreateChannel = ({ onAdd }: IAddChannelProps) => {
     });
   };
 
-  const handleVerifiedContract = (contractHash: string, symbol: string) => {
+  const handleVerifiedContract = (
+    contractHash: string,
+    symbol: string,
+    decimals: string
+  ) => {
     setValues({
       ...values,
       contractHash,
       symbol,
+      decimals,
     });
   };
 
@@ -50,6 +57,7 @@ const CreateChannel = ({ onAdd }: IAddChannelProps) => {
       const txid = await new DaoContract(network).createChannel(
         connectedWallet,
         values.contractHash,
+        values.decimals,
         values.minTokens,
         manifest
       );
@@ -79,50 +87,12 @@ const CreateChannel = ({ onAdd }: IAddChannelProps) => {
                 <hr />
                 {values.contractHash ? (
                   <div>
-                    <div className="field">
-                      <label className="label">
-                        Token amount to create a proposal
-                      </label>
-                      <div className="control">
-                        <NumberFormat
-                          placeholder={values.symbol}
-                          suffix={" " + values.symbol}
-                          thousandSeparator={true}
-                          allowNegative={false}
-                          decimalScale={0}
-                          inputMode="decimal"
-                          className="input"
-                          value={values.minTokens}
-                          onValueChange={(value) => {
-                            handleValueChange("minTokens", value.value);
-                          }}
-                          // allowLeadingZeros={false}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="columns">
-                      <div className="column">
-                        <div className="field">
-                          <label className="label">Logo</label>
-                          <div className="control">
-                            <input
-                              placeholder="https://"
-                              value={values.logo}
-                              onChange={(e) =>
-                                handleValueChange("logo", e.target.value)
-                              }
-                              className="input"
-                              type="text"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
+                    <ChannelForm values={values} onChange={handleValueChange} />
                     <button
                       disabled={
-                        values.minTokens === "" || values.minTokens === "0" || !values.logo
+                        values.minTokens === "" ||
+                        values.minTokens === "0" ||
+                        !values.logo
                       }
                       onClick={handleAddChannel}
                       className="button is-primary"

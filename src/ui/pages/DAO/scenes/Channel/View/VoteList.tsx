@@ -12,6 +12,7 @@ interface IVoteListProps {
   decimals: number;
   proposalNo: string;
   options: string[];
+  refresh: number;
 }
 const VoteList = ({
   network,
@@ -20,6 +21,7 @@ const VoteList = ({
   options,
   symbol,
   decimals,
+  refresh,
 }: IVoteListProps) => {
   const { isLoaded, error, data } = useOnChainData(() => {
     return new DaoContract(network).getVotes(
@@ -28,10 +30,10 @@ const VoteList = ({
       "5",
       "1"
     );
-  }, [network]);
+  }, [network, refresh]);
   return (
     <div className="table-container">
-      <h1 className="title is-6">
+      <h1 className="title is-7">
         Votes {data && <span className="tag">{data.totalItems}</span>}{" "}
       </h1>
       {isLoaded ? (

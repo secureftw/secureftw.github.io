@@ -97,7 +97,7 @@ export const balanceCheck = (
 
 const stringList = [
   "name",
-  "meta",
+  "manifest",
   "tokenId",
   "tokenASymbol",
   "tokenBSymbol",
@@ -151,8 +151,9 @@ export const parseMapValue = (stackItem: StackItemLike): any => {
   const obj = {};
   const root = stackItem.value as StackItemMap[];
   root.forEach(({ key, value }) => {
-    if (value.value) {
+    if (value.value !== undefined) {
       const _key = u.base642utf8(key.value as string);
+			console.log(_key)
       let val;
       switch (classify(_key)) {
         case "address":

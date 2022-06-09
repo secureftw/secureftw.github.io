@@ -6,7 +6,8 @@ import { wallet } from "../../../index";
 import { DAO_SCRIPT_HASH } from "./consts";
 import { base64ToString, parseMapValue, toDecimal } from "../../../utils";
 import { parseChannelsPaginate } from "./helpers";
-import { IChannel } from "./interfaces";
+import { IChannel, IProposal } from "./interfaces";
+import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
 
 export class DaoContract {
   network: INetworkType;
@@ -20,6 +21,7 @@ export class DaoContract {
   createChannel = async (
     connectedWallet: IConnectedWallet,
     contractHash: string,
+    decimals: string,
     minTokens: string,
     metadata: string
   ): Promise<string> => {
@@ -40,7 +42,10 @@ export class DaoContract {
         },
         {
           type: "Integer",
-          value: u.BigInteger.fromDecimal(minTokens, 8).toString(),
+          value: u.BigInteger.fromDecimal(
+            minTokens,
+            parseFloat(decimals)
+          ).toString(),
         },
         {
           type: "String",
@@ -62,6 +67,56 @@ export class DaoContract {
       undefined
     );
   };
+
+	editChannel = async (
+		connectedWallet: IConnectedWallet,
+		contractHash: string,
+		decimals: number,
+		minTokens: string,
+		manifest: string
+	): Promise<string> => {
+		const senderHash = NeonWallet.getScriptHashFromAddress(
+			connectedWallet.account.address
+		);
+		const invokeScript = {
+			operation: "updateManifest",
+			scriptHash: this.contractHash,
+			args: [
+				{
+					type: "Hash160",
+					value: contractHash,
+				},
+				{
+					type: "Hash160",
+					value: senderHash,
+				},
+				{
+					type: "Integer",
+					value: u.BigInteger.fromDecimal(
+						minTokens,
+						decimals
+					).toString(),
+				},
+				{
+					type: "String",
+					value: manifest,
+				},
+			],
+			signers: [
+				{
+					account: senderHash,
+					scopes: tx.WitnessScope.CustomContracts,
+					allowedContracts: [this.contractHash, contractHash],
+				},
+			],
+		};
+		return new wallet.WalletAPI(connectedWallet.key).invoke(
+			this.network,
+			invokeScript,
+			undefined,
+			undefined
+		);
+	};
 
   createProposal = async (
     connectedWallet: IConnectedWallet,
@@ -134,6 +189,7 @@ export class DaoContract {
   vote = async (
     connectedWallet: IConnectedWallet,
     contractHash: string,
+    decimals: string,
     proposalNo: string,
     optionIndex: string,
     voteAmount: string
@@ -163,7 +219,10 @@ export class DaoContract {
         },
         {
           type: "Integer",
-          value: u.BigInteger.fromDecimal(voteAmount, 8).toString(),
+          value: u.BigInteger.fromDecimal(
+            voteAmount,
+            parseFloat(decimals)
+          ).toString(),
         },
       ],
       signers: [
@@ -181,6 +240,90 @@ export class DaoContract {
       undefined
     );
   };
+
+  withdrawProposalFund = async (
+    connectedWallet: IConnectedWallet,
+    contractHash: string,
+    proposalNo: string
+  ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
+    const invokeScript = {
+      operation: "closeProposal",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "Hash160",
+          value: contractHash,
+        },
+        {
+          type: "Hash160",
+          value: senderHash,
+        },
+        {
+          type: "Integer",
+          value: proposalNo,
+        },
+      ],
+	    // signers: [
+		  //   {
+			//     account: senderHash,
+			//     scopes: tx.WitnessScope.CustomContracts,
+			//     allowedContracts: [this.contractHash, contractHash],
+		  //   },
+	    // ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+    };
+    return new wallet.WalletAPI(connectedWallet.key).invoke(
+      this.network,
+      invokeScript,
+      undefined,
+      undefined
+    );
+  };
+
+	withdrawVoteFund = async (
+		connectedWallet: IConnectedWallet,
+		contractHash: string,
+		proposalNo: string
+	): Promise<string> => {
+		const senderHash = NeonWallet.getScriptHashFromAddress(
+			connectedWallet.account.address
+		);
+		const invokeScript = {
+			operation: "closeVotes",
+			scriptHash: this.contractHash,
+			args: [
+				{
+					type: "Hash160",
+					value: contractHash,
+				},
+				{
+					type: "Hash160",
+					value: senderHash,
+				},
+				{
+					type: "Integer",
+					value: proposalNo,
+				},
+			],
+			// signers: [
+			// 	{
+			// 		account: senderHash,
+			// 		scopes: tx.WitnessScope.CustomContracts,
+			// 		allowedContracts: [this.contractHash, contractHash],
+			// 	},
+			// ],
+			signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+		};
+		return new wallet.WalletAPI(connectedWallet.key).invoke(
+			this.network,
+			invokeScript,
+			undefined,
+			undefined
+		);
+	};
 
   getChannels = async (perPage: string, page: string) => {
     const script = {
@@ -204,18 +347,12 @@ export class DaoContract {
       operation: "getChannel",
       args: [{ type: "Hash160", value: contractHash }],
     };
-    const script2 = {
-      scriptHash: contractHash,
-      operation: "decimals",
-      args: [],
-    };
-    const res = await Network.read(this.network, [script1, script2]);
+    const res = await Network.read(this.network, [script1]);
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
     return {
       ...parseMapValue(res.stack[0] as any),
-      decimals: parseFloat(res.stack[1].value as string),
     };
   };
 
@@ -252,7 +389,7 @@ export class DaoContract {
     contractHash: string,
     proposalNo: string,
     connectedWallet
-  ) => {
+  ): Promise<IProposal> => {
     const script1 = {
       scriptHash: this.contractHash,
       operation: "getProposal",
@@ -266,13 +403,8 @@ export class DaoContract {
       operation: "getChannel",
       args: [{ type: "Hash160", value: contractHash }],
     };
-    const script3 = {
-      scriptHash: contractHash,
-      operation: "decimals",
-      args: [],
-    };
 
-    const scripts = [script1, script2, script3];
+    const scripts = [script1, script2];
 
     if (connectedWallet) {
       const senderHash = NeonWallet.getScriptHashFromAddress(
@@ -289,11 +421,16 @@ export class DaoContract {
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
+    console.log(res);
+    const proposal = parseMapValue(res.stack[0] as any);
+    const channel = parseMapValue(res.stack[1] as any);
+    const balance = connectedWallet
+      ? parseFloat(res.stack[2].value as string)
+      : 0;
     return {
-      proposal: parseMapValue(res.stack[0] as any),
-      channel: parseMapValue(res.stack[1] as any),
-      decimals: parseFloat(res.stack[2].value as any),
-      balance: connectedWallet ? toDecimal(res.stack[3].value as any) : 0,
+      proposal,
+      channel,
+      balance,
     };
   };
 
@@ -321,10 +458,39 @@ export class DaoContract {
     return parseMapValue(res.stack[0] as any);
   };
 
+	getUserVotes = async (
+		connectedWallet: IConnectedWallet,
+		contractHash: string,
+		proposalNo: string,
+		perPage: string,
+		page: string
+	) => {
+		const senderHash = NeonWallet.getScriptHashFromAddress(
+			connectedWallet.account.address
+		);
+		const script = {
+			scriptHash: this.contractHash,
+			operation: "getUserVotes",
+			args: [
+				{ type: "Hash160", value: contractHash },
+				{ type: "Hash160", value: senderHash },
+				{ type: "Integer", value: proposalNo },
+				{ type: "Integer", value: perPage },
+				{ type: "Integer", value: page },
+			],
+		};
+
+		const res = await Network.read(this.network, [script]);
+		if (res.state === "FAULT") {
+			throw new Error(res.exception as string);
+		}
+		return parseMapValue(res.stack[0] as any);
+	};
+
   hasPermission = async (
     connectedWallet: IConnectedWallet,
     contractHash: string
-  ): Promise<{ hasPermission: boolean; symbol: string }> => {
+  ): Promise<{ hasPermission: boolean; symbol: string; decimals: string }> => {
     const senderHash = NeonWallet.getScriptHashFromAddress(
       connectedWallet.account.address
     );
@@ -341,14 +507,20 @@ export class DaoContract {
       operation: "symbol",
       args: [],
     };
+    const script3 = {
+      scriptHash: contractHash,
+      operation: "decimals",
+      args: [],
+    };
 
-    const res = await Network.read(this.network, [script1, script2]);
+    const res = await Network.read(this.network, [script1, script2, script3]);
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
     return {
       hasPermission: res.stack[0].value as boolean,
       symbol: base64ToString(res.stack[1].value as string),
+      decimals: res.stack[2].value as string,
     };
   };
   static getMetadata = (str) => {
