@@ -8,7 +8,7 @@ import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 interface IVerifyContractProps {
   network: INetworkType;
   connectedWallet?: IConnectedWallet;
-  onVerify: (contractHash: string, symbol: string) => void;
+  onVerify: (contractHash: string, symbol: string, decimals: string) => void;
 }
 const VerifyContract = ({
   network,
@@ -28,12 +28,12 @@ const VerifyContract = ({
     }
     if (wallet.isScriptHash(hash)) {
       if (connectedWallet) {
-        const { hasPermission, symbol } = await new DaoContract(
+        const { hasPermission, symbol, decimals } = await new DaoContract(
           network
         ).hasPermission(connectedWallet, contractHash);
         if (hasPermission) {
           // Verified
-          onVerify(contractHash, symbol);
+          onVerify(contractHash, symbol, decimals);
         } else {
           setError(
             "We couldn't find your permission to create a channel. Please contract FTW team if you have a permission."

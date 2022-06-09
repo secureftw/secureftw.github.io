@@ -11,12 +11,11 @@ import ChannelCard from "../../../components/ChannelCard";
 const ProposalList = () => {
   const params = useParams();
   const { contractHash } = params as any;
-  const { network } = useWallet();
+  const { network, connectedWallet } = useWallet();
   const [page] = useState("1");
   const { isLoaded, error, data } = useOnChainData(() => {
     return new DaoContract(network).getProposals(contractHash, "30", page);
   }, [page, network]);
-
   return (
     <div className="columns">
       <div className="column is-8 is-offset-2">
@@ -81,7 +80,7 @@ const ProposalList = () => {
             {isLoaded && data && (
               <ChannelCard
                 symbol={data.channel.symbol}
-                logo={DaoContract.getMetadata(data.channel.meta).logo}
+                logo={DaoContract.getMetadata(data.channel.manifest).logo}
               />
             )}
             <div className="box  is-shadowless">
@@ -104,6 +103,20 @@ const ProposalList = () => {
                       New proposal
                     </NavLink>
                   </li>
+                  {connectedWallet &&
+                  data &&
+                  data.channel.owner === connectedWallet.account.address ? (
+                    <li>
+                      <NavLink
+                        activeClassName={"is-active"}
+                        to={`${DAO_CHANNEL_PATH}/${contractHash}/edit`}
+                      >
+                        Edit channel
+                      </NavLink>
+                    </li>
+                  ) : (
+                    <></>
+                  )}
                   {/*<li>*/}
                   {/*	<NavLink*/}
                   {/*		activeClassName={"is-active"}*/}

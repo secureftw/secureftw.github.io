@@ -6,12 +6,13 @@ import { useWallet } from "../../../../../../packages/provider";
 import { useOnChainData } from "../../../../../../common/hooks/use-onchain-data";
 import { DaoContract } from "../../../../../../packages/neo/contracts/ftw/dao";
 import Modal from "../../../../../components/Modal";
-import NumberFormat from "react-number-format";
 import toast from "react-hot-toast";
 import AfterTransactionSubmitted from "../../../../../../packages/ui/AfterTransactionSubmitted";
 import VoteList from "./VoteList";
-import { toDecimal } from "../../../../../../packages/neo/utils";
-import { u } from "@cityofzion/neon-core";
+import VotingPeriod from "./components/VotingPeriod";
+import VotingProgress from "./components/VotingProgress";
+import VoteModal from "./components/VoteModal";
+import UserVotes from "./components/UserVotes";
 
 const ProposalView = () => {
   const params = useParams();
@@ -42,11 +43,30 @@ const ProposalView = () => {
     });
   };
 
+  const onSuccess = () => {
+    setRefresh(refresh + 1);
+    setTxid("");
+    setVote({
+      vote: "",
+      voteIndex: "",
+      amount: "",
+    });
+  };
+
+  const { isLoaded, error, data } = useOnChainData(() => {
+    return new DaoContract(network).getProposal(
+      contractHash,
+      proposalNo,
+      connectedWallet
+    );
+  }, [refresh, network, connectedWallet]);
+
   const handleVote = async () => {
     if (connectedWallet) {
       const res = await new DaoContract(network).vote(
         connectedWallet,
         contractHash,
+        data.channel.decimals,
         proposalNo,
         vote.voteIndex,
         vote.amount
@@ -58,22 +78,22 @@ const ProposalView = () => {
     }
   };
 
-  const onSuccess = () => {
-    setRefresh(refresh + 1);
-    setTxid("");
+  const handleWithdrawProposalFund = async () => {
+    if (connectedWallet) {
+      const res = await new DaoContract(network).withdrawProposalFund(
+        connectedWallet,
+        contractHash,
+        proposalNo
+      );
+      setTxid(res);
+    } else {
+      toast.error("Connect your wallet");
+    }
   };
 
-  const { isLoaded, error, data } = useOnChainData(() => {
-    return new DaoContract(network).getProposal(
-      contractHash,
-      proposalNo,
-      connectedWallet
-    );
-  }, [refresh, network, connectedWallet]);
 
   if (!isLoaded) return <div></div>;
   if (error) return <div></div>;
-
   const now = moment().valueOf();
   const end = data.proposal.end;
   const isActive = now < end;
@@ -134,6 +154,7 @@ const ProposalView = () => {
             </div>
             <div className="box is-shadowless">
               <VoteList
+                refresh={refresh}
                 contractHash={contractHash}
                 symbol={data.channel.symbol}
                 decimals={data.channel.decimals}
@@ -142,115 +163,63 @@ const ProposalView = () => {
                 options={data.proposal.options}
               />
             </div>
+            {connectedWallet && (
+              <div className="box is-shadowless">
+                <UserVotes
+	                voteOptions={data.proposal.options}
+                  contractHash={contractHash}
+                  proposalNo={proposalNo}
+                  network={network}
+                  connectedWallet={connectedWallet}
+                  refresh={refresh}
+                  isVoteActive={isActive}
+	                setTxid={setTxid}
+                />
+              </div>
+            )}
           </div>
 
           <div className="column is-4">
             <div className="box is-shadowless">
-              <div className="content">
-                <strong>Start date</strong>
-                <br />
-                <small>{moment(data.proposal.start).format("LLL")}</small>
-                <br />
-                <strong>End date</strong>
-                <br />
-                <small>{moment(data.proposal.end).format("LLL")}</small>
-                <br />
-              </div>
+              <VotingPeriod
+                start={data.proposal.start}
+                end={data.proposal.end}
+              />
               <hr />
-              <div>
-                {data.proposal.options.map((op, i) => {
-                  const percent =
-                    (data.proposal[`option${i}`] / data.proposal.totalVotes) *
-                    100;
-
-                  const voteAmount = u.BigInteger.fromNumber(
-                    data.proposal[`option${i}`]
-                  ).toDecimal(data.decimals);
-
-                  return (
-                    <div key={`option-${i}`} className="mb-3">
-                      <div className="level is-marginless">
-                        <div className="level-left">
-                          <div className="level-item">{op}</div>
-                        </div>
-                        <div className="level-right">
-                          <div className="level-item">
-                            {parseFloat(voteAmount)} {data.channel.symbol}
-                          </div>
-                        </div>
-                      </div>
-                      <progress
-                        className="progress is-info"
-                        value={percent}
-                        max="100"
-                      >
-                        {percent}%
-                      </progress>
-                    </div>
-                  );
-                })}
-              </div>
+              <VotingProgress data={data} />
             </div>
+
+            {connectedWallet &&
+            !isActive &&
+            !data.proposal.hasWithdrew &&
+            data.proposal.creator === connectedWallet.account.address ? (
+              <div className="box">
+                <p>
+                  <strong>Voting is over</strong>. Withdraw your fund
+                </p>
+                <br />
+                <button
+                  onClick={handleWithdrawProposalFund}
+                  className="button is-primary"
+                >
+                  Withdraw deposit
+                </button>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>
 
       {isVoteModalActive && (
-        <Modal onClose={() => setVoteModalActive(false)}>
-          <div>
-            <h1 className="title is-5">You are voting: {vote.vote}</h1>
-            <div className="notification is-info">
-              <div className="content">
-                You can withdraw your tokens back when proposal expires.
-              </div>
-            </div>
-            <div className="field">
-              <label className="label">Vote Amount</label>
-              <div className="control">
-                <NumberFormat
-                  allowLeadingZeros={false}
-                  suffix={" " + data.channel.symbol}
-                  thousandSeparator={true}
-                  allowNegative={false}
-                  decimalScale={0}
-                  inputMode="decimal"
-                  className="input"
-                  placeholder={`${data.channel.symbol}`}
-                  value={vote.amount}
-                  onValueChange={(value) => {
-                    handleVoteAmount(value.value);
-                  }}
-                />
-              </div>
-              <div className="level is-mobile mt-1">
-                <div className="level-left">
-                  <div className="level-item">
-                    <small className="is-size-7">Your balance</small>
-                  </div>
-                </div>
-                <div className="level-right">
-                  <div className="level-item">
-                    <small>
-                      {data.balance} {data.channel.symbol}
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <button
-              disabled={
-                vote.amount === "" ||
-                vote.amount === "0" ||
-                parseFloat(vote.amount) > data.balance
-              }
-              onClick={handleVote}
-              className="button is-primary"
-            >
-              Vote
-            </button>
-          </div>
-        </Modal>
+        <VoteModal
+          voteObj={vote}
+          onVoteAmountChange={handleVoteAmount}
+          data={data}
+          onVoteSubmit={handleVote}
+          onClose={() => setVoteModalActive(false)}
+        />
       )}
 
       {txid && (

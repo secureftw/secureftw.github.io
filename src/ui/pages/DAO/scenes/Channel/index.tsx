@@ -5,6 +5,7 @@ import ProposalList from "./ProposalList";
 import Create from "./Create";
 import { DAO_CHANNEL_PATH } from "../../../../../consts";
 import ProposalView from "./View";
+import Edit from "./Edit";
 
 const DAOChannel = (props) => {
   const path = DAO_CHANNEL_PATH + "/:contractHash";
@@ -13,6 +14,7 @@ const DAOChannel = (props) => {
     <PageLayout>
       <Route exact={true} path={path} component={ProposalList} />
       <Route path={`${path}/create`} component={Create} />
+	    <Route path={`${path}/edit`} component={Edit} />
       <Route path={`${path}/proposal/:proposalNo`} component={ProposalView} />
     </PageLayout>
   );

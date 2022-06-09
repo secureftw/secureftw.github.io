@@ -229,13 +229,13 @@ const Create = (props) => {
                 <div className="box is-shadowless">
                   <ChannelCard
                     symbol={data.symbol}
-                    logo={DaoContract.getMetadata(data.meta).logo}
+                    logo={DaoContract.getMetadata(data.manifest).logo}
                   />
                 </div>
                 <div className="box is-shadowless">
                   <div className="content is-small">
                     <li>
-                      You are making a new proposal of{" "}
+                      You are creating a new proposal of{" "}
                       <strong>{data.symbol} channel</strong>.
                     </li>
                     <li>

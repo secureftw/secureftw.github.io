@@ -16,7 +16,7 @@ export const DEFAULT_SLIPPAGE = 0.6;
 export const PRICE_IMPACT_LIMIT = 10;
 
 export const SWAP_SCRIPT_HASH = {
-  [CONST.PRIVATENET]: "aeac82f7830f4083b98089baa51060e621febb10",
+  [CONST.PRIVATENET]: "",
   [CONST.TESTNET]: "73255207d4d254aa46a06ebfa952f9b65914d05c", // real
   // [CONST.TESTNET]: "50ae712ccb2760ad3f2ec3edebb25dbacc627fe2", // -1
   [CONST.MAINNET]: "",
