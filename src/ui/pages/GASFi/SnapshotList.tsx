@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IFarmContractStatus } from "../../../packages/neo/contracts/ftw/farm/interfaces";
+import { IFarmContractStatus } from "../../../packages/neo/contracts/ftw/gas-fi/interfaces";
 import { useWallet } from "../../../packages/provider";
 import { FarmContract } from "../../../packages/neo/contracts";
 import { toast } from "react-hot-toast";

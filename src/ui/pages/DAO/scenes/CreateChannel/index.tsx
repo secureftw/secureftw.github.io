@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { detectEmojiInString } from "../../../Smith/helpers";
-import NumberFormat from "react-number-format";
 import { DaoContract } from "../../../../../packages/neo/contracts/ftw/dao";
 import toast from "react-hot-toast";
 import { useWallet } from "../../../../../packages/provider";
@@ -95,7 +94,7 @@ const CreateChannel = ({ onAdd }: IAddChannelProps) => {
                         !values.logo
                       }
                       onClick={handleAddChannel}
-                      className="button is-primary"
+                      className="button is-primary mt-5"
                     >
                       Create a channel
                     </button>

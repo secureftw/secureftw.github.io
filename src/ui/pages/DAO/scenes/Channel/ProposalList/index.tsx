@@ -7,7 +7,7 @@ import moment from "moment";
 import TextTruncate from "react-text-truncate";
 import { DAO_CHANNEL_PATH } from "../../../../../../consts";
 import ChannelCard from "../../../components/ChannelCard";
-
+import removeMd  from "remove-markdown";
 const ProposalList = () => {
   const params = useParams();
   const { contractHash } = params as any;
@@ -35,6 +35,7 @@ const ProposalList = () => {
                         const now = moment().valueOf();
                         const end = item.end;
                         const isActive = now < end;
+												const desc = removeMd(item.description);
                         return (
                           <Link
                             to={`${DAO_CHANNEL_PATH}/${contractHash}/proposal/${item.no}`}
@@ -50,7 +51,7 @@ const ProposalList = () => {
                                   line={1}
                                   element="span"
                                   truncateText="…"
-                                  text={item.description}
+                                  text={desc}
                                   // textTruncateChild={<a href="#">Read on</a>}
                                 />
                                 {/*<p>{item.description}</p>*/}

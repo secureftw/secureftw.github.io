@@ -3,7 +3,7 @@ import PageLayout from "../../components/PageLayout";
 import ActionModal from "./ActionModal";
 import { useWallet } from "../../../packages/provider";
 import { FarmContract } from "../../../packages/neo/contracts";
-import { IFarmContractStatus } from "../../../packages/neo/contracts/ftw/farm/interfaces";
+import { IFarmContractStatus } from "../../../packages/neo/contracts/ftw/gas-fi/interfaces";
 import toast from "react-hot-toast";
 import SnapshotList from "./SnapshotList";
 import NotifyError from "../../components/NotifyError";

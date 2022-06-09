@@ -1,5 +1,5 @@
 import React from "react";
-import { IFarmSnapshot } from "../../../packages/neo/contracts/ftw/farm/interfaces";
+import { IFarmSnapshot } from "../../../packages/neo/contracts/ftw/gas-fi/interfaces";
 
 interface ISnapshotListProps {
   item: IFarmSnapshot;

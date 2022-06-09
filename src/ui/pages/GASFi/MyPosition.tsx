@@ -1,5 +1,5 @@
 import React from "react";
-import { IFarmDepositRecord } from "../../../packages/neo/contracts/ftw/farm/interfaces";
+import { IFarmDepositRecord } from "../../../packages/neo/contracts/ftw/gas-fi/interfaces";
 
 interface IMyPositionProps {
   deposit?: IFarmDepositRecord;

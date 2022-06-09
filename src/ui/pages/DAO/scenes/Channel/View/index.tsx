@@ -13,6 +13,8 @@ import VotingPeriod from "./components/VotingPeriod";
 import VotingProgress from "./components/VotingProgress";
 import VoteModal from "./components/VoteModal";
 import UserVotes from "./components/UserVotes";
+import MDEditor from "@uiw/react-md-editor";
+import rehypeSanitize from "rehype-sanitize";
 
 const ProposalView = () => {
   const params = useParams();
@@ -91,7 +93,6 @@ const ProposalView = () => {
     }
   };
 
-
   if (!isLoaded) return <div></div>;
   if (error) return <div></div>;
   const now = moment().valueOf();
@@ -127,7 +128,10 @@ const ProposalView = () => {
               </div>
 
               <div className="block">
-                <p>{data.proposal.description}</p>
+                <MDEditor.Markdown
+                  source={data.proposal.description}
+                  rehypePlugins={[[rehypeSanitize]]}
+                />
               </div>
             </div>
             <div className="box is-shadowless">
@@ -166,14 +170,14 @@ const ProposalView = () => {
             {connectedWallet && (
               <div className="box is-shadowless">
                 <UserVotes
-	                voteOptions={data.proposal.options}
+                  voteOptions={data.proposal.options}
                   contractHash={contractHash}
                   proposalNo={proposalNo}
                   network={network}
                   connectedWallet={connectedWallet}
                   refresh={refresh}
                   isVoteActive={isActive}
-	                setTxid={setTxid}
+                  setTxid={setTxid}
                 />
               </div>
             )}

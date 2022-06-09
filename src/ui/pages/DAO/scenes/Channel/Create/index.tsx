@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import MDEditor from "@uiw/react-md-editor";
 import Modal from "../../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../../packages/ui/AfterTransactionSubmitted";
 import { useWallet } from "../../../../../../packages/provider";
@@ -11,8 +12,10 @@ import { DAO_CHANNEL_PATH } from "../../../../../../consts";
 import { useOnChainData } from "../../../../../../common/hooks/use-onchain-data";
 import { withDecimal } from "../../../../../../packages/neo/utils";
 import ChannelCard from "../../../components/ChannelCard";
+import rehypeSanitize from "rehype-sanitize";
+import {detectEmojiInString, emojiRegexExp} from "../../../../Smith/helpers";
 
-const Create = (props) => {
+const Create = () => {
   const params = useParams();
   const history = useHistory();
   const { contractHash } = params as any;
@@ -63,6 +66,7 @@ const Create = (props) => {
     history.push(`${DAO_CHANNEL_PATH}/${contractHash}`);
   };
 
+
   const { isLoaded, error, data } = useOnChainData(() => {
     return new DaoContract(network).getChannel(contractHash);
   }, []);
@@ -74,7 +78,10 @@ const Create = (props) => {
     }
   });
 
-  return (
+	// const hasEmoji = emojiRegexExp.test(description.replace(/ /g,''));
+	// console.log(description)
+	// console.log(hasEmoji)
+	return (
     <div className="columns">
       <div className="column is-8 is-offset-2">
         <Link
@@ -106,13 +113,23 @@ const Create = (props) => {
               <div className="field">
                 <label className="label">Description</label>
                 <div className="control">
-                  <textarea
-                    placeholder="My suggestion is.."
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="textarea"
-                  >
-                    {description}
-                  </textarea>
+                  <MDEditor
+                    value={description}
+                    onChange={(value) => setDescription(value ? value : "")}
+	                  // @ts-ignore
+                    // rehypePlugins={[[rehypeSanitize]]}
+                  />
+                  <MDEditor.Markdown
+                    source={description}
+                    // rehypePlugins={[[rehypeSanitize]]}
+                  />
+                  {/*<textarea*/}
+                  {/*  placeholder="My suggestion is.."*/}
+                  {/*  onChange={(e) => setDescription(e.target.value)}*/}
+                  {/*  className="textarea"*/}
+                  {/*>*/}
+                  {/*  {description}*/}
+                  {/*</textarea>*/}
                 </div>
               </div>
 

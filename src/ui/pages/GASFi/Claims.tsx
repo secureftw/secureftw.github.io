@@ -1,5 +1,5 @@
 import React from "react";
-import { IFarmContractStatus } from "../../../packages/neo/contracts/ftw/farm/interfaces";
+import { IFarmContractStatus } from "../../../packages/neo/contracts/ftw/gas-fi/interfaces";
 import SnapshotCountdown from "./SnapshotCountdown";
 
 interface IClaimsProps {

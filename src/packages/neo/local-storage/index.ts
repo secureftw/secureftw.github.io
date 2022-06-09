@@ -1,6 +1,6 @@
 import store from "store2";
 import { IConnectedWallet, ITransaction } from "../wallet/interfaces";
-import { FARM_SCRIPT_HASH } from "../contracts/ftw/farm/consts";
+import { FARM_SCRIPT_HASH } from "../contracts/ftw/gas-fi/consts";
 import { RUNE_SCRIPT_HASH } from "../contracts";
 import { MAINNET } from "../consts";
 import { INetworkType } from "../network";
