@@ -223,8 +223,6 @@ const Swap = () => {
       data.pair[tokenB.hash].reserveAmount
     ).toDecimal(tokenB.decimals);
     priceImpact = (amountB / parseFloat(reserve)) * 100;
-
-    console.log(u.BigInteger.fromDecimal(amountB, tokenB.decimals).toString());
     console.log(
       tokenA.symbol +
         " reserve: " +

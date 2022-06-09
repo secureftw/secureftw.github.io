@@ -130,7 +130,6 @@ export class DaoContract {
     const senderHash = NeonWallet.getScriptHashFromAddress(
       connectedWallet.account.address
     );
-
     const optionsToInvokeParams = options.map((op) => {
       return {
         type: "String",

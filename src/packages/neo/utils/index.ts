@@ -153,7 +153,6 @@ export const parseMapValue = (stackItem: StackItemLike): any => {
   root.forEach(({ key, value }) => {
     if (value.value !== undefined) {
       const _key = u.base642utf8(key.value as string);
-			console.log(_key)
       let val;
       switch (classify(_key)) {
         case "address":
