@@ -117,14 +117,6 @@ export class Network {
       sb.emitAppCall(script.scriptHash, script.operation, params);
     });
     return rpcClient.invokeScript(u.HexString.fromHex(sb.build()));
-    // if (res.state === "FAULT") {
-    //   console.error(res.exception);
-    //   return null;
-    // }
-    // if (!passFaultCheck && res.state === "FAULT") {
-    //   console.error("RPC read error" + res.exception);
-    //   throw new Error(res.exception ? res.exception : "Network error");
-    // }
   };
 
   static readOnly = async (
@@ -147,14 +139,6 @@ export class Network {
       return undefined;
     }
     return parser(res);
-    // if (res.state === "FAULT") {
-    //   console.error(res.exception);
-    //   return null;
-    // }
-    // if (!passFaultCheck && res.state === "FAULT") {
-    //   console.error("RPC read error" + res.exception);
-    //   throw new Error(res.exception ? res.exception : "Network error");
-    // }
   };
 
   static sleep = (duration: number) => {
