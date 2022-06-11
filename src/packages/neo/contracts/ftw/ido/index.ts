@@ -5,17 +5,15 @@ import { wallet } from "../../../index";
 import {
   DEFAULT_WITNESS_SCOPE,
   GAS_SCRIPT_HASH,
-  MAINNET,
   NEO_SCRIPT_HASH,
 } from "../../../consts";
-import { FARM_SCRIPT_HASH } from "../staking/consts";
 import { IIDOStatus } from "./interface";
 import { IDO_SCRIPT_HASH } from "./consts";
 import {
-  BNEO_SCRIPT_HASH,
-  FLM_SCRIPT_HASH,
-  GM_SCRIPT_HASH,
-  LRB_SCRIPT_HASH,
+	BNEO_SCRIPT_HASH,
+	FLM_SCRIPT_HASH,
+	GM_SCRIPT_HASH,
+	LRB_SCRIPT_HASH, NEP_SCRIPT_HASH,
 } from "../nep17/consts";
 
 export class IDOContract {
@@ -70,44 +68,35 @@ export class IDOContract {
   getIDOStatus = async (
     connectedWallet?: IConnectedWallet
   ): Promise<IIDOStatus> => {
-    if (this.network === MAINNET) {
-      return {
-        available: 50_000_000_00000000,
-        launchDate: 0,
-        balances: {
-          [NEO_SCRIPT_HASH]: 0,
-          [GAS_SCRIPT_HASH]: 0,
-          [BNEO_SCRIPT_HASH[this.network]]: 0,
-          [FLM_SCRIPT_HASH[this.network]]: 0,
-          [GM_SCRIPT_HASH[this.network]]: 0,
-          [LRB_SCRIPT_HASH[this.network]]: 0,
-        },
-      };
-    }
 
     const script1 = {
-      scriptHash: FARM_SCRIPT_HASH[this.network],
-      operation: "balanceOf",
-      args: [
-        {
-          type: "Hash160",
-          value: this.contractHash,
-        },
-      ],
+      scriptHash: this.contractHash,
+      operation: "getTotalMint",
     };
+
     const script2 = {
       scriptHash: this.contractHash,
       operation: "getLaunchDate",
-      args: [],
     };
 
-    const scripts = [script1, script2];
+	  const script3 = {
+		  scriptHash: NEP_SCRIPT_HASH[this.network],
+		  operation: "balanceOf",
+		  args: [
+			  {
+				  type: "Hash160",
+				  value: this.contractHash,
+			  },
+		  ],
+	  };
+
+    const scripts = [script1, script2, script3];
 
     if (connectedWallet) {
       const senderHash = NeonWallet.getScriptHashFromAddress(
         connectedWallet.account.address
       );
-	    const script3 = {
+	    const script4 = {
 		    scriptHash: NEO_SCRIPT_HASH,
 		    operation: "balanceOf",
 		    args: [
@@ -117,7 +106,7 @@ export class IDOContract {
 			    },
 		    ],
 	    };
-      const script4 = {
+      const script5 = {
         scriptHash: GAS_SCRIPT_HASH,
         operation: "balanceOf",
         args: [
@@ -127,7 +116,7 @@ export class IDOContract {
           },
         ],
       };
-      const script5 = {
+      const script6 = {
         scriptHash: BNEO_SCRIPT_HASH[this.network],
         operation: "balanceOf",
         args: [
@@ -137,7 +126,7 @@ export class IDOContract {
           },
         ],
       };
-      const script6 = {
+      const script7 = {
         scriptHash: FLM_SCRIPT_HASH[this.network],
         operation: "balanceOf",
         args: [
@@ -147,7 +136,7 @@ export class IDOContract {
           },
         ],
       };
-      const script7 = {
+      const script8 = {
         scriptHash: GM_SCRIPT_HASH[this.network],
         operation: "balanceOf",
         args: [
@@ -157,7 +146,7 @@ export class IDOContract {
           },
         ],
       };
-      const script8 = {
+      const script9 = {
         scriptHash: LRB_SCRIPT_HASH[this.network],
         operation: "balanceOf",
         args: [
@@ -167,39 +156,41 @@ export class IDOContract {
           },
         ],
       };
-      scripts.push(script3);
       scripts.push(script4);
       scripts.push(script5);
       scripts.push(script6);
       scripts.push(script7);
       scripts.push(script8);
+      scripts.push(script9);
     }
 
     const res = await Network.read(this.network, scripts);
+		console.log(res)
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
     return {
-      available: parseFloat(res.stack[0].value as string),
-      launchDate: parseFloat(res.stack[1].value as string),
+      totalSales: parseFloat(res.stack[0].value as string),
+      launchAt: parseFloat(res.stack[1].value as string),
+      availableBalance: parseFloat(res.stack[2].value as string),
       balances: {
         [NEO_SCRIPT_HASH]: connectedWallet
-          ? parseFloat(res.stack[2].value as string)
-          : 0,
-        [GAS_SCRIPT_HASH]: connectedWallet
           ? parseFloat(res.stack[3].value as string)
           : 0,
-        [BNEO_SCRIPT_HASH[this.network]]: connectedWallet
+        [GAS_SCRIPT_HASH]: connectedWallet
           ? parseFloat(res.stack[4].value as string)
           : 0,
-        [FLM_SCRIPT_HASH[this.network]]: connectedWallet
+        [BNEO_SCRIPT_HASH[this.network]]: connectedWallet
           ? parseFloat(res.stack[5].value as string)
           : 0,
-        [GM_SCRIPT_HASH[this.network]]: connectedWallet
+        [FLM_SCRIPT_HASH[this.network]]: connectedWallet
           ? parseFloat(res.stack[6].value as string)
           : 0,
-        [LRB_SCRIPT_HASH[this.network]]: connectedWallet
+        [GM_SCRIPT_HASH[this.network]]: connectedWallet
           ? parseFloat(res.stack[7].value as string)
+          : 0,
+        [LRB_SCRIPT_HASH[this.network]]: connectedWallet
+          ? parseFloat(res.stack[8].value as string)
           : 0,
       },
     };

@@ -1,6 +1,7 @@
 export interface IIDOStatus {
-  available: number;
-  launchDate: number;
+	totalSales: number;
+	launchAt: number;
+	availableBalance: number;
   balances: {
     [key: string]: number;
   };

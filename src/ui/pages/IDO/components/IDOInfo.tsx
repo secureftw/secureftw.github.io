@@ -1,32 +1,24 @@
 import React from "react";
 import {
-  LAUNCH_AT,
   TOTAL_TOKENS_FOR_SALE,
 } from "../../../../packages/neo/contracts/ftw/ido/consts";
 import LogoIcon from "../../../components/LogoIcon";
 import { NEP_LOGO } from "../../../../packages/neo/contracts/ftw/staking/consts";
 import moment from "moment";
-import Countdown from "react-countdown";
-import CountDownButton from "./CountDownButton";
-import { useWallet } from "../../../../packages/provider";
 
 interface IIDOInfoProps {
-  isSwapActive: boolean;
+  launchAt: number;
   totalSales: string;
   totalSalesInPercentage: number;
-  onClick: () => void;
 }
 const IDOInfo = ({
+  launchAt,
   totalSales,
   totalSalesInPercentage,
-  onClick,
-  isSwapActive,
 }: IIDOInfoProps) => {
-  const { connectedWallet } = useWallet();
-  const launchDateFormat = `${moment.unix(LAUNCH_AT).utc().format("llll")} UTC`;
+  const launchDateFormat = `${moment.unix(launchAt).utc().format("llll")} UTC`;
   return (
     <div className="box is-shadowless">
-      {/*<h1 className="title is-5 is-marginless">Initial Dex Offering</h1>*/}
       <div className="is-block mb-4">
         <img src={"/bgs/IDO.png"} />
       </div>
@@ -76,16 +68,6 @@ const IDOInfo = ({
           </div>
         </div>
       </div>
-
-      {!isSwapActive && (
-        <button
-          // onClick={onClick}
-          className="button is-primary is-fullwidth"
-        >
-          {/*Swap*/}
-          Opens at {launchDateFormat}
-        </button>
-      )}
     </div>
   );
 };

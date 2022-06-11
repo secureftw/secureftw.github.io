@@ -17,7 +17,7 @@ export const TOTAL_TOKENS_FOR_SALE = 50_000_000;
 
 export const IDO_SCRIPT_HASH = {
   [CONST.PRIVATENET]: "",
-  [CONST.TESTNET]: "563dde61ff806b1b7aab7123807ca8982ef5da9c",
+  [CONST.TESTNET]: "0x01365f8bb3d79b14c326e88163724bebc212daaa",
   [CONST.MAINNET]: "",
 };
 
@@ -26,7 +26,7 @@ export const payments = (network: INetworkType) => [
     contractHash: NEO_SCRIPT_HASH,
     symbol: "NEO",
     logo: "/symbols/neo.svg",
-    decimals: 8,
+    decimals: 0,
     amount: 1200,
   },
   {
