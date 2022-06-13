@@ -322,6 +322,7 @@ const Liquidity = () => {
 
       {isAssetChangeModalActive && (
         <AssetListModal
+	        activeTokenInput={isAssetChangeModalActive}
           tokenAHash={tokenA ? tokenA.hash : undefined}
           tokenBHash={tokenB ? tokenB.hash : undefined}
           onAssetClick={onAssetClick}
