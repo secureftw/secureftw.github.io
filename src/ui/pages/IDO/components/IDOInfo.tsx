@@ -28,7 +28,7 @@ const IDOInfo = ({
     <div className="box is-shadowless">
       {/*<h1 className="title is-5 is-marginless">Initial Dex Offering</h1>*/}
       <div className="is-block mb-4">
-        <img src={"/bgs/IDO.png"} />
+        <img src={"/assets/IDO-1200x600.png"} />
       </div>
       <p className="has-text-weight-light heading has-text-centered">
         FTWSwap is opening its first IDO with NEP tokens. NEP is the governance
