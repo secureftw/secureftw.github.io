@@ -7,6 +7,7 @@ import LeaveButton from "../../../../components/LeaveButton";
 import AfterTransactionSubmitted from "../../../../../../../packages/ui/AfterTransactionSubmitted";
 import { TournamentContract } from "../../../../../../../packages/neo/contracts/ftw/tournament";
 import { toDecimal } from "../../../../../../../packages/neo/utils";
+import AdminLeaveButton from "../../../../components/AdminLeaveButton";
 
 interface IPlayerModalProps {
   arenaNo: string;
@@ -117,6 +118,17 @@ const PlayerModal = ({
               ) : (
                 <></>
               )}
+	            {process.env.NODE_ENV === "development" ? (
+		            <div className="column">
+			            <AdminLeaveButton
+				            setTxid={setTxid}
+				            arenaNo={arenaNo}
+				            tokenId={player.tokenId}
+			            />
+		            </div>
+	            ) : (
+		            <></>
+	            )}
             </div>
           </div>
         )}
