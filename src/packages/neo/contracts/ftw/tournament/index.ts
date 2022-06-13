@@ -111,6 +111,36 @@ export class TournamentContract {
     );
   };
 
+	remove = async (
+		connectedWallet: IConnectedWallet,
+		tokenId: string,
+		arenaNo: string
+	): Promise<string> => {
+		const senderHash = NeonWallet.getScriptHashFromAddress(
+			connectedWallet.account.address
+		);
+		const invokeScript = {
+			operation: "remove",
+			scriptHash: this.contractHash,
+			args: [
+				{
+					type: "Integer",
+					value: arenaNo,
+				},
+				{
+					type: "String",
+					value: tokenId,
+				},
+			],
+			signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+		};
+		return new wallet.WalletAPI(connectedWallet.key).invoke(
+			this.network,
+			invokeScript
+			// "0.1"
+		);
+	};
+
   bet = async (
     connectedWallet: IConnectedWallet,
     tokenId: string,
