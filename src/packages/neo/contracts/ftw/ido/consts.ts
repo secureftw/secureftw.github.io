@@ -1,15 +1,12 @@
 import { CONST } from "../../../index";
 import {
-  GAS_SCRIPT_HASH,
-  MAINNET,
-  NEO_SCRIPT_HASH,
-} from "../../../consts";
-import {
   BNEO_SCRIPT_HASH,
   FLM_SCRIPT_HASH,
+  GAS_SCRIPT_HASH,
   GM_SCRIPT_HASH,
   LRB_SCRIPT_HASH,
-} from "../nep17/consts";
+  NEO_SCRIPT_HASH,
+} from "../../../consts";
 import { INetworkType } from "../../../network";
 
 export const LAUNCH_AT = 1655229600; // June 14th 6PM UTC (11AM LA)

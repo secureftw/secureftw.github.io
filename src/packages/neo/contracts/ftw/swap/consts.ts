@@ -1,13 +1,16 @@
-import { CONST } from "../../../index";
 import {
-	BNEO_SCRIPT_HASH, FLM_SCRIPT_HASH,
-	FTW_SCRIPT_HASH, GM_SCRIPT_HASH, LRB_SCRIPT_HASH,
-	MAXI_SCRIPT_HASH, NEP_SCRIPT_HASH,
-	NUDES_SCRIPT_HASH,
-	TTM_SCRIPT_HASH,
-} from "../nep17/consts";
-import {GAS_SCRIPT_HASH, MAINNET, PRIVATENET, TESTNET} from "../../../consts";
+	BNEO_SCRIPT_HASH,
+	FLM_SCRIPT_HASH, FTW_SCRIPT_HASH,
+	GAS_SCRIPT_HASH,
+	GM_SCRIPT_HASH,
+	LRB_SCRIPT_HASH,
+	MAINNET, MAXI_SCRIPT_HASH, NUDES_SCRIPT_HASH,
+	PRIVATENET,
+	TESTNET, TTM_SCRIPT_HASH
+} from "../../../consts";
+
 import { INetworkType } from "../../../network";
+import {NEP_SCRIPT_HASH} from "../nep-token/consts";
 
 export const SWAP_FEE = 0.25;
 
@@ -16,10 +19,10 @@ export const DEFAULT_SLIPPAGE = 0.6;
 export const PRICE_IMPACT_LIMIT = 10;
 
 export const SWAP_SCRIPT_HASH = {
-  [CONST.PRIVATENET]: "",
-  [CONST.TESTNET]: "73255207d4d254aa46a06ebfa952f9b65914d05c", // real
+  [PRIVATENET]: "",
+  [TESTNET]: "73255207d4d254aa46a06ebfa952f9b65914d05c", // real
   // [CONST.TESTNET]: "50ae712ccb2760ad3f2ec3edebb25dbacc627fe2", // -1
-  [CONST.MAINNET]: "",
+  [MAINNET]: "",
 };
 
 export const ASSET_LIST = {
@@ -44,12 +47,12 @@ export const ASSET_LIST = {
       logo: "/symbols/gas.svg",
 	    decimals: 8
     },
-    // [FTW_SCRIPT_HASH[TESTNET]]: {
-    //   contractHash: FTW_SCRIPT_HASH[TESTNET],
-    //   symbol: "FTW",
-    //   logo: "/symbols/ftw.svg",
-	  //   decimals: 8
-    // },
+    [FTW_SCRIPT_HASH[TESTNET]]: {
+      contractHash: FTW_SCRIPT_HASH[TESTNET],
+      symbol: "FTW",
+      logo: "/symbols/ftw.svg",
+	    decimals: 8
+    },
 	  [NEP_SCRIPT_HASH[TESTNET]]: {
 		  contractHash: NEP_SCRIPT_HASH[TESTNET],
 		  symbol: "NEP",
@@ -142,12 +145,12 @@ export const ASSET_LIST = {
 		  logo: "/symbols/nep.png",
 		  decimals: 8
 	  },
-    // [FTW_SCRIPT_HASH[MAINNET]]: {
-    //   contractHash: FTW_SCRIPT_HASH[MAINNET],
-    //   symbol: "FTW",
-    //   logo: "/symbols/ftw.svg",
-	  //   decimals: 8
-    // },
+    [FTW_SCRIPT_HASH[MAINNET]]: {
+      contractHash: FTW_SCRIPT_HASH[MAINNET],
+      symbol: "FTW",
+      logo: "/symbols/ftw.svg",
+	    decimals: 8
+    },
     [NUDES_SCRIPT_HASH[MAINNET]]: {
       contractHash: NUDES_SCRIPT_HASH[MAINNET],
       symbol: "NUDES",
@@ -203,7 +206,7 @@ export const PAIR_LIST = {
   [MAINNET]: [],
 };
 
-export const ASSETS = (network: INetworkType) => {
+export const SWAP_ASSET_LIST = (network: INetworkType) => {
   const keys = Object.keys(ASSET_LIST[network]);
   return keys.map((key) => {
     return ASSET_LIST[network][key];

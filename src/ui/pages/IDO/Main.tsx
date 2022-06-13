@@ -16,8 +16,8 @@ import { FaArrowDown } from "react-icons/fa";
 import moment from "moment";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
 import toast from "react-hot-toast";
-import { NEP_SCRIPT_HASH } from "../../../packages/neo/contracts";
 import { MAINNET } from "../../../packages/neo/consts";
+import { NEP_SCRIPT_HASH } from "../../../packages/neo/contracts/ftw/nep-token/consts";
 
 const Main = () => {
   const { network, connectedWallet } = useWallet();
@@ -67,17 +67,17 @@ const Main = () => {
     setRefresh(refresh + 1);
     setTxid("");
   };
-	//
+  //
   // const { isLoaded, error, data } = useOnChainData(() => {
   //   return new IDOContract(network).getIDOStatus(connectedWallet);
   // }, [network, connectedWallet, refresh]);
-	//
+  //
   // if (!isLoaded) return <div></div>;
-	//
+  //
   // const totalTokens = u.BigInteger.fromDecimal(TOTAL_TOKENS_FOR_SALE, 8);
   // const totalSales = totalTokens.sub(data.available);
   // const totalSalesInPercentage = totalSales.div(totalTokens).mul(100);
-	//
+  //
   // const userBalanceForSwap =
   //   token &&
   //   data.balances[token.contractHash] &&

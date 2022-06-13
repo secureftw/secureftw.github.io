@@ -3,20 +3,15 @@ import { IConnectedWallet } from "../../../wallet/interfaces";
 import { u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { wallet } from "../../../index";
 import {
-  DEFAULT_WITNESS_SCOPE,
-  GAS_SCRIPT_HASH,
-  MAINNET,
-  NEO_SCRIPT_HASH,
+	BNEO_SCRIPT_HASH,
+	DEFAULT_WITNESS_SCOPE, FLM_SCRIPT_HASH,
+	GAS_SCRIPT_HASH, GM_SCRIPT_HASH, LRB_SCRIPT_HASH,
+	MAINNET,
+	NEO_SCRIPT_HASH,
 } from "../../../consts";
 import { FARM_SCRIPT_HASH } from "../staking/consts";
 import { IIDOStatus } from "./interface";
 import { IDO_SCRIPT_HASH } from "./consts";
-import {
-  BNEO_SCRIPT_HASH,
-  FLM_SCRIPT_HASH,
-  GM_SCRIPT_HASH,
-  LRB_SCRIPT_HASH,
-} from "../nep17/consts";
 
 export class IDOContract {
   network: INetworkType;
