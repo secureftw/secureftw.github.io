@@ -30,7 +30,7 @@ const NEP11InfoPage = () => {
   const { isLoaded, error, data } = useOnChainData(() => {
     return new SmithContract(network).getNep11ContractInfo(contractHash);
   }, [connectedWallet, network, refresh]);
-
+	console.log(data)
   const onUpdate = async (values) => {
     if (connectedWallet) {
       const manifest = JSON.stringify({
@@ -116,6 +116,7 @@ const NEP11InfoPage = () => {
           </div>
           <div className="column is-8">
             <div className="box is-shadowless">
+	            <h3 className="title is-5">{data.name}</h3>
               <div className="media">
                 {manifest && manifest.logo ? (
                   <div className="media-left">
@@ -155,8 +156,6 @@ const NEP11InfoPage = () => {
                     <strong>Contract Owner</strong>
                     <br />
                     {data.owner}
-                    <br />
-                    <Tokens contractHash={contractHash} />
                   </div>
                   <div className="field is-grouped is-grouped-multiline">
                     <div className="control">
@@ -174,6 +173,10 @@ const NEP11InfoPage = () => {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="box is-shadowless">
+	            <h3 className="title is-5">Collection</h3>
+              <Tokens contractHash={contractHash} />
             </div>
           </div>
           <div className="column is-2">
@@ -224,7 +227,10 @@ const NEP11InfoPage = () => {
       {isUpdateModalActive && (
         <NEP17UpdateFormModal
           onUpdate={onUpdate}
-          onClose={() => setUpdateModalActive(false)}
+          onClose={() => {
+						setAdmin(false)
+	          setUpdateModalActive(false)
+          }}
         />
       )}
 

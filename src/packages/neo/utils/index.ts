@@ -106,6 +106,7 @@ const stringList = [
   "symbolB",
   "title",
   "description",
+	"author"
 ];
 const addressList = ["owner", "account", "creator"];
 const hash160List = ["contractHash", "tokenA", "tokenB", "tokenIn", "tokenOut"];

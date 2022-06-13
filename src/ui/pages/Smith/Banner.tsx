@@ -12,38 +12,66 @@ const Banner = () => {
   const location = useLocation();
   return (
     <section className="hero is-white">
-      <div className="hero-body">
+      <div className="hero-body is-center">
         <div className="container">
-          <h1 className="title ">Smith</h1>
-          <p className="subtitle">
-            Create your token smart contracts without codes
-          </p>
-          <br />
           <div className="columns">
-            <div className="column">
-              <div className="box content has-background-info has-text-white">
-                <h5 className="has-text-light">Token</h5>
-                <p>
-                  Neo blockchain's token smart contract. Like ERC20 Shiba Inu.
-                </p>
-                <Link to={SMITH_CREATE_NEP17_PATH} className="button is-light">
-                  Create Token Contract
-                </Link>
-              </div>
+            <div className="column is-flex" style={{ alignItems: "center" }}>
+              <figure
+                className="image"
+                style={{ width: "250px", margin: "0 auto" }}
+              >
+                <img src="/520/smith.png" />
+              </figure>
             </div>
-            <div className="column">
-              <div className="box content has-background-info  has-text-white">
-                <h5 className="has-text-white">NFT</h5>
-                <p>
-                  Neo blockchain's NFT smart contract. Like ERC721 Cryptopunk
-                  NFT.
+            <div className="column is-flex" style={{ alignItems: "center" }}>
+              <div className="">
+                <h1 className="title ">Smith</h1>
+                <p className="subtitle">
+                  Create your token smart contracts without codes
                 </p>
-                <Link to={SMITH_CREATE_NEP11_PATH} className="button  is-light">
-                  Create NFT Contract
-                </Link>
+                <br />
+                <div className="buttons">
+                  <Link
+                    to={SMITH_CREATE_NEP17_PATH}
+                    className="button is-success is-light"
+                  >
+                    Create Token Contract
+                  </Link>
+                  <Link
+                    to={SMITH_CREATE_NEP11_PATH}
+                    className="button is-info is-light"
+                  >
+                    Create NFT Contract
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
+          "{/*<div className="columns">*/}
+          {/*  <div className="column">*/}
+          {/*    <div className="box content has-background-info has-text-white">*/}
+          {/*      <h5 className="has-text-light">Token</h5>*/}
+          {/*      <p>*/}
+          {/*        Neo blockchain's token smart contract. Like ERC20 Shiba Inu.*/}
+          {/*      </p>*/}
+          {/*      <Link to={SMITH_CREATE_NEP17_PATH} className="button is-light">*/}
+          {/*        Create Token Contract*/}
+          {/*      </Link>*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*  <div className="column">*/}
+          {/*    <div className="box content has-background-info  has-text-white">*/}
+          {/*      <h5 className="has-text-white">NFT</h5>*/}
+          {/*      <p>*/}
+          {/*        Neo blockchain's NFT smart contract. Like ERC721 Cryptopunk*/}
+          {/*        NFT.*/}
+          {/*      </p>*/}
+          {/*      <Link to={SMITH_CREATE_NEP11_PATH} className="button  is-light">*/}
+          {/*        Create NFT Contract*/}
+          {/*      </Link>*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
         </div>
       </div>
       <div className="hero-foot">

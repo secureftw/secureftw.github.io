@@ -22,7 +22,7 @@ const Smith = () => {
       "Forthewin Smith: Create your NEP11 and NEP17 smart contracts without any codes.";
   }, []);
 
-  return <Maintenance />;
+  // return <Maintenance />;
   return (
     <>
       <Route exact path={SMITH_PATH} component={() => <NEP17Smith />} />

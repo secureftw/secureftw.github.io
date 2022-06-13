@@ -460,68 +460,23 @@ export class SmithContract {
   getNep17ContractInfo = async (
     contractHash: string
   ): Promise<ISmithNEP17Info> => {
-    const owner = {
-      operation: "owner",
-      scriptHash: contractHash,
-      args: [],
-    };
-    const name = {
-      operation: "name",
-      scriptHash: contractHash,
-      args: [],
-    };
-    const totalSupply = {
-      operation: "totalSupply",
-      scriptHash: contractHash,
-      args: [],
-    };
-    const symbol = {
-      operation: "symbol",
-      scriptHash: contractHash,
-      args: [],
-    };
-    const decimals = {
-      operation: "decimals",
-      scriptHash: contractHash,
-      args: [],
-    };
-    const author = {
-      operation: "author",
-      scriptHash: contractHash,
-      args: [],
-    };
-    const description = {
-      operation: "description",
-      scriptHash: contractHash,
-      args: [],
-    };
-    const website = {
-      operation: "website",
-      scriptHash: contractHash,
-      args: [],
-    };
-    const logo = {
-      operation: "logo",
-      scriptHash: contractHash,
-      args: [],
-    };
+	  const script = {
+		  operation: "getNEP17",
+		  scriptHash: this.contractHash,
+		  args: [
+			  {
+				  type: "Hash160",
+				  value: contractHash,
+			  }
+		  ],
+	  };
 
-    const scripts = [
-      owner,
-      name,
-      totalSupply,
-      symbol,
-      decimals,
-      author,
-      description,
-      website,
-      logo,
-    ];
-    const res = await Network.read(this.network, scripts);
+    const res = await Network.read(this.network, [script]);
+		console.log(res)
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-    return parseSmithNEP17Info(res);
+    return parseMapValue(res.stack[0] as any);
   };
 
   getNep11ContractInfo = async (

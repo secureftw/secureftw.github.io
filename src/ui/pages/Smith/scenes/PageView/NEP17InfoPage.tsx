@@ -33,18 +33,6 @@ const NEP17InfoPage = () => {
     setTxid("");
   };
 
-  // const onClickUpdate = () => {
-  //   if (connectedWallet) {
-  //     if (connectedWallet.account.address === data.owner) {
-  //       setUpdateModalActive(true);
-  //     } else {
-  //       toast.error("Only contract owner can update");
-  //     }
-  //   } else {
-  //     toast.error("Please connect your wallet");
-  //   }
-  // };
-
   const onUpdate = async (values) => {
     if (connectedWallet) {
       const manifest = JSON.stringify({
@@ -93,28 +81,28 @@ const NEP17InfoPage = () => {
           <div className="column is-8">
             <div className="box is-shadowless">
               <div className="media">
-	              {manifest && manifest.logo ? (
-		              <div className="media-left">
-			              <div className="image is-128x128 mb-2">
-				              <img
-					              onError={(e) => {
-						              // @ts-ignore
-						              e.target.src = UNKNOWN_TOKEN_IMAGE;
-					              }}
-					              src={
-						              manifest && manifest.logo
-							              ? manifest.logo
-							              : UNKNOWN_TOKEN_IMAGE
-					              }
-				              />
-			              </div>
-		              </div>
-	              ) : (
-		              <></>
-	              )}
+                {manifest && manifest.logo ? (
+                  <div className="media-left">
+                    <div className="image is-128x128 mb-2">
+                      <img
+                        onError={(e) => {
+                          // @ts-ignore
+                          e.target.src = UNKNOWN_TOKEN_IMAGE;
+                        }}
+                        src={
+                          manifest && manifest.logo
+                            ? manifest.logo
+                            : UNKNOWN_TOKEN_IMAGE
+                        }
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <div className="media-content">
+                  <h3 className="title is-5">{data.name}</h3>
                   <div className="content">
-                    <h3>{data.name}</h3>
                     <p>{data.description}</p>
                     <br />
 
@@ -142,7 +130,11 @@ const NEP17InfoPage = () => {
                     <p>{data.email ? data.email : "Unknown"}</p>
 
                     <h6>Website</h6>
-                    <p>{data.website ? data.website : "Unknown"}</p>
+                    <p>
+                      {manifest && manifest.website
+                        ? manifest.website
+                        : "Unknown"}
+                    </p>
                   </div>
 
                   <div className="field is-grouped is-grouped-multiline">
@@ -180,7 +172,7 @@ const NEP17InfoPage = () => {
                   onClick={() => {
                     setUpdateModalActive(true);
                   }}
-                  className="button is-primary"
+                  className="button is-primary is-fullwidth"
                 >
                   Update
                 </button>
@@ -193,7 +185,7 @@ const NEP17InfoPage = () => {
                       setAdmin(true);
                       setUpdateModalActive(true);
                     }}
-                    className="button is-danger mt-3"
+                    className="button is-danger is-fullwidth"
                   >
                     Admin
                   </button>

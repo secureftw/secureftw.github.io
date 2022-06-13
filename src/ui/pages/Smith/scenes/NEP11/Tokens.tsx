@@ -17,8 +17,6 @@ const Tokens = ({ contractHash }: ITokensProps) => {
 
   return (
     <>
-      <strong>Total Supply</strong>
-      <br />
       {!isLoaded ? (
         <div>Loading..</div>
       ) : error ? (
@@ -27,8 +25,6 @@ const Tokens = ({ contractHash }: ITokensProps) => {
         <>
           {data > 0 ? (
             <>
-              <br />
-              <strong>Showcase</strong>
               <div className="columns is-multiline is-mobile">
                 {_.range(data > 12 ? 12 : data).map((i) => {
                   const tokenId = i + 1;
@@ -64,7 +60,7 @@ const Tokens = ({ contractHash }: ITokensProps) => {
               )}
             </>
           ) : (
-            <div>None</div>
+            <div>No collections yet</div>
           )}
         </>
       )}

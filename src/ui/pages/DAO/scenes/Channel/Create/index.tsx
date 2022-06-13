@@ -65,7 +65,7 @@ const Create = () => {
     history.push(`${DAO_CHANNEL_PATH}/${contractHash}`);
   };
 
-  const { isLoaded, error, data } = useOnChainData(() => {
+  const { data } = useOnChainData(() => {
     return new DaoContract(network).getChannel(contractHash);
   }, []);
 
@@ -75,9 +75,9 @@ const Create = () => {
       hasEmptyOption = true;
     }
   });
-  const hasEmoji = useMemo(() => {
-    return emojiRegexExp.test(description);
-  }, [description]);
+  // const hasEmoji = useMemo(() => {
+  //   return emojiRegexExp.test(description);
+  // }, [description]);
   return (
     <div className="columns">
       <div className="column is-8 is-offset-2">
