@@ -12,18 +12,13 @@ import Stake from "./scenes/Stake";
 import MyPositions from "./scenes/MyPositions";
 import ClaimRewards from "./scenes/ClaimRewards";
 import { useWallet } from "../../../packages/provider";
+import TestnetOnlyRoute from "../../components/TestnetOnlyRoute";
 
 const Farm = () => {
   const { network } = useWallet();
   if (!FARM_PAGE_ROUTE.network.includes(network)) {
     return (
-      <PageLayout>
-        <div className="notification is-info">
-          {FARM_PAGE_ROUTE.label} is not on {network} yet.
-          <br />
-          Please stay tuned.
-        </div>
-      </PageLayout>
+    <TestnetOnlyRoute title={"FTW Farm"} />
     );
   }
   return (

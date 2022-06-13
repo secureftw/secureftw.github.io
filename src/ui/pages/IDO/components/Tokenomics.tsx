@@ -13,62 +13,43 @@ export const data = [
 export const options = {
   is3D: true,
 };
+
+const utilityCards = [
+  { img: "/520/smith.png", title: "Smith" },
+  { img: "/520/swap.png", title: "Swap" },
+  { img: "/520/farm.png", title: "Farm" },
+  { img: "/520/dao.png", title: "Voting" },
+  { img: "/520/rune.png", title: "Rune" },
+  { img: "/520/raffle.png", title: "Raffle" },
+];
+
 const Tokenomics = (props) => {
   return (
     <div className="box is-shadowless">
       <h1 className="title is-5 heading">Token utility</h1>
       <div className="columns is-multiline">
-        <div className="column is-6">
-          <div
-            className="has-text-centered box is-shadowless"
-            style={{ border: "1px solid hsl(0, 0%, 96%)" }}
-          >
-            <figure className="image is-128x128" style={{ margin: "auto" }}>
-              <img src="/icons/smith.png" />
-            </figure>
-            <span>Smith</span>
-          </div>
-        </div>
-
-        <div className="column is-6">
-          <div
-            className="has-text-centered box is-shadowless"
-            style={{ border: "1px solid hsl(0, 0%, 96%)" }}
-          >
-            <figure className="image is-128x128" style={{ margin: "auto" }}>
-              <img src="/icons/gov.png" />
-            </figure>
-            <span>Governance</span>
-          </div>
-        </div>
-
-        <div className="column is-6">
-          <div
-            className="has-text-centered box is-shadowless"
-            style={{ border: "1px solid hsl(0, 0%, 96%)" }}
-          >
-            <figure className="image is-128x128" style={{ margin: "auto" }}>
-              <img src="/icons/dao.png" />
-            </figure>
-            <span>DAO platform</span>
-          </div>
-        </div>
-
-        <div className="column is-6">
-          <div
-            className="has-text-centered box is-shadowless"
-            style={{ border: "1px solid hsl(0, 0%, 96%)" }}
-          >
-            <figure className="image is-128x128" style={{ margin: "auto" }}>
-              <img src="/icons/raffle.png" />
-            </figure>
-            <span>Raffle platform</span>
-          </div>
-        </div>
+        {utilityCards.map((card) => {
+          return (
+            <div key={`ucard-${card.title}`} className="column is-4">
+              <div
+                className="has-text-centered box is-shadowless"
+                style={{ border: "1px solid hsl(0, 0%, 96%)" }}
+              >
+                <figure className="image is-128x128" style={{ margin: "auto" }}>
+                  <img src={card.img} />
+                </figure>
+                <span className="heading">{card.title}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <h1 className="title is-5 heading">Tokenomics</h1>
-      <div className="box is-shadowless" style={{ border: "1px solid hsl(0, 0%, 96%)" }}>
+      <div
+        className="box is-shadowless"
+        style={{ border: "1px solid hsl(0, 0%, 96%)" }}
+      >
         <Chart
           chartType="PieChart"
           data={data}

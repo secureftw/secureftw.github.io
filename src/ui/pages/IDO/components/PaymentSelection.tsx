@@ -15,9 +15,9 @@ const PaymentSelection = ({
   return (
     <>
       <h1 className="title is-5">Swap rates</h1>
-      <p className="subtitle is-7">
-        Swap rates will be determined at the launch except{" "}
-        <strong>NEO/NEP</strong> and <strong>GAS/NEP</strong>.
+      <p className="subtitle is-6">
+        Swap rates will be determined at the launch except NEO/NEP and GAS/NEP.
+        Due to current volatility, NEO/GAS rates will be better than others.
       </p>
       <div className="columns is-multiline">
         {payments(network).map((p, i) => {

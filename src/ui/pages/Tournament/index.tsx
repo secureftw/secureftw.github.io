@@ -13,9 +13,16 @@ const Tournament = () => {
             <div className="column">
               <div>
                 <h1 className="title">Arenas</h1>
-                <p>New arenas will be hosted in TTM Universe</p>
+                <p>New arenas will be hosted in TOTHEMOON Universe</p>
+	              <p>-</p>
                 <p>
-                  <a href="https://tothemoonuniverse.com/">Click to the moon</a>
+                  TOTHEMOON is a strategic community-building NFT game built on
+                  Neo N3, where collectors engage with a moon-themed metaverse.
+                  The TOTHEMOON team aims to establish this metaverse by
+                  layering and integrating NFTs in a way that establishes a
+                  thriving supply and demand economy.
+                  <br />
+                  <a className="has-text-info" href="https://tothemoonuniverse.com/">click to the moon</a>
                 </p>
                 <p>-</p>
                 <p className="mb-2">Review legacy arena</p>

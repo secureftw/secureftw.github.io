@@ -20,8 +20,8 @@ const PoolCard = ({
   onPairClick: (tokenA, tokenB) => void;
 }) => {
   const { network } = useWallet();
-	const A = u.BigInteger.fromDecimal(amountA, tokenADecimals)
-	const B = u.BigInteger.fromDecimal(amountB, tokenADecimals)
+	// const A = u.BigInteger.fromDecimal(amountA, tokenADecimals)
+	// const B = u.BigInteger.fromDecimal(amountB, tokenADecimals)
   // const ratioAB = B.div(A);
   // const ratioBA = A.div(B)
   return (

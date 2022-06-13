@@ -11,18 +11,13 @@ import Channel from "./scenes/Channel";
 import CreateChannel from "./scenes/CreateChannel";
 import { useWallet } from "../../../packages/provider";
 import PageLayout from "../../components/PageLayout";
+import TestnetOnlyRoute from "../../components/TestnetOnlyRoute";
 
 const Dao = () => {
   const { network } = useWallet();
   if (!DAO_PAGE_ROUTE.network.includes(network)) {
     return (
-      <PageLayout>
-        <div className="notification is-info">
-          {DAO_PAGE_ROUTE.label} is not on {network} yet.
-          <br />
-          Please stay tuned.
-        </div>
-      </PageLayout>
+     <TestnetOnlyRoute title={"FTW DAO (Voting platform)"} />
     );
   }
   return (
