@@ -151,6 +151,7 @@ export const parseMapValue = (stackItem: StackItemLike): any => {
   const obj = {};
   const root = stackItem.value as StackItemMap[];
   root.forEach(({ key, value }) => {
+		console.log(key)
     if (value.value !== undefined) {
       const _key = u.base642utf8(key.value as string);
       let val;

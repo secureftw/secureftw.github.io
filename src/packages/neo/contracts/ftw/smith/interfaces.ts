@@ -16,6 +16,7 @@ export interface ISmithNEP17Record {
   author: string;
   description: string;
   createdAt: string;
+  manifest: string;
 }
 
 export interface ISmithNEP11RecordPaginate {
@@ -35,6 +36,7 @@ export interface ISmithNEP11Record {
   author: string;
   email: string;
   createdAt: string;
+  manifest: string;
 }
 
 export interface ISmithNEP17Info {
