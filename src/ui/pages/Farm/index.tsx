@@ -2,12 +2,10 @@ import React from "react";
 import PageLayout from "../../components/PageLayout";
 import { Route } from "react-router-dom";
 import {
-  DAO_PAGE_ROUTE,
   FARM_PAGE_ROUTE,
   FARM_PATH,
   FARM_STAKE_PATH,
   FARM_STAKE_POSITIONS_PATH,
-  SWAP_PAGE_ROUTE,
 } from "../../../consts";
 import StakingMain from "./scenes/Main";
 import Stake from "./scenes/Stake";
