@@ -3,6 +3,7 @@ import { IWalletType } from "../wallet/interfaces";
 
 /* Wallets */
 export const O3 = "O3";
+export const NEON = "NEON";
 export const NEO_LINE = "NEO_LINE";
 export const DEV = "DEV";
 export const ONE_GATE = "ONE_GATE";

@@ -1,11 +1,12 @@
-import { DEV, NEO_LINE, O3, ONE_GATE } from "../consts";
+import { DEV, NEO_LINE, NEON, O3, ONE_GATE } from "../consts";
 import { INetworkType } from "../network";
 
 export type IWalletType =
   | typeof O3
   | typeof NEO_LINE
   | typeof DEV
-  | typeof ONE_GATE;
+  | typeof ONE_GATE
+  | typeof NEON;
 
 export interface IConnectedWallet {
   key: IWalletType;
