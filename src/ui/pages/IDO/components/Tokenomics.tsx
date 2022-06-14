@@ -5,9 +5,9 @@ export const data = [
   ["Distribution", "Tokens"],
   ["IDO", 50_000_000],
   ["Team", 50_000_000],
-  ["Marketing", 20_000_000],
-  ["NEP initial pool", 30_000_000],
-  ["Swap reward", 855_000_000],
+  ["Marketing", 5_000_000],
+  ["NEP initial pool", 25_000_000],
+  ["Swap reward", 870_000_000],
 ];
 
 export const options = {
