@@ -66,7 +66,7 @@ const Main = () => {
     setTxid("");
   };
 
-  const { isLoaded, error, data } = useOnChainData(() => {
+  const { isLoaded, data } = useOnChainData(() => {
     return new IDOContract(network).getIDOStatus(connectedWallet);
   }, [network, connectedWallet, refresh]);
 
@@ -139,18 +139,14 @@ const Main = () => {
           <div className="block">
             <button
               onClick={() => {
-                if (process.env.NODE_ENV === "development") {
-                  handleExchange();
-                } else {
-                  if (moment().valueOf() >= data.launchAt) {
-                    if (connectedWallet) {
-                      handleExchange();
-                    } else {
-                      toggleWalletSidebar();
-                    }
+                if (moment().valueOf() >= data.launchAt) {
+                  if (connectedWallet) {
+                    handleExchange();
                   } else {
-                    toast.error("Launched yet");
+                    toggleWalletSidebar();
                   }
+                } else {
+                  toast.error("Launched yet");
                 }
               }}
               disabled={amount === undefined || amount > userBalanceForSwap}

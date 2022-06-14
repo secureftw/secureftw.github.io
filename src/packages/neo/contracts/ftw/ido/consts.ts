@@ -12,8 +12,10 @@ import { INetworkType } from "../../../network";
 export const LAUNCH_AT = 1655229600000; // June 14th 6PM UTC (11AM LA)
 export const TOTAL_TOKENS_FOR_SALE = 50_000_000;
 
+// IDO Hash to address NVEuiwucYuzBrDFp36NHqT5EPkB1HDv8M2
+
 export const IDO_SCRIPT_HASH = {
-  [CONST.PRIVATENET]: "",
+  [CONST.PRIVATENET]: "8baedfbb355ca3a7dacea69884c47fea2c254e66",
   [CONST.TESTNET]: "8baedfbb355ca3a7dacea69884c47fea2c254e66",
   [CONST.MAINNET]: "8baedfbb355ca3a7dacea69884c47fea2c254e66",
 };
