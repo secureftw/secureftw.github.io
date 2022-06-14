@@ -30,7 +30,6 @@ const NEP11InfoPage = () => {
   const { isLoaded, error, data } = useOnChainData(() => {
     return new SmithContract(network).getNep11ContractInfo(contractHash);
   }, [connectedWallet, network, refresh]);
-	console.log(data)
   const onUpdate = async (values) => {
     if (connectedWallet) {
       const manifest = JSON.stringify({

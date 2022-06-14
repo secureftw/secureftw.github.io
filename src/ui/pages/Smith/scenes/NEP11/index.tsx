@@ -12,7 +12,6 @@ const NEP11Smith = () => {
   const { isLoaded, error, data } = useOnChainData(() => {
     return new SmithContract(network).getNEP11Records();
   }, [connectedWallet, network, page]);
-  console.log(data);
   return (
     <>
       <Banner />

@@ -472,7 +472,6 @@ export class SmithContract {
 	  };
 
     const res = await Network.read(this.network, [script]);
-		console.log(res)
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
@@ -500,4 +499,48 @@ export class SmithContract {
     }
     return parseMapValue(res.stack[0] as any);
   };
+
+	isNEP17SymbolTaken = async (
+		symbol: string
+	): Promise<boolean> => {
+		const script = {
+			operation: "isNEP17TokenTaken",
+			scriptHash: this.contractHash,
+			args: [
+				{
+					type: "String",
+					value: symbol,
+				}
+			],
+		};
+
+		const scripts = [script];
+		const res = await Network.read(this.network, scripts);
+		if (res.state === "FAULT") {
+			throw new Error(res.exception as string);
+		}
+		return res.stack[0].value as boolean;
+	};
+
+	isNEP11SymbolTaken = async (
+		symbol: string
+	): Promise<boolean> => {
+		const script = {
+			operation: "isNEP11TokenTaken",
+			scriptHash: this.contractHash,
+			args: [
+				{
+					type: "String",
+					value: symbol,
+				}
+			],
+		};
+
+		const scripts = [script];
+		const res = await Network.read(this.network, scripts);
+		if (res.state === "FAULT") {
+			throw new Error(res.exception as string);
+		}
+		return res.stack[0].value as boolean;
+	};
 }

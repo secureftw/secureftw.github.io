@@ -14,7 +14,6 @@ interface IContractCardProps {
   data: ISmithNEP17Record;
 }
 const ContractCard = ({ data }: IContractCardProps) => {
-  console.log(data.manifest);
   const manifest = data.manifest ? JSON.parse(data.manifest) : {};
   return (
     <div>
