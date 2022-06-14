@@ -75,7 +75,6 @@ const Main = () => {
   const totalSales = parseFloat(
     u.BigInteger.fromNumber(data.totalSales).toDecimal(8)
   );
-  // const totalSales = totalTokens.sub(data.available);
   const totalSalesInPercentage = (totalSales / TOTAL_TOKENS_FOR_SALE) * 100;
   const availableNEP = parseFloat(
     u.BigInteger.fromNumber(data.availableBalance).toDecimal(8)
@@ -90,10 +89,6 @@ const Main = () => {
           )
         )
       : 0;
-
-  // const nowMs = moment().valueOf();
-  // console.log("LaunchAt: " + data.launchAt);
-  // console.log("Now " + nowMs);
   console.log("Available balance " + availableNEP);
 
   return (
@@ -144,14 +139,18 @@ const Main = () => {
           <div className="block">
             <button
               onClick={() => {
-                if (moment().valueOf() > data.launchAt) {
-                  if (connectedWallet) {
-                    handleExchange();
-                  } else {
-                    toggleWalletSidebar();
-                  }
+                if (process.env.NODE_ENV === "development") {
+                  handleExchange();
                 } else {
-                  toast.error("Launched yet");
+                  if (moment().valueOf() >= data.launchAt) {
+                    if (connectedWallet) {
+                      handleExchange();
+                    } else {
+                      toggleWalletSidebar();
+                    }
+                  } else {
+                    toast.error("Launched yet");
+                  }
                 }
               }}
               disabled={amount === undefined || amount > userBalanceForSwap}

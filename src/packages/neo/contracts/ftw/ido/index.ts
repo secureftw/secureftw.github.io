@@ -68,21 +68,6 @@ export class IDOContract {
   getIDOStatus = async (
     connectedWallet?: IConnectedWallet
   ): Promise<IIDOStatus> => {
-    if (this.network === MAINNET) {
-      return {
-        totalSales: 0,
-        availableBalance: 0,
-        launchAt: LAUNCH_AT,
-        balances: {
-          [NEO_SCRIPT_HASH]: 0,
-          [GAS_SCRIPT_HASH]: 0,
-          [BNEO_SCRIPT_HASH[this.network]]: 0,
-          [FLM_SCRIPT_HASH[this.network]]: 0,
-          [GM_SCRIPT_HASH[this.network]]: 0,
-          [LRB_SCRIPT_HASH[this.network]]: 0,
-        },
-      };
-    }
 
     const script1 = {
       scriptHash: this.contractHash,

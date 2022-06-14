@@ -14,10 +14,10 @@ const PaymentSelection = ({
 }: IPaymentSelectionProps) => {
   return (
     <>
-      <h1 className="title is-5">Swap rates</h1>
+      <h1 className="title is-5 is-spaced">Swap rates</h1>
       <p className="subtitle is-6">
-        Swap rates will be determined at the launch except NEO/NEP and GAS/NEP.
-        Due to current volatility, NEO/GAS rates will be better than others.
+        Due to the current market condition, NEO/GAS rates are better than
+        others. Please swap accordingly.
       </p>
       <div className="columns is-multiline">
         {payments(network).map((p, i) => {
@@ -36,22 +36,9 @@ const PaymentSelection = ({
                 >
                   <img src={p.logo} />
                 </figure>
-                <div className="title is-7 is-marginless">1 {p.symbol}</div>
+                <small>1 {p.symbol}</small>
                 <div>=</div>
-                <div className="title is-7 is-marginless">
-                  <span
-                    className={
-                      p.symbol === "NEO" ||
-                      p.symbol === "bNEO" ||
-                      p.symbol === "GAS"
-                        ? ""
-                        : "spoiler-blurred"
-                    }
-                  >
-                    {p.amount}
-                  </span>{" "}
-                  NEP
-                </div>
+                <small>{p.amount} NEP</small>
               </div>
             </div>
           );

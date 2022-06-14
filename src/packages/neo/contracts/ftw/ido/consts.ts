@@ -3,6 +3,8 @@ import {
   BNEO_SCRIPT_HASH,
   FLM_SCRIPT_HASH,
   GAS_SCRIPT_HASH,
+	GM_SCRIPT_HASH,
+	LRB_SCRIPT_HASH,
   NEO_SCRIPT_HASH,
 } from "../../../consts";
 import { INetworkType } from "../../../network";
@@ -12,8 +14,8 @@ export const TOTAL_TOKENS_FOR_SALE = 50_000_000;
 
 export const IDO_SCRIPT_HASH = {
   [CONST.PRIVATENET]: "",
-  [CONST.TESTNET]: "0e0ffaacc089914ef3f97ad9e831da20d63c6027",
-  [CONST.MAINNET]: "",
+  [CONST.TESTNET]: "8baedfbb355ca3a7dacea69884c47fea2c254e66",
+  [CONST.MAINNET]: "8baedfbb355ca3a7dacea69884c47fea2c254e66",
 };
 
 export const payments = (network: INetworkType) => [
@@ -43,20 +45,20 @@ export const payments = (network: INetworkType) => [
     symbol: "FLM",
     logo: "/symbols/flm.svg",
     decimals: 8,
-    amount: 12,
+    amount: 10,
   },
-  // {
-  //   contractHash: LRB_SCRIPT_HASH[network],
-  //   symbol: "LRB",
-  //   logo: "/symbols/lrb.svg",
-  //   decimals: 8,
-  //   amount: 25,
-  // },
-  // {
-  //   contractHash: GM_SCRIPT_HASH[network],
-  //   symbol: "GM",
-  //   logo: "/symbols/gm.svg",
-  //   decimals: 8,
-  //   amount: 5,
-  // },
+  {
+    contractHash: LRB_SCRIPT_HASH[network],
+    symbol: "LRB",
+    logo: "/symbols/lrb.svg",
+    decimals: 8,
+    amount: 3,
+  },
+  {
+    contractHash: GM_SCRIPT_HASH[network],
+    symbol: "GM",
+    logo: "/symbols/gm.svg",
+    decimals: 8,
+    amount: 4,
+  },
 ];
