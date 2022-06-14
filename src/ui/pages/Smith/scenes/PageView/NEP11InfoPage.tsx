@@ -115,7 +115,7 @@ const NEP11InfoPage = () => {
           </div>
           <div className="column is-8">
             <div className="box is-shadowless">
-	            <h3 className="title is-5">{data.name}</h3>
+              <h3 className="title is-5">{data.name}</h3>
               <div className="media">
                 {manifest && manifest.logo ? (
                   <div className="media-left">
@@ -155,6 +155,20 @@ const NEP11InfoPage = () => {
                     <strong>Contract Owner</strong>
                     <br />
                     {data.owner}
+                    <br />
+                    <strong>Website</strong>
+                    <br />
+                    {manifest && manifest.website ? (
+                      <a
+                        className="has-text-dark"
+                        target="_blank"
+                        href={manifest.website}
+                      >
+                        {manifest.website}
+                      </a>
+                    ) : (
+                      "Unknown"
+                    )}
                   </div>
                   <div className="field is-grouped is-grouped-multiline">
                     <div className="control">
@@ -174,7 +188,7 @@ const NEP11InfoPage = () => {
               </div>
             </div>
             <div className="box is-shadowless">
-	            <h3 className="title is-5">Collection</h3>
+              <h3 className="title is-5">Collection</h3>
               <Tokens contractHash={contractHash} />
             </div>
           </div>
@@ -227,8 +241,8 @@ const NEP11InfoPage = () => {
         <NEP17UpdateFormModal
           onUpdate={onUpdate}
           onClose={() => {
-						setAdmin(false)
-	          setUpdateModalActive(false)
+            setAdmin(false);
+            setUpdateModalActive(false);
           }}
         />
       )}
