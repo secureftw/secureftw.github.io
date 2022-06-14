@@ -20,7 +20,7 @@ const Banner = () => {
                 className="image"
                 style={{ width: "250px", margin: "0 auto" }}
               >
-                <img src="/520/smith.png" />
+                <img src="/logo/NEP_Logo_Smith.svg" />
               </figure>
             </div>
             <div className="column is-flex" style={{ alignItems: "center" }}>
@@ -29,6 +29,26 @@ const Banner = () => {
                 <p className="subtitle">
                   Create your token smart contracts without codes
                 </p>
+                <div className="content">
+                  <li>
+                    <a
+                      target="_blank"
+                      href={"https://docs.forthewin.network/smith"}
+                    >
+                      Tutorial for token contract
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      target="_blank"
+                      href={
+                        "https://medium.com/@Forthewin_network/diy-nft-smart-contract-on-neo-without-codes-82957811f5ff"
+                      }
+                    >
+                      Tutorial for NFT contract
+                    </a>
+                  </li>
+                </div>
                 <br />
                 <div className="buttons">
                   <Link
@@ -66,9 +86,7 @@ const Banner = () => {
                   location.pathname === SMITH_PATH_NEP11 ? "is-active" : ""
                 }
               >
-                <Link to={SMITH_PATH_NEP11}>
-                  &nbsp; NFT Showcase
-                </Link>
+                <Link to={SMITH_PATH_NEP11}>&nbsp; NFT Showcase</Link>
               </li>
             </ul>
           </div>
