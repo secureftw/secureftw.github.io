@@ -49,10 +49,7 @@ export class TournamentContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   play = async (
@@ -73,11 +70,11 @@ export class TournamentContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+      connectedWallet,
       this.network,
       invokeScript,
-      "0.05",
-      true
+      "0.05"
     );
   };
 
@@ -104,42 +101,34 @@ export class TournamentContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-      // "0.1"
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
-	remove = async (
-		connectedWallet: IConnectedWallet,
-		tokenId: string,
-		arenaNo: string
-	): Promise<string> => {
-		const senderHash = NeonWallet.getScriptHashFromAddress(
-			connectedWallet.account.address
-		);
-		const invokeScript = {
-			operation: "remove",
-			scriptHash: this.contractHash,
-			args: [
-				{
-					type: "Integer",
-					value: arenaNo,
-				},
-				{
-					type: "String",
-					value: tokenId,
-				},
-			],
-			signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
-		};
-		return new wallet.WalletAPI(connectedWallet.key).invoke(
-			this.network,
-			invokeScript
-			// "0.1"
-		);
-	};
+  remove = async (
+    connectedWallet: IConnectedWallet,
+    tokenId: string,
+    arenaNo: string
+  ): Promise<string> => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
+    const invokeScript = {
+      operation: "remove",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "Integer",
+          value: arenaNo,
+        },
+        {
+          type: "String",
+          value: tokenId,
+        },
+      ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+    };
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
+  };
 
   bet = async (
     connectedWallet: IConnectedWallet,
@@ -169,12 +158,7 @@ export class TournamentContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript,
-      undefined,
-      true
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   claim = async (
@@ -182,9 +166,9 @@ export class TournamentContract {
     arenaNo: string,
     gameNo: string
   ): Promise<string> => {
-	  const senderHash = NeonWallet.getScriptHashFromAddress(
-		  connectedWallet.account.address
-	  );
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
     const invokeScript = {
       operation: "claim",
       scriptHash: this.contractHash,
@@ -192,12 +176,9 @@ export class TournamentContract {
         { type: "Integer", value: arenaNo },
         { type: "Integer", value: gameNo },
       ],
-	    signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   getPlayers = async (arenaNo: string): Promise<object[]> => {

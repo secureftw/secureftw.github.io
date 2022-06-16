@@ -57,11 +57,10 @@ export class IDOContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+			connectedWallet,
       this.network,
       invokeScript,
-      undefined,
-      undefined
     );
   };
 

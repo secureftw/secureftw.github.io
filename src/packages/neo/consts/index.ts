@@ -3,6 +3,7 @@ import { IWalletType } from "../wallet/interfaces";
 
 /* Wallets */
 export const O3 = "O3";
+export const NEON = "NEON";
 export const NEO_LINE = "NEO_LINE";
 export const DEV = "DEV";
 export const ONE_GATE = "ONE_GATE";
@@ -11,20 +12,20 @@ export const WALLET_LIST: {
   key: IWalletType;
 }[] = [
   {
-    label: "Dev",
-    key: DEV,
-  },
-  {
     label: "NEO Line",
     key: NEO_LINE,
   },
+	{
+		label: "Neon wallet",
+		key: NEON,
+	},
+	{
+		label: "OneGate",
+		key: ONE_GATE,
+	},
   {
     label: "O3",
     key: O3,
-  },
-  {
-    label: "OneGate",
-    key: ONE_GATE,
   },
 ];
 

@@ -1,136 +1,43 @@
-import neo3Dapi from "neo3-dapi";
-import { ITransaction, IWalletType } from "./interfaces";
-import {
-  DEV,
-  MAINNET,
-  NEO_LINE,
-  O3,
-  ONE_GATE,
-  TESTNET,
-  WALLET_LIST,
-} from "../consts";
-import { NeoDapi } from "@neongd/neo-dapi";
-import { DevWallet } from "./dev-wallet";
+import { IConnectedWallet, ITransaction, IWalletType } from "./interfaces";
+import { MAINNET, NEO_LINE, NEON, O3, ONE_GATE, WALLET_LIST } from "../consts";
 import { u, wallet } from "@cityofzion/neon-core";
-import { INetworkType, Network } from "../network";
+import { INetworkType } from "../network";
 import { LocalStorage } from "../local-storage";
 import moment from "moment";
+import { initNeoLine } from "./neoline";
+import { initOG } from "./onegate";
+import { initO3 } from "./o3";
+import { initNeon } from "./neon";
 
 export class WalletAPI {
-  walletType: IWalletType;
-
-  constructor(walletType: IWalletType) {
-    this.walletType = walletType;
-  }
-
   static list = WALLET_LIST;
 
-  private O3Wallet = async () => {
-    const instance = neo3Dapi;
-    const provider = await instance.getProvider();
-    const account = await instance.getAccount();
-    const network = await instance.getNetworks();
-    const balances = await instance.getBalance(
-      {
-        params: {
-          address: account.address,
-          contracts: [],
-        },
-      },
-      network.defaultNetwork
-    );
-    // TODO: Need to some sort of validation for balances in case wallet doesn't have any address?
-    return {
-      instance,
-      provider,
-      account,
-      network,
-      balances: balances[account.address],
-    };
-  };
-
-  private OneGate = async () => {
-    // @ts-ignore
-    const instance = new NeoDapi(window.OneGate);
-    const provider = await instance.getProvider();
-    const account = await instance.getAccount();
-    const network = await instance.getNetworks();
-    network.defaultNetwork =
-      network.defaultNetwork === "MainNet" ? MAINNET : TESTNET;
-    const balances = await instance.getNep17Balances({
-      address: account.address,
-      assetHashes: [],
-    });
-    // TODO: Need to some sort of validation for balances in case wallet doesn't have any address?
-    return {
-      instance,
-      provider,
-      account,
-      network,
-      balances,
-    };
-  };
-
-  private NeoLine = async () => {
-    // @ts-ignore
-    const instance = new NEOLineN3.Init();
-    // @ts-ignore
-    // NEOLineN3 doesn't have getNetworks function
-    const instance2 = new NEOLine.Init();
-    const network = await instance2.getNetworks();
-    const provider = await instance.getProvider();
-    const account = await instance.getAccount();
-    const balances = await instance.getBalance({
-      params: {
-        address: account.address,
-        contracts: [],
-      },
-    });
-    return {
-      instance,
-      provider,
-      account,
-      network,
-      balances: balances[account.address],
-    };
-  };
-
-  private Dev = async (defaultNetwork: INetworkType) => {
-    const instance = DevWallet;
-    const network = await instance.getNetworks(defaultNetwork);
-    const provider = await instance.getProvider();
-    const account = await instance.getAccount();
-    const balances = await instance.getBalance(defaultNetwork);
-    return { instance, provider, account, network, balances };
-  };
-
-  /**
-   * TODO: Remove dev wallet when 3rd party has privatenet support
-   * @param defaultNetwork
-   */
-  init = async (defaultNetwork: INetworkType): Promise<any> => {
-    let _instance;
+  static init = async (
+    walletType: IWalletType,
+    network: INetworkType
+  ): Promise<IConnectedWallet> => {
+    let instance;
     try {
-      switch (this.walletType) {
+      switch (walletType) {
         case O3:
-          _instance = await this.O3Wallet();
+          instance = await initO3();
           break;
         case NEO_LINE:
-          _instance = await this.NeoLine();
+          instance = await initNeoLine();
+          break;
+        case NEON:
+          instance = await initNeon(network);
           break;
         case ONE_GATE:
-          _instance = await this.OneGate();
-          break;
-        case DEV:
-          _instance = await this.Dev(defaultNetwork);
+          instance = await initOG();
           break;
       }
       return {
-        key: this.walletType,
-        ..._instance,
+        key: walletType,
+        ...instance,
       };
     } catch (e: any) {
-      if (this.walletType === ONE_GATE) {
+      if (walletType === ONE_GATE) {
         throw new Error("OneGate wallet only supports in OneGate web browser.");
       } else {
         throw new Error(e.description ? e.description : e.message);
@@ -139,61 +46,72 @@ export class WalletAPI {
   };
 
   /* Control signing and send transaction. TODO:Need to improve type hardcoding later */
-  invoke = async (
+  static invoke = async (
+    connectedWallet: IConnectedWallet,
     currentNetwork: INetworkType,
     invokeScript: any,
-    extraSystemFee?: string,
-    testInvoke?: boolean
+    extraSystemFee?: string
   ): Promise<string> => {
-    const { instance, network } = await this.init(currentNetwork);
-    if (network.defaultNetwork !== currentNetwork) {
-      throw new Error(
-        "Your wallet's network doesn't match with the app network setting."
+    const instance = connectedWallet.instance;
+    const walletType = connectedWallet.key;
+    if (connectedWallet.key === NEON) {
+      const res = await instance.invokeFunction(
+        invokeScript,
+        invokeScript.signers
       );
-    }
-
-    // Do test invoke if required.
-    if (testInvoke) {
-      const rpcClient = Network.getRPCClient(currentNetwork);
-      const transaction = await DevWallet.build(rpcClient, invokeScript);
-      const invokeFunctionResponse = await rpcClient.invokeScript(
-        transaction.script,
-        transaction.signers
-      );
-      if (invokeFunctionResponse.state === "FAULT") {
-        throw new Error(invokeFunctionResponse.exception as string);
+      if (res && res.result.error) {
+        throw new Error(res.result.error.message);
       }
-    }
-
-    // Hard coding for OG wallet
-    if (this.walletType === ONE_GATE) {
-      invokeScript.args = invokeScript.args.map((param: any) => {
-        if (param.type === "Address") {
-          return {
-            type: "Hash160",
-            value: wallet.getScriptHashFromAddress(param.value),
-          };
-        } else {
-          return param;
-        }
-      });
-      if (extraSystemFee) {
-        invokeScript.extraSystemFee = u.BigInteger.fromDecimal(
-          extraSystemFee,
-          8
-        ).toString();
-      }
+      const submittedTx: ITransaction = {
+        network: currentNetwork,
+        wallet: walletType,
+        txid: res.result,
+        contractHash: invokeScript.scriptHash,
+        method: invokeScript.operation,
+        args: invokeScript.args,
+        createdAt: moment().format("lll"),
+      };
+      LocalStorage.addTransaction(submittedTx);
+      return res.result;
     } else {
-      if (extraSystemFee) {
-        invokeScript.extraSystemFee = extraSystemFee;
+      if (
+        connectedWallet.network &&
+        connectedWallet.network.defaultNetwork !== currentNetwork
+      ) {
+        throw new Error(
+          "Your wallet's network doesn't match with the app network setting."
+        );
       }
-    }
 
-    try {
+      if (extraSystemFee) {
+        if (walletType === ONE_GATE) {
+          invokeScript.extraSystemFee = u.BigInteger.fromDecimal(
+            extraSystemFee,
+            8
+          ).toString();
+        } else {
+          invokeScript.extraSystemFee = extraSystemFee;
+        }
+      }
+
+      // Hard coding for OG wallet
+      if (walletType === ONE_GATE) {
+        invokeScript.args = invokeScript.args.map((param: any) => {
+          if (param.type === "Address") {
+            return {
+              type: "Hash160",
+              value: wallet.getScriptHashFromAddress(param.value),
+            };
+          } else {
+            return param;
+          }
+        });
+      }
+
       const res = await instance.invoke(invokeScript, currentNetwork);
       const submittedTx: ITransaction = {
-        network,
-        wallet: this.walletType,
+        network: instance.network ? instance.network.defaultNetwork : MAINNET,
+        wallet: walletType,
         txid: res.txid,
         contractHash: invokeScript.scriptHash,
         method: invokeScript.operation,
@@ -202,42 +120,36 @@ export class WalletAPI {
       };
       LocalStorage.addTransaction(submittedTx);
       return res.txid;
-    } catch (e: any) {
-      // TODO: Need to improve dev wallet error handling as dapi standard.
-      if (e.description) {
-        throw new Error(e.description);
-      }
-      throw e;
     }
   };
 
-  invokeMulti = async (
-    currentNetwork: INetworkType,
-    invokeScript: any
-  ): Promise<any> => {
-    const { instance, network } = await this.init(currentNetwork);
-    if (network.defaultNetwork !== currentNetwork) {
-      throw new Error(
-        "Your wallet's network doesn't match with the app network setting."
-      );
-    }
-    try {
-      const res = await instance.invokeMultiple(invokeScript);
-      const submittedTx: ITransaction = {
-        network,
-        wallet: this.walletType,
-        txid: res.txid,
-        contractHash: "MultiInvoke",
-        method: "MultiInvoke",
-        args: invokeScript.invokeArgs,
-        createdAt: moment().format("lll"),
-      };
-      LocalStorage.addTransaction(submittedTx);
-      return res.txid;
-    } catch (e: any) {
-      if (e.description) {
-        throw new Error(e.description);
-      }
-    }
-  };
+  // invokeMulti = async (
+  //   currentNetwork: INetworkType,
+  //   invokeScript: any
+  // ): Promise<any> => {
+  //   const { instance, network } = await this.init();
+  //   if (network.defaultNetwork !== currentNetwork) {
+  //     throw new Error(
+  //       "Your wallet's network doesn't match with the app network setting."
+  //     );
+  //   }
+  //   try {
+  //     const res = await instance.invokeMultiple(invokeScript);
+  //     const submittedTx: ITransaction = {
+  //       network,
+  //       wallet: this.walletType,
+  //       txid: res.txid,
+  //       contractHash: "MultiInvoke",
+  //       method: "MultiInvoke",
+  //       args: invokeScript.invokeArgs,
+  //       createdAt: moment().format("lll"),
+  //     };
+  //     LocalStorage.addTransaction(submittedTx);
+  //     return res.txid;
+  //   } catch (e: any) {
+  //     if (e.description) {
+  //       throw new Error(e.description);
+  //     }
+  //   }
+  // };
 }

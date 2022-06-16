@@ -60,11 +60,10 @@ export class FusionContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+	    connectedWallet,
       this.network,
       invokeScript,
-      undefined,
-      undefined
     );
   };
 
@@ -101,11 +100,10 @@ export class FusionContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+			connectedWallet,
       this.network,
       invokeScript,
-      undefined,
-      undefined
     );
   };
 

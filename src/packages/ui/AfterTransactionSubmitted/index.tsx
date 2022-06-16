@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { INetworkType, Network } from "../../neo/network";
 import RuneLoading from "./RuneLoading";
 import CheckMark from "../../../ui/pages/Tournament/scenes/Arena/Players/components/CheckMark";
-// tslint:disable-next-line:no-submodule-imports
 import { FaExclamationCircle } from "react-icons/fa";
 import { TESTNET } from "../../neo/consts";
+import CubeLoading from "../../../ui/components/CubeLoading";
 
 interface IAfterTransactionSubmittedProps {
   txid: string;
@@ -39,8 +39,8 @@ const AfterTransactionSubmitted = ({
     <div>
       <div
         style={{
-          width: "200px",
-          height: "200px",
+          width: "300px",
+          height: "300px",
           margin: "auto",
           display: "flex",
           justifyContent: "center",
@@ -53,7 +53,7 @@ const AfterTransactionSubmitted = ({
         ) : isDone ? (
           <CheckMark />
         ) : (
-          <RuneLoading />
+         <CubeLoading />
         )}
       </div>
       <div className="has-background  has-text-centered mt-5">
@@ -87,7 +87,7 @@ const AfterTransactionSubmitted = ({
           </div>
         ) : (
           <div>
-            <h1 className="title is-5">Submitting..</h1>
+            <h1 className="title is-5">Submitting</h1>
             <p className="subtitle is-7">
               Please wait until your transaction accepted
             </p>

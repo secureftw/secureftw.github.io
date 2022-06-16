@@ -56,7 +56,8 @@ const Main = () => {
         );
         setTxid(res);
       } catch (e: any) {
-        toast.error(e.message);
+				console.log(e);
+        toast.error(e && e.description ? e.description : "Error. Check console.");
       }
     }
   };

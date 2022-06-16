@@ -33,6 +33,7 @@ const Stake = () => {
           connectedWallet,
           tokenId
         );
+				console.log(res)
         setTxid(res);
       } catch (e: any) {
         toast.error(e.description ? e.description : e.message);

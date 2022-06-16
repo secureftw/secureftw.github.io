@@ -50,12 +50,7 @@ export class StakingContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript,
-      undefined,
-      undefined
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   remove = async (
@@ -80,12 +75,7 @@ export class StakingContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript,
-      undefined,
-      undefined
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   claim = async (
@@ -115,12 +105,7 @@ export class StakingContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript,
-      undefined,
-      undefined
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   claimMulti = async (
@@ -159,12 +144,7 @@ export class StakingContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript,
-      undefined,
-      undefined
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   getStakingPairs = async (): Promise<IStakingPairs[]> => {
