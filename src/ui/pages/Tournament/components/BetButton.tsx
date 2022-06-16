@@ -14,23 +14,17 @@ const BetButton = ({ arenaNo, tokenId, setTxid }: IBetButtonProps) => {
   const { connectedWallet, network, addPendingTransaction } = useWallet();
   const onBet = async () => {
     if (connectedWallet) {
-      if (
-        balanceCheck(connectedWallet.balances, parseFloat(SUPPORT_TICKET_PRICE))
-      ) {
-        try {
-          const res = await new TournamentContract(network).bet(
-            connectedWallet,
-            tokenId,
-            arenaNo
-          );
-          addPendingTransaction(res);
-          setTxid(res);
-        } catch (e: any) {
-          toast.error(e.message);
-        }
-      } else {
-        toast.error(`You must have more than ${SUPPORT_TICKET_PRICE} GAS.`);
-      }
+	    try {
+		    const res = await new TournamentContract(network).bet(
+			    connectedWallet,
+			    tokenId,
+			    arenaNo
+		    );
+		    addPendingTransaction(res);
+		    setTxid(res);
+	    } catch (e: any) {
+		    toast.error(e.message);
+	    }
     } else {
       toast.error("Please connect wallet.");
     }

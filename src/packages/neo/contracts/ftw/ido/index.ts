@@ -3,20 +3,18 @@ import { IConnectedWallet } from "../../../wallet/interfaces";
 import { u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { wallet } from "../../../index";
 import {
+  BNEO_SCRIPT_HASH,
   DEFAULT_WITNESS_SCOPE,
+  FLM_SCRIPT_HASH,
   GAS_SCRIPT_HASH,
+  GM_SCRIPT_HASH,
+  LRB_SCRIPT_HASH,
   MAINNET,
   NEO_SCRIPT_HASH,
 } from "../../../consts";
-import { FARM_SCRIPT_HASH } from "../staking/consts";
 import { IIDOStatus } from "./interface";
-import { IDO_SCRIPT_HASH } from "./consts";
-import {
-  BNEO_SCRIPT_HASH,
-  FLM_SCRIPT_HASH,
-  GM_SCRIPT_HASH,
-  LRB_SCRIPT_HASH,
-} from "../nep17/consts";
+import { IDO_SCRIPT_HASH, LAUNCH_AT } from "./consts";
+import { NEP_SCRIPT_HASH } from "../nep-token/consts";
 
 export class IDOContract {
   network: INetworkType;
@@ -59,34 +57,29 @@ export class IDOContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+			connectedWallet,
       this.network,
       invokeScript,
-      undefined,
-      undefined
     );
   };
 
   getIDOStatus = async (
     connectedWallet?: IConnectedWallet
   ): Promise<IIDOStatus> => {
-    if (this.network === MAINNET) {
-      return {
-        available: 50_000_000_00000000,
-        launchDate: 0,
-        balances: {
-          [NEO_SCRIPT_HASH]: 0,
-          [GAS_SCRIPT_HASH]: 0,
-          [BNEO_SCRIPT_HASH[this.network]]: 0,
-          [FLM_SCRIPT_HASH[this.network]]: 0,
-          [GM_SCRIPT_HASH[this.network]]: 0,
-          [LRB_SCRIPT_HASH[this.network]]: 0,
-        },
-      };
-    }
 
     const script1 = {
-      scriptHash: FARM_SCRIPT_HASH[this.network],
+      scriptHash: this.contractHash,
+      operation: "getTotalMint",
+    };
+
+    const script2 = {
+      scriptHash: this.contractHash,
+      operation: "getLaunchDate",
+    };
+
+    const script3 = {
+      scriptHash: NEP_SCRIPT_HASH[this.network],
       operation: "balanceOf",
       args: [
         {
@@ -95,30 +88,15 @@ export class IDOContract {
         },
       ],
     };
-    const script2 = {
-      scriptHash: this.contractHash,
-      operation: "getLaunchDate",
-      args: [],
-    };
 
-    const scripts = [script1, script2];
+    const scripts = [script1, script2, script3];
 
     if (connectedWallet) {
       const senderHash = NeonWallet.getScriptHashFromAddress(
         connectedWallet.account.address
       );
-	    const script3 = {
-		    scriptHash: NEO_SCRIPT_HASH,
-		    operation: "balanceOf",
-		    args: [
-			    {
-				    type: "Hash160",
-				    value: senderHash,
-			    },
-		    ],
-	    };
       const script4 = {
-        scriptHash: GAS_SCRIPT_HASH,
+        scriptHash: NEO_SCRIPT_HASH,
         operation: "balanceOf",
         args: [
           {
@@ -128,7 +106,7 @@ export class IDOContract {
         ],
       };
       const script5 = {
-        scriptHash: BNEO_SCRIPT_HASH[this.network],
+        scriptHash: GAS_SCRIPT_HASH,
         operation: "balanceOf",
         args: [
           {
@@ -138,7 +116,7 @@ export class IDOContract {
         ],
       };
       const script6 = {
-        scriptHash: FLM_SCRIPT_HASH[this.network],
+        scriptHash: BNEO_SCRIPT_HASH[this.network],
         operation: "balanceOf",
         args: [
           {
@@ -148,7 +126,7 @@ export class IDOContract {
         ],
       };
       const script7 = {
-        scriptHash: GM_SCRIPT_HASH[this.network],
+        scriptHash: FLM_SCRIPT_HASH[this.network],
         operation: "balanceOf",
         args: [
           {
@@ -158,6 +136,16 @@ export class IDOContract {
         ],
       };
       const script8 = {
+        scriptHash: GM_SCRIPT_HASH[this.network],
+        operation: "balanceOf",
+        args: [
+          {
+            type: "Hash160",
+            value: senderHash,
+          },
+        ],
+      };
+      const script9 = {
         scriptHash: LRB_SCRIPT_HASH[this.network],
         operation: "balanceOf",
         args: [
@@ -167,39 +155,39 @@ export class IDOContract {
           },
         ],
       };
-      scripts.push(script3);
       scripts.push(script4);
       scripts.push(script5);
       scripts.push(script6);
       scripts.push(script7);
       scripts.push(script8);
+      scripts.push(script9);
     }
-
     const res = await Network.read(this.network, scripts);
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
     return {
-      available: parseFloat(res.stack[0].value as string),
-      launchDate: parseFloat(res.stack[1].value as string),
+      totalSales: parseFloat(res.stack[0].value as string),
+      launchAt: parseFloat(res.stack[1].value as string),
+      availableBalance: parseFloat(res.stack[2].value as string),
       balances: {
         [NEO_SCRIPT_HASH]: connectedWallet
-          ? parseFloat(res.stack[2].value as string)
-          : 0,
-        [GAS_SCRIPT_HASH]: connectedWallet
           ? parseFloat(res.stack[3].value as string)
           : 0,
-        [BNEO_SCRIPT_HASH[this.network]]: connectedWallet
+        [GAS_SCRIPT_HASH]: connectedWallet
           ? parseFloat(res.stack[4].value as string)
           : 0,
-        [FLM_SCRIPT_HASH[this.network]]: connectedWallet
+        [BNEO_SCRIPT_HASH[this.network]]: connectedWallet
           ? parseFloat(res.stack[5].value as string)
           : 0,
-        [GM_SCRIPT_HASH[this.network]]: connectedWallet
+        [FLM_SCRIPT_HASH[this.network]]: connectedWallet
           ? parseFloat(res.stack[6].value as string)
           : 0,
-        [LRB_SCRIPT_HASH[this.network]]: connectedWallet
+        [GM_SCRIPT_HASH[this.network]]: connectedWallet
           ? parseFloat(res.stack[7].value as string)
+          : 0,
+        [LRB_SCRIPT_HASH[this.network]]: connectedWallet
+          ? parseFloat(res.stack[8].value as string)
           : 0,
       },
     };

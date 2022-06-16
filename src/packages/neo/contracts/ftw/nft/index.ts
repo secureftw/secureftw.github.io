@@ -46,7 +46,8 @@ export class NFTContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+			connectedWallet,
       this.network,
       invokeScript,
       "0.01"
@@ -63,7 +64,8 @@ export class NFTContract {
       args: [],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+			connectedWallet,
       this.network,
       invokeScript
     );

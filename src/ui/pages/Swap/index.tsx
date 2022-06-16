@@ -13,25 +13,22 @@ import {
 import { Route } from "react-router-dom";
 import Liquidity from "./scenes/AddLiquidity";
 import { useWallet } from "../../../packages/provider";
-import { MAINNET } from "../../../packages/neo/consts";
 import History from "./scenes/History";
 import Trade from "./scenes/Swap";
 import Pools from "./scenes/Pools";
 import RemoveLiquidity from "./scenes/RemoveLiquidity";
 import Providers from "./scenes/Providers";
 import Main from "./scenes/Main";
+import TestnetOnlyRoute from "../../components/TestnetOnlyRoute";
 
 const Swap = () => {
   const { network } = useWallet();
   if (!SWAP_PAGE_ROUTE.network.includes(network)) {
     return (
-      <PageLayout>
-        <div className="notification is-info">
-          {SWAP_PAGE_ROUTE.label} is not on {network} yet.
-          <br />
-          Please stay tuned.
-        </div>
-      </PageLayout>
+      <TestnetOnlyRoute
+        title={"FTW Swap"}
+        date="Swap launch is schedule on June 21st 6PM (UTC)"
+      />
     );
   }
 

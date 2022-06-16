@@ -16,7 +16,7 @@ const Edit = () => {
   const { contractHash } = params as any;
   const { network, connectedWallet } = useWallet();
   const [txid, setTxid] = useState<string>();
-  const [refresh, setRefresh] = useState<string>();
+  // const [refresh, setRefresh] = useState<string>();
   const [values, setValues] = useState<any>();
 
   const handleValueChange = (key: string, val: string) => {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Banner from "./Banner";
-import PageLayout from "../../../../components/PageLayout";
 import { ARENA_PATH } from "../../pageRoutes";
 import { Route, useLocation } from "react-router-dom";
 import Players from "./Players";

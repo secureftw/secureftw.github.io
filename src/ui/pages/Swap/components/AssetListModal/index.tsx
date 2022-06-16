@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import Modal from "../../../../components/Modal";
 import { useWallet } from "../../../../../packages/provider";
-import { ASSETS } from "../../../../../packages/neo/contracts/ftw/swap/consts";
+import { SWAP_ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import { FaPlus } from "react-icons/fa";
 
 import ContractSearchInput from "./ContractSearchInput";
 interface IAssetListModalProps {
+  activeTokenInput: "A" | "B";
   tokenAHash?: string;
   tokenBHash?: string;
   onClose: () => void;
@@ -17,13 +18,33 @@ const AssetListModal = ({
   tokenBHash,
   onAssetClick,
   onClose,
+  activeTokenInput,
 }: IAssetListModalProps) => {
   const { network } = useWallet();
   const [isCustomInputMode, setCustomInputMode] = useState(false);
-  const assets = ASSETS(network).filter((asset) => {
-    return (
-      asset.contractHash !== tokenAHash && asset.contractHash !== tokenBHash
-    );
+
+  let assets = SWAP_ASSET_LIST(network);
+  // if ((tokenAHash && !tokenBHash) || (!tokenAHash && tokenBHash))
+  assets = assets.filter((asset) => {
+    if (
+      activeTokenInput === "A" &&
+      tokenBHash &&
+      asset.contractHash === tokenBHash
+    ) {
+      return false;
+    }
+    if (
+      activeTokenInput === "B" &&
+      tokenAHash &&
+      asset.contractHash === tokenAHash
+    ) {
+      return false;
+    }
+    return true;
+
+    // return (
+    //   asset.contractHash !== tokenAHash && asset.contractHash !== tokenBHash
+    // );
   });
 
   return (

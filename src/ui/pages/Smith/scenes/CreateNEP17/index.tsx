@@ -42,19 +42,26 @@ const NEP17FormModal = () => {
       if (connectedWallet) {
         // if (balanceCheck(connectedWallet.balances, 20)) {
         try {
-          const res = await new SmithContract(network).createNEP17V2(
-            connectedWallet,
-            values.totalSupply,
-            values.decimals,
-            values.symbol,
-            values.name,
-            values.author,
-            values.description,
-            values.email,
-            values.website,
-            values.logo
+          const res = await new SmithContract(network).isNEP17SymbolTaken(
+            values.symbol
           );
-          setTxid(res);
+          if (res) {
+            toast.error("Token symbol is already taken. Try other symbol.");
+          } else {
+            const res = await new SmithContract(network).createNEP17V2(
+              connectedWallet,
+              values.totalSupply,
+              values.decimals,
+              values.symbol,
+              values.name,
+              values.author,
+              values.description,
+              values.email,
+              values.website,
+              values.logo
+            );
+            setTxid(res);
+          }
         } catch (e: any) {
           toast.error(e.message);
         }

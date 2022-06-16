@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  LAUNCH_AT,
+  payments,
   TOTAL_TOKENS_FOR_SALE,
 } from "../../../packages/neo/contracts/ftw/ido/consts";
 import { useWallet } from "../../../packages/provider";
@@ -16,18 +16,23 @@ import { FaArrowDown } from "react-icons/fa";
 import moment from "moment";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
 import toast from "react-hot-toast";
-import { NEP_SCRIPT_HASH } from "../../../packages/neo/contracts";
-import { MAINNET } from "../../../packages/neo/consts";
+import { NEP_SCRIPT_HASH } from "../../../packages/neo/contracts/ftw/nep-token/consts";
+import { useApp } from "../../../common/hooks/use-app";
 
 const Main = () => {
+  const { toggleWalletSidebar } = useApp();
   const { network, connectedWallet } = useWallet();
-  const [token, setToken] = useState<{
-    contractHash: string;
-    symbol: string;
-    logo: string;
-    decimals: number;
-    amount: number;
-  }>();
+  const defaultToken = payments(network)[0];
+  const [token, setToken] = useState<
+    | {
+        contractHash: string;
+        symbol: string;
+        logo: string;
+        decimals: number;
+        amount: number;
+      }
+    | undefined
+  >({ ...defaultToken });
   const [amount, setAmount] = useState<number | undefined>();
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
@@ -36,14 +41,8 @@ const Main = () => {
     useState(false);
 
   const onTokenClick = (token) => {
-    if (network === MAINNET) {
-      alert(
-        `Mainnet IDO is at ${moment.unix(LAUNCH_AT).utc().format("llll")} UTC`
-      );
-    } else {
-      setToken(token);
-      setTokenSelectionModalActive(false);
-    }
+    setToken(token);
+    setTokenSelectionModalActive(false);
   };
 
   const handleExchange = async () => {
@@ -57,47 +56,48 @@ const Main = () => {
         );
         setTxid(res);
       } catch (e: any) {
-        toast.error(e.message);
+				console.log(e);
+        toast.error(e && e.description ? e.description : "Error. Check console.");
       }
     }
   };
 
   const onSuccess = () => {
-    setToken(undefined);
     setRefresh(refresh + 1);
     setTxid("");
   };
-	//
-  // const { isLoaded, error, data } = useOnChainData(() => {
-  //   return new IDOContract(network).getIDOStatus(connectedWallet);
-  // }, [network, connectedWallet, refresh]);
-	//
-  // if (!isLoaded) return <div></div>;
-	//
-  // const totalTokens = u.BigInteger.fromDecimal(TOTAL_TOKENS_FOR_SALE, 8);
-  // const totalSales = totalTokens.sub(data.available);
-  // const totalSalesInPercentage = totalSales.div(totalTokens).mul(100);
-	//
-  // const userBalanceForSwap =
-  //   token &&
-  //   data.balances[token.contractHash] &&
-  //   data.balances[token.contractHash] !== 0
-  //     ? parseFloat(
-  //         withDecimal(data.balances[token.contractHash], token.decimals)
-  //       )
-  //     : 0;
 
-  // const nowMs = moment().valueOf();
+  const { isLoaded, data } = useOnChainData(() => {
+    return new IDOContract(network).getIDOStatus(connectedWallet);
+  }, [network, connectedWallet, refresh]);
+
+  if (!isLoaded) return <div></div>;
+
+  const totalSales = parseFloat(
+    u.BigInteger.fromNumber(data.totalSales).toDecimal(8)
+  );
+  const totalSalesInPercentage = (totalSales / TOTAL_TOKENS_FOR_SALE) * 100;
+  const availableNEP = parseFloat(
+    u.BigInteger.fromNumber(data.availableBalance).toDecimal(8)
+  );
+  const userBalanceForSwap =
+    token &&
+    data.balances[token.contractHash] &&
+    data.balances[token.contractHash] !== 0
+      ? parseFloat(
+          u.BigInteger.fromNumber(data.balances[token.contractHash]).toDecimal(
+            token.decimals
+          )
+        )
+      : 0;
+  console.log("Available balance " + availableNEP);
 
   return (
     <>
       <IDOInfo
-        isSwapActive={!!token}
-        totalSales={"0"}
-        // totalSales={parseFloat(totalSales.toDecimal(8)).toLocaleString()}
-        totalSalesInPercentage={0}
-        // totalSalesInPercentage={parseFloat(totalSalesInPercentage.toString())}
-        onClick={() => setTokenSelectionModalActive(true)}
+        launchAt={data.launchAt}
+        totalSales={totalSales.toLocaleString()}
+        totalSalesInPercentage={parseFloat(totalSalesInPercentage.toString())}
       />
 
       {token ? (
@@ -117,7 +117,7 @@ const Main = () => {
                 setAmount(value);
               }}
               logo={token.logo}
-              // userBalance={userBalanceForSwap}
+              userBalance={userBalanceForSwap}
             />
             <div className="pt-4 pb-4 has-text-centered">
               <FaArrowDown size={16} />
@@ -126,7 +126,7 @@ const Main = () => {
               isReadOnly={true}
               heading="Receive"
               onClickAsset={() => {
-                setTokenSelectionModalActive(true);
+                // setTokenSelectionModalActive(true);
               }}
               contractHash={NEP_SCRIPT_HASH[network]}
               symbol={"NEP"}
@@ -138,13 +138,23 @@ const Main = () => {
             />
           </div>
           <div className="block">
-            {/*<button*/}
-            {/*  onClick={handleExchange}*/}
-            {/*  disabled={amount === undefined || amount > userBalanceForSwap}*/}
-            {/*  className="button is-fullwidth is-primary"*/}
-            {/*>*/}
-            {/*  Swap*/}
-            {/*</button>*/}
+            <button
+              onClick={() => {
+                if (moment().valueOf() >= data.launchAt) {
+                  if (connectedWallet) {
+                    handleExchange();
+                  } else {
+                    toggleWalletSidebar();
+                  }
+                } else {
+                  toast.error("Launched yet");
+                }
+              }}
+              disabled={amount === undefined || amount > userBalanceForSwap}
+              className="button is-fullwidth is-primary"
+            >
+              {totalSales !== TOTAL_TOKENS_FOR_SALE ? "Swap" : "Finished"}
+            </button>
           </div>
         </div>
       ) : (
@@ -152,7 +162,12 @@ const Main = () => {
       )}
 
       <div className="box">
-        <PaymentSelection network={network} onClick={() => {}} />
+        <PaymentSelection
+          network={network}
+          onClick={(token) => {
+            setToken(token);
+          }}
+        />
       </div>
 
       <Tokenomics />

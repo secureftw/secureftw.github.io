@@ -60,34 +60,36 @@ const UserVotes = ({
         ) : (
           <div>
             {data.items.length ? (
-              <div className="table-container">
-                <h1 className="title is-7">
-                  My votes{" "}
-                  {data && <span className="tag">{data.totalItems}</span>}{" "}
-                </h1>
-                <table className="table is-narrow is-bordered is-fullwidth">
-                  {data.items.map((item, i) => (
-                    <tr key={`myvote-${i}`}>
-                      <td>{voteOptions[item.optionIndex]}</td>
-                      <td>{item.amount}</td>
-                      <td>{item.createdAt}</td>
-                      <td>
-                        {item.hasWithdrew ? (
-                          <span>Ended</span>
-                        ) : (
-                          <span>Active</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </table>
-                <button
-                  onClick={handleWithdrawUserVoteFunds}
-                  disabled={isVoteActive || !hasVoteToWithdraw}
-                  className="button is-primary"
-                >
-                  Withdraw funds
-                </button>
+              <div className="box is-shadowless">
+                <div className="table-container">
+                  <h1 className="title is-7">
+                    My votes{" "}
+                    {data && <span className="tag">{data.totalItems}</span>}{" "}
+                  </h1>
+                  <table className="table is-narrow is-bordered is-fullwidth">
+                    {data.items.map((item, i) => (
+                      <tr key={`myvote-${i}`}>
+                        <td>{voteOptions[item.optionIndex]}</td>
+                        <td>{item.amount}</td>
+                        <td>{item.createdAt}</td>
+                        <td>
+                          {item.hasWithdrew ? (
+                            <span>Ended</span>
+                          ) : (
+                            <span>Active</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </table>
+                  <button
+                    onClick={handleWithdrawUserVoteFunds}
+                    disabled={isVoteActive || !hasVoteToWithdraw}
+                    className="button is-primary"
+                  >
+                    Withdraw funds
+                  </button>
+                </div>
               </div>
             ) : (
               <div></div>

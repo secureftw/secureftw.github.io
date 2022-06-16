@@ -36,7 +36,7 @@ const MyCollection = () => {
       <section className="hero is-white">
         <div className="hero-body">
           <div className="container">
-            <h1 className="title">My collection</h1>
+            <h1 className="title">My runes</h1>
           </div>
         </div>
       </section>
@@ -49,7 +49,7 @@ const MyCollection = () => {
           <div className="columns is-multiline">
             {tokens.length > 0 ? (
               tokens.map((token) => (
-                <div className="column is-3">
+                <div className="column is-2">
                   <figure
                     className="image"
                     onClick={() => onPropertiesModalActive(token.tokenId)}

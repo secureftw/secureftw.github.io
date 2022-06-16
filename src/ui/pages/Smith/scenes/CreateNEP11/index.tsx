@@ -38,15 +38,22 @@ const NEP11FormModal = () => {
     } else {
       if (connectedWallet) {
         try {
-          const res = await new SmithContract(network).createNEP11(
-            connectedWallet,
-            values.name,
-            values.symbol,
-            values.author,
-            values.description,
-            values.email
+          const res = await new SmithContract(network).isNEP11SymbolTaken(
+            values.symbol
           );
-          setTxid(res);
+          if (res) {
+            toast.error("Token symbol is already taken. Try other symbol.");
+          } else {
+            const res = await new SmithContract(network).createNEP11(
+              connectedWallet,
+              values.name,
+              values.symbol,
+              values.author,
+              values.description,
+              values.email
+            );
+            setTxid(res);
+          }
         } catch (e: any) {
           toast.error(e.message);
         }

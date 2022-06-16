@@ -22,16 +22,18 @@ const NEP17Smith = () => {
         ) : error ? (
           <div>{error}</div>
         ) : (
-          <div className="box">
+          <div className="">
             {data && (
               <>
-                {data.items.length > 0 ? (
-                  data.items.map((item, i) => (
-                    <ContractCard key={"contact17" + i} data={item} />
-                  ))
-                ) : (
-                  <div>No contracts to display</div>
-                )}
+                <div className="columns is-multiline">
+                  {data.items.map((item, i) => (
+                    <div key={"contact17" + i} className="column is-3">
+                      <div className="box is-hoverable ">
+                        <ContractCard data={item} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
                 {data.totalPages > 1 && (
                   <>

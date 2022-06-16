@@ -1,47 +1,71 @@
 import React from "react";
-import PageLayout from "../components/PageLayout";
-import BgContainer from "../components/BgContainer";
+import Wave from "react-wavify";
 import {
+  DAO_PATH,
+  FARM_PATH,
   GALLERY_PATH,
+  IDO_PATH,
   SMITH_PATH,
   SWAP_PATH,
-  TOURNAMENT_PATH,
 } from "../../consts";
-import { ARENA_PATH } from "./Tournament/pageRoutes";
 import { Link } from "react-router-dom";
-import { useWallet } from "../../packages/provider";
-import { TESTNET } from "../../packages/neo/consts";
-import toast from "react-hot-toast";
 
-const CARDS = [
+const CARDS: {
+  title: string;
+  type: string;
+  desc?: string;
+  img: string;
+  link: string;
+}[] = [
   {
-    title: "FTW Swap",
+    title: "NEP IDO",
+    type: "IDO",
+    // desc: "Coming soon. Try on our Testnet.",
+    img: "520/nep.png",
+    link: IDO_PATH,
+  },
+  {
+    title: "Swap",
     type: "DeFi",
-    desc: "Coming soon. Try on our Testnet.",
-    img: "symbols/nep.png",
+    // desc: "Coming soon. Try on our Testnet.",
+    img: "520/swap.png",
     link: SWAP_PATH,
   },
   {
-    title: "FTW Smith",
+    title: "Smith",
     type: "Utility",
-    desc: "Deploy fungible/Non-fungible token smart contracts without any codes.",
-	  img: "symbols/smith.png",
+    // desc: "Deploy fungible/Non-fungible token smart contracts without any codes.",
+    img: "520/smith.png",
     link: SMITH_PATH,
   },
   {
-    title: "FTW Rune",
-    type: "NFT",
-    desc: "An algorithmically generated NFT created and stored onchain.",
-    img: "assets/runes.png",
-    link: GALLERY_PATH,
+    title: "Farm",
+    type: "DeFi",
+    // desc: "Deploy fungible/Non-fungible token smart contracts without any codes.",
+    img: "520/farm.png",
+    link: FARM_PATH,
   },
   {
-    title: "FTW Arena",
-    type: "GameFi",
-    desc: "FTW Runes against each other with the victor earning a GAS prize.",
-    img: "assets/arena-bg.jpeg",
-    link: TOURNAMENT_PATH,
+    title: "DAO",
+    type: "Utility",
+    // desc: "Deploy fungible/Non-fungible token smart contracts without any codes.",
+    img: "520/dao.png",
+    link: DAO_PATH,
   },
+  {
+    title: "Rune",
+    type: "NFT",
+    // desc: "An algorithmically generated NFT created and stored onchain.",
+    img: "520/rune.png",
+    link: GALLERY_PATH,
+  },
+  // {
+  //   title: "Arena",
+  //   type: "GameFi",
+  //   // desc: "FTW Runes against each other with the victor earning a GAS prize.",
+  //   img: "assets/54.png",
+  //   link: TOURNAMENT_PATH,
+  // },
   // {
   //   title: "FTW Lab",
   //   type: "Testnet",
@@ -54,50 +78,69 @@ const CARDS = [
 const Home = () => {
   return (
     <div>
-      <section className="hero is-black">
+      <section className="hero is-white is-fullheight-with-navbar is-relative">
         <div className="hero-body">
           <div className="container">
-            <h1 className="title">Forthewin Network</h1>
-            <p className="subtitle">
-              Building some cool decentralized stuff on NEO blockchain.{" "}
-            </p>
+            <div className="has-text-centered mb-5">
+              <h1 className="title is-spaced">Forthewin Network</h1>
+              <p className="subtitle">The hub of NEP-17</p>
+            </div>
+
+            <div className="columns is-multiline">
+              {CARDS.map((card) => {
+                return (
+                  <div key={card.title} className="column is-2">
+                    <div className=" is-shadowless">
+                      <Link to={card.link}>
+                        <figure className="image">
+                          <img src={card.img} />
+                        </figure>
+                      </Link>
+                      <div className="media">
+                        <div className="media-content">
+                          <p className="title is-6 heading has-text-centered">
+                            <Link className={"has-text-dark"} to={card.link}>
+                              {card.title}
+                            </Link>
+                          </p>
+                          {/*<span className="tag is-primary">{card.type}</span>*/}
+                        </div>
+                      </div>
+                      {/*<div*/}
+                      {/*  className="content"*/}
+                      {/*  // style={{ minHeight: "100px" }}*/}
+                      {/*>*/}
+                      {/*  {card.desc}*/}
+                      {/*</div>*/}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </section>
-      <PageLayout>
-        <div className="columns is-multiline">
-          {CARDS.map((card) => {
-            return (
-              <div key={card.title} className="column is-2">
-                <div className="card">
-                  <div className="card-image is-clickable">
-                    <Link to={card.link}>
-                      <figure className="image">
-                        <BgContainer src={card.img} height="250px" />
-                      </figure>
-                    </Link>
-                  </div>
-                  <div className="card-content">
-                    <div className="media">
-                      <div className="media-content">
-                        <p className="title is-6 heading">
-                          <Link className={"has-text-dark"} to={card.link}>
-                            {card.title}
-                          </Link>
-                        </p>
-                        <span className="tag is-primary">{card.type}</span>
-                      </div>
-                    </div>
-                    <div className="content" style={{ minHeight: "100px" }}>
-                      {card.desc}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        <div className="hero-foot">
+          <Wave
+            fill="#000"
+            paused={false}
+            options={{
+              height: 10,
+              amplitude: 30,
+              speed: 0.15,
+            }}
+          />
+          <div
+            style={{
+              width: "100%",
+              height: "10px",
+              bottom: 0,
+              position: "absolute",
+              backgroundColor: "black",
+              zIndex: 999,
+            }}
+          ></div>
         </div>
-      </PageLayout>
+      </section>
     </div>
   );
 };

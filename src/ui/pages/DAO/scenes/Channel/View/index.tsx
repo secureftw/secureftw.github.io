@@ -168,18 +168,16 @@ const ProposalView = () => {
               />
             </div>
             {connectedWallet && (
-              <div className="box is-shadowless">
-                <UserVotes
-                  voteOptions={data.proposal.options}
-                  contractHash={contractHash}
-                  proposalNo={proposalNo}
-                  network={network}
-                  connectedWallet={connectedWallet}
-                  refresh={refresh}
-                  isVoteActive={isActive}
-                  setTxid={setTxid}
-                />
-              </div>
+              <UserVotes
+                voteOptions={data.proposal.options}
+                contractHash={contractHash}
+                proposalNo={proposalNo}
+                network={network}
+                connectedWallet={connectedWallet}
+                refresh={refresh}
+                isVoteActive={isActive}
+                setTxid={setTxid}
+              />
             )}
           </div>
 

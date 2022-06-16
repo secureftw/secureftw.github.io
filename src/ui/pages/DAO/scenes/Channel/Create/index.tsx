@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import DatePicker from "react-datepicker";
 import MDEditor from "@uiw/react-md-editor";
 import Modal from "../../../../../components/Modal";
@@ -12,8 +12,7 @@ import { DAO_CHANNEL_PATH } from "../../../../../../consts";
 import { useOnChainData } from "../../../../../../common/hooks/use-onchain-data";
 import { withDecimal } from "../../../../../../packages/neo/utils";
 import ChannelCard from "../../../components/ChannelCard";
-import rehypeSanitize from "rehype-sanitize";
-import {detectEmojiInString, emojiRegexExp} from "../../../../Smith/helpers";
+import { emojiRegexExp } from "../../../../Smith/helpers";
 
 const Create = () => {
   const params = useParams();
@@ -66,8 +65,7 @@ const Create = () => {
     history.push(`${DAO_CHANNEL_PATH}/${contractHash}`);
   };
 
-
-  const { isLoaded, error, data } = useOnChainData(() => {
+  const { data } = useOnChainData(() => {
     return new DaoContract(network).getChannel(contractHash);
   }, []);
 
@@ -77,11 +75,10 @@ const Create = () => {
       hasEmptyOption = true;
     }
   });
-
-	// const hasEmoji = emojiRegexExp.test(description.replace(/ /g,''));
-	// console.log(description)
-	// console.log(hasEmoji)
-	return (
+  // const hasEmoji = useMemo(() => {
+  //   return emojiRegexExp.test(description);
+  // }, [description]);
+  return (
     <div className="columns">
       <div className="column is-8 is-offset-2">
         <Link
@@ -115,21 +112,16 @@ const Create = () => {
                 <div className="control">
                   <MDEditor
                     value={description}
-                    onChange={(value) => setDescription(value ? value : "")}
-	                  // @ts-ignore
+                    onChange={(value, event, state) => {
+                      setDescription(value ? value : "");
+                    }}
+                    // @ts-ignore
                     // rehypePlugins={[[rehypeSanitize]]}
                   />
                   <MDEditor.Markdown
                     source={description}
                     // rehypePlugins={[[rehypeSanitize]]}
                   />
-                  {/*<textarea*/}
-                  {/*  placeholder="My suggestion is.."*/}
-                  {/*  onChange={(e) => setDescription(e.target.value)}*/}
-                  {/*  className="textarea"*/}
-                  {/*>*/}
-                  {/*  {description}*/}
-                  {/*</textarea>*/}
                 </div>
               </div>
 
@@ -266,6 +258,9 @@ const Create = () => {
                     <li>
                       You will get your tokens back after{" "}
                       <strong>proposal expired</strong>.
+                    </li>
+                    <li>
+                      Do not use <strong>Emojis</strong>.
                     </li>
                   </div>
                 </div>

@@ -1,19 +1,19 @@
 import { rpc, sc, u } from "@cityofzion/neon-core";
 import {
-  MAINNET,
-  MAINNET_CONFIG,
-  PRIVATE_CONFIG,
-  PRIVATENET,
-  TESTNET,
-  TESTNET_CONFIG,
-  TESTNET_CONFIG_2,
-  MAINNET_CONFIG_2,
+	MAINNET,
+	MAINNET_CONFIG,
+	PRIVATE_CONFIG,
+	PRIVATENET,
+	TESTNET,
+	TESTNET_CONFIG,
+	TESTNET_CONFIG_2,
+	MAINNET_CONFIG_2, NEON,
 } from "../consts";
 import { InvokeResult } from "@cityofzion/neon-core/lib/rpc";
 import { ApplicationLogJson } from "@cityofzion/neon-core/lib/rpc/Query";
 import { convertContractCallParam } from "../utils";
 
-export type INetworkType = typeof PRIVATENET | typeof MAINNET | typeof TESTNET;
+export type INetworkType = typeof PRIVATENET | typeof MAINNET | typeof TESTNET
 
 export class Network {
   private static readonly READ_LOG_FREQUENCY = 6000;
@@ -117,14 +117,6 @@ export class Network {
       sb.emitAppCall(script.scriptHash, script.operation, params);
     });
     return rpcClient.invokeScript(u.HexString.fromHex(sb.build()));
-    // if (res.state === "FAULT") {
-    //   console.error(res.exception);
-    //   return null;
-    // }
-    // if (!passFaultCheck && res.state === "FAULT") {
-    //   console.error("RPC read error" + res.exception);
-    //   throw new Error(res.exception ? res.exception : "Network error");
-    // }
   };
 
   static readOnly = async (
@@ -147,14 +139,6 @@ export class Network {
       return undefined;
     }
     return parser(res);
-    // if (res.state === "FAULT") {
-    //   console.error(res.exception);
-    //   return null;
-    // }
-    // if (!passFaultCheck && res.state === "FAULT") {
-    //   console.error("RPC read error" + res.exception);
-    //   throw new Error(res.exception ? res.exception : "Network error");
-    // }
   };
 
   static sleep = (duration: number) => {

@@ -1,40 +1,30 @@
 import React from "react";
-import {
-  LAUNCH_AT,
-  TOTAL_TOKENS_FOR_SALE,
-} from "../../../../packages/neo/contracts/ftw/ido/consts";
+import { TOTAL_TOKENS_FOR_SALE } from "../../../../packages/neo/contracts/ftw/ido/consts";
 import LogoIcon from "../../../components/LogoIcon";
 import { NEP_LOGO } from "../../../../packages/neo/contracts/ftw/staking/consts";
 import moment from "moment";
-import Countdown from "react-countdown";
-import CountDownButton from "./CountDownButton";
-import { useWallet } from "../../../../packages/provider";
 
 interface IIDOInfoProps {
-  isSwapActive: boolean;
+  launchAt: number;
   totalSales: string;
   totalSalesInPercentage: number;
-  onClick: () => void;
 }
 const IDOInfo = ({
+  launchAt,
   totalSales,
   totalSalesInPercentage,
-  onClick,
-  isSwapActive,
 }: IIDOInfoProps) => {
-  const { connectedWallet } = useWallet();
-  const launchDateFormat = `${moment.unix(LAUNCH_AT).utc().format("llll")} UTC`;
+  const launchDateFormat = `${moment(launchAt).utc().format("llll")} UTC`;
   return (
     <div className="box is-shadowless">
-      {/*<h1 className="title is-5 is-marginless">Initial Dex Offering</h1>*/}
       <div className="is-block mb-4">
-        <img src={"/bgs/IDO.png"} />
+        <img src={"/assets/IDO-1200x600.png"} />
       </div>
-      <p className="has-text-weight-light heading has-text-centered">
+      <p className=" ">
         FTWSwap is opening its first IDO with NEP tokens. NEP is the governance
         token used to vote on Forthewin platform development, and it can also be
-        used as utility tokens of Forthewin ecosystem such as FTWSmith, FTWSwap,
-        FTWDAO, FTWRaffle and future platforms.
+        used as utility tokens of Forthewin ecosystem, the hub of NEP-17, such
+        as Smith, Swap, Farm, DAO, Raffle and future platforms.
       </p>
 
       <hr />
@@ -76,16 +66,6 @@ const IDOInfo = ({
           </div>
         </div>
       </div>
-
-      {!isSwapActive && (
-        <button
-          // onClick={onClick}
-          className="button is-primary is-fullwidth"
-        >
-          {/*Swap*/}
-          Opens at {launchDateFormat}
-        </button>
-      )}
     </div>
   );
 };

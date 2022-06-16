@@ -105,14 +105,14 @@ const WalletDropdown = ({ connectedWallet }: IWalletDropdownProps) => {
               </div>
             </div>
           </div>
-          <hr className="dropdown-divider" />
-          <NavLink
-            className="dropdown-item has-text-dark"
-            onClick={() => setActive(false)}
-            to={COLLECTION_PATH}
-          >
-            My NFT
-          </NavLink>
+          {/*<hr className="dropdown-divider" />*/}
+          {/*<NavLink*/}
+          {/*  className="dropdown-item has-text-dark"*/}
+          {/*  onClick={() => setActive(false)}*/}
+          {/*  to={COLLECTION_PATH}*/}
+          {/*>*/}
+          {/*  My NFT*/}
+          {/*</NavLink>*/}
           <hr className="dropdown-divider" />
           <a onClick={handleDisconnectWallet} className="dropdown-item">
             Disconnect

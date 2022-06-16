@@ -1,7 +1,11 @@
 import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
-import { DEFAULT_WITNESS_SCOPE, NEO_SCRIPT_HASH } from "../../../consts";
+import {
+  DEFAULT_WITNESS_SCOPE,
+  FTW_SCRIPT_HASH,
+  NEO_SCRIPT_HASH,
+} from "../../../consts";
 import { FARM_SCRIPT_HASH } from "./consts";
 import { IFarmContractStatus } from "./interfaces";
 import {
@@ -9,7 +13,6 @@ import {
   parseDeposit,
   parseSnapshotPaginate,
 } from "./helpers";
-import { FTW_SCRIPT_HASH } from "../nep17/consts";
 import { toDecimal } from "../../../utils";
 import { wallet as NeonWallet } from "@cityofzion/neon-core";
 
@@ -53,10 +56,7 @@ export class FarmContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   remove = async (connectedWallet: IConnectedWallet): Promise<string> => {
@@ -74,7 +74,8 @@ export class FarmContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+	    connectedWallet,
       this.network,
       invokeScript
     );
@@ -92,10 +93,7 @@ export class FarmContract {
       args: [],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   claim = async (connectedWallet: IConnectedWallet): Promise<string> => {
@@ -113,10 +111,7 @@ export class FarmContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   changePosition = async (
@@ -141,7 +136,8 @@ export class FarmContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+			connectedWallet,
       this.network,
       invokeScript
     );

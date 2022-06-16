@@ -6,9 +6,8 @@ import { sc } from "@cityofzion/neon-core";
 import { WalletAPI } from "../neo/wallet";
 import toast from "react-hot-toast";
 import { INetworkType } from "../neo/network";
-import { TESTNET } from "../neo/consts";
+import {NEON, TESTNET } from "../neo/consts";
 
-// tslint:disable-next-line:no-object-literal-type-assertion
 export const WalletContext = createContext({} as IWalletStates);
 export const WalletContextProvider = (props: {
   options: ContextOptions;
@@ -44,21 +43,24 @@ export const WalletContextProvider = (props: {
 
   const connectWallet = async (walletType: IWalletType) => {
     try {
-      const res = await new WalletAPI(walletType).init(network);
+      const res = await WalletAPI.init(walletType, network);
       setConnectedWallet(res);
-      toast.success("Wallet connected");
-      if (props.options.useLocalStorage) {
-        LocalStorage.setWallet(res);
-      }
-      setWalletModalActive(false);
+	    setWalletModalActive(false);
+	    toast.success("Wallet connected");
+      // if (props.options.useLocalStorage) {
+        // LocalStorage.setWallet(res);
+      // }
     } catch (e: any) {
       toast.error(e.message);
     }
   };
 
   const disConnectWallet = () => {
-    LocalStorage.removeWallet();
+    // LocalStorage.removeWallet();
     setConnectedWallet(undefined);
+		if(connectedWallet && connectedWallet.key === NEON){
+			connectedWallet.instance.disconnect();
+		}
     toast.success("Wallet disconnected");
   };
 
@@ -74,6 +76,7 @@ export const WalletContextProvider = (props: {
   };
 
   const switchNetwork = (val: INetworkType) => {
+	  setConnectedWallet(undefined);
     setNetwork(val);
     LocalStorage.setNetwork(val);
   };
@@ -107,6 +110,7 @@ export const WalletContextProvider = (props: {
     increaseTotalTxSubmit,
   };
 
+  // @ts-ignore
   return (
     <WalletContext.Provider value={contextValue}>
       {props.children}
