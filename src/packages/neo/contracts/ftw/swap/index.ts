@@ -7,11 +7,11 @@ import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { defaultDeadLine } from "./helpers";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
 import {
-	IContractInfo,
-	ILPHistory,
-	IReserve,
-	IReserveData,
-	ISwapsHistory,
+  IContractInfo,
+  ILPHistory,
+  IReserve,
+  IReserveData,
+  ISwapsHistory,
 } from "./interfaces";
 import { SMITH_SCRIPT_HASH } from "../smith/consts";
 
@@ -83,12 +83,7 @@ export class SwapContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript,
-      undefined,
-      undefined
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   remove = async (
@@ -117,12 +112,7 @@ export class SwapContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript,
-      undefined,
-      undefined
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   swap = async (
@@ -174,12 +164,7 @@ export class SwapContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript,
-      undefined,
-      undefined
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   getReserve = async (
@@ -434,9 +419,7 @@ export class SwapContract {
     };
   };
 
-  getContractInfo = async (
-    contractHash: string
-  ): Promise<IContractInfo> => {
+  getContractInfo = async (contractHash: string): Promise<IContractInfo> => {
     const smithContractHash = SMITH_SCRIPT_HASH[this.network];
     const script1 = {
       scriptHash: contractHash,
@@ -463,7 +446,7 @@ export class SwapContract {
       throw new Error(res.exception as string);
     }
     return {
-			contractHash,
+      contractHash,
       symbol: base64ToString(res.stack[0].value as string),
       decimals: parseFloat(res.stack[1].value as string),
       isWhitelisted: res.stack[2].value as boolean,

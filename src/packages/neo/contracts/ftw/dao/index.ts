@@ -4,7 +4,7 @@ import { IConnectedWallet } from "../../../wallet/interfaces";
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { wallet } from "../../../index";
 import { DAO_SCRIPT_HASH } from "./consts";
-import { base64ToString, parseMapValue, toDecimal } from "../../../utils";
+import { base64ToString, parseMapValue } from "../../../utils";
 import { parseChannelsPaginate } from "./helpers";
 import { IChannel, IProposal } from "./interfaces";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
@@ -60,11 +60,10 @@ export class DaoContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+			connectedWallet,
       this.network,
       invokeScript,
-      undefined,
-      undefined
     );
   };
 
@@ -110,11 +109,10 @@ export class DaoContract {
 				},
 			],
 		};
-		return new wallet.WalletAPI(connectedWallet.key).invoke(
+		return wallet.WalletAPI.invoke(
+			connectedWallet,
 			this.network,
 			invokeScript,
-			undefined,
-			undefined
 		);
 	};
 
@@ -177,11 +175,10 @@ export class DaoContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+			connectedWallet,
       this.network,
       invokeScript,
-      undefined,
-      undefined
     );
   };
 
@@ -232,11 +229,10 @@ export class DaoContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+			connectedWallet,
       this.network,
       invokeScript,
-      undefined,
-      undefined
     );
   };
 
@@ -274,11 +270,10 @@ export class DaoContract {
 	    // ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
+    return wallet.WalletAPI.invoke(
+			connectedWallet,
       this.network,
       invokeScript,
-      undefined,
-      undefined
     );
   };
 
@@ -316,11 +311,10 @@ export class DaoContract {
 			// ],
 			signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
 		};
-		return new wallet.WalletAPI(connectedWallet.key).invoke(
+		return wallet.WalletAPI.invoke(
+			connectedWallet,
 			this.network,
 			invokeScript,
-			undefined,
-			undefined
 		);
 	};
 

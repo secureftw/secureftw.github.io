@@ -101,10 +101,7 @@ export class SmithContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   createNEP17 = async (
@@ -160,10 +157,7 @@ export class SmithContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   createNEP11 = async (
@@ -218,10 +212,7 @@ export class SmithContract {
         },
       ],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   mintNFT = async (
@@ -258,10 +249,7 @@ export class SmithContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   updateManifest = async (
@@ -292,10 +280,7 @@ export class SmithContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return new wallet.WalletAPI(connectedWallet.key).invoke(
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
     // const invokeScript: any = {
     //   invokeArgs: [],
     //   signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
@@ -330,35 +315,32 @@ export class SmithContract {
     // );
   };
 
-	adminUpdate = async (
-		connectedWallet: IConnectedWallet,
-		contractHash: string,
-		manifest: string
-	) => {
-		const senderHash = NeonWallet.getScriptHashFromAddress(
-			connectedWallet.account.address
-		);
+  adminUpdate = async (
+    connectedWallet: IConnectedWallet,
+    contractHash: string,
+    manifest: string
+  ) => {
+    const senderHash = NeonWallet.getScriptHashFromAddress(
+      connectedWallet.account.address
+    );
 
-		const invokeScript = {
-			operation: "adminUpdateManifest",
-			scriptHash: this.contractHash,
-			args: [
-				{
-					type: "Hash160",
-					value: contractHash,
-				},
-				{
-					type: "String",
-					value: manifest,
-				},
-			],
-			signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
-		};
-		return new wallet.WalletAPI(connectedWallet.key).invoke(
-			this.network,
-			invokeScript
-		);
-	};
+    const invokeScript = {
+      operation: "adminUpdateManifest",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "Hash160",
+          value: contractHash,
+        },
+        {
+          type: "String",
+          value: manifest,
+        },
+      ],
+      signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
+    };
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
+  };
 
   getNEP17Records = async (
     page: number
@@ -460,16 +442,16 @@ export class SmithContract {
   getNep17ContractInfo = async (
     contractHash: string
   ): Promise<ISmithNEP17Info> => {
-	  const script = {
-		  operation: "getNEP17",
-		  scriptHash: this.contractHash,
-		  args: [
-			  {
-				  type: "Hash160",
-				  value: contractHash,
-			  }
-		  ],
-	  };
+    const script = {
+      operation: "getNEP17",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "Hash160",
+          value: contractHash,
+        },
+      ],
+    };
 
     const res = await Network.read(this.network, [script]);
     if (res.state === "FAULT") {
@@ -485,10 +467,10 @@ export class SmithContract {
       operation: "getNEP11",
       scriptHash: this.contractHash,
       args: [
-	      {
-		      type: "Hash160",
-		      value: contractHash,
-	      }
+        {
+          type: "Hash160",
+          value: contractHash,
+        },
       ],
     };
 
@@ -500,47 +482,43 @@ export class SmithContract {
     return parseMapValue(res.stack[0] as any);
   };
 
-	isNEP17SymbolTaken = async (
-		symbol: string
-	): Promise<boolean> => {
-		const script = {
-			operation: "isNEP17TokenTaken",
-			scriptHash: this.contractHash,
-			args: [
-				{
-					type: "String",
-					value: symbol,
-				}
-			],
-		};
+  isNEP17SymbolTaken = async (symbol: string): Promise<boolean> => {
+    const script = {
+      operation: "isNEP17TokenTaken",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "String",
+          value: symbol,
+        },
+      ],
+    };
 
-		const scripts = [script];
-		const res = await Network.read(this.network, scripts);
-		if (res.state === "FAULT") {
-			throw new Error(res.exception as string);
-		}
-		return res.stack[0].value as boolean;
-	};
+    const scripts = [script];
+    const res = await Network.read(this.network, scripts);
+    if (res.state === "FAULT") {
+      throw new Error(res.exception as string);
+    }
+    return res.stack[0].value as boolean;
+  };
 
-	isNEP11SymbolTaken = async (
-		symbol: string
-	): Promise<boolean> => {
-		const script = {
-			operation: "isNEP11TokenTaken",
-			scriptHash: this.contractHash,
-			args: [
-				{
-					type: "String",
-					value: symbol,
-				}
-			],
-		};
+  isNEP11SymbolTaken = async (symbol: string): Promise<boolean> => {
+    const script = {
+      operation: "isNEP11TokenTaken",
+      scriptHash: this.contractHash,
+      args: [
+        {
+          type: "String",
+          value: symbol,
+        },
+      ],
+    };
 
-		const scripts = [script];
-		const res = await Network.read(this.network, scripts);
-		if (res.state === "FAULT") {
-			throw new Error(res.exception as string);
-		}
-		return res.stack[0].value as boolean;
-	};
+    const scripts = [script];
+    const res = await Network.read(this.network, scripts);
+    if (res.state === "FAULT") {
+      throw new Error(res.exception as string);
+    }
+    return res.stack[0].value as boolean;
+  };
 }

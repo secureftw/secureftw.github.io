@@ -144,7 +144,8 @@ const Swap = () => {
           );
           setTxid(res);
         } catch (e: any) {
-          toast.error(e.description ? e.description : e.message);
+          console.log(e);
+          toast.error(e.message ? e.message : "Error. Check console.");
         }
       }
     } else {
@@ -201,7 +202,7 @@ const Swap = () => {
     if (params.tokenA && params.tokenB) {
       load(params.tokenA, params.tokenB);
     }
-  }, [location, refresh, params.tokenA, params.tokenB]);
+  }, [location, refresh, params.tokenA, params.tokenB, connectedWallet]);
 
   const noLiquidity =
     (tokenA &&
@@ -214,7 +215,6 @@ const Swap = () => {
       data &&
       data.pair[tokenB.hash] &&
       data.pair[tokenB.hash].reserveAmount === 0);
-
 
   let priceImpact = 0;
 
@@ -454,7 +454,7 @@ const Swap = () => {
 
       {isAssetChangeModalActive && (
         <AssetListModal
-	        activeTokenInput={isAssetChangeModalActive}
+          activeTokenInput={isAssetChangeModalActive}
           tokenAHash={tokenA ? tokenA.hash : undefined}
           tokenBHash={tokenB ? tokenB.hash : undefined}
           onAssetClick={onAssetClick}

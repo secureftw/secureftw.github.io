@@ -87,7 +87,6 @@ const validateConnectedWallet = (connectedWallet?: IConnectedWallet) => {
   if (
     !connectedWallet ||
     !connectedWallet.account ||
-    !connectedWallet.provider ||
     !connectedWallet.network
   ) {
     return undefined;

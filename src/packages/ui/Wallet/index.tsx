@@ -5,6 +5,7 @@ import WalletList from "./WalletList";
 import AssetCard from "./AssetCard";
 import { useWallet } from "../../provider";
 import NetworkSwitch2 from "../../../ui/components/NetworkSwitch2";
+import Modal from "../../../ui/components/Modal";
 
 const Wallet = () => {
   const { connectedWallet } = useWallet();
@@ -28,18 +29,7 @@ const Wallet = () => {
       </header>
       <hr className="m-0" />
       <section className="p-5">
-        {connectedWallet ? (
-          <>
-            <div>
-              {connectedWallet &&
-                connectedWallet.balances.map((balance) => {
-                  return <AssetCard key={balance.symbol} {...balance} />;
-                })}
-            </div>
-          </>
-        ) : (
-          <WalletList />
-        )}
+        {connectedWallet ? <></> : <WalletList />}
       </section>
 
       <div

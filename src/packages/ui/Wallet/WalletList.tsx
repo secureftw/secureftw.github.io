@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useWallet } from "../../provider";
-import { DEV } from "../../neo/consts";
 import { getWalletIcon } from "./helpers";
+import { IWalletType } from "../../neo/wallet/interfaces";
+import Modal from "../../../ui/components/Modal";
 
 const WalletList = () => {
-  const { connectWallet, list, useDevWallet } = useWallet();
+  const [neonWalletConnecting, setNeonWalletConnecting] = useState(false);
+  const { connectWallet, list } = useWallet();
+  const handleWalletConnect = async (walletType: IWalletType) => {
+    connectWallet(walletType);
+  };
   return (
     <>
       <p className="subtitle is-6">
@@ -13,23 +18,31 @@ const WalletList = () => {
       </p>
       <nav className="panel">
         {list.map((_wallet) => {
-          if (!useDevWallet && _wallet.key === DEV) return false;
           return (
             <a
               key={_wallet.key}
               className="panel-block"
-              onClick={() => connectWallet(_wallet.key)}
+              onClick={() => handleWalletConnect(_wallet.key)}
             >
               <span className="panel-icon">
                 <img src={getWalletIcon(_wallet.key)} />
-                {/*<_wallet.img />*/}
-                {/*<i className="fas fa-book" aria-hidden="true"></i>*/}
               </span>
               {_wallet.label}
             </a>
           );
         })}
       </nav>
+
+      {neonWalletConnecting && (
+        <Modal onClose={() => setNeonWalletConnecting(false)}>
+          <div className="box">
+            <figure className="image">
+              <img src={"/icon/neon.svg"} />
+            </figure>
+            <p>Check your neon wallet</p>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };

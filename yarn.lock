@@ -1116,6 +1116,18 @@
     "@walletconnect/types" "2.0.0-beta.17"
     "@walletconnect/utils" "2.0.0-beta.17"
 
+"@cityofzion/wallet-connect-sdk-react@^1.4.1":
+  "integrity" "sha512-tBIZNDqeJO6faLwUUlMTbAJToK/wdGDAZLhIhXBmfZilCZKFL5furA4Sxhn6Ru6tNz3iR2tSV/0KMR/fFwtd+Q=="
+  "resolved" "https://registry.npmjs.org/@cityofzion/wallet-connect-sdk-react/-/wallet-connect-sdk-react-1.4.1.tgz"
+  "version" "1.4.1"
+  dependencies:
+    "@cityofzion/wallet-connect-sdk-core" "^1.6.1"
+    "@walletconnect/client" "2.0.0-beta.17"
+    "@walletconnect/jsonrpc-utils" "^1.0.0"
+    "@walletconnect/qrcode-modal" "^2.0.0-alpha.20"
+    "@walletconnect/types" "2.0.0-beta.17"
+    "@walletconnect/utils" "2.0.0-beta.17"
+
 "@csstools/normalize.css@*":
   "integrity" "sha512-M0qqxAcwCsIVfpFQSlGN5XjXWu8l5JDZN+fPt1LeW5SZexQTgnaEvgXAY+CeygRw0EeppWHi12JxESWiWrB0Sg=="
   "resolved" "https://registry.npmjs.org/@csstools/normalize.css/-/normalize.css-12.0.0.tgz"
