@@ -36,8 +36,8 @@ const ClaimRewards = () => {
         setClaimModalOpen(false);
         setTxid(res);
       } catch (e: any) {
-        console.error(e);
-        toast.error(e.description ? e.description : e.message);
+	      console.log(e);
+	      toast.error("An error occurred, Check console.");
       }
     } else {
       toast.error("Please connect wallet");

@@ -57,7 +57,7 @@ const Main = () => {
         setTxid(res);
       } catch (e: any) {
 				console.log(e);
-        toast.error(e && e.description ? e.description : "Error. Check console.");
+        toast.error("An error occurred. Check console.");
       }
     }
   };

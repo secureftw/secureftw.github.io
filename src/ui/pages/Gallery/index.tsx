@@ -29,7 +29,8 @@ const Gallery = () => {
         addPendingTransaction(res);
         setTxid(res);
       } catch (e: any) {
-        toast.error(e.message);
+	      console.log(e);
+	      toast.error("An error occurred, Check console.");
       }
     } else {
       toast.error("Please connect wallet.");

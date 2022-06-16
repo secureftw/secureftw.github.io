@@ -26,7 +26,7 @@ const PlayButton = ({ arenaNo, onSubmitted, status }: IPlayButtonProps) => {
       //   addPendingTransaction(res);
       //   onSubmitted(res);
       // } catch (e: any) {
-      //   toast.error(e.message);
+
       // }
       // const timeLeft =
       //   TOURNAMENT_TIME_PADDING -
@@ -40,10 +40,9 @@ const PlayButton = ({ arenaNo, onSubmitted, status }: IPlayButtonProps) => {
         addPendingTransaction(res);
         onSubmitted(res);
       } catch (e: any) {
-        toast.error(e.message);
+	      console.log(e);
+	      toast.error("An error occurred, Check console.");
       }
-      // } else {
-      // }
     } else {
       toast.error("Please connect wallet.");
     }

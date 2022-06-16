@@ -40,7 +40,7 @@ export class WalletAPI {
       if (walletType === ONE_GATE) {
         throw new Error("OneGate wallet only supports in OneGate web browser.");
       } else {
-        throw new Error(e.description ? e.description : e.message);
+        throw new Error("An error occurred, Check console.");
       }
     }
   };

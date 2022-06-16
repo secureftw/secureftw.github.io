@@ -17,7 +17,8 @@ const CancelModal = ({ onClose }: IActionModal) => {
         const res = await new FarmContract(network).claim(connectedWallet);
         setTxid(res);
       } catch (e: any) {
-        toast.error(e.message);
+	      console.log(e);
+	      toast.error("An error occurred, Check console.");
       }
     } else {
       openWalletModal();

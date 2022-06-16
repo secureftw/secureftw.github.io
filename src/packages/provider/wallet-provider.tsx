@@ -51,7 +51,9 @@ export const WalletContextProvider = (props: {
         // LocalStorage.setWallet(res);
       // }
     } catch (e: any) {
-      toast.error(e.message);
+	    console.log(e);
+	    toast.error("An error occurred, Check console.");
+      // toast.error(e.message);
     }
   };
 

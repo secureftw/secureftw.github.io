@@ -145,7 +145,7 @@ const Swap = () => {
           setTxid(res);
         } catch (e: any) {
           console.log(e);
-          toast.error(e.message ? e.message : "Error. Check console.");
+          toast.error("An error occurred, Check console.");
         }
       }
     } else {

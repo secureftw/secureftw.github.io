@@ -19,7 +19,8 @@ const CancelModal = ({ onClose }: IActionModal) => {
         addPendingTransaction(res);
         setTxid(txid);
       } catch (e: any) {
-        toast.error(e.message);
+	      console.log(e);
+	      toast.error("An error occurred, Check console.");
       }
     } else {
       openWalletModal();

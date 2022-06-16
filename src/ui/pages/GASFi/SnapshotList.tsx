@@ -20,7 +20,8 @@ const SnapshotList = ({ contractStatus }: ISnapshotListProps) => {
         );
         setTxid(res);
       } catch (e: any) {
-        toast.error(e.message);
+	      console.log(e);
+	      toast.error("An error occurred, Check console.");
       }
     } else {
       openWalletModal();
