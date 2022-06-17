@@ -54,7 +54,7 @@ const Main = () => {
           </div>
           <div className="column is-mobile">
             <div className="box is-shadowless has-text-centered">
-              <div className="heading">Total tickets</div>
+              <div className="heading">Tickets in the pool</div>
               <strong>{data ? data.tickets : ""}</strong>
             </div>
           </div>
@@ -64,6 +64,7 @@ const Main = () => {
           <div className="content">
             <ul>
               <li>Make a new wallet to participate.</li>
+	            <li>Your wallet didn't participate Polaris plus quadratic funding.</li>
               <li>1 ticket per address.</li>
               <li>5 winners. Each 100 GAS.</li>
               <li>Drawing at 6/29/2022 6PM (UTC)</li>
