@@ -59,8 +59,8 @@ const App = () => {
         <Route path={FUSION_PATH} component={Fusion} />
         <Route path={DAO_PATH} component={DAO} />
         <Route path={IDO_PATH} component={IDO} />
-        <Route path={LOTTO_PATH} component={Lotto} />
         <Route exact path={MIGRATION_PATH} component={Migration} />
+	      <Route path={LOTTO_PATH} component={Lotto} />
         <MobileMenuSlider />
         <WalletSidebar />
         <ReactGa />

@@ -64,11 +64,19 @@ export const DAO_PAGE_ROUTE = {
   category: [],
 };
 
+export const LOTTO_PAGE_ROUTE = {
+  label: "Sweepstake",
+  path: LOTTO_PATH,
+  network: [PRIVATENET, TESTNET, MAINNET],
+  category: [],
+};
+
 export const MENU = [
   IDO_PAGE_ROUTE,
   SWAP_PAGE_ROUTE,
   FARM_PAGE_ROUTE,
   SMITH_PAGE_ROUTE,
+  LOTTO_PAGE_ROUTE,
   DAO_PAGE_ROUTE,
   {
     label: "NFT",
