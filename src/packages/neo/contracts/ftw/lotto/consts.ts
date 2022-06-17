@@ -1,0 +1,7 @@
+import { CONST } from "../../../index";
+
+export const LOTTO_SCRIPT_HASH = {
+  [CONST.PRIVATENET]: "ad3f4007d3214523df561700b0fe7c29374d6ed1",
+  [CONST.TESTNET]: "ad3f4007d3214523df561700b0fe7c29374d6ed1",
+  [CONST.MAINNET]: "cfa0b6b8f99ff03cd67a08a33247aaaa068211c4",
+};

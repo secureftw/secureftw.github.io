@@ -27,6 +27,7 @@ export const FUSION_PATH = "/fusion";
 export const DAO_PATH = "/dao";
 export const DAO_CHANNEL_CREATE_PATH = "/dao/create";
 export const DAO_CHANNEL_PATH = "/dao/channel";
+export const LOTTO_PATH = "/lotto";
 
 export const IDO_PAGE_ROUTE = {
   label: "IDO",

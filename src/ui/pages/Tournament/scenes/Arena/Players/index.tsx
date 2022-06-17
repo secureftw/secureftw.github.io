@@ -3,7 +3,7 @@ import { useWallet } from "../../../../../../packages/provider";
 import { TournamentContract } from "../../../../../../packages/neo/contracts/ftw/tournament";
 import DisplayRuneWithProperties from "../../../components/DisplayRuneWithProperties";
 import PlayerModal from "./components/PlayerModal";
-import { IRuneMeta } from "../../../../../../packages/neo/contracts/ftw/nft/interfaces";
+import { IRuneMeta } from "../../../../../../packages/neo/contracts/ftw/rune/interfaces";
 import RegisterButton from "./components/ArenaRegisterButton";
 
 const Players = ({ arenaNo, gameNo }: { arenaNo: string; gameNo?: number }) => {

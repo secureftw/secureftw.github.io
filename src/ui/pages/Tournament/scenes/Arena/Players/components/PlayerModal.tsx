@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IRuneMeta } from "../../../../../../../packages/neo/contracts/ftw/nft/interfaces";
+import { IRuneMeta } from "../../../../../../../packages/neo/contracts/ftw/rune/interfaces";
 import Modal from "../../../../../../components/Modal";
 import { useWallet } from "../../../../../../../packages/provider";
 import BetButton from "../../../../components/BetButton";

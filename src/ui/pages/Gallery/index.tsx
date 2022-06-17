@@ -6,7 +6,7 @@ import { useWallet } from "../../../packages/provider";
 import { NFTContract } from "../../../packages/neo/contracts";
 import Banner from "./Banner";
 import { RestAPI } from "../../../packages/neo/api";
-import { RUNE_PHASE_FILTER } from "../../../packages/neo/contracts/ftw/nft/consts";
+import { RUNE_PHASE_FILTER } from "../../../packages/neo/contracts/ftw/rune/consts";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
 import Modal from "../../components/Modal";
 

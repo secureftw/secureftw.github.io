@@ -17,7 +17,7 @@ import {
   parseSmithProperties,
 } from "./helpers";
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
-import { IRuneMeta } from "../nft/interfaces";
+import { IRuneMeta } from "../rune/interfaces";
 import { parseMapValue } from "../../../utils";
 
 export class SmithContract {

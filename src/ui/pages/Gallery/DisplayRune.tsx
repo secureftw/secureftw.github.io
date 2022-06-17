@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NFTContract } from "../../../packages/neo/contracts";
 import { useWallet } from "../../../packages/provider";
 import { INetworkType } from "../../../packages/neo/network";
-import { IRuneMeta } from "../../../packages/neo/contracts/ftw/nft/interfaces";
+import { IRuneMeta } from "../../../packages/neo/contracts/ftw/rune/interfaces";
 
 interface IDisplayRuneProps {
   width: string;

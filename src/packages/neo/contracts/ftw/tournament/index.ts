@@ -2,7 +2,7 @@ import { INetworkType, Network } from "../../../network";
 import { SUPPORT_TICKET_PRICE, TOURNAMENT_SCRIPT_HASH } from "./consts";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
-import { RUNE_SCRIPT_HASH } from "../nft";
+import { RUNE_SCRIPT_HASH } from "../rune";
 import { parsePlayer, parseHistory } from "./helpers";
 import { DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH } from "../../../consts";
 import { base64ToAddress, toDecimal } from "../../../utils";

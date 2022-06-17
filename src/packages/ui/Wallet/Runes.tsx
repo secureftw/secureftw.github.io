@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NFTContract } from "../../neo/contracts";
-import { IRuneMeta } from "../../neo/contracts/ftw/nft/interfaces";
+import { IRuneMeta } from "../../neo/contracts/ftw/rune/interfaces";
 import { useWallet } from "../../provider";
 import { IConnectedWallet } from "../../neo/wallet/interfaces";
 

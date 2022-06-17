@@ -4,7 +4,7 @@ import { IConnectedWallet } from "../../../wallet/interfaces";
 import { parseProperties } from "../../ttm/nft/helpers";
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import {  GAS_SCRIPT_HASH } from "../../../consts";
-import { RUNE_SCRIPT_HASH } from "../nft";
+import { RUNE_SCRIPT_HASH } from "../rune";
 import { TTM_SCRIPT_HASH } from "../../ttm/nft";
 
 export const FUSE_SCRIPT_HASH = {

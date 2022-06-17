@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 // tslint:disable-next-line:no-submodule-imports
 import { FaPlay } from "react-icons/fa";
 import { NFTContract } from "../../../../../../packages/neo/contracts";
-import { IRuneMeta } from "../../../../../../packages/neo/contracts/ftw/nft/interfaces";
+import { IRuneMeta } from "../../../../../../packages/neo/contracts/ftw/rune/interfaces";
 import { INetworkType } from "../../../../../../packages/neo/network";
 import { IHistoryGame } from "../../../../../../packages/neo/contracts/ftw/tournament/interfaces";
 import ClaimButton from "../../../components/ClaimButton";

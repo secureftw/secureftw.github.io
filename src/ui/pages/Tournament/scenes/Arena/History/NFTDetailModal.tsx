@@ -1,5 +1,5 @@
 import React from "react";
-import { IRuneMeta } from "../../../../../../packages/neo/contracts/ftw/nft/interfaces";
+import { IRuneMeta } from "../../../../../../packages/neo/contracts/ftw/rune/interfaces";
 import Modal from "../../../../../components/Modal";
 
 interface IPlayerModalProps {
