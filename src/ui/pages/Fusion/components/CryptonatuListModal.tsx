@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { TournamentContract } from "../../../../packages/neo/contracts/ftw/tournament";
+import { TournamentContract } from "../../../../packages/neo/contracts/ftw/arena";
 import AfterTransactionSubmitted from "../../../../packages/ui/AfterTransactionSubmitted";
 import Modal from "../../../components/Modal";
 import { NFTContract } from "../../../../packages/neo/contracts";

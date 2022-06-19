@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IClaimableRewards } from "../../../../../packages/neo/contracts/ftw/staking/interfaces";
+import { IClaimableRewards } from "../../../../../packages/neo/contracts/ftw/farm/interfaces";
 import ModalCard from "../../../../components/Modal";
 import {toDecimal} from "../../../../../packages/neo/utils";
 

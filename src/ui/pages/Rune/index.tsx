@@ -9,6 +9,7 @@ import { RestAPI } from "../../../packages/neo/api";
 import { RUNE_PHASE_FILTER } from "../../../packages/neo/contracts/ftw/rune/consts";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
 import Modal from "../../components/Modal";
+import {handleError} from "../../../packages/neo/utils/errors";
 
 const Gallery = () => {
   const [txid, setTxid] = useState("");
@@ -29,8 +30,7 @@ const Gallery = () => {
         addPendingTransaction(res);
         setTxid(res);
       } catch (e: any) {
-	      console.log(e);
-	      toast.error("An error occurred, Check console.");
+	      toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet.");

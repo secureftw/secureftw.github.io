@@ -1,7 +1,7 @@
 import React from "react";
 import { TOTAL_TOKENS_FOR_SALE } from "../../../../packages/neo/contracts/ftw/ido/consts";
 import LogoIcon from "../../../components/LogoIcon";
-import { NEP_LOGO } from "../../../../packages/neo/contracts/ftw/staking/consts";
+import { NEP_LOGO } from "../../../../packages/neo/contracts/ftw/farm/consts";
 import moment from "moment";
 
 interface IIDOInfoProps {

@@ -4,7 +4,7 @@ import { FaPlay } from "react-icons/fa";
 import { NFTContract } from "../../../../../../packages/neo/contracts";
 import { IRuneMeta } from "../../../../../../packages/neo/contracts/ftw/rune/interfaces";
 import { INetworkType } from "../../../../../../packages/neo/network";
-import { IHistoryGame } from "../../../../../../packages/neo/contracts/ftw/tournament/interfaces";
+import { IHistoryGame } from "../../../../../../packages/neo/contracts/ftw/arena/interfaces";
 import ClaimButton from "../../../components/ClaimButton";
 import { toDecimal } from "../../../../../../packages/neo/utils";
 

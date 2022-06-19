@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PageLayout from "../../components/PageLayout";
 import { useWallet } from "../../../packages/provider";
 import { NFTContract } from "../../../packages/neo/contracts";
-import PropertiesModal from "../Gallery/PropertiesModal";
+import PropertiesModal from "../Rune/PropertiesModal";
 import { GALLERY_PATH } from "../../../consts";
 import { Link } from "react-router-dom";
 

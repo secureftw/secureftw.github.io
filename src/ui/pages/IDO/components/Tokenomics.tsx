@@ -27,10 +27,10 @@ const Tokenomics = (props) => {
   return (
     <div className="box is-shadowless">
       <h1 className="title is-5 heading">Token utility</h1>
-      <div className="columns is-multiline">
+      <div className="columns is-multiline is-mobile">
         {utilityCards.map((card) => {
           return (
-            <div key={`ucard-${card.title}`} className="column is-4">
+            <div key={`ucard-${card.title}`} className="column is-4-desktop is-6-mobile">
               <div
                 className="has-text-centered box is-shadowless"
                 style={{ border: "1px solid hsl(0, 0%, 96%)" }}

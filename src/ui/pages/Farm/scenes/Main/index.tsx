@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FARM_STAKE_POSITIONS_PATH } from "../../../../../consts";
 import StakingPairCard from "../../components/StakingPairCard";
 import { useWallet } from "../../../../../packages/provider";
-import { StakingContract } from "../../../../../packages/neo/contracts/ftw/staking";
+import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
 

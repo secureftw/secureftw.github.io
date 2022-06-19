@@ -5,7 +5,7 @@ import { useWallet } from "../../../../../packages/provider";
 import PlayButton from "../../components/PlayButton";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
-import { ADMIN_FOR_PLAY } from "../../../../../packages/neo/contracts/ftw/tournament/consts";
+import { ADMIN_FOR_PLAY } from "../../../../../packages/neo/contracts/ftw/arena/consts";
 
 interface IBanner {
   arenaNo: string;

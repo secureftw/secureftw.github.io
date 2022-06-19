@@ -10,6 +10,7 @@ import { SMITH_PATH } from "../../../../../consts";
 import Modal from "../../../../components/Modal";
 import PageLayout from "../../../../components/PageLayout";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
+import {handleError} from "../../../../../packages/neo/utils/errors";
 
 const NEP17FormModal = () => {
   const { network, connectedWallet } = useWallet();
@@ -63,8 +64,7 @@ const NEP17FormModal = () => {
             setTxid(res);
           }
         } catch (e: any) {
-	        console.log(e);
-	        toast.error("An error occurred, Check console.");
+	        toast.error(handleError(e));
         }
         // } else {
         //   toast.error("You must have more than 20 GAS.");

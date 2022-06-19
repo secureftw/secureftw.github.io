@@ -1,5 +1,5 @@
 import React from "react";
-import { IPlayer } from "../../../../../../packages/neo/contracts/ftw/tournament/interfaces";
+import { IPlayer } from "../../../../../../packages/neo/contracts/ftw/arena/interfaces";
 import DisplayRuneWithProperties from "../../../components/DisplayRuneWithProperties";
 import { fight } from "../helpers";
 import { useWallet } from "../../../../../../packages/provider";

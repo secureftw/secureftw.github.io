@@ -12,14 +12,16 @@ const List = ({ network }: any) => {
       {data ? (
         <div className="table-container">
           <table className=" table is-fullwidth">
-            {data.items.map((item) => {
-              return (
-                <tr key={`ticketlist${item.no}`}>
-                  <td>{item.no}</td>
-                  <td>{item.owner}</td>
-                </tr>
-              );
-            })}
+            <tbody>
+              {data.items.map((item) => {
+                return (
+                  <tr key={`ticketlist${item.no}`}>
+                    <td>{item.no}</td>
+                    <td>{item.owner}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
           </table>
         </div>
       ) : (

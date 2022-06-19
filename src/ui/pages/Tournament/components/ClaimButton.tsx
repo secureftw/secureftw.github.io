@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useWallet } from "../../../../packages/provider";
-import { TournamentContract } from "../../../../packages/neo/contracts/ftw/tournament";
+import { TournamentContract } from "../../../../packages/neo/contracts/ftw/arena";
 import toast from "react-hot-toast";
-import { IHistoryGame } from "../../../../packages/neo/contracts/ftw/tournament/interfaces";
-import { calculateClaimableAmount } from "../../../../packages/neo/contracts/ftw/tournament/helpers";
+import { IHistoryGame } from "../../../../packages/neo/contracts/ftw/arena/interfaces";
+import { calculateClaimableAmount } from "../../../../packages/neo/contracts/ftw/arena/helpers";
+import {handleError} from "../../../../packages/neo/utils/errors";
 
 interface IClaimButtonProps {
   arenaNo: string;
@@ -29,8 +30,7 @@ const ClaimButton = ({ arenaNo, history, onClaimed }: IClaimButtonProps) => {
         addPendingTransaction(res);
         onClaimed(res);
       } catch (e: any) {
-	      console.log(e);
-	      toast.error("An error occurred, Check console.");
+	      toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet.");

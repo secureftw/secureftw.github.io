@@ -4,11 +4,12 @@ import HeaderBetween from "../../../../components/HeaderBetween";
 import { useWallet } from "../../../../../packages/provider";
 import { toast } from "react-hot-toast";
 import { useLocation } from "react-router-dom";
-import { StakingContract } from "../../../../../packages/neo/contracts/ftw/staking";
+import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 import LPTokenList from "./LPTokenList";
+import {handleError} from "../../../../../packages/neo/utils/errors";
 
 const Stake = () => {
   const { network, connectedWallet } = useWallet();
@@ -33,11 +34,9 @@ const Stake = () => {
           connectedWallet,
           tokenId
         );
-				console.log(res)
         setTxid(res);
       } catch (e: any) {
-	      console.log(e);
-	      toast.error("An error occurred, Check console.");
+	      toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet");

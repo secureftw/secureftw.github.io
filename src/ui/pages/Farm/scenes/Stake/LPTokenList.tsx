@@ -1,7 +1,7 @@
 import React from "react";
 import LPTokenCard from "./LPTokenCard";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
-import { StakingContract } from "../../../../../packages/neo/contracts/ftw/staking";
+import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import { IConnectedWallet } from "../../../../../packages/neo/wallet/interfaces";
 import { INetworkType } from "../../../../../packages/neo/network";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";

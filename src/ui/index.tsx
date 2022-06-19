@@ -18,10 +18,9 @@ import {
 } from "../consts";
 import { WalletContextProvider } from "../packages/provider";
 import WalletSidebar from "./components/WalletSidebar";
-import GASFI from "./pages/GASFi";
 import { Toaster } from "react-hot-toast";
 import MyCollection from "./pages/MyCollection";
-import Gallery from "./pages/Gallery";
+import Gallery from "./pages/Rune";
 import MobileMenuSlider from "./components/MobileMenuSlider";
 import Home from "./pages/Home";
 import Smith from "./pages/Smith";
@@ -52,7 +51,6 @@ const App = () => {
         <Route path={GALLERY_PATH} component={Gallery} />
         <Route path={TOURNAMENT_PATH} component={Tournament} />
         <Route path={SMITH_PATH} component={Smith} />
-        <Route path={GASFI_PATH} component={GASFI} />
         <Route path={COLLECTION_PATH} component={MyCollection} />
         <Route path={SWAP_PATH} component={Swap} />
         <Route path={FARM_PATH} component={Farm} />

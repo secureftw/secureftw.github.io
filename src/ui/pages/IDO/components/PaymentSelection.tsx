@@ -15,16 +15,16 @@ const PaymentSelection = ({
   return (
     <>
       <h1 className="title is-5 is-spaced">Swap rates</h1>
-      <p className="subtitle is-6">
-        Due to the current market condition, NEO/GAS rates are better than
-        others. Please swap accordingly.
-      </p>
-      <div className="columns is-multiline">
+      {/*<p className="subtitle is-6">*/}
+      {/*  Due to the current market condition, NEO/GAS rates are better than*/}
+      {/*  others. Please swap accordingly.*/}
+      {/*</p>*/}
+      <div className="columns is-multiline is-mobile">
         {payments(network).map((p, i) => {
           if (currentTokenHash && currentTokenHash === p.contractHash)
             return <></>;
           return (
-            <div key={`payment-select-${i}`} className="column is-3">
+            <div key={`payment-select-${i}`} className="column is-3-desktop is-6-mobile">
               <div
                 onClick={() => onClick(p)}
                 className="box has-text-centered is-hoverable"

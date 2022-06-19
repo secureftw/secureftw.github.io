@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useWallet } from "../../../../../../packages/provider";
-import { TournamentContract } from "../../../../../../packages/neo/contracts/ftw/tournament";
+import { TournamentContract } from "../../../../../../packages/neo/contracts/ftw/arena";
 import DisplayRuneWithProperties from "../../../components/DisplayRuneWithProperties";
 import PlayerModal from "./components/PlayerModal";
 import { IRuneMeta } from "../../../../../../packages/neo/contracts/ftw/rune/interfaces";

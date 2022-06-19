@@ -8,6 +8,7 @@ import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransacti
 import { useHistory } from "react-router-dom";
 import { SMITH_PATH_NEP11 } from "../../../../../consts";
 import PageLayout from "../../../../components/PageLayout";
+import {handleError} from "../../../../../packages/neo/utils/errors";
 
 const NEP11FormModal = () => {
   const history = useHistory();
@@ -55,8 +56,7 @@ const NEP11FormModal = () => {
             setTxid(res);
           }
         } catch (e: any) {
-	        console.log(e);
-	        toast.error("An error occurred, Check console.");
+	        toast.error(handleError(e));
         }
       } else {
         toast.error("Please connect wallet.");

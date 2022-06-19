@@ -18,6 +18,7 @@ import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubm
 import toast from "react-hot-toast";
 import { NEP_SCRIPT_HASH } from "../../../packages/neo/contracts/ftw/nep-token/consts";
 import { useApp } from "../../../common/hooks/use-app";
+import {handleError} from "../../../packages/neo/utils/errors";
 
 const Main = () => {
   const { toggleWalletSidebar } = useApp();
@@ -56,8 +57,7 @@ const Main = () => {
         );
         setTxid(res);
       } catch (e: any) {
-				console.log(e);
-        toast.error("An error occurred. Check console.");
+	      toast.error(handleError(e));
       }
     }
   };
@@ -96,7 +96,7 @@ const Main = () => {
     <>
       <IDOInfo
         launchAt={data.launchAt}
-        totalSales={totalSales.toLocaleString()}
+        totalSales={(TOTAL_TOKENS_FOR_SALE - availableNEP).toLocaleString()}
         totalSalesInPercentage={parseFloat(totalSalesInPercentage.toString())}
       />
 

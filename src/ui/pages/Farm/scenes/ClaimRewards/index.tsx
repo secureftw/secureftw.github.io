@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { StakingContract } from "../../../../../packages/neo/contracts/ftw/staking";
+import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import { useWallet } from "../../../../../packages/provider";
-import { IClaimableRewards } from "../../../../../packages/neo/contracts/ftw/staking/interfaces";
+import { IClaimableRewards } from "../../../../../packages/neo/contracts/ftw/farm/interfaces";
 import { FaCoins } from "react-icons/fa";
 import ClaimModal from "./ClaimModal";
 import Modal from "../../../../components/Modal";
@@ -12,7 +12,8 @@ import { toDecimal } from "../../../../../packages/neo/utils";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import LogoIcon from "../../../../components/LogoIcon";
-import { NEP_LOGO } from "../../../../../packages/neo/contracts/ftw/staking/consts";
+import { NEP_LOGO } from "../../../../../packages/neo/contracts/ftw/farm/consts";
+import {handleError} from "../../../../../packages/neo/utils/errors";
 
 const ClaimRewards = () => {
   const { toggleWalletSidebar } = useApp();
@@ -36,8 +37,7 @@ const ClaimRewards = () => {
         setClaimModalOpen(false);
         setTxid(res);
       } catch (e: any) {
-	      console.log(e);
-	      toast.error("An error occurred, Check console.");
+	      toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet");

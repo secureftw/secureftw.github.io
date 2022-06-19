@@ -6,9 +6,10 @@ import FusionBox from "./components/FusionBox";
 import RuneListModal from "./components/RuneListModal";
 import CryptonautListModal from "./components/CryptonatuListModal";
 import { toast } from "react-hot-toast";
-import { FusionContract } from "../../../packages/neo/contracts/ftw/fuse";
+import { FusionContract } from "../../../packages/neo/contracts/ftw/fusion";
 import FusedList from "./components/FusedList";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
+import {handleError} from "../../../packages/neo/utils/errors";
 
 const Fusion = () => {
   const { network, connectedWallet } = useWallet();
@@ -28,8 +29,7 @@ const Fusion = () => {
         );
         setTxid(res);
       } catch (e: any) {
-	      console.log(e);
-	      toast.error("An error occurred, Check console.");
+	      toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet.");

@@ -14,6 +14,7 @@ import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransacti
 import NEP17UpdateFormModal from "./NEP17UpdateFormModal";
 import PageLayout from "../../../../components/PageLayout";
 import { SMITH_PATH, SMITH_PATH_NEP11 } from "../../../../../consts";
+import {handleError} from "../../../../../packages/neo/utils/errors";
 
 const NEP17InfoPage = () => {
   const params = useParams();
@@ -59,8 +60,7 @@ const NEP17InfoPage = () => {
           setTxid(res);
         }
       } catch (e: any) {
-	      console.log(e);
-	      toast.error("An error occurred, Check console.");
+	      toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet.");

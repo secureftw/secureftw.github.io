@@ -17,32 +17,24 @@ export class WalletAPI {
     network: INetworkType
   ): Promise<IConnectedWallet> => {
     let instance;
-    try {
-      switch (walletType) {
-        case O3:
-          instance = await initO3();
-          break;
-        case NEO_LINE:
-          instance = await initNeoLine();
-          break;
-        case NEON:
-          instance = await initNeon(network);
-          break;
-        case ONE_GATE:
-          instance = await initOG();
-          break;
-      }
-      return {
-        key: walletType,
-        ...instance,
-      };
-    } catch (e: any) {
-      if (walletType === ONE_GATE) {
-        throw new Error("OneGate wallet only supports in OneGate web browser.");
-      } else {
-        throw new Error("An error occurred, Check console.");
-      }
+    switch (walletType) {
+      case O3:
+        instance = await initO3();
+        break;
+      case NEO_LINE:
+        instance = await initNeoLine();
+        break;
+      case NEON:
+        instance = await initNeon(network);
+        break;
+      case ONE_GATE:
+        instance = await initOG();
+        break;
     }
+    return {
+      key: walletType,
+      ...instance,
+    };
   };
 
   /* Control signing and send transaction. TODO:Need to improve type hardcoding later */

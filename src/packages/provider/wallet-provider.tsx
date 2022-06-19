@@ -7,6 +7,7 @@ import { WalletAPI } from "../neo/wallet";
 import toast from "react-hot-toast";
 import { INetworkType } from "../neo/network";
 import {NEON, TESTNET } from "../neo/consts";
+import {handleError} from "../neo/utils/errors";
 
 export const WalletContext = createContext({} as IWalletStates);
 export const WalletContextProvider = (props: {
@@ -52,8 +53,7 @@ export const WalletContextProvider = (props: {
       // }
     } catch (e: any) {
 	    console.log(e);
-	    toast.error("An error occurred, Check console.");
-      // toast.error(e.message);
+	    toast.error(handleError(e));
     }
   };
 
@@ -63,7 +63,7 @@ export const WalletContextProvider = (props: {
 		if(connectedWallet && connectedWallet.key === NEON){
 			connectedWallet.instance.disconnect();
 		}
-    toast.success("Wallet disconnected");
+    toast.error("Wallet disconnected");
   };
 
   const doInvoke = (args: sc.ContractCallJson) => {

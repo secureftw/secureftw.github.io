@@ -1,8 +1,8 @@
 import React from "react";
 import { FARM_STAKE_PATH } from "../../../../consts";
 import { Link } from "react-router-dom";
-import { IStakingPairs } from "../../../../packages/neo/contracts/ftw/staking/interfaces";
-import { NEP_LOGO } from "../../../../packages/neo/contracts/ftw/staking/consts";
+import { IStakingPairs } from "../../../../packages/neo/contracts/ftw/farm/interfaces";
+import { NEP_LOGO } from "../../../../packages/neo/contracts/ftw/farm/consts";
 import { toDecimal } from "../../../../packages/neo/utils";
 import LogoIcon from "../../../components/LogoIcon";
 

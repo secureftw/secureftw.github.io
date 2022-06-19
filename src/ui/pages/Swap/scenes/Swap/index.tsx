@@ -37,6 +37,7 @@ import HistoryButtons from "./components/HistoryButtons";
 import { getAfterSlippage } from "../../../../../packages/neo/contracts/ftw/swap/helpers";
 import SwapDetails from "./components/SwapDetails";
 import { u } from "@cityofzion/neon-core";
+import {handleError} from "../../../../../packages/neo/utils/errors";
 
 export interface ITokenState {
   hash: string;
@@ -144,8 +145,7 @@ const Swap = () => {
           );
           setTxid(res);
         } catch (e: any) {
-          console.log(e);
-          toast.error("An error occurred, Check console.");
+	        toast.error(handleError(e));
         }
       }
     } else {

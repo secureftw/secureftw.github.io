@@ -1,6 +1,6 @@
 import React from "react";
 import TournamentTree from "./TournamentTree";
-import { IHistoryGame } from "../../../../../../packages/neo/contracts/ftw/tournament/interfaces";
+import { IHistoryGame } from "../../../../../../packages/neo/contracts/ftw/arena/interfaces";
 
 interface IReplayProps {
   arenaNo: string;

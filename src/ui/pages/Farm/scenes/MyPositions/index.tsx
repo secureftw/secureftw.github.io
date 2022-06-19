@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import HeaderBetween from "../../../../components/HeaderBetween";
 import { FARM_PATH } from "../../../../../consts";
 import { useWallet } from "../../../../../packages/provider";
-import { StakingContract } from "../../../../../packages/neo/contracts/ftw/staking";
+import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import { toast } from "react-hot-toast";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 import PositionList from "./PositionList";
+import {handleError} from "../../../../../packages/neo/utils/errors";
 
 const MyPositions = () => {
   const { network, connectedWallet } = useWallet();
@@ -23,8 +24,7 @@ const MyPositions = () => {
         );
         setTxid(res);
       } catch (e: any) {
-	      console.log(e);
-	      toast.error("An error occurred, Check console.");
+	      toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet");

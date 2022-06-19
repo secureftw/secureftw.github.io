@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useApp } from "../../../common/hooks/use-app";
 import { LottoContract } from "../../../packages/neo/contracts/ftw/lotto";
 import List from "./List";
+import { handleError } from "../../../packages/neo/utils/errors";
 
 const Main = () => {
   const { toggleWalletSidebar } = useApp();
@@ -21,7 +22,7 @@ const Main = () => {
         setTxid(res);
       } catch (e: any) {
         console.log(e);
-        toast.error("An error occurred. Check console.");
+        toast.error(handleError(e));
       }
     } else {
       toggleWalletSidebar();
@@ -64,7 +65,9 @@ const Main = () => {
           <div className="content">
             <ul>
               <li>Make a new wallet to participate.</li>
-	            <li>Your wallet didn't participate Polaris plus quadratic funding.</li>
+              <li>
+                Your wallet didn't participate Polaris plus quadratic funding.
+              </li>
               <li>1 ticket per address.</li>
               <li>5 winners. Each 100 GAS.</li>
               <li>Drawing at 6/29/2022 6PM (UTC)</li>
@@ -94,7 +97,7 @@ const Main = () => {
           </button>
         )}
       </div>
-	    <List network={network} />
+      <List network={network} />
       {txid && (
         <Modal onClose={() => setTxid("")}>
           <AfterTransactionSubmitted

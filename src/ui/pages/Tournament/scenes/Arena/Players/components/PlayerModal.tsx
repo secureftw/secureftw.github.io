@@ -5,7 +5,7 @@ import { useWallet } from "../../../../../../../packages/provider";
 import BetButton from "../../../../components/BetButton";
 import LeaveButton from "../../../../components/LeaveButton";
 import AfterTransactionSubmitted from "../../../../../../../packages/ui/AfterTransactionSubmitted";
-import { TournamentContract } from "../../../../../../../packages/neo/contracts/ftw/tournament";
+import { TournamentContract } from "../../../../../../../packages/neo/contracts/ftw/arena";
 import { toDecimal } from "../../../../../../../packages/neo/utils";
 import AdminLeaveButton from "../../../../components/AdminLeaveButton";
 

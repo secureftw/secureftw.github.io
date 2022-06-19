@@ -20,6 +20,7 @@ import SettingDropdown from "./SettingDropdown";
 import { DEFAULT_SLIPPAGE } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import PriceRatio from "../Swap/components/PriceRatio";
 import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
+import {handleError} from "../../../../../packages/neo/utils/errors";
 
 export interface ITokenState {
   hash: string;
@@ -102,8 +103,7 @@ const Liquidity = () => {
           );
           setTxid(res);
         } catch (e: any) {
-	        console.log(e);
-	        toast.error("An error occurred, Check console.");
+	        toast.error(handleError(e));
         }
       }
     } else {

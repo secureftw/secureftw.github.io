@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useWallet } from "../../../../packages/provider";
-import { FusionContract } from "../../../../packages/neo/contracts/ftw/fuse";
+import { FusionContract } from "../../../../packages/neo/contracts/ftw/fusion";
 import { toast } from "react-hot-toast";
 import ModalCard from "../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../packages/ui/AfterTransactionSubmitted";
+import {handleError} from "../../../../packages/neo/utils/errors";
 interface IFusedListProps {
   onSubmitted: (txid: string) => void;
   onReset: () => void;
@@ -26,8 +27,7 @@ const FusedList = ({ onSubmitted, onReset }: IFusedListProps) => {
         setDetail(false);
         onSubmitted(res);
       } catch (e: any) {
-	      console.log(e);
-	      toast.error("An error occurred, Check console.");
+	      toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet.");

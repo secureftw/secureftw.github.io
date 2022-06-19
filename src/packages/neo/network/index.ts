@@ -1,19 +1,19 @@
 import { rpc, sc, u } from "@cityofzion/neon-core";
 import {
-	MAINNET,
-	MAINNET_CONFIG,
-	PRIVATE_CONFIG,
-	PRIVATENET,
-	TESTNET,
-	TESTNET_CONFIG,
-	TESTNET_CONFIG_2,
-	MAINNET_CONFIG_2, NEON,
+  MAINNET,
+  MAINNET_CONFIG,
+  PRIVATE_CONFIG,
+  PRIVATENET,
+  TESTNET,
+  TESTNET_CONFIG,
+  TESTNET_CONFIG_2,
+  MAINNET_CONFIG_2,
 } from "../consts";
 import { InvokeResult } from "@cityofzion/neon-core/lib/rpc";
 import { ApplicationLogJson } from "@cityofzion/neon-core/lib/rpc/Query";
 import { convertContractCallParam } from "../utils";
 
-export type INetworkType = typeof PRIVATENET | typeof MAINNET | typeof TESTNET
+export type INetworkType = typeof PRIVATENET | typeof MAINNET | typeof TESTNET;
 
 export class Network {
   private static readonly READ_LOG_FREQUENCY = 6000;

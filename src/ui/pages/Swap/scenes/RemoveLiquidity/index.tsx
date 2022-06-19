@@ -8,6 +8,7 @@ import HeaderBetween from "../../../../components/HeaderBetween";
 import { SWAP_PATH } from "../../../../../consts";
 import LPTokenList from "./LPTokenList";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
+import {handleError} from "../../../../../packages/neo/utils/errors";
 
 const RemoveLiquidity = () => {
   const { network, connectedWallet } = useWallet();
@@ -23,8 +24,7 @@ const RemoveLiquidity = () => {
         );
         setTxid(res);
       } catch (e: any) {
-	      console.log(e);
-	      toast.error("An error occurred, Check console.");
+	      toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet");
