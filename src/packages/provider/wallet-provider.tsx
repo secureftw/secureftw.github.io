@@ -26,7 +26,7 @@ export const WalletContextProvider = (props: {
 
   const [connectedWallet, setConnectedWallet] = useState<
     IConnectedWallet | undefined
-  >(props.options.useLocalStorage ? LocalStorage.getWallet() : undefined);
+  >(undefined);
 
   const [invokeScript, setInvokeScript] = useState<
     sc.ContractCallJson | undefined
