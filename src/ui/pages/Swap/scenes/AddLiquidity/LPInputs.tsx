@@ -6,6 +6,7 @@ import { IReserveData } from "../../../../../packages/neo/contracts/ftw/swap/int
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { ITokenState } from "./index";
 import { IConnectedWallet } from "../../../../../packages/neo/wallet/interfaces";
+import {GAS_SCRIPT_HASH} from "../../../../../packages/neo/consts";
 
 interface ILPInputsProps {
   network: INetworkType;
@@ -19,9 +20,8 @@ interface ILPInputsProps {
   setAmountB: (val?: number) => void;
   data?: IReserveData;
   noLiquidity?: boolean;
-  connectedWallet?: IConnectedWallet;
-  isTokenAMaxGas?: any;
-  isTokenBMaxGas?: any;
+  userTokenABalance?: number;
+  userTokenBBalance?: number;
 }
 
 const LPInputs = ({
@@ -35,9 +35,8 @@ const LPInputs = ({
   setAmountB,
   noLiquidity,
   data,
-  connectedWallet,
-  isTokenAMaxGas,
-  isTokenBMaxGas,
+  userTokenABalance,
+  userTokenBBalance,
 }: ILPInputsProps) => {
   const handleChangeAmountA = (val) => {
     setAmountA(val);
@@ -91,15 +90,18 @@ const LPInputs = ({
         decimals={tokenA ? tokenA.decimals : undefined}
         val={amountA}
         setValue={handleChangeAmountA}
-        userBalance={
-          connectedWallet && tokenA && data
-            ? data.userBalances[tokenA.hash]
-            : undefined
+        userBalance={userTokenABalance}
+        balanceOverflow={
+          !!(amountA && userTokenABalance && amountA > userTokenABalance)
         }
         errorMessage={
-          isTokenAMaxGas
-            ? "You need to have GAS for transaction fee"
-            : undefined
+	        tokenA &&
+	        tokenA.hash === GAS_SCRIPT_HASH &&
+	        amountA &&
+	        userTokenABalance &&
+	        amountA === userTokenABalance
+		        ? "You need to have more GAS for a tx fee"
+		        : undefined
         }
       />
       <div className="pt-4 pb-4 has-text-centered">
@@ -116,15 +118,18 @@ const LPInputs = ({
         decimals={tokenB ? tokenB.decimals : undefined}
         val={amountB}
         setValue={handleChangeAmountB}
-        userBalance={
-          connectedWallet && tokenB && data
-            ? data.userBalances[tokenB.hash]
-            : undefined
+        userBalance={userTokenBBalance}
+        balanceOverflow={
+	        !!(amountB && userTokenBBalance && amountB > userTokenBBalance)
         }
         errorMessage={
-          isTokenBMaxGas
-            ? "You need to have GAS for transaction fee"
-            : undefined
+	        tokenB &&
+	        tokenB.hash === GAS_SCRIPT_HASH &&
+	        tokenB &&
+	        userTokenABalance &&
+	        amountB === userTokenBBalance
+		        ? "You need to have more GAS for a tx fee"
+		        : undefined
         }
       />
     </>

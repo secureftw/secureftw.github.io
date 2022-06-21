@@ -19,6 +19,7 @@ interface IInputProps {
   isDisable?: boolean;
   errorMessage?: string;
   decimals?: number;
+  balanceOverflow?: boolean;
 }
 const Input = ({
   contractHash,
@@ -34,6 +35,7 @@ const Input = ({
   userBalance,
   errorMessage,
   decimals,
+  balanceOverflow,
 }: IInputProps) => {
   const { network } = useWallet();
   let logoIcon;
@@ -95,7 +97,7 @@ const Input = ({
               placeholder="0.00"
               decimalScale={decimals !== undefined ? decimals : 8}
               inputMode="decimal"
-              className={`input ${errorMessage ? "is-danger" : ""}`}
+              className={`input ${balanceOverflow ? "is-danger" : ""}`}
               value={val !== undefined ? val : ""}
               allowNegative={false}
               onValueChange={(value, e) => {
@@ -122,7 +124,7 @@ const Input = ({
                       onClick={(e) => {
                         if (userBalance) {
                           // @ts-ignore
-                          setValue(userBalance.toString(), e);
+                          setValue(userBalance, e);
                         }
                       }}
                       className={`is-size-7 ${

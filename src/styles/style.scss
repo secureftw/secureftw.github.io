@@ -78,6 +78,13 @@ For fixed top height
   }
 }
 
+.modal-background{
+  z-index: 9;
+}
+.modal-content{
+  z-index: 10;
+}
+
 .navbar-item {
   img {
     max-height: none;

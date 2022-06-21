@@ -14,11 +14,13 @@ const PairList = ({ onPairClick }: IPairListProps) => {
   }, [connectedWallet, network]);
   return (
     <div>
-	    <h1 className="title is-5 ">Pool List</h1>
+      <h1 className="title is-5 ">Pool List</h1>
       {!isLoaded ? (
         <div>Loading..</div>
       ) : error ? (
         <div>{error}</div>
+      ) : data.length === 0 ? (
+        <div>No available pairs yet</div>
       ) : (
         <div className="panel">
           {data.map((item, i) => {

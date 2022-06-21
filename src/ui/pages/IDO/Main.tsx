@@ -67,108 +67,108 @@ const Main = () => {
     setTxid("");
   };
 
-  const { isLoaded, data } = useOnChainData(() => {
-    return new IDOContract(network).getIDOStatus(connectedWallet);
-  }, [network, connectedWallet, refresh]);
-
-  if (!isLoaded) return <div></div>;
-
-  const totalSales = parseFloat(
-    u.BigInteger.fromNumber(data.totalSales).toDecimal(8)
-  );
-  const totalSalesInPercentage = (totalSales / TOTAL_TOKENS_FOR_SALE) * 100;
-  const availableNEP = parseFloat(
-    u.BigInteger.fromNumber(data.availableBalance).toDecimal(8)
-  );
-  const userBalanceForSwap =
-    token &&
-    data.balances[token.contractHash] &&
-    data.balances[token.contractHash] !== 0
-      ? parseFloat(
-          u.BigInteger.fromNumber(data.balances[token.contractHash]).toDecimal(
-            token.decimals
-          )
-        )
-      : 0;
-  console.log("Available balance " + availableNEP);
+  // const { isLoaded, data } = useOnChainData(() => {
+  //   return new IDOContract(network).getIDOStatus(connectedWallet);
+  // }, [network, connectedWallet, refresh]);
+	//
+  // if (!isLoaded) return <div></div>;
+	//
+  // const totalSales = parseFloat(
+  //   u.BigInteger.fromNumber(data.totalSales).toDecimal(8)
+  // );
+  // const totalSalesInPercentage = (totalSales / TOTAL_TOKENS_FOR_SALE) * 100;
+  // const availableNEP = parseFloat(
+  //   u.BigInteger.fromNumber(data.availableBalance).toDecimal(8)
+  // );
+  // const userBalanceForSwap =
+  //   token &&
+  //   data.balances[token.contractHash] &&
+  //   data.balances[token.contractHash] !== 0
+  //     ? parseFloat(
+  //         u.BigInteger.fromNumber(data.balances[token.contractHash]).toDecimal(
+  //           token.decimals
+  //         )
+  //       )
+  //     : 0;
+  // console.log("Available balance " + availableNEP);
 
   return (
     <>
       <IDOInfo
-        launchAt={data.launchAt}
-        totalSales={(TOTAL_TOKENS_FOR_SALE - availableNEP).toLocaleString()}
-        totalSalesInPercentage={parseFloat(totalSalesInPercentage.toString())}
+        // launchAt={data.launchAt}
+        // totalSales={(TOTAL_TOKENS_FOR_SALE - availableNEP).toLocaleString()}
+        // totalSalesInPercentage={parseFloat(totalSalesInPercentage.toString())}
       />
 
-      {token ? (
-        <div className="box">
-          <div className="block">
-            <Input
-              isDisable={false}
-              heading="Send"
-              onClickAsset={() => {
-                setTokenSelectionModalActive(true);
-              }}
-              contractHash={token.contractHash}
-              symbol={token.symbol}
-              decimals={token.decimals}
-              val={amount}
-              setValue={(value) => {
-                setAmount(value);
-              }}
-              logo={token.logo}
-              userBalance={userBalanceForSwap}
-            />
-            <div className="pt-4 pb-4 has-text-centered">
-              <FaArrowDown size={16} />
-            </div>
-            <Input
-              isReadOnly={true}
-              heading="Receive"
-              onClickAsset={() => {
-                // setTokenSelectionModalActive(true);
-              }}
-              contractHash={NEP_SCRIPT_HASH[network]}
-              symbol={"NEP"}
-              logo={"/symbols/nep.png"}
-              decimals={8}
-              val={amount ? amount * token.amount : undefined}
-              setValue={() => {}}
-              userBalance={undefined}
-            />
-          </div>
-          <div className="block">
-            <button
-              onClick={() => {
-                if (moment().valueOf() >= data.launchAt) {
-                  if (connectedWallet) {
-                    handleExchange();
-                  } else {
-                    toggleWalletSidebar();
-                  }
-                } else {
-                  toast.error("Launched yet");
-                }
-              }}
-              disabled={amount === undefined || amount > userBalanceForSwap}
-              className="button is-fullwidth is-primary"
-            >
-              {totalSales !== TOTAL_TOKENS_FOR_SALE ? "Swap" : "Finished"}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <></>
-      )}
+      {/*{token ? (*/}
+      {/*  <div className="box">*/}
+      {/*    <div className="block">*/}
+      {/*      <Input*/}
+      {/*        isDisable={false}*/}
+      {/*        heading="Send"*/}
+      {/*        onClickAsset={() => {*/}
+      {/*          setTokenSelectionModalActive(true);*/}
+      {/*        }}*/}
+      {/*        contractHash={token.contractHash}*/}
+      {/*        symbol={token.symbol}*/}
+      {/*        decimals={token.decimals}*/}
+      {/*        val={amount}*/}
+      {/*        setValue={(value) => {*/}
+      {/*          setAmount(value);*/}
+      {/*        }}*/}
+      {/*        logo={token.logo}*/}
+      {/*        userBalance={userBalanceForSwap}*/}
+      {/*      />*/}
+      {/*      <div className="pt-4 pb-4 has-text-centered">*/}
+      {/*        <FaArrowDown size={16} />*/}
+      {/*      </div>*/}
+      {/*      <Input*/}
+      {/*        isReadOnly={true}*/}
+      {/*        heading="Receive"*/}
+      {/*        onClickAsset={() => {*/}
+      {/*          // setTokenSelectionModalActive(true);*/}
+      {/*        }}*/}
+      {/*        contractHash={NEP_SCRIPT_HASH[network]}*/}
+      {/*        symbol={"NEP"}*/}
+      {/*        logo={"/symbols/nep.png"}*/}
+      {/*        decimals={8}*/}
+      {/*        val={amount ? amount * token.amount : undefined}*/}
+      {/*        setValue={() => {}}*/}
+      {/*        userBalance={undefined}*/}
+      {/*      />*/}
+      {/*    </div>*/}
+      {/*    <div className="block">*/}
+      {/*      <button*/}
+      {/*        onClick={() => {*/}
+      {/*          if (moment().valueOf() >= data.launchAt) {*/}
+      {/*            if (connectedWallet) {*/}
+      {/*              handleExchange();*/}
+      {/*            } else {*/}
+      {/*              toggleWalletSidebar();*/}
+      {/*            }*/}
+      {/*          } else {*/}
+      {/*            toast.error("Launched yet");*/}
+      {/*          }*/}
+      {/*        }}*/}
+      {/*        disabled={amount === undefined || amount > userBalanceForSwap}*/}
+      {/*        className="button is-fullwidth is-primary"*/}
+      {/*      >*/}
+      {/*        {totalSales !== TOTAL_TOKENS_FOR_SALE ? "Swap" : "Finished"}*/}
+      {/*      </button>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*) : (*/}
+      {/*  <></>*/}
+      {/*)}*/}
 
-      <div className="box">
-        <PaymentSelection
-          network={network}
-          onClick={(token) => {
-            setToken(token);
-          }}
-        />
-      </div>
+      {/*<div className="box">*/}
+      {/*  <PaymentSelection*/}
+      {/*    network={network}*/}
+      {/*    onClick={(token) => {*/}
+      {/*      setToken(token);*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</div>*/}
 
       <Tokenomics />
 

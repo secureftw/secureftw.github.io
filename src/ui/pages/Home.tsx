@@ -18,13 +18,6 @@ const CARDS: {
   link: string;
 }[] = [
   {
-    title: "NEP IDO",
-    type: "IDO",
-    // desc: "Coming soon. Try on our Testnet.",
-    img: "520/nep.png",
-    link: IDO_PATH,
-  },
-  {
     title: "Swap",
     type: "DeFi",
     // desc: "Coming soon. Try on our Testnet.",
@@ -59,6 +52,13 @@ const CARDS: {
     img: "520/rune.png",
     link: GALLERY_PATH,
   },
+	{
+		title: "NEP",
+		type: "Governance token",
+		// desc: "Coming soon. Try on our Testnet.",
+		img: "520/nep.png",
+		link: IDO_PATH,
+	},
   // {
   //   title: "Arena",
   //   type: "GameFi",
@@ -86,11 +86,11 @@ const Home = () => {
               <p className="subtitle">The hub of NEP-17</p>
             </div>
 
-            <div className="columns is-multiline">
+            <div className="columns is-multiline is-mobile">
               {CARDS.map((card) => {
                 return (
-                  <div key={card.title} className="column is-2">
-                    <div className=" is-shadowless">
+                  <div key={card.title} className="column is-2-desktop is-6-mobile">
+                    <div className="is-shadowless">
                       <Link to={card.link}>
                         <figure className="image">
                           <img src={card.img} />
@@ -103,15 +103,8 @@ const Home = () => {
                               {card.title}
                             </Link>
                           </p>
-                          {/*<span className="tag is-primary">{card.type}</span>*/}
                         </div>
                       </div>
-                      {/*<div*/}
-                      {/*  className="content"*/}
-                      {/*  // style={{ minHeight: "100px" }}*/}
-                      {/*>*/}
-                      {/*  {card.desc}*/}
-                      {/*</div>*/}
                     </div>
                   </div>
                 );

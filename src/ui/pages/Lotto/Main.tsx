@@ -21,7 +21,6 @@ const Main = () => {
         const res = await new LottoContract(network).buy(connectedWallet);
         setTxid(res);
       } catch (e: any) {
-        console.log(e);
         toast.error(handleError(e));
       }
     } else {
@@ -40,7 +39,6 @@ const Main = () => {
 
   const voted = data && data.votePrice && data.votePrice !== "100000000";
   const participated = data && data.isAddressParticipated;
-  console.log(data);
   return (
     <>
       <div className="block">

@@ -10,7 +10,6 @@ import ChannelList from "./scenes/ChannelList";
 import Channel from "./scenes/Channel";
 import CreateChannel from "./scenes/CreateChannel";
 import { useWallet } from "../../../packages/provider";
-import PageLayout from "../../components/PageLayout";
 import TestnetOnlyRoute from "../../components/TestnetOnlyRoute";
 
 const Dao = () => {

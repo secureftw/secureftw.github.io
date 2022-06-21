@@ -20,7 +20,7 @@ import SettingDropdown from "./SettingDropdown";
 import { DEFAULT_SLIPPAGE } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import PriceRatio from "../Swap/components/PriceRatio";
 import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
-import {handleError} from "../../../../../packages/neo/utils/errors";
+import { handleError } from "../../../../../packages/neo/utils/errors";
 
 export interface ITokenState {
   hash: string;
@@ -103,7 +103,7 @@ const Liquidity = () => {
           );
           setTxid(res);
         } catch (e: any) {
-	        toast.error(handleError(e));
+          toast.error(handleError(e));
         }
       }
     } else {
@@ -235,8 +235,6 @@ const Liquidity = () => {
       )}
       <div className="is-relative">
         <LPInputs
-          isTokenAMaxGas={isTokenAMaxGas}
-          isTokenBMaxGas={isTokenBMaxGas}
           noLiquidity={noLiquidity}
           network={network}
           tokenA={tokenA}
@@ -248,7 +246,16 @@ const Liquidity = () => {
           setAmountA={setAmountA}
           setAmountB={setAmountB}
           data={data}
-          connectedWallet={connectedWallet}
+          userTokenABalance={
+            connectedWallet && tokenA && data
+              ? data.userBalances[tokenA.hash]
+              : undefined
+          }
+          userTokenBBalance={
+            connectedWallet && tokenB && data
+              ? data.userBalances[tokenB.hash]
+              : undefined
+          }
         />
 
         {connectedWallet ? (
@@ -282,8 +289,8 @@ const Liquidity = () => {
 
               <button
                 disabled={
-                  isTokenAMaxGas ||
-                  isTokenBMaxGas ||
+                  // isTokenAMaxGas ||
+                  // isTokenBMaxGas ||
                   (tokenA &&
                     tokenB &&
                     data &&
@@ -323,7 +330,7 @@ const Liquidity = () => {
 
       {isAssetChangeModalActive && (
         <AssetListModal
-	        activeTokenInput={isAssetChangeModalActive}
+          activeTokenInput={isAssetChangeModalActive}
           tokenAHash={tokenA ? tokenA.hash : undefined}
           tokenBHash={tokenB ? tokenB.hash : undefined}
           onAssetClick={onAssetClick}

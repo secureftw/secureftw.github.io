@@ -128,8 +128,10 @@ const intList = [
   "tokenBDecimals",
   "minTokens",
   "claimable",
-  "dailyReward",
+  "currentAPR",
   "TVL",
+	"APR",
+	"rewardsPerDay",
 ];
 
 const classify = (k: string): any => {

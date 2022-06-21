@@ -54,32 +54,40 @@ const AssetListModal = ({
       ) : (
         <div>
           <h5 className="title is-6 ">Select a token</h5>
-          <nav className="panel">
+          <div className="columns is-multiline is-mobile">
             {assets.length > 0 ? (
               assets.map(({ contractHash, logo, symbol, decimals }) => {
                 return (
-                  <a
+                  <div
+                    className="column is-2-desktop is-3-mobile"
                     onClick={() => onAssetClick(contractHash, symbol, decimals)}
-                    className="panel-block"
+                    // className="panel-block"
                     key={`assets-${contractHash}`}
                   >
-                    <div className="panel-icon">
-                      <img src={logo} />
+                    <div className="box is-hoverable has-text-centered">
+                      <figure
+                        className="image is-32x32"
+                        style={{ margin: "auto" }}
+                      >
+                        <img src={logo} />
+                      </figure>
+
+                      <span className="is-size-7">{symbol}</span>
                     </div>
-                    {symbol}
-                  </a>
+                  </div>
                 );
               })
             ) : (
               <div></div>
             )}
-            <a onClick={() => setCustomInputMode(true)} className="panel-block">
-              <div className="panel-icon">
+
+            <a onClick={() => setCustomInputMode(true)} className="button is-fullwidth is-light">
+              <span className="icon">
                 <FaPlus />
-              </div>
-              Custom contract hash
+              </span>
+              <span>Custom contract hash</span>
             </a>
-          </nav>
+          </div>
         </div>
       )}
     </Modal>

@@ -1,6 +1,5 @@
 import store from "store2";
 import { IConnectedWallet, ITransaction } from "../wallet/interfaces";
-import { FARM_SCRIPT_HASH } from "../contracts/ftw/gas-fi/consts";
 import { RUNE_SCRIPT_HASH } from "../contracts";
 import { MAINNET } from "../consts";
 import { INetworkType } from "../network";
@@ -14,7 +13,6 @@ const SWAP_TOKEN_B = "SWAP_TOKEN_B"
 export class LocalStorage {
   public static initStorage = (network: string): ITransaction[] => {
     const supportContracts = [
-      FARM_SCRIPT_HASH[network],
       RUNE_SCRIPT_HASH[network],
     ];
     const transactions = LocalStorage.getTransactions();
@@ -93,15 +91,3 @@ const validateConnectedWallet = (connectedWallet?: IConnectedWallet) => {
   }
   return connectedWallet;
 };
-//
-// const validateTransaction = (connectedWallet?: IConnectedWallet) => {
-//   if (
-//     !connectedWallet ||
-//     !connectedWallet.account ||
-//     !connectedWallet.provider ||
-//     !connectedWallet.network
-//   ) {
-//     return undefined;
-//   }
-//   return connectedWallet;
-// };

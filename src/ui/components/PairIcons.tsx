@@ -1,0 +1,44 @@
+import React from "react";
+import LogoIcon from "./LogoIcon";
+import { ASSET_LIST } from "../../packages/neo/contracts/ftw/swap/consts";
+import {
+  BNEO_SCRIPT_HASH,
+  GAS_SCRIPT_HASH,
+  UNKNOWN_TOKEN_IMAGE,
+} from "../../packages/neo/consts";
+import { INetworkType } from "../../packages/neo/network";
+import { NEP_SCRIPT_HASH } from "../../packages/neo/contracts/ftw/nep-token/consts";
+
+interface IPairIconsProps {
+  network: INetworkType;
+  tokenA: string;
+  tokenB: string;
+}
+const PairIcons = ({ network, tokenA, tokenB }: IPairIconsProps) => {
+  let token1 = ASSET_LIST[network][tokenA]
+    ? ASSET_LIST[network][tokenA]
+    : undefined;
+
+  let token2 = ASSET_LIST[network][tokenB]
+    ? ASSET_LIST[network][tokenB]
+    : undefined;
+
+  if (token2 && token2.contractHash === NEP_SCRIPT_HASH[network]) {
+    const _token1 = token1;
+    token1 = token2;
+    token2 = _token1;
+  }
+
+  return (
+    <div className="is-flex">
+      <LogoIcon
+        img={token1 && token1.logo ? token1.logo : UNKNOWN_TOKEN_IMAGE}
+      />
+      <LogoIcon
+        img={token2 && token2.logo ? token2.logo : UNKNOWN_TOKEN_IMAGE}
+      />
+    </div>
+  );
+};
+
+export default PairIcons;

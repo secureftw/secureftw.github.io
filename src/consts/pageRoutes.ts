@@ -19,7 +19,6 @@ export const SWAP_PATH_HISTORY = "/swap/history";
 export const SWAP_PATH_LP_LIST = "/swap/providers";
 export const SWAP_PATH_LIQUIDITY_ADD = "/swap/liquidity/add";
 export const SWAP_PATH_LIQUIDITY_REMOVE = "/swap/liquidity/remove";
-export const SWAP_PATH_TRADE = "/swap/trade";
 export const FARM_PATH = "/farm";
 export const FARM_STAKE_PATH = "/farm/stake";
 export const FARM_STAKE_POSITIONS_PATH = "/farm/stake/positions";
@@ -39,14 +38,14 @@ export const IDO_PAGE_ROUTE = {
 export const SWAP_PAGE_ROUTE = {
   label: "Swap",
   path: SWAP_PATH,
-  network: [PRIVATENET, TESTNET],
+  network: [PRIVATENET, TESTNET, MAINNET],
   category: [],
 };
 
 export const FARM_PAGE_ROUTE = {
   label: "Farm",
   path: FARM_PATH,
-  network: [PRIVATENET, TESTNET],
+  network: [PRIVATENET, TESTNET, MAINNET],
   category: [],
 };
 
@@ -72,11 +71,11 @@ export const LOTTO_PAGE_ROUTE = {
 };
 
 export const MENU = [
-  IDO_PAGE_ROUTE,
   SWAP_PAGE_ROUTE,
   FARM_PAGE_ROUTE,
   SMITH_PAGE_ROUTE,
   LOTTO_PAGE_ROUTE,
+	IDO_PAGE_ROUTE,
   DAO_PAGE_ROUTE,
   {
     label: "NFT",

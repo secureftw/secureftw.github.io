@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { IClaimableRewards } from "../../../../../packages/neo/contracts/ftw/farm/interfaces";
 import ModalCard from "../../../../components/Modal";
-import {toDecimal} from "../../../../../packages/neo/utils";
+import { toDecimal } from "../../../../../packages/neo/utils";
+import ClaimList from "./ClaimList";
+import { INetworkType } from "../../../../../packages/neo/network";
+import { IConnectedWallet } from "../../../../../packages/neo/wallet/interfaces";
 
 const ClaimModal = (props: {
+  network: INetworkType;
+  connectedWallet?: IConnectedWallet;
+  refresh: number;
+  pRefresh: number;
   items: IClaimableRewards[];
   onClaim: (v: IClaimableRewards[]) => void;
   onClose: () => void;
@@ -32,47 +39,26 @@ const ClaimModal = (props: {
   return (
     <>
       <ModalCard onClose={() => props.onClose()}>
-        <div>
-          <h1 className="title">Claim rewards</h1>
-          <nav className="panel is-primary">
-            {props.items.map((item, i) => {
-              let isSelected = false;
-              selectedItems.forEach((_item) => {
-                if (
-                  item.tokenA === _item.tokenA &&
-                  item.tokenB === _item.tokenB
-                ) {
-                  isSelected = true;
-                }
-              });
-              return (
-                <label key={`select-${i}`} className="panel-block">
-                  <div className="media-left">
-                    <input
-                      onClick={() => handleToggle(item)}
-                      type="checkbox"
-                      checked={isSelected}
-                    />
-                  </div>
-                  <div className="media">
-                    <div className="media-content content is-small">
-                      {item.tokenASymbol}-{item.tokenBSymbol}
-                      <br /> {toDecimal(item.claimable)} NEP
-                    </div>
-                  </div>
-                </label>
-              );
-            })}
-            <div className="panel-block">
-              <button
-                onClick={() => props.onClaim(selectedItems)}
-                className="button is-warning is-fullwidth"
-              >
-                Claim
-              </button>
-            </div>
-          </nav>
-        </div>
+        <>
+          <h1 className="title is-5">Claim rewards</h1>
+          <div className="box">
+            <ClaimList
+              handleToggle={handleToggle}
+              isClaimNode={true}
+              selectedItems={selectedItems}
+              network={props.network}
+              connectedWallet={props.connectedWallet}
+              refresh={props.pRefresh}
+              pRefresh={props.pRefresh}
+            />
+          </div>
+          <button
+            onClick={() => props.onClaim(selectedItems)}
+            className="button is-primary is-fullwidth"
+          >
+            Claim
+          </button>
+        </>
       </ModalCard>
     </>
   );

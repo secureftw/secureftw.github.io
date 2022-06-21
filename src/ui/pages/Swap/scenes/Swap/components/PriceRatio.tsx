@@ -15,7 +15,7 @@ const PriceRatio = ({
   const [isReversed, setReversed] = useState(false);
   let ratio = amountA / amountB;
   if (isReversed) {
-    ratio = amountA / amountB;
+    ratio = amountB / amountA;
   }
   return (
     <p

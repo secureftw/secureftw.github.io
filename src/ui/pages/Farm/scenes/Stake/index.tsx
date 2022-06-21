@@ -9,22 +9,22 @@ import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 import LPTokenList from "./LPTokenList";
-import {handleError} from "../../../../../packages/neo/utils/errors";
+import { handleError } from "../../../../../packages/neo/utils/errors";
 
-const Stake = () => {
+const Stake = ({ onRefresh }) => {
   const { network, connectedWallet } = useWallet();
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
 
   const location = useLocation();
-	let params = new URLSearchParams(location.search);
+  let params = new URLSearchParams(location.search);
 
   // @ts-ignore
-	const [symbolA] = useState<any>(
+  const [symbolA] = useState<any>(
     params.get("tokenASymbol") ? params.get("tokenASymbol") : undefined
   );
   const [symbolB] = useState<any>(
-	  params.get("tokenBSymbol") ? params.get("tokenBSymbol") : undefined
+    params.get("tokenBSymbol") ? params.get("tokenBSymbol") : undefined
   );
 
   const onStakeLP = async (tokenId) => {
@@ -36,7 +36,7 @@ const Stake = () => {
         );
         setTxid(res);
       } catch (e: any) {
-	      toast.error(handleError(e));
+        toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet");
@@ -44,6 +44,7 @@ const Stake = () => {
   };
 
   const onSuccess = () => {
+    onRefresh();
     setRefresh(refresh + 1);
     setTxid("");
   };

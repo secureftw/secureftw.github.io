@@ -1,20 +1,24 @@
 import React from "react";
-import { TOTAL_TOKENS_FOR_SALE } from "../../../../packages/neo/contracts/ftw/ido/consts";
+import {
+  END_AT,
+  LAUNCH_AT,
+  TOTAL_TOKENS_FOR_SALE,
+} from "../../../../packages/neo/contracts/ftw/ido/consts";
 import LogoIcon from "../../../components/LogoIcon";
 import { NEP_LOGO } from "../../../../packages/neo/contracts/ftw/farm/consts";
 import moment from "moment";
 
 interface IIDOInfoProps {
-  launchAt: number;
-  totalSales: string;
-  totalSalesInPercentage: number;
+  // launchAt: number;
+  // totalSales: string;
+  // totalSalesInPercentage: number;
 }
-const IDOInfo = ({
-  launchAt,
-  totalSales,
-  totalSalesInPercentage,
-}: IIDOInfoProps) => {
-  const launchDateFormat = `${moment(launchAt).utc().format("llll")} UTC`;
+const IDOInfo = ({}: // launchAt,
+// totalSales,
+// totalSalesInPercentage,
+IIDOInfoProps) => {
+  const launchDateFormat = `${moment(LAUNCH_AT).utc().format("lll")} UTC`;
+  const endDateFormat = `${moment(END_AT).utc().format("lll")} UTC`;
   return (
     <div className="box is-shadowless">
       <div className="is-block mb-4">
@@ -29,43 +33,48 @@ const IDOInfo = ({
 
       <hr />
 
-      <div className="block">
-        <p className="has-text-weight-bold heading">
-          Sale progress: {totalSales} NEP
+      <div className="block  has-text-centered">
+        <p className="has-text-weight-bold title is-6 has-text-centered">
+          {/*Sale progress: {totalSales} NEP*/}
+          Total sales: 3,264,370.51 NEP
         </p>
-        <progress
-          className="progress is-info"
-          value={totalSalesInPercentage === 0 ? 0 : totalSalesInPercentage}
-          max="100"
-        >
-          {totalSalesInPercentage}%
-        </progress>
+        <p>
+          {launchDateFormat} ~ {endDateFormat}
+        </p>
+        {/*<progress*/}
+        {/*  className="progress is-info"*/}
+        {/*  value={totalSalesInPercentage === 0 ? 0 : totalSalesInPercentage}*/}
+        {/*  max="100"*/}
+        {/*>*/}
+        {/*  {totalSalesInPercentage}%*/}
+        {/*</progress>*/}
       </div>
 
-      <div className="level">
-        <div className="level-left">
-          <div className="level-item is-block">
-            <p className="has-text-weight-bold heading">Open at</p>
-            <small>{launchDateFormat}</small>
-          </div>
-        </div>
+      {/*<div className="level">*/}
+      {/*  <div className="level-left">*/}
+      {/*    <div className="level-item is-block">*/}
+      {/*      <p className="has-text-weight-bold heading">Open at</p>*/}
+      {/*      <small>{launchDateFormat}</small>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
 
-        <div className="level-right">
-          <div className="level-item is-block">
-            <p className="has-text-weight-bold heading">Tokens for sale</p>
-            <div className="level is-mobile">
-              <div className="level-left">
-                <div className="level-item">
-                  <LogoIcon img={NEP_LOGO} />
-                </div>
-                <div className="level-item">
-                  <small>{TOTAL_TOKENS_FOR_SALE.toLocaleString()} NEP</small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/*  <div className="level-right">*/}
+      {/*    <div className="level-item is-block">*/}
+      {/*      <p className="has-text-weight-bold heading">End at</p>*/}
+      {/*      <small>{endDateFormat}</small>*/}
+      {/*<div className="level is-mobile">*/}
+      {/*  <div className="level-left">*/}
+      {/*    <div className="level-item">*/}
+      {/*      <LogoIcon img={NEP_LOGO} />*/}
+      {/*    </div>*/}
+      {/*    <div className="level-item">*/}
+      {/*      <small>{TOTAL_TOKENS_FOR_SALE.toLocaleString()} NEP</small>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
+      {/*</div>*/}
+      {/*</div>*/}
+      {/*</div>*/}
     </div>
   );
 };

@@ -8,7 +8,6 @@ const Logo = () => {
         width="36px"
         height="36px"
       />
-      {/*<DisplayRandomRune width="36px" height="36px" />*/}
     </>
   );
 };

@@ -46,15 +46,15 @@ const LPTokenItem = ({
           </small>
           <br />
           <small>
-            {withdrawA.toDecimal(data.pair[tokenA].decimals)}{" "}
+            {parseFloat(withdrawA.toDecimal(data.pair[tokenA].decimals))}{" "}
             {data.pair[tokenA].symbol} /{" "}
-            {withdrawB.toDecimal(data.pair[tokenB].decimals)}{" "}
+            {parseFloat(withdrawB.toDecimal(data.pair[tokenB].decimals))}{" "}
             {data.pair[tokenB].symbol}
           </small>
         </p>
         <div className="control">
           <div className="tags has-addons">
-            <span className="tag is-dark">Lock</span>
+            <span className="tag is-dark">Locked until</span>
             <span className="tag is-info">{lock}</span>
           </div>
         </div>

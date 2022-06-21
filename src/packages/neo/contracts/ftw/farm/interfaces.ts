@@ -11,7 +11,7 @@ export interface IStakingPairs {
   tokenB: string;
   tokenASymbol: string;
   tokenBSymbol: string;
-  dailyReward: number;
+  currentAPR: number;
 }
 
 export interface ILPTokens {

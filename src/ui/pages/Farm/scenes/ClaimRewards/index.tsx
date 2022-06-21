@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import { useWallet } from "../../../../../packages/provider";
-import { IClaimableRewards } from "../../../../../packages/neo/contracts/ftw/farm/interfaces";
-import { FaCoins } from "react-icons/fa";
 import ClaimModal from "./ClaimModal";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
@@ -10,12 +8,16 @@ import { toast } from "react-hot-toast";
 import { useApp } from "../../../../../common/hooks/use-app";
 import { toDecimal } from "../../../../../packages/neo/utils";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
-import { SwapContract } from "../../../../../packages/neo/contracts";
 import LogoIcon from "../../../../components/LogoIcon";
 import { NEP_LOGO } from "../../../../../packages/neo/contracts/ftw/farm/consts";
-import {handleError} from "../../../../../packages/neo/utils/errors";
+import { handleError } from "../../../../../packages/neo/utils/errors";
+import CounterUp from "./CounterUp";
+import ClaimList from "./ClaimList";
 
-const ClaimRewards = () => {
+interface IClaimRewardsProps {
+  pRefresh: number;
+}
+const ClaimRewards = ({ pRefresh }: IClaimRewardsProps) => {
   const { toggleWalletSidebar } = useApp();
   const { network, connectedWallet } = useWallet();
   const [txid, setTxid] = useState("");
@@ -37,7 +39,7 @@ const ClaimRewards = () => {
         setClaimModalOpen(false);
         setTxid(res);
       } catch (e: any) {
-	      toast.error(handleError(e));
+        toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet");
@@ -46,7 +48,7 @@ const ClaimRewards = () => {
 
   const { isLoaded, error, data } = useOnChainData(() => {
     return new StakingContract(network).getClaimable(connectedWallet);
-  }, [connectedWallet, network, refresh]);
+  }, [connectedWallet, network, refresh, pRefresh]);
 
   return (
     <div>
@@ -62,17 +64,43 @@ const ClaimRewards = () => {
       </div>
 
       <div className="mb-3">
-        {isLoaded &&
-          data.map((item, i) => {
-            return (
-              <div key={`claim-${i}`} className="media">
-                <div className="media-content content is-small">
-                  {item.tokenASymbol}-{item.tokenBSymbol}
-                  <br /> {toDecimal(item.claimable)} <strong>NEP</strong>
-                </div>
-              </div>
-            );
-          })}
+        <ClaimList
+          handleToggle={(item) => {}}
+          isClaimNode={false}
+          selectedItems={[]}
+          network={network}
+          connectedWallet={connectedWallet}
+          refresh={refresh}
+          pRefresh={pRefresh}
+        />
+        {/*{isLoaded &&*/}
+        {/*  data.map((item, i) => {*/}
+        {/*    return (*/}
+        {/*      <div key={`claim-${i}`} className="media">*/}
+        {/*        <div className="media-content content is-small">*/}
+        {/*          <div className="level">*/}
+        {/*            <div className="level-left">*/}
+        {/*              <div className="level-item">*/}
+        {/*                <span className="has-text-weight-medium">*/}
+        {/*                  {item.tokenASymbol}-{item.tokenBSymbol}*/}
+        {/*                </span>*/}
+        {/*              </div>*/}
+        {/*            </div>*/}
+
+        {/*            <div className="level-right">*/}
+        {/*              <div className="level-item">*/}
+        {/*                <small>APR {item.APR / 100}%</small>*/}
+        {/*              </div>*/}
+        {/*            </div>*/}
+        {/*          </div>*/}
+        {/*          <CounterUp*/}
+        {/*            claimable={item.claimable}*/}
+        {/*            rewardsPerDay={item.rewardsPerDay}*/}
+        {/*          />*/}
+        {/*        </div>*/}
+        {/*      </div>*/}
+        {/*    );*/}
+        {/*  })}*/}
       </div>
       <button
         disabled={isLoaded && data.length === 0}
@@ -90,6 +118,10 @@ const ClaimRewards = () => {
 
       {isClaimModalOpen && (
         <ClaimModal
+          network={network}
+          connectedWallet={connectedWallet}
+          refresh={refresh}
+          pRefresh={pRefresh}
           items={data}
           onClose={() => setClaimModalOpen(false)}
           onClaim={onClaim}

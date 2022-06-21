@@ -7,7 +7,7 @@ import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm"
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
 
-const StakingMain = () => {
+const StakingMain = ({ onRefresh }) => {
   const { network } = useWallet();
   const [refresh, setRefresh] = useState(0);
   const handleRefresh = () => setRefresh(refresh + 1);
@@ -46,10 +46,14 @@ const StakingMain = () => {
             onRefresh={handleRefresh}
           />
         ) : data && data.length > 0 ? (
-          <div>
-            {data.map((item, i) => (
-              <StakingPairCard key={"sc" + i} {...item} />
-            ))}
+          <div className="table-container">
+            <table className="table is-fullwidth is-hoverable">
+              <tbody>
+                {data.map((item, i) => (
+                  <StakingPairCard key={"sc" + i} {...item} />
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : (
           <div></div>

@@ -4,6 +4,7 @@ import { FaExchangeAlt } from "react-icons/fa";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { INetworkType } from "../../../../../packages/neo/network";
 import { ITokenState } from ".";
+import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
 
 interface ISwapInputsProps {
   network: INetworkType;
@@ -16,8 +17,6 @@ interface ISwapInputsProps {
   setAmountA: (val?: number) => void;
   setAmountB: (val?: number) => void;
   noLiquidity?: boolean;
-  isTokenAMaxGas?: any;
-  isTokenBMaxGas?: any;
   userTokenABalance?: number;
   userTokenBBalance?: number;
 }
@@ -40,8 +39,6 @@ const SwapInputs = ({
   setAmountA,
   setAmountB,
   noLiquidity,
-  isTokenAMaxGas,
-  isTokenBMaxGas,
 }: ISwapInputsProps) => {
   const [searchTerm, setSearchTerm] = useState<ISearchTerm>();
   const [isAmountALoading, setAmountALoading] = useState(false);
@@ -95,9 +92,16 @@ const SwapInputs = ({
         decimals={tokenA ? tokenA.decimals : userTokenABalance}
         userBalance={userTokenABalance}
         isLoading={isAmountALoading}
+        balanceOverflow={
+          !!(amountA && userTokenABalance && amountA > userTokenABalance)
+        }
         errorMessage={
-          isTokenAMaxGas
-            ? "You need to have GAS for transaction fee"
+          tokenA &&
+          tokenA.hash === GAS_SCRIPT_HASH &&
+          amountA &&
+          userTokenABalance &&
+          amountA === userTokenABalance
+            ? "You need to have more GAS for a tx fee"
             : undefined
         }
       />
@@ -125,11 +129,6 @@ const SwapInputs = ({
         decimals={tokenB ? tokenB.decimals : undefined}
         userBalance={userTokenBBalance}
         isLoading={isAmountBLoading}
-        errorMessage={
-          isTokenBMaxGas
-            ? "You need to have GAS for transaction fee"
-            : undefined
-        }
       />
     </>
   );

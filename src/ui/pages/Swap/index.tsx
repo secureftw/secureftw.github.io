@@ -7,7 +7,6 @@ import {
   SWAP_PATH_LIQUIDITY_ADD,
   SWAP_PATH_LIQUIDITY_REMOVE,
   SWAP_PATH_LP_LIST,
-  SWAP_PATH_TRADE,
   SWAP_POOL_PATH,
 } from "../../../consts";
 import { Route } from "react-router-dom";
@@ -18,27 +17,17 @@ import Trade from "./scenes/Swap";
 import Pools from "./scenes/Pools";
 import RemoveLiquidity from "./scenes/RemoveLiquidity";
 import Providers from "./scenes/Providers";
-import Main from "./scenes/Main";
-import TestnetOnlyRoute from "../../components/TestnetOnlyRoute";
+import MarketStatus from "./components/CheckMarketStatus";
 
 const Swap = () => {
-  const { network } = useWallet();
-  if (!SWAP_PAGE_ROUTE.network.includes(network)) {
-    return (
-      <TestnetOnlyRoute
-        title={"FTW Swap"}
-        date="Swap launch is schedule on June 21st 6PM (UTC)"
-      />
-    );
-  }
-
   return (
     <div>
       <PageLayout>
         <div className="columns is-centered">
           <div className="column is-half">
+	          <MarketStatus />
             <div className="box is-shadowless">
-              <Route exact={true} path={SWAP_PATH} component={Main} />
+              <Route exact={true} path={SWAP_PATH} component={Trade} />
               <Route path={SWAP_POOL_PATH} component={Pools} />
               <Route path={SWAP_PATH_HISTORY} component={History} />
               <Route path={SWAP_PATH_LP_LIST} component={Providers} />
@@ -47,7 +36,6 @@ const Swap = () => {
                 path={SWAP_PATH_LIQUIDITY_REMOVE}
                 component={RemoveLiquidity}
               />
-              <Route path={SWAP_PATH_TRADE} component={Trade} />
             </div>
           </div>
         </div>

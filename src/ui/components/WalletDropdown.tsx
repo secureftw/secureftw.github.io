@@ -4,8 +4,6 @@ import { IConnectedWallet } from "../../packages/neo/wallet/interfaces";
 import { useWallet } from "../../packages/provider";
 import { useApp } from "../../common/hooks/use-app";
 import { getWalletIcon } from "../../packages/ui/Wallet/helpers";
-import { COLLECTION_PATH } from "../../consts";
-import { NavLink } from "react-router-dom";
 import { NEO_LINE, O3 } from "../../packages/neo/consts";
 import neo3Dapi from "neo3-dapi";
 interface IWalletDropdownProps {
@@ -13,7 +11,7 @@ interface IWalletDropdownProps {
 }
 const WalletDropdown = ({ connectedWallet }: IWalletDropdownProps) => {
   const [isActive, setActive] = useState(false);
-  const { disConnectWallet, connectWallet } = useWallet();
+  const { disConnectWallet } = useWallet();
   const { toggleWalletSidebar } = useApp();
   const handleDisconnectWallet = () => {
     setActive(false);
@@ -24,25 +22,33 @@ const WalletDropdown = ({ connectedWallet }: IWalletDropdownProps) => {
   const onActive = () => setActive(!isActive);
 
   useEffect(() => {
-    const refresh = () => {
-      connectWallet(connectedWallet.key);
-    };
+    // const refresh = () => {
+    //   connectWallet(connectedWallet.key);
+    // };
+
     const disconnected = () => {
+      console.log("Wallet has been switched.");
       disConnectWallet();
     };
 
     if (connectedWallet.key === NEO_LINE) {
-      window.addEventListener("NEOLine.NEO.EVENT.ACCOUNT_CHANGED", refresh);
-      window.addEventListener("NEOLine.NEO.EVENT.NETWORK_CHANGED", refresh);
+      window.addEventListener(
+        "NEOLine.NEO.EVENT.ACCOUNT_CHANGED",
+        disconnected
+      );
+      window.addEventListener(
+        "NEOLine.NEO.EVENT.NETWORK_CHANGED",
+        disconnected
+      );
       window.addEventListener("NEOLine.NEO.EVENT.DISCONNECTED", disconnected);
       return () => {
         window.removeEventListener(
           "NEOLine.NEO.EVENT.ACCOUNT_CHANGED",
-          refresh
+          disconnected
         );
         window.removeEventListener(
           "NEOLine.NEO.EVENT.NETWORK_CHANGED",
-          refresh
+          disconnected
         );
         window.removeEventListener(
           "NEOLine.NEO.EVENT.DISCONNECTED",
@@ -53,12 +59,12 @@ const WalletDropdown = ({ connectedWallet }: IWalletDropdownProps) => {
     if (connectedWallet.key === O3) {
       neo3Dapi.addEventListener(
         neo3Dapi.Constants.EventName.ACCOUNT_CHANGED,
-        refresh
+        disconnected
       );
 
       neo3Dapi.addEventListener(
         neo3Dapi.Constants.EventName.NETWORK_CHANGED,
-        refresh
+        disconnected
       );
 
       neo3Dapi.addEventListener(
@@ -69,11 +75,11 @@ const WalletDropdown = ({ connectedWallet }: IWalletDropdownProps) => {
       return () => {
         neo3Dapi.removeEventListener(
           neo3Dapi.Constants.EventName.ACCOUNT_CHANGED,
-          refresh
+          disconnected
         );
         neo3Dapi.removeEventListener(
           neo3Dapi.Constants.EventName.NETWORK_CHANGED,
-          refresh
+          disconnected
         );
         neo3Dapi.removeEventListener(
           neo3Dapi.Constants.EventName.DISCONNECTED,
@@ -105,14 +111,6 @@ const WalletDropdown = ({ connectedWallet }: IWalletDropdownProps) => {
               </div>
             </div>
           </div>
-          {/*<hr className="dropdown-divider" />*/}
-          {/*<NavLink*/}
-          {/*  className="dropdown-item has-text-dark"*/}
-          {/*  onClick={() => setActive(false)}*/}
-          {/*  to={COLLECTION_PATH}*/}
-          {/*>*/}
-          {/*  My NFT*/}
-          {/*</NavLink>*/}
           <hr className="dropdown-divider" />
           <a onClick={handleDisconnectWallet} className="dropdown-item">
             Disconnect

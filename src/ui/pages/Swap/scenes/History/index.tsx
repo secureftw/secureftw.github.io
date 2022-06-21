@@ -72,7 +72,7 @@ const History = ({ tokenA, tokenB }: IHistoryProps) => {
                 })
               ) : (
                 <tr>
-                  <td>No swap history</td>
+                  <td colSpan={4}>No swap history</td>
                 </tr>
               )
             ) : (

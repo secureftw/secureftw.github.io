@@ -1,55 +1,69 @@
 import React from "react";
 import { useWallet } from "../../../../../packages/provider";
-import PairIcons from "../../components/PairIcons";
 import { IReserve } from "../../../../../packages/neo/contracts/ftw/swap/interfaces";
+import PairIcons from "../../../../components/PairIcons";
+import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
+import { SwapContract } from "../../../../../packages/neo/contracts";
 import { u } from "@cityofzion/neon-core";
-import { withDecimal } from "../../../../../packages/neo/utils";
-// import {numberTrim} from "../../../../../packages/neo/utils";
 
 const PoolCard = ({
   tokenA,
   tokenB,
-  amountA,
-  amountB,
-  tokenASymbol,
-  tokenBSymbol,
   tokenADecimals,
+  tokenASymbol,
   tokenBDecimals,
+  tokenBSymbol,
   onPairClick,
 }: IReserve & {
   onPairClick: (tokenA, tokenB) => void;
 }) => {
   const { network } = useWallet();
-	// const A = u.BigInteger.fromDecimal(amountA, tokenADecimals)
-	// const B = u.BigInteger.fromDecimal(amountB, tokenADecimals)
+  // const A = u.BigInteger.fromDecimal(amountA, tokenADecimals)
+  // const B = u.BigInteger.fromDecimal(amountB, tokenADecimals)
   // const ratioAB = B.div(A);
   // const ratioBA = A.div(B)
+  const { isLoaded, error, data } = useOnChainData(() => {
+    return new SwapContract(network).getReserve(tokenA, tokenB);
+  }, [network]);
+
+  const reserveA =
+    data && data.pair[tokenA] && data.pair[tokenA].reserveAmount !== 0
+      ? u.BigInteger.fromNumber(data.pair[tokenA].reserveAmount).toDecimal(
+          tokenADecimals
+        )
+      : 0;
+  const reserveB =
+    data && data.pair[tokenB] && data.pair[tokenB].reserveAmount !== 0
+      ? u.BigInteger.fromNumber(data.pair[tokenB].reserveAmount).toDecimal(
+          tokenBDecimals
+        )
+      : 0;
+
   return (
-    <a onClick={() => onPairClick(tokenA, tokenB)} className="panel-block">
+    <a
+      onClick={() => onPairClick(tokenA, tokenB)}
+      className="panel-block is-block"
+    >
       <div>
         <div className="level is-mobile">
           <div className="level-left">
             <div className="level-item">
-              <PairIcons
-                network={network}
-                token={tokenA}
-                tokenSymbol={tokenASymbol}
-              />
+              <PairIcons network={network} tokenA={tokenA} tokenB={tokenB} />
             </div>
+            <div className="level-item has-text-weight-medium is-size-7">
+              {tokenASymbol} / {tokenBSymbol}
+            </div>
+          </div>
+          <div className="level-right">
             <div className="level-item">
-              <PairIcons
-                network={network}
-                token={tokenB}
-                tokenSymbol={tokenBSymbol}
-              />
+              <small className="is-size-7">TVL</small>
+	            &nbsp;
+              <small className="is-size-7">
+                {!isLoaded ? "Loading" : `${reserveA} / ${reserveB}`}
+              </small>
             </div>
           </div>
         </div>
-        {/*<div className="content is-small">*/}
-        {/*  {`1 ${tokenASymbol}: ${ratioAB} ${tokenBSymbol}`}*/}
-        {/*  <br />*/}
-        {/*  {`1 ${tokenBSymbol}: ${ratioBA} ${tokenASymbol}`}*/}
-        {/*</div>*/}
       </div>
     </a>
   );

@@ -37,7 +37,8 @@ import HistoryButtons from "./components/HistoryButtons";
 import { getAfterSlippage } from "../../../../../packages/neo/contracts/ftw/swap/helpers";
 import SwapDetails from "./components/SwapDetails";
 import { u } from "@cityofzion/neon-core";
-import {handleError} from "../../../../../packages/neo/utils/errors";
+import { handleError } from "../../../../../packages/neo/utils/errors";
+import { toDecimal } from "../../../../../packages/neo/utils";
 
 export interface ITokenState {
   hash: string;
@@ -145,7 +146,7 @@ const Swap = () => {
           );
           setTxid(res);
         } catch (e: any) {
-	        toast.error(handleError(e));
+          toast.error(handleError(e));
         }
       }
     } else {
@@ -239,17 +240,6 @@ const Swap = () => {
     );
     console.log("Price impact: " + priceImpact.toString());
   }
-
-  const isTokenAMaxGas =
-    tokenA &&
-    tokenA.hash === GAS_SCRIPT_HASH &&
-    data &&
-    amountA &&
-    data.userBalances[tokenA.hash] > 0 &&
-    data.userBalances[tokenA.hash] <= amountA;
-
-  const isTokenBMaxGas = false;
-
   return (
     <div>
       <div className="level">
@@ -335,8 +325,6 @@ const Swap = () => {
       )}
 
       <SwapInputs
-        isTokenAMaxGas={isTokenAMaxGas}
-        isTokenBMaxGas={isTokenBMaxGas}
         noLiquidity={noLiquidity}
         network={network}
         tokenA={tokenA}
@@ -422,8 +410,6 @@ const Swap = () => {
 
       <button
         disabled={
-          isTokenAMaxGas ||
-          isTokenBMaxGas ||
           !amountA ||
           !amountB ||
           (tokenA && data && data.userBalances[tokenA.hash] < amountA) ||

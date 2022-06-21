@@ -8,9 +8,9 @@ import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 import PositionList from "./PositionList";
-import {handleError} from "../../../../../packages/neo/utils/errors";
+import { handleError } from "../../../../../packages/neo/utils/errors";
 
-const MyPositions = () => {
+const MyPositions = ({ onRefresh }) => {
   const { network, connectedWallet } = useWallet();
   const [txid, setTxid] = useState("");
   const [refresh, setRefresh] = useState(0);
@@ -24,7 +24,7 @@ const MyPositions = () => {
         );
         setTxid(res);
       } catch (e: any) {
-	      toast.error(handleError(e));
+        toast.error(handleError(e));
       }
     } else {
       toast.error("Please connect wallet");
@@ -32,6 +32,7 @@ const MyPositions = () => {
   };
 
   const onSuccess = () => {
+    onRefresh();
     setRefresh(refresh + 1);
     setTxid("");
   };
