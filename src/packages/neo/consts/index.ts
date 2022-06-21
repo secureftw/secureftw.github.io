@@ -129,4 +129,9 @@ export const N3F_SCRIPT_HASH = {
 	[TESTNET]: "979b839648d215fe895d559019dedde31fcf45a9",
 	[MAINNET]: "979b839648d215fe895d559019dedde31fcf45a9",
 };
+export const FRANK_SCRIPT_HASH = {
+	[PRIVATENET]: "7e7a84abff782e9f0c60c2fe1cd6b550a32d5cee",
+	[TESTNET]: "7e7a84abff782e9f0c60c2fe1cd6b550a32d5cee",
+	[MAINNET]: "a06cfd7ae9dd7befb7bf8e5b8c5902c969182de0",
+};
 

@@ -1,6 +1,6 @@
 import {
 	BNEO_SCRIPT_HASH,
-	FLM_SCRIPT_HASH,
+	FLM_SCRIPT_HASH, FRANK_SCRIPT_HASH,
 	FTW_SCRIPT_HASH,
 	GAS_SCRIPT_HASH,
 	GM_SCRIPT_HASH,
@@ -53,12 +53,12 @@ export const ASSET_LIST = {
       logo: "/symbols/nep.png",
       decimals: 8,
     },
-    "7e7a84abff782e9f0c60c2fe1cd6b550a32d5cee": {
-      contractHash: "7e7a84abff782e9f0c60c2fe1cd6b550a32d5cee",
-      symbol: "FRANK",
-      logo: "/symbols/frank.png",
-      decimals: 8,
-    },
+	  [FRANK_SCRIPT_HASH[TESTNET]]: {
+		  contractHash: FRANK_SCRIPT_HASH[TESTNET],
+		  symbol: "frank",
+		  logo: "/symbols/frank.png",
+		  decimals: 8,
+	  },
     [MAXI_SCRIPT_HASH[TESTNET]]: {
       contractHash: MAXI_SCRIPT_HASH[TESTNET],
       symbol: "MAXI",
@@ -163,6 +163,12 @@ export const ASSET_LIST = {
       logo: "/symbols/maxi.png",
       decimals: 8,
     },
+	  [FRANK_SCRIPT_HASH[MAINNET]]: {
+		  contractHash: FRANK_SCRIPT_HASH[MAINNET],
+		  symbol: "frank",
+		  logo: "/symbols/frank.png",
+		  decimals: 8,
+	  },
   },
 };
 

@@ -9,11 +9,10 @@ import {
   GAS_SCRIPT_HASH,
   GM_SCRIPT_HASH,
   LRB_SCRIPT_HASH,
-  MAINNET,
   NEO_SCRIPT_HASH,
 } from "../../../consts";
 import { IIDOStatus } from "./interface";
-import { IDO_SCRIPT_HASH, LAUNCH_AT } from "./consts";
+import { IDO_SCRIPT_HASH } from "./consts";
 import { NEP_SCRIPT_HASH } from "../nep-token/consts";
 
 export class IDOContract {
