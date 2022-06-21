@@ -3,11 +3,11 @@ import { Chart } from "react-google-charts";
 
 export const data = [
   ["Distribution", "Tokens"],
-  ["IDO", 50_000_000],
+  ["IDO", 3264370],
   ["Team", 50_000_000],
   ["Marketing", 5_000_000],
-  ["NEP initial pool", 25_000_000],
-  ["Swap reward", 870_000_000],
+  ["NEP initial pool", 1835629],
+  ["Swap reward", 870_000_000 + 44900000],
 ];
 
 export const options = {
