@@ -45,7 +45,7 @@ const PoolCard = ({
       className="panel-block is-block"
     >
       <div>
-        <div className="level is-mobile">
+        <div className="level is-mobile mb-2">
           <div className="level-left">
             <div className="level-item">
               <PairIcons network={network} tokenA={tokenA} tokenB={tokenB} />
@@ -64,6 +64,10 @@ const PoolCard = ({
             </div>
           </div>
         </div>
+	      <div className="is-size-7">
+		      {`${tokenASymbol}: 0x${tokenA}`}<br/>
+		      {`${tokenBSymbol}: 0x${tokenB}`}
+	      </div>
       </div>
     </a>
   );
