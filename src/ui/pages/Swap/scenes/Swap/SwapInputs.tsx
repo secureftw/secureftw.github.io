@@ -58,7 +58,8 @@ const SwapInputs = ({
             tokenB.hash,
             searchTerm.type === "A" ? tokenA.hash : tokenB.hash,
             searchTerm.type === "A" ? tokenA.decimals : tokenB.decimals,
-            searchTerm.value
+            searchTerm.value,
+	          searchTerm.type === "A" ? tokenB.decimals : tokenA.decimals,
           );
           if (searchTerm.type === "A") {
             setAmountBLoading(false);

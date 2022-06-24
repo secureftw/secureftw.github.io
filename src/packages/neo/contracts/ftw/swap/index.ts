@@ -257,7 +257,8 @@ export class SwapContract {
     tokenB,
     swapToken,
     swapTokenDecimals,
-    amount
+    amount,
+    desiredTokenDecimals
   ): Promise<string> => {
     const script = {
       scriptHash: this.contractHash,
@@ -280,7 +281,7 @@ export class SwapContract {
       console.log(
         "Fee: " + u.BigInteger.fromNumber(fee).toDecimal(swapTokenDecimals)
       );
-      return u.BigInteger.fromNumber(estimated).toDecimal(decimals);
+      return u.BigInteger.fromNumber(estimated).toDecimal(desiredTokenDecimals);
     }
   };
 
