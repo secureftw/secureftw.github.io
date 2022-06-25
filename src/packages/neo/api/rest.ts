@@ -30,4 +30,8 @@ export class RestAPI {
   async getRune(tokenId) {
     return this.fetchResult(this.endpoint + "/rune/" + tokenId);
   }
+
+	async getPools() {
+		return this.fetchResult(this.endpoint + "/pools");
+	}
 }

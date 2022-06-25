@@ -27,6 +27,9 @@ export const DAO_PATH = "/dao";
 export const DAO_CHANNEL_CREATE_PATH = "/dao/create";
 export const DAO_CHANNEL_PATH = "/dao/channel";
 export const LOTTO_PATH = "/lotto";
+export const ANALYTICS_PATH = "/analytics";
+export const ANALYTICS_POOLS_PATH = "/analytics/pools";
+export const ANALYTICS_FARM_PATH = "/analytics/farm";
 
 export const IDO_PAGE_ROUTE = {
   label: "IDO",
@@ -63,6 +66,24 @@ export const DAO_PAGE_ROUTE = {
   category: [],
 };
 
+export const ANALYTICS_ROUTE = {
+  label: "Analytics",
+  path: ANALYTICS_PATH,
+  network: [MAINNET],
+  category: [
+    {
+      label: "Pools",
+      path: ANALYTICS_POOLS_PATH,
+      network: [MAINNET],
+    },
+    {
+      label: "Farm",
+      path: ANALYTICS_FARM_PATH,
+      network: [MAINNET],
+    },
+  ],
+};
+
 export const LOTTO_PAGE_ROUTE = {
   label: "Sweepstake",
   path: LOTTO_PATH,
@@ -73,9 +94,10 @@ export const LOTTO_PAGE_ROUTE = {
 export const MENU = [
   SWAP_PAGE_ROUTE,
   FARM_PAGE_ROUTE,
+	ANALYTICS_ROUTE,
   SMITH_PAGE_ROUTE,
   LOTTO_PAGE_ROUTE,
-	IDO_PAGE_ROUTE,
+  IDO_PAGE_ROUTE,
   DAO_PAGE_ROUTE,
   {
     label: "NFT",
