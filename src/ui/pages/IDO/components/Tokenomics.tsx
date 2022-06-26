@@ -45,19 +45,19 @@ const Tokenomics = (props) => {
         })}
       </div>
 
-      <h1 className="title is-5 heading">Tokenomics</h1>
-      <div
-        className="box is-shadowless"
-        style={{ border: "1px solid hsl(0, 0%, 96%)" }}
-      >
-        <Chart
-          chartType="PieChart"
-          data={data}
-          options={options}
-          width={"100%"}
-          height={"400px"}
-        />
-      </div>
+      {/*<h1 className="title is-5 heading">Tokenomics</h1>*/}
+      {/*<div*/}
+      {/*  className="box is-shadowless"*/}
+      {/*  style={{ border: "1px solid hsl(0, 0%, 96%)" }}*/}
+      {/*>*/}
+      {/*  <Chart*/}
+      {/*    chartType="PieChart"*/}
+      {/*    data={data}*/}
+      {/*    options={options}*/}
+      {/*    width={"100%"}*/}
+      {/*    height={"400px"}*/}
+      {/*  />*/}
+      {/*</div>*/}
     </div>
   );
 };
