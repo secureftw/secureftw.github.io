@@ -7,14 +7,12 @@ import { INetworkType } from "../network";
 const CONNECTED_WALLET = "CONNECTED_WALLET";
 const TRANSACTIONS = "TRANSACTIONS";
 const NETWORK = "NETWORK";
-const SWAP_TOKEN_A = "SWAP_TOKEN_A"
-const SWAP_TOKEN_B = "SWAP_TOKEN_B"
+const SWAP_TOKEN_A = "SWAP_TOKEN_A";
+const SWAP_TOKEN_B = "SWAP_TOKEN_B";
 
 export class LocalStorage {
   public static initStorage = (network: string): ITransaction[] => {
-    const supportContracts = [
-      RUNE_SCRIPT_HASH[network],
-    ];
+    const supportContracts = [RUNE_SCRIPT_HASH[network]];
     const transactions = LocalStorage.getTransactions();
     const validatedTx: ITransaction[] = [];
     transactions.forEach((tx) => {

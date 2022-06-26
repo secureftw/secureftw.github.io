@@ -56,17 +56,12 @@ export class IDOContract {
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return wallet.WalletAPI.invoke(
-			connectedWallet,
-      this.network,
-      invokeScript,
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   getIDOStatus = async (
     connectedWallet?: IConnectedWallet
   ): Promise<IIDOStatus> => {
-
     const script1 = {
       scriptHash: this.contractHash,
       operation: "getTotalMint",

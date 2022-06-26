@@ -8,6 +8,7 @@ import { useApp } from "../../../common/hooks/use-app";
 import { LottoContract } from "../../../packages/neo/contracts/ftw/lotto";
 import List from "./List";
 import { handleError } from "../../../packages/neo/utils/errors";
+import { MAINNET } from "../../../packages/neo/consts";
 
 const Main = () => {
   const { toggleWalletSidebar } = useApp();
@@ -68,6 +69,7 @@ const Main = () => {
               </li>
               <li>1 ticket per address.</li>
               <li>5 winners. Each 100 GAS.</li>
+              <li>It ends at 6/27/2022 6PM (UTC)</li>
               <li>Drawing at 6/29/2022 6PM (UTC)</li>
             </ul>
           </div>
@@ -75,7 +77,9 @@ const Main = () => {
       </div>
       <div className="block">
         {isLoaded ? (
-          connectedWallet && data && (voted || participated) ? (
+          connectedWallet &&
+          data &&
+          (voted || (participated && network === MAINNET)) ? (
             <div className="notification is-danger">
               Not eligible. Try a new wallet.
             </div>

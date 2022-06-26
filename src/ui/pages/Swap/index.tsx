@@ -11,7 +11,6 @@ import {
 } from "../../../consts";
 import { Route } from "react-router-dom";
 import Liquidity from "./scenes/AddLiquidity";
-import { useWallet } from "../../../packages/provider";
 import History from "./scenes/History";
 import Trade from "./scenes/Swap";
 import Pools from "./scenes/Pools";

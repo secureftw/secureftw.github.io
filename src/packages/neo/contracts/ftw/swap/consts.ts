@@ -1,15 +1,18 @@
 import {
-	BNEO_SCRIPT_HASH,
-	FLM_SCRIPT_HASH, FRANK_SCRIPT_HASH,
-	FTW_SCRIPT_HASH,
-	GAS_SCRIPT_HASH,
-	GM_SCRIPT_HASH,
-	MAINNET,
-	MAXI_SCRIPT_HASH, N3F_SCRIPT_HASH,
-	NUDES_SCRIPT_HASH,
-	PRIVATENET, TED_SCRIPT_HASH,
-	TESTNET,
-	TTM_SCRIPT_HASH,
+  BNEO_SCRIPT_HASH,
+  FLM_SCRIPT_HASH,
+  FRANK_SCRIPT_HASH,
+  FTW_SCRIPT_HASH,
+  GAS_SCRIPT_HASH,
+  GM_SCRIPT_HASH,
+  MAINNET,
+  MAXI_SCRIPT_HASH,
+  N3F_SCRIPT_HASH,
+  NUDES_SCRIPT_HASH,
+  PRIVATENET,
+  TED_SCRIPT_HASH,
+  TESTNET,
+  TTM_SCRIPT_HASH,
 } from "../../../consts";
 
 import { INetworkType } from "../../../network";
@@ -53,12 +56,12 @@ export const ASSET_LIST = {
       logo: "/symbols/nep.png",
       decimals: 8,
     },
-	  [FRANK_SCRIPT_HASH[TESTNET]]: {
-		  contractHash: FRANK_SCRIPT_HASH[TESTNET],
-		  symbol: "frank",
-		  logo: "/symbols/frank.png",
-		  decimals: 8,
-	  },
+    [FRANK_SCRIPT_HASH[TESTNET]]: {
+      contractHash: FRANK_SCRIPT_HASH[TESTNET],
+      symbol: "frank",
+      logo: "/symbols/frank.png",
+      decimals: 8,
+    },
     [MAXI_SCRIPT_HASH[TESTNET]]: {
       contractHash: MAXI_SCRIPT_HASH[TESTNET],
       symbol: "MAXI",
@@ -145,7 +148,7 @@ export const ASSET_LIST = {
       logo: "/symbols/gm.svg",
       decimals: 8,
     },
-	  [N3F_SCRIPT_HASH[MAINNET]]: {
+    [N3F_SCRIPT_HASH[MAINNET]]: {
       contractHash: [N3F_SCRIPT_HASH[MAINNET]],
       symbol: "N3F",
       logo: "/symbols/n3f.jpg",
@@ -163,12 +166,12 @@ export const ASSET_LIST = {
       logo: "/symbols/maxi.png",
       decimals: 8,
     },
-	  [FRANK_SCRIPT_HASH[MAINNET]]: {
-		  contractHash: FRANK_SCRIPT_HASH[MAINNET],
-		  symbol: "frank",
-		  logo: "/symbols/frank.png",
-		  decimals: 8,
-	  },
+    [FRANK_SCRIPT_HASH[MAINNET]]: {
+      contractHash: FRANK_SCRIPT_HASH[MAINNET],
+      symbol: "frank",
+      logo: "/symbols/frank.png",
+      decimals: 8,
+    },
   },
 };
 

@@ -19,18 +19,20 @@ const SidebarNav = (props) => {
               <li key={`${route.label}${i}`}>
                 {route.category.length > 0 ? (
                   <>
-                    <div
+                    <NavLink
                       onClick={toggleSidebar}
+                      key={`category-${route.label}`}
                       // activeClassName={"is-active"}
-                      // to={route.path}
+                      to={route.path}
                     >
                       {route.label}
-                    </div>
+                    </NavLink>
                     <ul>
                       {route.category.map((item) => {
                         return (
                           <li key={item.label}>
                             <NavLink
+                              onClick={toggleSidebar}
                               key={`category-${item.label}`}
                               activeClassName={"is-active"}
                               to={item.path}
@@ -61,7 +63,7 @@ const SidebarNav = (props) => {
               className="navbar-item"
               href={"http://docs.forthewin.network/"}
             >
-	            Documentation
+              Documentation
             </a>
           </li>
         </ul>

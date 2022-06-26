@@ -1,10 +1,11 @@
 import { CONST } from "../../../index";
 import {
-	BNEO_SCRIPT_HASH,
-	FLM_SCRIPT_HASH,
-	GAS_SCRIPT_HASH,
-	GM_SCRIPT_HASH, LRB_SCRIPT_HASH,
-	NEO_SCRIPT_HASH,
+  BNEO_SCRIPT_HASH,
+  FLM_SCRIPT_HASH,
+  GAS_SCRIPT_HASH,
+  GM_SCRIPT_HASH,
+  LRB_SCRIPT_HASH,
+  NEO_SCRIPT_HASH,
 } from "../../../consts";
 import { INetworkType } from "../../../network";
 
@@ -56,11 +57,11 @@ export const payments = (network: INetworkType) => [
     decimals: 8,
     amount: 4,
   },
-	{
-		contractHash: LRB_SCRIPT_HASH[network],
-		symbol: "LRB",
-		logo: "/symbols/lrb.svg",
-		decimals: 8,
-		amount: 3,
-	},
+  {
+    contractHash: LRB_SCRIPT_HASH[network],
+    symbol: "LRB",
+    logo: "/symbols/lrb.svg",
+    decimals: 8,
+    amount: 3,
+  },
 ];

@@ -53,7 +53,7 @@ const AfterTransactionSubmitted = ({
         ) : isDone ? (
           <CheckMark />
         ) : (
-         <CubeLoading />
+          <CubeLoading />
         )}
       </div>
       <div className="has-background  has-text-centered mt-5">

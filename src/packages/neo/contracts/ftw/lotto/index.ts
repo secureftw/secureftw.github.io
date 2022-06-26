@@ -109,6 +109,6 @@ export class LottoContract {
       throw new Error(res.exception as string);
     }
     // @ts-ignore
-    return parseMapValue(res.stack[0])
+    return parseMapValue(res.stack[0]);
   };
 }

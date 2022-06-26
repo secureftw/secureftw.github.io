@@ -2,23 +2,24 @@ import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import PageLayout from "../../../components/PageLayout";
 import { useWallet } from "../../../../packages/provider";
-import { MAINNET } from "../../../../packages/neo/consts";
-import PairIcons from "../../../components/PairIcons";
+import {MAINNET, UNKNOWN_TOKEN_IMAGE} from "../../../../packages/neo/consts";
 import { RestAPI } from "../../../../packages/neo/api";
 import { numberTrim } from "../../../../packages/neo/utils";
+import LogoIcon from "../../../components/LogoIcon";
+import { ASSET_LIST } from "../../../../packages/neo/contracts/ftw/swap/consts";
 
 const columns = [
   {
     name: "Name",
     selector: (row) => row.name,
     cell: (row) => {
+			const hash = row.id.substring(2);
+			const logo = ASSET_LIST[MAINNET][hash] ? ASSET_LIST[MAINNET][hash].logo : UNKNOWN_TOKEN_IMAGE;
       return (
         <div className="is-flex is-center">
-          {/*<PairIcons*/}
-          {/*  network={MAINNET}*/}
-          {/*  tokenA={row.token_A_id.slice(2)}*/}
-          {/*  tokenB={row.token_B_id.slice(2)}*/}
-          {/*/>*/}
+	        <LogoIcon
+		        img={logo}
+	        />
           <span className="ml-2">{row.name}</span>
         </div>
       );

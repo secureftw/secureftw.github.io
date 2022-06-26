@@ -488,18 +488,18 @@ export class SwapContract {
     return res.stack[0].value.map((item) => parseMapValue(item));
   };
 
-	getMarketStatus = async (): Promise<boolean> => {
-		const scripts = [
-			{
-				scriptHash: this.contractHash,
-				operation: "getMarketStatus",
-				args: [],
-			},
-		];
-		const res = await Network.read(this.network, scripts);
-		if (res.state === "FAULT") {
-			throw new Error(res.exception as string);
-		}
-		return res.stack[0].value as boolean;
-	};
+  getMarketStatus = async (): Promise<boolean> => {
+    const scripts = [
+      {
+        scriptHash: this.contractHash,
+        operation: "getMarketStatus",
+        args: [],
+      },
+    ];
+    const res = await Network.read(this.network, scripts);
+    if (res.state === "FAULT") {
+      throw new Error(res.exception as string);
+    }
+    return res.stack[0].value as boolean;
+  };
 }

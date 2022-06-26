@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import _ from "underscore";
 const getColors = () => _.range(18).map((i) => Math.floor(Math.random() * 256));
 const RuneLoading = () => {
-	const [colors, setColors] = useState(getColors());
+  const [colors, setColors] = useState(getColors());
   const [bg, setBg] = useState("black");
   const [dot1, setDot1] = useState("black");
   const [dot2, setDot2] = useState("black");

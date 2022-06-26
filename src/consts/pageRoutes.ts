@@ -35,28 +35,28 @@ export const ANALYTICS_TOKENS_PATH = "/analytics/tokens";
 export const IDO_PAGE_ROUTE = {
   label: "IDO",
   path: IDO_PATH,
-  network: [PRIVATENET, TESTNET, MAINNET],
+  network: [MAINNET],
   category: [],
 };
 
 export const SWAP_PAGE_ROUTE = {
   label: "Swap",
   path: SWAP_PATH,
-  network: [PRIVATENET, TESTNET, MAINNET],
+  network: [TESTNET, MAINNET],
   category: [],
 };
 
 export const FARM_PAGE_ROUTE = {
   label: "Farm",
   path: FARM_PATH,
-  network: [PRIVATENET, TESTNET, MAINNET],
+  network: [MAINNET],
   category: [],
 };
 
 export const SMITH_PAGE_ROUTE = {
   label: "Smith",
   path: SMITH_PATH,
-  network: [PRIVATENET, TESTNET, MAINNET],
+  network: [TESTNET, MAINNET],
   category: [],
 };
 
@@ -69,14 +69,14 @@ export const DAO_PAGE_ROUTE = {
 
 export const ANALYTICS_ROUTE = {
   label: "Analytics",
-  path: ANALYTICS_PATH,
+  path: ANALYTICS_TOKENS_PATH,
   network: [MAINNET],
   category: [
-	  {
-		  label: "Tokens",
-		  path: ANALYTICS_TOKENS_PATH,
-		  network: [MAINNET],
-	  },
+    {
+      label: "Tokens",
+      path: ANALYTICS_TOKENS_PATH,
+      network: [MAINNET],
+    },
     {
       label: "Pools",
       path: ANALYTICS_POOLS_PATH,
@@ -93,14 +93,14 @@ export const ANALYTICS_ROUTE = {
 export const LOTTO_PAGE_ROUTE = {
   label: "Sweepstake",
   path: LOTTO_PATH,
-  network: [PRIVATENET, TESTNET, MAINNET],
+  network: [MAINNET],
   category: [],
 };
 
 export const MENU = [
   SWAP_PAGE_ROUTE,
   FARM_PAGE_ROUTE,
-	ANALYTICS_ROUTE,
+  ANALYTICS_ROUTE,
   SMITH_PAGE_ROUTE,
   LOTTO_PAGE_ROUTE,
   IDO_PAGE_ROUTE,
@@ -108,25 +108,19 @@ export const MENU = [
   {
     label: "NFT",
     path: GALLERY_PATH,
-    network: [PRIVATENET, TESTNET, MAINNET],
+    network: [MAINNET],
     category: [
       {
         label: "Rune",
         path: GALLERY_PATH,
-        network: [PRIVATENET, TESTNET, MAINNET],
+        network: [MAINNET],
       },
       {
         label: "Arena",
         path: TOURNAMENT_PATH,
-        network: [PRIVATENET, TESTNET, MAINNET],
+        network: [MAINNET],
       },
     ],
-  },
-  {
-    label: "Fusion",
-    path: FUSION_PATH,
-    network: [PRIVATENET],
-    category: [],
   },
   {
     label: "GAS-FI",

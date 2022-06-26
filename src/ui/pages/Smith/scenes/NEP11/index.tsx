@@ -24,9 +24,9 @@ const NEP11Smith = () => {
           <div className="">
             {data && (
               <>
-                <div className="columns is-multiline">
+                <div className="columns is-multiline is-mobile">
                   {data.items.map((item, i) => (
-                    <div key={"contact11" + i} className="column is-3">
+                    <div key={"contact11" + i} className="column is-3-desktop is-6-mobile">
                       <div className="box is-hoverable ">
                         <ContractCard data={item} />
                       </div>

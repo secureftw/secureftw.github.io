@@ -12,9 +12,9 @@ export const getWalletIcon = (key: string) => {
     case CONST.NEO_LINE:
       svg = "/icons/neoline.svg";
       break;
-	  case CONST.NEON:
-		  svg = "/icons/neon.svg";
-		  break;
+    case CONST.NEON:
+      svg = "/icons/neon.svg";
+      break;
     case CONST.ONE_GATE:
       svg = "/icons/onegate.png";
       break;

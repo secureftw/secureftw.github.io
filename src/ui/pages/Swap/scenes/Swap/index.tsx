@@ -242,7 +242,7 @@ const Swap = () => {
   }
   return (
     <div>
-      <div className="level">
+      <div className="level is-mobile">
         <div className="level-left">
           <div className="level-item">
             <h1 className="title is-5 is-marginless ">Swap</h1>

@@ -106,7 +106,7 @@ const stringList = [
   "symbolB",
   "title",
   "description",
-	"author"
+  "author",
 ];
 const addressList = ["owner", "account", "creator"];
 const hash160List = ["contractHash", "tokenA", "tokenB", "tokenIn", "tokenOut"];
@@ -130,8 +130,8 @@ const intList = [
   "claimable",
   "currentAPR",
   "TVL",
-	"APR",
-	"rewardsPerDay",
+  "APR",
+  "rewardsPerDay",
 ];
 
 const classify = (k: string): any => {

@@ -15,7 +15,7 @@ const Banner = () => {
       <div className="hero-body is-center">
         <div className="container">
           <div className="columns">
-            <div className="column is-flex" style={{ alignItems: "center" }}>
+            <div className="column is-flex is-hidden-mobile" style={{ alignItems: "center" }}>
               <figure
                 className="image"
                 style={{ width: "250px", margin: "0 auto" }}

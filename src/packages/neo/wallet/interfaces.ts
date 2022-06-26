@@ -9,8 +9,8 @@ export type IWalletType =
   | typeof NEON;
 
 export interface IConnectedWallet {
-	key: IWalletType;
-	instance: any
+  key: IWalletType;
+  instance: any;
   account: any;
   network?: any;
 }

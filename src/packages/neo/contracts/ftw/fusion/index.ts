@@ -3,7 +3,7 @@ import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { parseProperties } from "../../ttm/nft/helpers";
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
-import {  GAS_SCRIPT_HASH } from "../../../consts";
+import { GAS_SCRIPT_HASH } from "../../../consts";
 import { RUNE_SCRIPT_HASH } from "../rune";
 import { TTM_SCRIPT_HASH } from "../../ttm/nft";
 
@@ -60,11 +60,7 @@ export class FusionContract {
         },
       ],
     };
-    return wallet.WalletAPI.invoke(
-	    connectedWallet,
-      this.network,
-      invokeScript,
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   refund = async (
@@ -100,11 +96,7 @@ export class FusionContract {
         },
       ],
     };
-    return wallet.WalletAPI.invoke(
-			connectedWallet,
-      this.network,
-      invokeScript,
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   getProperties = async (tokenId: string): Promise<object> => {

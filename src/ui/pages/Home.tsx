@@ -82,14 +82,14 @@ const Home = () => {
         <div className="hero-body">
           <div className="container">
             <div className="has-text-centered mb-5">
-              <h1 className="title is-spaced">Forthewin Network</h1>
-              <p className="subtitle">The hub of NEP-17</p>
+              <h1 className="title is-spaced is-size-4-mobile">Forthewin Network</h1>
+              <p className="subtitle is-size-6-mobile">The hub of NEP-17</p>
             </div>
 
             <div className="columns is-multiline is-mobile">
               {CARDS.map((card) => {
                 return (
-                  <div key={card.title} className="column is-2-desktop is-6-mobile">
+                  <div key={card.title} className="column is-2-desktop is-4-mobile">
                     <div className="is-shadowless">
                       <Link to={card.link}>
                         <figure className="image">

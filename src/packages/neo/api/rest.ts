@@ -31,11 +31,11 @@ export class RestAPI {
     return this.fetchResult(this.endpoint + "/rune/" + tokenId);
   }
 
-	async getPools() {
-		return this.fetchResult(this.endpoint + "/pools");
-	}
+  async getPools() {
+    return this.fetchResult(this.endpoint + "/pools");
+  }
 
-	async getTokens() {
-		return this.fetchResult(this.endpoint + "/tokens");
-	}
+  async getTokens() {
+    return this.fetchResult(this.endpoint + "/tokens");
+  }
 }

@@ -8,7 +8,7 @@ const ConnectWalletButton = (props: IConnectWalletButtonProps) => {
   return (
     <button
       onClick={toggleWalletSidebar}
-      className={`button ${props.className ? props.className : "is-primary"}`}
+      className={`button is-fullwidth ${props.className ? props.className : "is-primary"}`}
     >
       Connect your wallet
     </button>

@@ -47,7 +47,7 @@ export class NFTContract {
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return wallet.WalletAPI.invoke(
-			connectedWallet,
+      connectedWallet,
       this.network,
       invokeScript,
       "0.01"
@@ -64,11 +64,7 @@ export class NFTContract {
       args: [],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
-    return wallet.WalletAPI.invoke(
-			connectedWallet,
-      this.network,
-      invokeScript
-    );
+    return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
   getProperties = async (tokenId: string): Promise<IRuneMeta | null> => {

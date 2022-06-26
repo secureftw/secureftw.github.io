@@ -4,6 +4,7 @@ import NumberFormat from "react-number-format";
 import { useWallet } from "../../../../../packages/provider";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import { UNKNOWN_TOKEN_IMAGE } from "../../../../../packages/neo/consts";
+import LogoIcon from "../../../../components/LogoIcon";
 
 interface IInputProps {
   contractHash: string;
@@ -50,7 +51,7 @@ const Input = ({
   // const noFund = userBalance && val && val > userBalance
   return (
     <div className="">
-      <div className="columns">
+      <div className="columns" style={{ alignItems: "center" }}>
         <div className="column is-narrow">
           <div style={{ width: "150px" }}>
             <div
@@ -69,7 +70,7 @@ const Input = ({
                   }}
                   className="image is-clickable is-flex"
                 >
-                  <img src={logoIcon ? logoIcon : UNKNOWN_TOKEN_IMAGE} />
+                  <LogoIcon img={logoIcon ? logoIcon : UNKNOWN_TOKEN_IMAGE} />
                 </div>
               </div>
               <div
