@@ -30,6 +30,7 @@ export const LOTTO_PATH = "/lotto";
 export const ANALYTICS_PATH = "/analytics";
 export const ANALYTICS_POOLS_PATH = "/analytics/pools";
 export const ANALYTICS_FARM_PATH = "/analytics/farm";
+export const ANALYTICS_TOKENS_PATH = "/analytics/tokens";
 
 export const IDO_PAGE_ROUTE = {
   label: "IDO",
@@ -71,6 +72,11 @@ export const ANALYTICS_ROUTE = {
   path: ANALYTICS_PATH,
   network: [MAINNET],
   category: [
+	  {
+		  label: "Tokens",
+		  path: ANALYTICS_TOKENS_PATH,
+		  network: [MAINNET],
+	  },
     {
       label: "Pools",
       path: ANALYTICS_POOLS_PATH,

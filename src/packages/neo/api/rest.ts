@@ -34,4 +34,8 @@ export class RestAPI {
 	async getPools() {
 		return this.fetchResult(this.endpoint + "/pools");
 	}
+
+	async getTokens() {
+		return this.fetchResult(this.endpoint + "/tokens");
+	}
 }

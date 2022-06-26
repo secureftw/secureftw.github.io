@@ -14,24 +14,29 @@ const columns = [
     cell: (row) => {
       return (
         <div className="is-flex is-center">
-          <PairIcons
-            network={MAINNET}
-            tokenA={row.token_A_id.slice(2)}
-            tokenB={row.token_B_id.slice(2)}
-          />
+          {/*<PairIcons*/}
+          {/*  network={MAINNET}*/}
+          {/*  tokenA={row.token_A_id.slice(2)}*/}
+          {/*  tokenB={row.token_B_id.slice(2)}*/}
+          {/*/>*/}
           <span className="ml-2">{row.name}</span>
         </div>
       );
     },
   },
   {
-    name: "TVL",
+    name: "Price",
+    selector: (row) => (row.price > 0 ? "$" + numberTrim(row.price, 5) : "-"),
+  },
+  {
+    name: "Liquidity",
     selector: (row) =>
-      row.tvlInUSD > 0 ? "$" + numberTrim(row.tvlInUSD) : "-",
+      row.liquidity > 0 ? numberTrim(row.liquidity, 2) + " " + row.symbol : "-",
   },
   {
     name: "Volume",
-    selector: (row) => (row.volume > 0 ? "$" + numberTrim(row.volume) : "-"),
+    selector: (row) =>
+      row.volume > 0 ? numberTrim(row.volume, 2) + " " + row.symbol : "-",
   },
   // {
   //   name: "Fees",
@@ -39,7 +44,7 @@ const columns = [
   // },
 ];
 
-const PoolAnalytics = (props) => {
+const TokensAnalytics = (props) => {
   const { network } = useWallet();
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
@@ -47,7 +52,7 @@ const PoolAnalytics = (props) => {
     async function fetch() {
       try {
         setLoading(true);
-        const res = await new RestAPI(network).getPools();
+        const res = await new RestAPI(network).getTokens();
         setData(res);
         setLoading(false);
       } catch (e: any) {
@@ -62,7 +67,7 @@ const PoolAnalytics = (props) => {
       <section className="hero is-white is-small">
         <div className="hero-body">
           <div className="container">
-            <h1 className="title">Pool Analytics</h1>
+            <h1 className="title">Token Analytics</h1>
             {/*<p className="subtitle is-6">*/}
             {/*  Click on the column name to sort pairs by its TVL, volume, fees or*/}
             {/*  APY.*/}
@@ -83,4 +88,4 @@ const PoolAnalytics = (props) => {
   );
 };
 
-export default PoolAnalytics;
+export default TokensAnalytics;
