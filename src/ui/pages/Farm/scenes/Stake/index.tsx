@@ -50,7 +50,7 @@ const Stake = ({ onRefresh }) => {
   };
   return (
     <div>
-      <HeaderBetween path={FARM_PATH} title={`Stake ${symbolA}-${symbolB}`} />
+      <HeaderBetween path={FARM_PATH} title={`Stake LP tokens`} />
       <hr />
       {connectedWallet ? (
         <LPTokenList

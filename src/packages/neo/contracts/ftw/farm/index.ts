@@ -159,34 +159,35 @@ export class StakingContract {
     }
     return parsePairsMap(res as any);
   };
-
-  getLPTokens = async (connectedWallet: IConnectedWallet, symbolA, symbolB) => {
-    const swapContract = new SwapContract(this.network);
-    const scripts = [
-      {
-        scriptHash: swapContract.contractHash,
-        operation: "tokensOf",
-        args: [{ type: "Address", value: connectedWallet.account.address }],
-      },
-    ];
-
-    const res = await Network.read(this.network, scripts);
-    if (res.state === "FAULT") {
-      throw new Error(res.exception as string);
-    }
-    const tokens: object[] = [];
-    // @ts-ignore
-    for await (const item of res.stack[0].iterator) {
-      const tokenId = u.HexString.fromBase64(item.value as string).toAscii();
-      if (tokenId.includes(`${symbolA}-${symbolB}`)) {
-        const properties = await swapContract.getProperties(tokenId);
-        if (properties) {
-          tokens.push({ tokenId, ...properties });
-        }
-      }
-    }
-    return tokens;
-  };
+	//Deprecate
+  // getLPTokens = async (connectedWallet: IConnectedWallet, symbolA, symbolB) => {
+  //   const swapContract = new SwapContract(this.network);
+  //   const scripts = [
+  //     {
+  //       scriptHash: swapContract.contractHash,
+  //       operation: "getLPTokensByUser",
+  //       args: [{ type: "Address", value: connectedWallet.account.address }],
+  //     },
+  //   ];
+	//
+  //   const res = await Network.read(this.network, scripts);
+	// 	console.log(res)
+  //   if (res.state === "FAULT") {
+  //     throw new Error(res.exception as string);
+  //   }
+  //   const tokens: object[] = [];
+  //   // @ts-ignore
+  //   for await (const item of res.stack[0].iterator) {
+  //     const tokenId = u.HexString.fromBase64(item.value as string).toAscii();
+  //     if (tokenId.includes(`${symbolA}-${symbolB}`)) {
+  //       const properties = await swapContract.getProperties(tokenId);
+  //       if (properties) {
+  //         tokens.push({ tokenId, ...properties });
+  //       }
+  //     }
+  //   }
+  //   return tokens;
+  // };
 
   getStakedLPTokens = async (
     connectedWallet: IConnectedWallet
