@@ -160,7 +160,7 @@ export class SwapContract {
         {
           account: senderHash,
           scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [this.contractHash, tokenA, tokenB],
+          allowedContracts: [this.contractHash, tokenA],
         },
       ],
     };
