@@ -8,7 +8,7 @@ const List = ({ network }: any) => {
   }, [network]);
   return (
     <div className="box is-shadowless">
-      <h5 className="title is-5">Latest tickets</h5>
+      <h5 className="title is-5">Tickets</h5>
       {data ? (
         <div className="table-container">
           <table className=" table is-fullwidth">

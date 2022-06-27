@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useWallet } from "../../../packages/provider";
-import { useOnChainData } from "../../../common/hooks/use-onchain-data";
 import Modal from "../../components/Modal";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
 import toast from "react-hot-toast";
@@ -8,7 +7,6 @@ import { useApp } from "../../../common/hooks/use-app";
 import { LottoContract } from "../../../packages/neo/contracts/ftw/lotto";
 import List from "./List";
 import { handleError } from "../../../packages/neo/utils/errors";
-import { MAINNET } from "../../../packages/neo/consts";
 
 const Main = () => {
   const { toggleWalletSidebar } = useApp();
@@ -33,13 +31,13 @@ const Main = () => {
     setRefresh(refresh + 1);
     setTxid("");
   };
-
-  const { isLoaded, data } = useOnChainData(() => {
-    return new LottoContract(network).getStatus(connectedWallet);
-  }, [network, connectedWallet, refresh]);
-
-  const voted = data && data.votePrice && data.votePrice !== "100000000";
-  const participated = data && data.isAddressParticipated;
+  //
+  // const { isLoaded, data } = useOnChainData(() => {
+  //   return new LottoContract(network).getStatus(connectedWallet);
+  // }, [network, connectedWallet, refresh]);
+  //
+  // const voted = data && data.votePrice && data.votePrice !== "100000000";
+  // const participated = data && data.isAddressParticipated;
   return (
     <>
       <div className="block">
@@ -54,8 +52,9 @@ const Main = () => {
           </div>
           <div className="column is-mobile">
             <div className="box is-shadowless has-text-centered">
-              <div className="heading">Tickets in the pool</div>
-              <strong>{data ? data.tickets : ""}</strong>
+              <div className="heading">Available tickets</div>
+              {/*<strong>{data ? data.tickets : ""}</strong>*/}
+              <strong>0</strong>
             </div>
           </div>
         </div>
@@ -76,28 +75,32 @@ const Main = () => {
         </div>
       </div>
       <div className="block">
-        {isLoaded ? (
-          connectedWallet &&
-          data &&
-          (voted || (participated && network === MAINNET)) ? (
-            <div className="notification is-danger">
-              Not eligible. Try a new wallet.
-            </div>
-          ) : (
-            <button
-              onClick={() => {
-                handleExchange();
-              }}
-              className="button is-fullwidth is-primary"
-            >
-              Get a ticket
-            </button>
-          )
-        ) : (
-          <button className="button is-loading is-primary is-fullwidth ">
-            Loading
-          </button>
-        )}
+        <div className="notification is-primary">
+          The event has ended. Winners Drawing will take place at 6/29/2022 6PM
+          (UTC). We will announce winners in here.
+        </div>
+        {/*{isLoaded ? (*/}
+        {/*  connectedWallet &&*/}
+        {/*  data &&*/}
+        {/*  (voted || (participated && network === MAINNET)) ? (*/}
+        {/*    <div className="notification is-danger">*/}
+        {/*      Not eligible. Try a new wallet.*/}
+        {/*    </div>*/}
+        {/*  ) : (*/}
+        {/*    <button*/}
+        {/*      onClick={() => {*/}
+        {/*        handleExchange();*/}
+        {/*      }}*/}
+        {/*      className="button is-fullwidth is-primary"*/}
+        {/*    >*/}
+        {/*      Get a ticket*/}
+        {/*    </button>*/}
+        {/*  )*/}
+        {/*) : (*/}
+        {/*  <button className="button is-loading is-primary is-fullwidth ">*/}
+        {/*    Loading*/}
+        {/*  </button>*/}
+        {/*)}*/}
       </div>
       <List network={network} />
       {txid && (
