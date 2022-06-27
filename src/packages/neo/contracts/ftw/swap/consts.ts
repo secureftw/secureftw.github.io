@@ -109,7 +109,7 @@ export const ASSET_LIST = {
     [NEP_SCRIPT_HASH[MAINNET]]: {
       contractHash: NEP_SCRIPT_HASH[MAINNET],
       symbol: "NEP",
-      logo: "/symbols/nep.svg",
+      logo: "/symbols/nep.png",
       decimals: 8,
     },
     [GAS_SCRIPT_HASH]: {

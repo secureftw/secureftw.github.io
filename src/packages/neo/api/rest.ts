@@ -38,4 +38,8 @@ export class RestAPI {
   async getTokens() {
     return this.fetchResult(this.endpoint + "/tokens");
   }
+
+	async getFarms() {
+		return this.fetchResult(this.endpoint + "/farms");
+	}
 }
