@@ -56,7 +56,7 @@ const PoolCard = ({
               <strong>{tokenASymbol}</strong> (
               <TruncatedAddress address={`0x${tokenA}`} />) /{" "}
               <strong>{tokenBSymbol}</strong> (
-              <TruncatedAddress address={`0x${tokenBSymbol}`} />)
+              <TruncatedAddress address={`0x${tokenB}`} />)
             </div>
             <div>
               <small className="is-size-7">TVL</small>
