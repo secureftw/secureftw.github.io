@@ -134,3 +134,9 @@ export const FRANK_SCRIPT_HASH = {
   [TESTNET]: "7e7a84abff782e9f0c60c2fe1cd6b550a32d5cee",
   [MAINNET]: "a06cfd7ae9dd7befb7bf8e5b8c5902c969182de0",
 };
+export const HOOD_SCRIPT_HASH = {
+	[PRIVATENET]: "",
+	[TESTNET]: "465f444cb15bab93501099403d40938ed8eae0b3",
+	[MAINNET]: "",
+};
+
