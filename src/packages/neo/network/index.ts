@@ -59,6 +59,11 @@ export class Network {
     return rawTx;
   };
 
+	static getContactState = (networkType: INetworkType, scriptHash: string) => {
+		const rpc = this.getRPCClient(networkType)
+		return rpc.getContractState(scriptHash);
+	}
+
   static findNotificationFromTxId = async (
     txId: string,
     scriptHash: string,
