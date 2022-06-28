@@ -19,7 +19,6 @@ import { FaAngleLeft } from "react-icons/fa";
 import SettingDropdown from "./SettingDropdown";
 import { DEFAULT_SLIPPAGE } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import PriceRatio from "../Swap/components/PriceRatio";
-import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
 import { handleError } from "../../../../../packages/neo/utils/errors";
 
 export interface ITokenState {
@@ -179,22 +178,6 @@ const Liquidity = () => {
       data &&
       data.pair[tokenB.hash] &&
       data.pair[tokenB.hash].reserveAmount === 0);
-
-  const isTokenAMaxGas =
-    tokenA &&
-    tokenA.hash === GAS_SCRIPT_HASH &&
-    data &&
-    amountA &&
-    data.userBalances[tokenA.hash] > 0 &&
-    data.userBalances[tokenA.hash] <= amountA;
-
-  const isTokenBMaxGas =
-    tokenB &&
-    tokenB.hash === GAS_SCRIPT_HASH &&
-    data &&
-    amountB &&
-    data.userBalances[tokenB.hash] > 0 &&
-    data.userBalances[tokenB.hash] <= amountB;
 
   const toMain = {
     pathname: `${SWAP_PATH}`,
