@@ -350,7 +350,7 @@ const Swap = () => {
       {tokenA && tokenB && data && !noLiquidity ? (
         <>
           <hr />
-          <div className="level">
+          <div className="level is-mobile">
             <div className="level-left">
               <div className="level-item">
                 {amountA && amountB ? (

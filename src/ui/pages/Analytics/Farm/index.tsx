@@ -51,13 +51,13 @@ const FarmAnalytics = (props) => {
 				setData(res);
 				setLoading(false);
 			} catch (e: any) {
+				console.log(e)
 				setLoading(false);
 				// setError(e.message);
 			}
 		}
 		fetch();
 	}, []);
-	console.log(data)
   return (
     <div>
       <section className="hero is-white is-small">

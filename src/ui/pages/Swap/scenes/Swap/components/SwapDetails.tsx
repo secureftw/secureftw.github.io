@@ -24,9 +24,9 @@ const SwapDetails = ({
   const tolerance = numberTrim(getAfterSlippage(amountB, slippage), decimalsB);
   const expected = numberTrim(amountB, decimalsB);
   return (
-    <div className="message content is-small">
+    <div className="message content is-small" style={{ overflow: "scroll" }}>
       <div className="message-body">
-        <div className="level mb-1">
+        <div className="level mb-1 is-mobile">
           <div className="level-left">
             <div className="level-item">Expected output</div>
           </div>
@@ -39,7 +39,7 @@ const SwapDetails = ({
             </div>
           </div>
         </div>
-        <div className="level mb-5">
+        <div className="level mb-5 is-mobile">
           <div className="level-left">
             <div className="level-item">Price impact</div>
           </div>
@@ -48,7 +48,7 @@ const SwapDetails = ({
           </div>
         </div>
 
-        <div className="level mb-1">
+        <div className="level mb-1 is-mobile">
           <div className="level-left">
             <div className="level-item">
               Minimum received after slippage ({slippage} %)
@@ -66,7 +66,7 @@ const SwapDetails = ({
           </div>
         </div>
 
-        <div className="level mb-1">
+        <div className="level mb-1 is-mobile">
           <div className="level-left">
             <div className="level-item">Liquidity provider fee</div>
           </div>

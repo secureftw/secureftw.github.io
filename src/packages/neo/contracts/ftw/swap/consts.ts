@@ -26,6 +26,7 @@ export const DEFAULT_SLIPPAGE = 3;
 
 export const PRICE_IMPACT_LIMIT = 100;
 
+// address: NZaRfXQyyVam8pdpHU5GUZax3iv5mKTT2q
 export const SWAP_SCRIPT_HASH = {
   [PRIVATENET]: "",
   [TESTNET]: "997ced5777a3f66485d66828bda3864b8c8bdf95",

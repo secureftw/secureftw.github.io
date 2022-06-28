@@ -7,7 +7,6 @@ import {
   TESTNET,
   TESTNET_CONFIG,
   TESTNET_CONFIG_2,
-  MAINNET_CONFIG_2,
 } from "../consts";
 import { InvokeResult } from "@cityofzion/neon-core/lib/rpc";
 import { ApplicationLogJson } from "@cityofzion/neon-core/lib/rpc/Query";
@@ -44,7 +43,7 @@ export class Network {
         config = TESTNET_CONFIG_2;
         break;
       case MAINNET:
-        config = MAINNET_CONFIG_2;
+        config = MAINNET_CONFIG;
         break;
     }
     const rpcClient = new rpc.RPCClient(config.url);

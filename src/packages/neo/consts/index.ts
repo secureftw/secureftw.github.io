@@ -57,11 +57,6 @@ export const MAINNET_CONFIG = {
   url: "https://n3seed2.ngd.network:10332",
 };
 
-export const MAINNET_CONFIG_2 = {
-  label: "N3MainNet",
-  url: "https://mainnet1.neo.coz.io:443",
-};
-
 /* Contract hashes */
 export const GAS_SCRIPT_HASH = NEON_CONST.NATIVE_CONTRACT_HASH.GasToken;
 export const NEO_SCRIPT_HASH = NEON_CONST.NATIVE_CONTRACT_HASH.NeoToken;

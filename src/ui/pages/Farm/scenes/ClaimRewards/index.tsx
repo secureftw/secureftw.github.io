@@ -6,12 +6,10 @@ import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import { toast } from "react-hot-toast";
 import { useApp } from "../../../../../common/hooks/use-app";
-import { toDecimal } from "../../../../../packages/neo/utils";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import LogoIcon from "../../../../components/LogoIcon";
 import { NEP_LOGO } from "../../../../../packages/neo/contracts/ftw/farm/consts";
 import { handleError } from "../../../../../packages/neo/utils/errors";
-import CounterUp from "./CounterUp";
 import ClaimList from "./ClaimList";
 
 interface IClaimRewardsProps {
@@ -73,34 +71,6 @@ const ClaimRewards = ({ pRefresh }: IClaimRewardsProps) => {
           refresh={refresh}
           pRefresh={pRefresh}
         />
-        {/*{isLoaded &&*/}
-        {/*  data.map((item, i) => {*/}
-        {/*    return (*/}
-        {/*      <div key={`claim-${i}`} className="media">*/}
-        {/*        <div className="media-content content is-small">*/}
-        {/*          <div className="level">*/}
-        {/*            <div className="level-left">*/}
-        {/*              <div className="level-item">*/}
-        {/*                <span className="has-text-weight-medium">*/}
-        {/*                  {item.tokenASymbol}-{item.tokenBSymbol}*/}
-        {/*                </span>*/}
-        {/*              </div>*/}
-        {/*            </div>*/}
-
-        {/*            <div className="level-right">*/}
-        {/*              <div className="level-item">*/}
-        {/*                <small>APR {item.APR / 100}%</small>*/}
-        {/*              </div>*/}
-        {/*            </div>*/}
-        {/*          </div>*/}
-        {/*          <CounterUp*/}
-        {/*            claimable={item.claimable}*/}
-        {/*            rewardsPerDay={item.rewardsPerDay}*/}
-        {/*          />*/}
-        {/*        </div>*/}
-        {/*      </div>*/}
-        {/*    );*/}
-        {/*  })}*/}
       </div>
       <button
         disabled={isLoaded && data.length === 0}

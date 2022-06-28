@@ -48,7 +48,7 @@ const ClaimList = ({
                 </div>
               )}
               <div className="media-content content is-small">
-                <div className="level">
+                <div className="level is-mobile">
                   <div className="level-left">
                     <div className="level-item">
                       <span className="has-text-weight-medium">

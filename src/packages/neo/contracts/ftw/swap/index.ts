@@ -14,6 +14,8 @@ import {
   ISwapsHistory,
 } from "./interfaces";
 import { SMITH_SCRIPT_HASH } from "../smith/consts";
+import {Signer, WitnessConditionType} from "@cityofzion/neon-core/lib/tx";
+import {WitnessRule, WitnessRuleAction} from "@cityofzion/neon-core/lib/tx/components/WitnessRule";
 
 export class SwapContract {
   network: INetworkType;
@@ -75,14 +77,31 @@ export class SwapContract {
           value: slippage,
         },
       ],
-      signers: [
-        {
-          account: senderHash,
-          scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [this.contractHash, tokenA, tokenB],
-        },
-      ],
+	    signers: [
+		    {
+			    account: senderHash,
+			    scopes: tx.WitnessScope.CustomContracts,
+			    allowedContracts: [this.contractHash, tokenA, tokenB],
+		    },
+	    ],
+      // signers: [
+      //   {
+      //     account: senderHash,
+      //     scopes: tx.WitnessScope.WitnessRules,
+	    //     rules: [
+		  //       {
+			//         action: WitnessRuleAction.Allow,
+			//         condition: {
+			// 	        type: WitnessConditionType.And,
+			// 	        hash: this.contractHash,
+			//         }
+		  //       }
+	    //     ]
+      //   },
+      // ],
     };
+
+
     return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
