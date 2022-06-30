@@ -1,10 +1,10 @@
 import React from "react";
-import { FaAngleDown } from "react-icons/fa";
+import { FaAngleDown, FaInfoCircle } from "react-icons/fa";
 import NumberFormat from "react-number-format";
 import { useWallet } from "../../../../../packages/provider";
 import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
-import { UNKNOWN_TOKEN_IMAGE } from "../../../../../packages/neo/consts";
 import LogoIcon from "../../../../components/LogoIcon";
+import { BsQuestionSquare } from "react-icons/bs";
 
 interface IInputProps {
   contractHash: string;
@@ -53,41 +53,84 @@ const Input = ({
     <div className="">
       <div className="columns" style={{ alignItems: "center" }}>
         <div className="column is-narrow">
-          <div style={{ width: "150px" }}>
-            <div
-              className="media"
-              style={{ alignItems: "center", display: "flex" }}
-            >
-              <div className="media-left">
-                <div
-                  onClick={onClickAsset}
-                  style={{
-                    maxWidth: "50px",
-                    maxHeight: "50px",
-                    width: "50px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                  className="image is-clickable is-flex"
-                >
-                  <LogoIcon img={logoIcon ? logoIcon : UNKNOWN_TOKEN_IMAGE} />
+          <div>
+            <div className="level is-mobile">
+              <div className="level-left">
+                <div className="level-item mr-4">
+                  {logoIcon ? (
+                    <LogoIcon width="35px" height="35px" img={logoIcon} />
+                  ) : (
+                    <div
+                      className="circular--portrait"
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        borderRadius: "50%",
+                        background: "white",
+                        width: "35px",
+                        height: "35px",
+                      }}
+                    >
+                      <BsQuestionSquare size={25} />
+                    </div>
+                  )}
                 </div>
-              </div>
-              <div
-                onClick={onClickAsset}
-                className="media-content is-clickable"
-              >
-                {heading && <p className="heading">{heading}</p>}
-                <div style={{ alignItems: "center", display: "flex" }}>
-                  <span className="has-text-weight-bold">
-                    {symbol ? symbol : "Select"}
-                  </span>
-                  <span className="icon">
-                    <FaAngleDown />
-                  </span>
+                <div className="level-item">
+                  <div
+                    onClick={onClickAsset}
+                    className="is-clickable"
+                    style={{ width: "60px" }}
+                  >
+                    {heading && <p className="heading">{heading}</p>}
+                    <div style={{ alignItems: "center", display: "flex" }}>
+                      <span className="has-text-weight-bold">
+                        {symbol ? symbol : "Select"}
+                      </span>
+                      <span className="icon">
+                        <FaAngleDown />
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/*<div*/}
+            {/*  className="media"*/}
+            {/*  style={{ alignItems: "center", display: "flex" }}*/}
+            {/*>*/}
+            {/*  <div className="media-left">*/}
+            {/*    <div*/}
+            {/*      onClick={onClickAsset}*/}
+            {/*      style={{*/}
+            {/*        maxWidth: "50px",*/}
+            {/*        maxHeight: "50px",*/}
+            {/*        width: "50px",*/}
+            {/*        alignItems: "center",*/}
+            {/*        justifyContent: "center",*/}
+            {/*      }}*/}
+            {/*      className="image is-clickable is-flex"*/}
+            {/*    >*/}
+            {/*      <LogoIcon img={logoIcon ? logoIcon : UNKNOWN_TOKEN_IMAGE} />*/}
+            {/*    </div>*/}
+            {/*  </div>*/}
+            {/*  <div*/}
+            {/*    onClick={onClickAsset}*/}
+            {/*    className="media-content is-clickable"*/}
+            {/*  >*/}
+            {/*    {heading && <p className="heading">{heading}</p>}*/}
+            {/*    <div style={{ alignItems: "center", display: "flex" }}>*/}
+            {/*      <span className="has-text-weight-bold">*/}
+            {/*        {symbol ? symbol : "Select"}*/}
+            {/*      </span>*/}
+            {/*      <span className="icon">*/}
+            {/*        <FaAngleDown />*/}
+            {/*      </span>*/}
+            {/*    </div>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
           </div>
         </div>
         <div className="column">

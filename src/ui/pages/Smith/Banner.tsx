@@ -18,7 +18,7 @@ const Banner = () => {
             <div className="column is-flex is-hidden-mobile" style={{ alignItems: "center" }}>
               <figure
                 className="image"
-                style={{ width: "250px", margin: "0 auto" }}
+                style={{ width: "200px", margin: "0 auto" }}
               >
                 <img src="/logo/NEP_Logo_Smith.svg" />
               </figure>
@@ -48,6 +48,16 @@ const Banner = () => {
                       Tutorial for NFT contract
                     </a>
                   </li>
+	                <li>
+		                <a
+			                target="_blank"
+			                href={
+				                "https://www.youtube.com/watch?v=yqZJE7NXu5o"
+			                }
+		                >
+			                Tutorials on Youtube
+		                </a>
+	                </li>
                 </div>
                 <br />
                 <div className="buttons">
