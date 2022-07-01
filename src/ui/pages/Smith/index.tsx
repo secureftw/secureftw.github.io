@@ -14,6 +14,7 @@ import NEP17InfoPage from "./scenes/PageView/NEP17InfoPage";
 import NEP11InfoPage from "./scenes/PageView/NEP11InfoPage";
 import CreateNEP17 from "./scenes/CreateNEP17";
 import CreateNEP11 from "./scenes/CreateNEP11";
+// import Maintenance from "./Maintenance";
 
 const Smith = () => {
   useEffect(() => {

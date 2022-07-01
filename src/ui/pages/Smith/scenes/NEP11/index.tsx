@@ -10,7 +10,7 @@ const NEP11Smith = () => {
   const [page, setPage] = useState(1);
   const { connectedWallet, network } = useWallet();
   const { isLoaded, error, data } = useOnChainData(() => {
-    return new SmithContract(network).getNEP11Records();
+    return new SmithContract(network).getNEP11Records(page);
   }, [connectedWallet, network, page]);
   return (
     <>

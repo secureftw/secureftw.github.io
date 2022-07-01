@@ -29,7 +29,7 @@ export class SmithContract {
     this.contractHash = SMITH_SCRIPT_HASH[networkType];
   }
 
-  createNEP17V2 = async (
+  createNEP17V3 = async (
     connectedWallet: IConnectedWallet,
     totalSupply: string,
     decimals: string,
@@ -38,8 +38,6 @@ export class SmithContract {
     author: string,
     description: string,
     email: string,
-    website: string,
-    logo: string
   ): Promise<string> => {
     const senderHash = NeonWallet.getScriptHashFromAddress(
       connectedWallet.account.address
@@ -50,7 +48,7 @@ export class SmithContract {
       args: [
         {
           type: "String",
-          value: "v2",
+          value: "v3",
         },
         {
           type: "Hash160",
@@ -83,14 +81,6 @@ export class SmithContract {
         {
           type: "String",
           value: email,
-        },
-        {
-          type: "String",
-          value: website,
-        },
-        {
-          type: "String",
-          value: logo,
         },
       ],
       signers: [
@@ -351,7 +341,7 @@ export class SmithContract {
       args: [
         {
           type: "Integer",
-          value: "20",
+          value: "12",
         },
         {
           type: "Integer",
@@ -366,23 +356,24 @@ export class SmithContract {
     return parseMapValue(res.stack[0] as any);
   };
 
-  getNEP11Records = async (): Promise<ISmithNEP11RecordPaginate> => {
+  getNEP11Records = async (page: number): Promise<ISmithNEP11RecordPaginate> => {
     const records = {
       operation: "getNEP11List",
       scriptHash: this.contractHash,
       args: [
         {
           type: "Integer",
-          value: "10",
+          value: "12",
         },
         {
           type: "Integer",
-          value: "1",
+          value: page,
         },
       ],
     };
     const scripts = [records];
     const res = await Network.read(this.network, scripts);
+		console.log(res)
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }

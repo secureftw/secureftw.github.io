@@ -76,8 +76,32 @@ const Main = () => {
       </div>
       <div className="block">
         <div className="notification is-primary">
-          The event has ended. Winners Drawing will take place at 6/29/2022 6PM
-          (UTC). We will announce winners in here.
+	        <strong>Drawing TX</strong>:{" "}
+          <a
+            target="_blank"
+            href={
+              "https://explorer.onegate.space/transactionInfo/0x5108f5604df7568e047d886370847b3b7becf2c683aa36972cec239f5fd40755"
+            }
+          >
+            here
+          </a>
+          <br />
+          <br />
+          <strong>Winner1</strong>: NPMUwhHkqz8rs1ZWp3t6zgN1vqniA3bZ2f
+          <br />
+          <strong>Winner2</strong>: NNHvh3woMGmNSMhdWzHEcc429CaXXXAXQ5
+          <br />
+          <strong>Winner3</strong>: Nebi4nUXhQ5YG5aQf8x9VNLekRVbvFVuuL
+          <br />
+          <strong>Winner4</strong>: NMy3hAt2sMc3iMPtQFiCy6B1DLwf85gNHW
+          <br />
+          <strong>Winner5</strong>: NSqnaHb7ig7YnSrgLtWwHpTNoxFXJeoJoF
+          <br />
+          <br />
+          Congratulations to all winners. We've sent 100GAS to each winner.
+          We've been having great events with our community; battle arena
+          events, meme coin competition and this sweepstake. We will bring more
+          fun events in the future. Stay tuned!
         </div>
         {/*{isLoaded ? (*/}
         {/*  connectedWallet &&*/}

@@ -24,8 +24,6 @@ const NEP17FormModal = () => {
     author: "",
     description: "",
     email: "",
-    website: "",
-    logo: "",
   });
   const handleValueChange = (key: string, val: string) => {
     setValues({
@@ -49,7 +47,7 @@ const NEP17FormModal = () => {
           if (res) {
             toast.error("Token symbol is already taken. Try other symbol.");
           } else {
-            const res = await new SmithContract(network).createNEP17V2(
+            const res = await new SmithContract(network).createNEP17V3(
               connectedWallet,
               values.totalSupply,
               values.decimals,
@@ -58,8 +56,6 @@ const NEP17FormModal = () => {
               values.author,
               values.description,
               values.email,
-              values.website,
-              values.logo
             );
             setTxid(res);
           }
@@ -225,42 +221,6 @@ const NEP17FormModal = () => {
                   </div>
                 </div>
 
-                <div className="columns">
-                  <div className="column">
-                    <div className="field">
-                      <label className="label">Website</label>
-                      <div className="control">
-                        <input
-                          placeholder="Optional"
-                          value={values.website}
-                          onChange={(e) =>
-                            handleValueChange("website", e.target.value)
-                          }
-                          className="input"
-                          type="text"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="column">
-                    <div className="field">
-                      <label className="label">Logo</label>
-                      <div className="control">
-                        <input
-                          placeholder="Optional"
-                          value={values.logo}
-                          onChange={(e) =>
-                            handleValueChange("logo", e.target.value)
-                          }
-                          className="input"
-                          type="text"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <hr />
 
                 {hasEmoji && (
@@ -306,13 +266,14 @@ const NEP17FormModal = () => {
                   <li>
                     Deploy fee is <strong>10 GAS</strong>.
                   </li>
-                  <li>FTWSwap cannot support tokens with 0 decimals</li>
+                  <li>FTWSwap cannot support tokens with 0 decimals.</li>
+	                <li>Your contract will <strong>not</strong> have a <strong>update method</strong>.</li>
                   <li>
                     Check contract source code at{" "}
                     <a
                       target="_blank"
                       href={
-                        "https://github.com/ForTheWinn/public-contracts/blob/main/FTWSmithNep17-v2/FTWSmithNep17-v2.cs"
+                        "https://github.com/ForTheWinn/public-contracts/blob/main/FTWSmithNep17-v3/FTWSmithNep17-v3.cs"
                       }
                     >
                       here
