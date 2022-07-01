@@ -31,6 +31,9 @@ export const ANALYTICS_PATH = "/analytics";
 export const ANALYTICS_POOLS_PATH = "/analytics/pools";
 export const ANALYTICS_FARM_PATH = "/analytics/farm";
 export const ANALYTICS_TOKENS_PATH = "/analytics/tokens";
+export const FARM_V2_PATH = "/double-farm";
+export const FARM_V2_STAKE_PATH = "/double-farm/stake";
+export const FARM_V2_STAKE_POSITIONS_PATH = "/double-farm/stake/positions";
 
 export const IDO_PAGE_ROUTE = {
   label: "IDO",
@@ -51,6 +54,13 @@ export const FARM_PAGE_ROUTE = {
   path: FARM_PATH,
   network: [MAINNET],
   category: [],
+};
+
+export const FARM_V2_PAGE_ROUTE = {
+	label: "Double Farm",
+	path: FARM_V2_PATH,
+	network: [TESTNET, MAINNET],
+	category: [],
 };
 
 export const SMITH_PAGE_ROUTE = {
@@ -100,6 +110,7 @@ export const LOTTO_PAGE_ROUTE = {
 export const MENU = [
   SWAP_PAGE_ROUTE,
   FARM_PAGE_ROUTE,
+	FARM_V2_PAGE_ROUTE,
   ANALYTICS_ROUTE,
   SMITH_PAGE_ROUTE,
   LOTTO_PAGE_ROUTE,

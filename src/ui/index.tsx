@@ -14,7 +14,7 @@ import {
 	TOURNAMENT_PATH,
 	FARM_PATH,
 	DAO_PATH,
-	IDO_PATH, LOTTO_PATH, ANALYTICS_PATH,
+	IDO_PATH, LOTTO_PATH, ANALYTICS_PATH, FARM_V2_PATH,
 } from "../consts";
 import { WalletContextProvider } from "../packages/provider";
 import WalletSidebar from "./components/WalletSidebar";
@@ -34,6 +34,7 @@ import DAO from "./pages/DAO";
 import IDO from "./pages/IDO";
 import Lotto from "./pages/Lotto";
 import Analytics from "./pages/Analytics";
+import FarmV2 from "./pages/FarmV2";
 
 ReactGA.initialize("UA-114435339-1");
 
@@ -55,6 +56,7 @@ const App = () => {
         <Route path={COLLECTION_PATH} component={MyCollection} />
         <Route path={SWAP_PATH} component={Swap} />
         <Route path={FARM_PATH} component={Farm} />
+        <Route path={FARM_V2_PATH} component={FarmV2} />
         <Route path={FUSION_PATH} component={Fusion} />
         <Route path={DAO_PATH} component={DAO} />
         <Route path={IDO_PATH} component={IDO} />
