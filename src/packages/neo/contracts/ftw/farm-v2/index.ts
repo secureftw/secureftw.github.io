@@ -4,21 +4,21 @@ import { IConnectedWallet } from "../../../wallet/interfaces";
 import { tx, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { wallet } from "../../../index";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
-import { FARM_SCRIPT_HASH } from "./consts";
-import { IClaimableRewards, ILPTokens, IStakingPairs } from "./interfaces";
+import {IClaimableRewards, ILPTokens, IPool} from "./interfaces";
 import {
   parseClaimableMap,
-  parsePairsMap,
   parseStakedLPTokensMap,
 } from "./helpers";
+import {FARM_V2_SCRIPT_HASH} from "./consts";
+import {parseMapValue} from "../../../utils";
 
-export class StakingContract {
+export class FarmV2Contract {
   network: INetworkType;
   contractHash: string;
 
   constructor(networkType: INetworkType) {
     this.network = networkType;
-    this.contractHash = FARM_SCRIPT_HASH[networkType];
+    this.contractHash = FARM_V2_SCRIPT_HASH[networkType];
   }
 
   stake = async (
@@ -29,25 +29,23 @@ export class StakingContract {
       connectedWallet.account.address
     );
     const invokeScript = {
-      operation: "stake",
-      scriptHash: this.contractHash,
+      operation: "transfer",
+      scriptHash: SWAP_SCRIPT_HASH[this.network],
       args: [
         {
           type: "Hash160",
-          value: senderHash,
+          value: this.contractHash,
         },
         {
           type: "String",
           value: tokenId,
         },
+	      {
+		      type: "String",
+		      value: "1",
+	      },
       ],
-      signers: [
-        {
-          account: senderHash,
-          scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [this.contractHash, SWAP_SCRIPT_HASH[this.network]],
-        },
-      ],
+	    signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
@@ -60,7 +58,7 @@ export class StakingContract {
       connectedWallet.account.address
     );
     const invokeScript = {
-      operation: "withdraw",
+      operation: "unStake",
       scriptHash: this.contractHash,
       args: [
         {
@@ -146,33 +144,20 @@ export class StakingContract {
     return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
-  getStakingPairs = async (): Promise<IStakingPairs[]> => {
+  getPools = async (): Promise<IPool[]> => {
     const script = {
       scriptHash: this.contractHash,
-      operation: "getPairs",
+      operation: "getPools",
       args: [],
     };
     const res = await Network.read(this.network, [script]);
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-    return parsePairsMap(res as any);
-  };
-
-  getTVL = async (tokenA, tokenB) => {
-    const script = {
-      scriptHash: this.contractHash,
-      operation: "getTVL",
-      args: [
-
-	      { type: "Hash160", value: tokenA },
-	      { type: "Hash160", value: tokenB },
-
-      ],
-    };
-    const res = await Network.read(this.network, [script]);
-
-    return res.stack[0].value;
+		// @ts-ignore
+	  return res.stack[0].value.map((pair) => {
+		  return parseMapValue(pair);
+	  });
   };
 
   getStakedLPTokens = async (

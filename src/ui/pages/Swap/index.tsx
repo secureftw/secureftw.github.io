@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PageLayout from "../../components/PageLayout";
 import {
   SWAP_PAGE_ROUTE,
@@ -19,6 +19,10 @@ import Providers from "./scenes/Providers";
 import MarketStatus from "./components/CheckMarketStatus";
 
 const Swap = () => {
+	useEffect(() => {
+		document.title =
+			"FTW | Swap";
+	}, []);
   return (
     <div>
       <PageLayout>

@@ -39,7 +39,7 @@ const Gallery = () => {
 
   useEffect(() => {
     document.title =
-      "Forthewin Rune: Algorithms-generated lucky runes NFT on NEO";
+      "FTW | Runes";
     async function fetchContractStatus() {
       setError("");
       setLoading(true);

@@ -38,7 +38,6 @@ import { getAfterSlippage } from "../../../../../packages/neo/contracts/ftw/swap
 import SwapDetails from "./components/SwapDetails";
 import { u } from "@cityofzion/neon-core";
 import { handleError } from "../../../../../packages/neo/utils/errors";
-import { toDecimal } from "../../../../../packages/neo/utils";
 
 export interface ITokenState {
   hash: string;
@@ -225,19 +224,12 @@ const Swap = () => {
     ).toDecimal(tokenB.decimals);
     priceImpact = (amountB / parseFloat(reserve)) * 100;
     console.log(
-      tokenA.symbol +
-        " reserve: " +
-        u.BigInteger.fromNumber(data.pair[tokenA.hash].reserveAmount).toDecimal(
-          tokenA.decimals
-        )
+      tokenA.symbol + " reserve: " + data.pair[tokenA.hash].reserveAmount
     );
     console.log(
-      tokenB.symbol +
-        " reserve: " +
-        u.BigInteger.fromNumber(data.pair[tokenB.hash].reserveAmount).toDecimal(
-          tokenB.decimals
-        )
+      tokenB.symbol + " reserve: " + data.pair[tokenB.hash].reserveAmount
     );
+    console.log("Total shares: " + data.totalShare);
     console.log("Price impact: " + priceImpact.toString());
   }
   return (
