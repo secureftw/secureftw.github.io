@@ -73,7 +73,7 @@ export class IDOContract {
     };
 
     const script3 = {
-      scriptHash: NEP_SCRIPT_HASH[this.network],
+      scriptHash: NEP_SCRIPT_HASH,
       operation: "balanceOf",
       args: [
         {

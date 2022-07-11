@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Wave from "react-wavify";
 import {
   DAO_PATH,
@@ -20,62 +20,45 @@ const CARDS: {
   {
     title: "Swap",
     type: "DeFi",
-    // desc: "Coming soon. Try on our Testnet.",
     img: "520/swap.png",
     link: SWAP_PATH,
   },
   {
     title: "Smith",
     type: "Utility",
-    // desc: "Deploy fungible/Non-fungible token smart contracts without any codes.",
     img: "520/smith.png",
     link: SMITH_PATH,
   },
   {
     title: "Farm",
     type: "DeFi",
-    // desc: "Deploy fungible/Non-fungible token smart contracts without any codes.",
     img: "520/farm.png",
     link: FARM_PATH,
   },
   {
     title: "DAO",
     type: "Utility",
-    // desc: "Deploy fungible/Non-fungible token smart contracts without any codes.",
     img: "520/dao.png",
     link: DAO_PATH,
   },
   {
     title: "Rune",
     type: "NFT",
-    // desc: "An algorithmically generated NFT created and stored onchain.",
     img: "520/rune.png",
     link: GALLERY_PATH,
   },
 	{
 		title: "NEP",
 		type: "Governance token",
-		// desc: "Coming soon. Try on our Testnet.",
 		img: "520/nep.png",
-		link: IDO_PATH,
+		link: "/swap?tokenA=d2a4cff31913016155e38e474a2c06d08be276cf&tokenB=f853a98ac55a756ae42379a312d55ddfdf7c8514",
 	},
-  // {
-  //   title: "Arena",
-  //   type: "GameFi",
-  //   // desc: "FTW Runes against each other with the victor earning a GAS prize.",
-  //   img: "assets/54.png",
-  //   link: TOURNAMENT_PATH,
-  // },
-  // {
-  //   title: "FTW Lab",
-  //   type: "Testnet",
-  //   desc: "Preview FTW future apps.",
-  //   img: "assets/testnet.png",
-  //   link: SMITH_PATH,
-  // },
 ];
 
 const Home = () => {
+	useEffect(() => {
+		document.title = "FTW";
+	}, []);
   return (
     <div>
       <section className="hero is-white is-fullheight-with-navbar is-relative">

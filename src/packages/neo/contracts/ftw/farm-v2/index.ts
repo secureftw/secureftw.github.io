@@ -29,25 +29,23 @@ export class FarmV2Contract {
       connectedWallet.account.address
     );
     const invokeScript = {
-      operation: "stake",
-      scriptHash: this.contractHash,
+      operation: "transfer",
+      scriptHash: SWAP_SCRIPT_HASH[this.network],
       args: [
         {
           type: "Hash160",
-          value: senderHash,
+          value: this.contractHash,
         },
         {
           type: "String",
           value: tokenId,
         },
+	      {
+		      type: "String",
+		      value: "1",
+	      },
       ],
-      signers: [
-        {
-          account: senderHash,
-          scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [this.contractHash, SWAP_SCRIPT_HASH[this.network]],
-        },
-      ],
+	    signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
@@ -60,7 +58,7 @@ export class FarmV2Contract {
       connectedWallet.account.address
     );
     const invokeScript = {
-      operation: "withdraw",
+      operation: "unStake",
       scriptHash: this.contractHash,
       args: [
         {

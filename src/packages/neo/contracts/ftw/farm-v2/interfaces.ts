@@ -3,7 +3,13 @@ export interface IClaimableRewards {
   tokenB: string;
   tokenASymbol: string;
   tokenBSymbol: string;
-  claimable: number;
+	bonusToHarvest: number
+	bonusTokenHash: string
+	rewardsToHarvest: number
+	share: number
+	tokensStaked: number
+	nepTokensPerSecond: number;
+	bonusTokensPerSecond: number;
 }
 
 export interface IPool {
@@ -11,11 +17,13 @@ export interface IPool {
   tokenB: string;
   tokenASymbol: string;
   tokenBSymbol: string;
-	lastRewardedBlock: string;
-	accumulatedRewardsPerShare: string;
-	tokensStaked: string;
-	nepTokensPerBlock: string;
-
+	lastRewardedAt: string;
+	tokensStaked: number;
+	nepTokensPerSecond: number;
+	bonusToken: string;
+	bonusTokenSymbol: string;
+	bonusTokenDecimals: number;
+	bonusTokensPerSecond: number;
 }
 
 export interface ILPTokens {

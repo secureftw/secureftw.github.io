@@ -1,10 +1,10 @@
 import React from "react";
 import PositionCard from "./PositionCard";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
-import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import { INetworkType } from "../../../../../packages/neo/network";
 import { IConnectedWallet } from "../../../../../packages/neo/wallet/interfaces";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
+import {FarmV2Contract} from "../../../../../packages/neo/contracts/ftw/farm-v2";
 
 interface IPositionListProps {
   network: INetworkType;
@@ -21,7 +21,7 @@ const PositionList = ({
   onUnStake,
 }: IPositionListProps) => {
   const { isLoaded, error, data } = useOnChainData(() => {
-    return new StakingContract(network).getStakedLPTokens(connectedWallet);
+    return new FarmV2Contract(network).getStakedLPTokens(connectedWallet);
   }, [connectedWallet, refresh, network]);
   return (
     <div>

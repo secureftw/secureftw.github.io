@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PoolAnalytics from "./Pools";
 import {
   ANALYTICS_FARM_PATH,
@@ -9,14 +9,20 @@ import {
 import { Route } from "react-router-dom";
 import FarmAnalytics from "./Farm";
 import { useWallet } from "../../../packages/provider";
-import PageLayout from "../../components/PageLayout";
 import TokensAnalytics from "./Tokens";
+import ProductNotSupportedInNetwork from "../../components/ProductNotSupportedInNetwork";
 
-const Analytics = (props) => {
+const Analytics = () => {
   const { network } = useWallet();
   if (!ANALYTICS_ROUTE.network.includes(network)) {
-    return <PageLayout>Mainnet only</PageLayout>;
+    return (
+      <ProductNotSupportedInNetwork title={"Analytics"} network={network} />
+    );
   }
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    document.title = "FTW | Analytics";
+  }, []);
   return (
     <div>
       <Route component={TokensAnalytics} path={ANALYTICS_TOKENS_PATH} />

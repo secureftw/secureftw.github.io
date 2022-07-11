@@ -1,27 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FARM_STAKE_POSITIONS_PATH, FARM_V2_STAKE_POSITIONS_PATH } from "../../../../../consts";
-import StakingPairCard from "../../components/StakingPairCard";
+import { FARM_V2_STAKE_POSITIONS_PATH } from "../../../../../consts";
+import StakingPairCard from "./StakingPairCard";
 import { useWallet } from "../../../../../packages/provider";
-import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
-import {FarmV2Contract} from "../../../../../packages/neo/contracts/ftw/farm-v2";
+import { FarmV2Contract } from "../../../../../packages/neo/contracts/ftw/farm-v2";
+import { RestAPI } from "../../../../../packages/neo/api";
+import { MAINNET } from "../../../../../packages/neo/consts";
 
 const StakingMain = ({ onRefresh }) => {
   const { network } = useWallet();
   const [refresh, setRefresh] = useState(0);
+  const [prices, setPrices] = useState();
   const handleRefresh = () => setRefresh(refresh + 1);
   const { isLoaded, error, data } = useOnChainData(() => {
     return new FarmV2Contract(network).getPools();
   }, [network, refresh]);
+
+  useEffect(() => {
+    async function fetch() {
+      try {
+        const res = await new RestAPI(MAINNET).getPrices();
+        setPrices(res);
+      } catch (e: any) {
+        console.error(e);
+      }
+    }
+    fetch();
+  }, []);
 
   return (
     <div>
       <div className="level is-mobile">
         <div className="level-left">
           <div className="level-item">
-            <h1 className="title is-5 ">Farm</h1>
+            <h1 className="title is-5 ">Double Farm</h1>
           </div>
         </div>
         <div className="level-right">
@@ -48,10 +62,10 @@ const StakingMain = ({ onRefresh }) => {
           />
         ) : data && data.length > 0 ? (
           <div className="table-container">
-            <table className="table is-fullwidth is-hoverable">
+            <table className="table is-fullwidth is-hoverable has-custom-border">
               <tbody>
                 {data.map((item, i) => (
-                  <StakingPairCard key={"sc" + i} {...item} />
+                  <StakingPairCard key={"sc" + i} {...item} prices={prices} />
                 ))}
               </tbody>
             </table>

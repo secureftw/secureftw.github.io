@@ -18,7 +18,7 @@ import CreateNEP11 from "./scenes/CreateNEP11";
 const Smith = () => {
   useEffect(() => {
     document.title =
-      "Forthewin Smith: Create your NEP11 and NEP17 smart contracts without any codes.";
+      "FTW | Smith";
   }, []);
 
   // return <Maintenance />;

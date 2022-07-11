@@ -159,6 +159,22 @@ export class StakingContract {
     return parsePairsMap(res as any);
   };
 
+  getTVL = async (tokenA, tokenB) => {
+    const script = {
+      scriptHash: this.contractHash,
+      operation: "getTVL",
+      args: [
+
+	      { type: "Hash160", value: tokenA },
+	      { type: "Hash160", value: tokenB },
+
+      ],
+    };
+    const res = await Network.read(this.network, [script]);
+
+    return res.stack[0].value;
+  };
+
   getStakedLPTokens = async (
     connectedWallet: IConnectedWallet
   ): Promise<ILPTokens[]> => {

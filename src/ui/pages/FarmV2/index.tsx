@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import PageLayout from "../../components/PageLayout";
 import { Route } from "react-router-dom";
 import {
-  FARM_V2_PAGE_ROUTE,
   FARM_V2_PATH,
   FARM_V2_STAKE_PATH,
   FARM_V2_STAKE_POSITIONS_PATH,
@@ -11,22 +10,19 @@ import StakingMain from "./scenes/Main";
 import Stake from "./scenes/Stake";
 import MyPositions from "./scenes/MyPositions";
 import ClaimRewards from "./scenes/ClaimRewards";
-import { useWallet } from "../../../packages/provider";
-import TestnetOnlyRoute from "../../components/TestnetOnlyRoute";
 import CheckMarketStatus from "./components/CheckMarketStatus";
 
 const Farm = () => {
-  const { network } = useWallet();
   const [refresh, setRefresh] = useState(0);
-  if (!FARM_V2_PAGE_ROUTE.network.includes(network)) {
-    return <TestnetOnlyRoute title={"FTW Farm"} />;
-  }
+	useEffect(() => {
+		document.title = "FTW | Double Farm";
+	}, []);
   return (
     <PageLayout>
       <div className="columns">
-        <div className="column is-6 is-offset-3">
+        <div className="column is-8 is-offset-2">
           <div className="columns">
-            <div className="column is-9">
+            <div className="column is-8">
 	            <CheckMarketStatus />
               <div className="box is-shadowless">
                 <Route exact={true} path={FARM_V2_PATH} component={StakingMain} />

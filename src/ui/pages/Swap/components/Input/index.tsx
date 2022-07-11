@@ -47,7 +47,6 @@ const Input = ({
       ? ASSET_LIST[network][contractHash].logo
       : undefined;
   }
-
   // const noFund = userBalance && val && val > userBalance
   return (
     <div className="">
@@ -96,41 +95,6 @@ const Input = ({
                 </div>
               </div>
             </div>
-
-            {/*<div*/}
-            {/*  className="media"*/}
-            {/*  style={{ alignItems: "center", display: "flex" }}*/}
-            {/*>*/}
-            {/*  <div className="media-left">*/}
-            {/*    <div*/}
-            {/*      onClick={onClickAsset}*/}
-            {/*      style={{*/}
-            {/*        maxWidth: "50px",*/}
-            {/*        maxHeight: "50px",*/}
-            {/*        width: "50px",*/}
-            {/*        alignItems: "center",*/}
-            {/*        justifyContent: "center",*/}
-            {/*      }}*/}
-            {/*      className="image is-clickable is-flex"*/}
-            {/*    >*/}
-            {/*      <LogoIcon img={logoIcon ? logoIcon : UNKNOWN_TOKEN_IMAGE} />*/}
-            {/*    </div>*/}
-            {/*  </div>*/}
-            {/*  <div*/}
-            {/*    onClick={onClickAsset}*/}
-            {/*    className="media-content is-clickable"*/}
-            {/*  >*/}
-            {/*    {heading && <p className="heading">{heading}</p>}*/}
-            {/*    <div style={{ alignItems: "center", display: "flex" }}>*/}
-            {/*      <span className="has-text-weight-bold">*/}
-            {/*        {symbol ? symbol : "Select"}*/}
-            {/*      </span>*/}
-            {/*      <span className="icon">*/}
-            {/*        <FaAngleDown />*/}
-            {/*      </span>*/}
-            {/*    </div>*/}
-            {/*  </div>*/}
-            {/*</div>*/}
           </div>
         </div>
         <div className="column">

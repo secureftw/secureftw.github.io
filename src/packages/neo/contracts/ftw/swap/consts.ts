@@ -47,8 +47,8 @@ export const ASSET_LIST = {
       logo: "/symbols/gas.svg",
       decimals: 8,
     },
-    [NEP_SCRIPT_HASH[TESTNET]]: {
-      contractHash: NEP_SCRIPT_HASH[TESTNET],
+	  [NEP_SCRIPT_HASH]: {
+      contractHash: NEP_SCRIPT_HASH,
       symbol: "NEP",
       logo: "/symbols/nep.png",
       decimals: 8,
@@ -61,8 +61,8 @@ export const ASSET_LIST = {
     },
   },
   [MAINNET]: {
-    [NEP_SCRIPT_HASH[MAINNET]]: {
-      contractHash: NEP_SCRIPT_HASH[MAINNET],
+    [NEP_SCRIPT_HASH]: {
+      contractHash: NEP_SCRIPT_HASH,
       symbol: "NEP",
       logo: "/symbols/nep.png",
       decimals: 8,

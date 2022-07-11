@@ -31,16 +31,10 @@ export const ANALYTICS_PATH = "/analytics";
 export const ANALYTICS_POOLS_PATH = "/analytics/pools";
 export const ANALYTICS_FARM_PATH = "/analytics/farm";
 export const ANALYTICS_TOKENS_PATH = "/analytics/tokens";
+export const ARCHIVE_PATH = "/archive";
 export const FARM_V2_PATH = "/double-farm";
 export const FARM_V2_STAKE_PATH = "/double-farm/stake";
 export const FARM_V2_STAKE_POSITIONS_PATH = "/double-farm/stake/positions";
-
-export const IDO_PAGE_ROUTE = {
-  label: "IDO",
-  path: IDO_PATH,
-  network: [MAINNET],
-  category: [],
-};
 
 export const SWAP_PAGE_ROUTE = {
   label: "Swap",
@@ -52,15 +46,15 @@ export const SWAP_PAGE_ROUTE = {
 export const FARM_PAGE_ROUTE = {
   label: "Farm",
   path: FARM_PATH,
-  network: [MAINNET],
+  network: [TESTNET, MAINNET],
   category: [],
 };
 
 export const FARM_V2_PAGE_ROUTE = {
-	label: "Double Farm",
-	path: FARM_V2_PATH,
-	network: [TESTNET, MAINNET],
-	category: [],
+  label: "Double Farm",
+  path: FARM_V2_PATH,
+  network: [TESTNET, MAINNET],
+  category: [],
 };
 
 export const SMITH_PAGE_ROUTE = {
@@ -92,57 +86,71 @@ export const ANALYTICS_ROUTE = {
       path: ANALYTICS_POOLS_PATH,
       network: [MAINNET],
     },
+    // {
+    //   label: "Farm",
+    //   path: ANALYTICS_FARM_PATH,
+    //   network: [MAINNET],
+    // },
+  ],
+};
+
+export const ARCHIVE_ROUTE = {
+  label: "Archive",
+  path: ARCHIVE_PATH,
+  network: [MAINNET],
+  category: [
     {
-      label: "Farm",
-      path: ANALYTICS_FARM_PATH,
+      label: "Arena",
+      path: TOURNAMENT_PATH,
+      network: [MAINNET],
+    },
+    {
+      label: "Sweepstake",
+      path: LOTTO_PATH,
+      network: [MAINNET],
+      category: [],
+    },
+    {
+      label: "IDO",
+      path: IDO_PATH,
+      network: [MAINNET],
+      category: [],
+    },
+    // {
+    // 	label: "GAS-FI",
+    // 	path: GASFI_PATH,
+    // 	network: [PRIVATENET],
+    // 	category: [],
+    // },
+    {
+      label: "Migration",
+      path: MIGRATION_PATH,
+      network: [PRIVATENET],
+      category: [],
+    },
+  ],
+};
+
+export const NFT_ROUTE = {
+  label: "NFT",
+  path: GALLERY_PATH,
+  network: [MAINNET],
+  category: [
+    {
+      label: "Runes",
+      path: GALLERY_PATH,
       network: [MAINNET],
     },
   ],
 };
 
-export const LOTTO_PAGE_ROUTE = {
-  label: "Sweepstake",
-  path: LOTTO_PATH,
-  network: [MAINNET],
-  category: [],
-};
-
 export const MENU = [
   SWAP_PAGE_ROUTE,
   FARM_PAGE_ROUTE,
-	FARM_V2_PAGE_ROUTE,
+  FARM_V2_PAGE_ROUTE,
+	SMITH_PAGE_ROUTE,
   ANALYTICS_ROUTE,
-  SMITH_PAGE_ROUTE,
-  LOTTO_PAGE_ROUTE,
-  IDO_PAGE_ROUTE,
   DAO_PAGE_ROUTE,
-  {
-    label: "NFT",
-    path: GALLERY_PATH,
-    network: [MAINNET],
-    category: [
-      {
-        label: "Rune",
-        path: GALLERY_PATH,
-        network: [MAINNET],
-      },
-      {
-        label: "Arena",
-        path: TOURNAMENT_PATH,
-        network: [MAINNET],
-      },
-    ],
-  },
-  {
-    label: "GAS-FI",
-    path: GASFI_PATH,
-    network: [PRIVATENET],
-    category: [],
-  },
-  {
-    label: "Migration",
-    path: MIGRATION_PATH,
-    network: [PRIVATENET],
-    category: [],
-  },
+  NFT_ROUTE,
+  ARCHIVE_ROUTE,
 ];

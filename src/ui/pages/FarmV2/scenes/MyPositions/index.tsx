@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import HeaderBetween from "../../../../components/HeaderBetween";
-import { FARM_PATH } from "../../../../../consts";
+import {FARM_V2_PATH} from "../../../../../consts";
 import { useWallet } from "../../../../../packages/provider";
-import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import { toast } from "react-hot-toast";
 import Modal from "../../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransactionSubmitted";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 import PositionList from "./PositionList";
 import { handleError } from "../../../../../packages/neo/utils/errors";
+import {FarmV2Contract} from "../../../../../packages/neo/contracts/ftw/farm-v2";
 
 const MyPositions = ({ onRefresh }) => {
   const { network, connectedWallet } = useWallet();
@@ -18,7 +18,7 @@ const MyPositions = ({ onRefresh }) => {
   const onUnStake = async (tokenId) => {
     if (connectedWallet) {
       try {
-        const res = await new StakingContract(network).remove(
+        const res = await new FarmV2Contract(network).remove(
           connectedWallet,
           tokenId
         );
@@ -39,7 +39,7 @@ const MyPositions = ({ onRefresh }) => {
 
   return (
     <div>
-      <HeaderBetween path={FARM_PATH} title={`My staking`} />
+      <HeaderBetween path={FARM_V2_PATH} title={`My staking`} />
       <hr />
       {connectedWallet ? (
         <PositionList

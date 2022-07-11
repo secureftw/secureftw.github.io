@@ -2,9 +2,8 @@ import React, { useEffect } from "react";
 
 const Tournament = () => {
   useEffect(() => {
-    document.title = "Forthewin Arena: NFT tournament on NEO";
+    document.title = "FTW | Arenas";
   }, []);
-
   return (
     <section className="hero is-white is-fullheight-with-navbar">
       <div className="hero-body">

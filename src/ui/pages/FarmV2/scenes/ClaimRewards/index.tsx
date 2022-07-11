@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import { useWallet } from "../../../../../packages/provider";
 import ClaimModal from "./ClaimModal";
 import Modal from "../../../../components/Modal";
@@ -11,6 +10,7 @@ import LogoIcon from "../../../../components/LogoIcon";
 import { NEP_LOGO } from "../../../../../packages/neo/contracts/ftw/farm/consts";
 import { handleError } from "../../../../../packages/neo/utils/errors";
 import ClaimList from "./ClaimList";
+import {FarmV2Contract} from "../../../../../packages/neo/contracts/ftw/farm-v2";
 
 interface IClaimRewardsProps {
   pRefresh: number;
@@ -30,7 +30,7 @@ const ClaimRewards = ({ pRefresh }: IClaimRewardsProps) => {
   const onClaim = async (selectedItems) => {
     if (connectedWallet) {
       try {
-        const res = await new StakingContract(network).claimMulti(
+        const res = await new FarmV2Contract(network).claimMulti(
           connectedWallet,
           selectedItems
         );
@@ -45,9 +45,8 @@ const ClaimRewards = ({ pRefresh }: IClaimRewardsProps) => {
   };
 
   const { isLoaded, error, data } = useOnChainData(() => {
-    return new StakingContract(network).getClaimable(connectedWallet);
+    return new FarmV2Contract(network).getClaimable(connectedWallet);
   }, [connectedWallet, network, refresh, pRefresh]);
-
   return (
     <div>
       <div className="level is-mobile">
@@ -93,6 +92,7 @@ const ClaimRewards = ({ pRefresh }: IClaimRewardsProps) => {
           refresh={refresh}
           pRefresh={pRefresh}
           items={data}
+          isLoaded={isLoaded}
           onClose={() => setClaimModalOpen(false)}
           onClaim={onClaim}
         />

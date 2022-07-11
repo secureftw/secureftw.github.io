@@ -4,6 +4,8 @@ import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
 import { INetworkType } from "../../../../../packages/neo/network";
 import { IConnectedWallet } from "../../../../../packages/neo/wallet/interfaces";
+import { FarmV2Contract } from "../../../../../packages/neo/contracts/ftw/farm-v2";
+import { u } from "@cityofzion/neon-core";
 interface IClaimListProps {
   network: INetworkType;
   connectedWallet?: IConnectedWallet;
@@ -23,13 +25,13 @@ const ClaimList = ({
   selectedItems,
 }: IClaimListProps) => {
   const { isLoaded, data } = useOnChainData(() => {
-    return new StakingContract(network).getClaimable(connectedWallet);
+    return new FarmV2Contract(network).getClaimable(connectedWallet);
   }, [connectedWallet, network, refresh, pRefresh]);
-  if (!isLoaded) <div></div>;
   return (
     <div>
       {isLoaded &&
         data.map((item, i) => {
+					console.log(item)
           let isSelected = false;
           selectedItems.forEach((_item) => {
             if (item.tokenA === _item.tokenA && item.tokenB === _item.tokenB) {
@@ -58,15 +60,32 @@ const ClaimList = ({
                   </div>
 
                   <div className="level-right">
-                    <div className="level-item">
-                      <small>APR {item.APR / 100}%</small>
+                    <div className="level-item is-block has-text-right">
+                      <small>
+                        <CounterUp
+                          symbol="NEP"
+                          claimable={item.rewardsToHarvest}
+                          rewardsPerSecond={item.nepTokensPerSecond}
+                          tokensStaked={item.tokensStaked}
+                          share={item.share}
+                        />
+                      </small>
+                      {item.bonusTokensPerSecond > 0 ? (
+                        <small>
+                          <CounterUp
+                            symbol={item.bonusTokenSymbol}
+                            claimable={item.bonusToHarvest}
+                            rewardsPerSecond={item.bonusTokensPerSecond}
+                            tokensStaked={item.tokensStaked}
+                            share={item.share}
+                          />
+                        </small>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                 </div>
-                <CounterUp
-                  claimable={item.claimable}
-                  rewardsPerDay={item.rewardsPerDay}
-                />
               </div>
             </div>
           );

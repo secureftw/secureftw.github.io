@@ -128,7 +128,7 @@ const Main = () => {
       {/*        onClickAsset={() => {*/}
       {/*          // setTokenSelectionModalActive(true);*/}
       {/*        }}*/}
-      {/*        contractHash={NEP_SCRIPT_HASH[network]}*/}
+      {/*        contractHash={NEP_SCRIPT_HASH}*/}
       {/*        symbol={"NEP"}*/}
       {/*        logo={"/symbols/nep.png"}*/}
       {/*        decimals={8}*/}

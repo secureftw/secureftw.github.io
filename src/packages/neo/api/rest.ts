@@ -42,4 +42,8 @@ export class RestAPI {
 	async getFarms() {
 		return this.fetchResult(this.endpoint + "/farms");
 	}
+
+	async getPrices() {
+		return this.fetchResult(this.endpoint + "/prices");
+	}
 }
