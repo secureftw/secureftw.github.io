@@ -76,21 +76,21 @@ export const ANALYTICS_ROUTE = {
   path: ANALYTICS_TOKENS_PATH,
   network: [MAINNET],
   category: [
-    {
-      label: "Tokens",
-      path: ANALYTICS_TOKENS_PATH,
-      network: [MAINNET],
-    },
-    {
-      label: "Pools",
-      path: ANALYTICS_POOLS_PATH,
-      network: [MAINNET],
-    },
     // {
-    //   label: "Farm",
-    //   path: ANALYTICS_FARM_PATH,
+    //   label: "Tokens",
+    //   path: ANALYTICS_TOKENS_PATH,
     //   network: [MAINNET],
     // },
+    // {
+    //   label: "Pools",
+    //   path: ANALYTICS_POOLS_PATH,
+    //   network: [MAINNET],
+    // },
+    // // {
+    // //   label: "Farm",
+    // //   path: ANALYTICS_FARM_PATH,
+    // //   network: [MAINNET],
+    // // },
   ],
 };
 
