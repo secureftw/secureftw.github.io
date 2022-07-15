@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import PageLayout from "../../components/PageLayout";
 import { Route } from "react-router-dom";
 import {
@@ -14,18 +14,22 @@ import CheckMarketStatus from "./components/CheckMarketStatus";
 
 const Farm = () => {
   const [refresh, setRefresh] = useState(0);
-	useEffect(() => {
-		document.title = "FTW | Double Farm";
-	}, []);
+  useEffect(() => {
+    document.title = "FTW | Double Farm";
+  }, []);
   return (
     <PageLayout>
       <div className="columns">
         <div className="column is-8 is-offset-2">
           <div className="columns">
             <div className="column is-8">
-	            <CheckMarketStatus />
+              <CheckMarketStatus />
               <div className="box is-shadowless">
-                <Route exact={true} path={FARM_V2_PATH} component={StakingMain} />
+                <Route
+                  exact={true}
+                  path={FARM_V2_PATH}
+                  component={StakingMain}
+                />
                 <Route
                   exact={true}
                   path={FARM_V2_STAKE_PATH}

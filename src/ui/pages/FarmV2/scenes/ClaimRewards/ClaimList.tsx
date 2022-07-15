@@ -31,7 +31,6 @@ const ClaimList = ({
     <div>
       {isLoaded &&
         data.map((item, i) => {
-					console.log(item)
           let isSelected = false;
           selectedItems.forEach((_item) => {
             if (item.tokenA === _item.tokenA && item.tokenB === _item.tokenB) {

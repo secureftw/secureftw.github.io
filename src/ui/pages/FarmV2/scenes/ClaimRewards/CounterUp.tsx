@@ -27,7 +27,7 @@ const CounterUp = ({
 
   return (
     <div className="has-text-right">
-      {u.BigInteger.fromNumber(rewardsPerSecond)
+      {u.BigInteger.fromNumber(Math.round(rewardsPerSecond))
         .mul(timeElapsed)
         .add(claimable)
         .toDecimal(8)}{" "}

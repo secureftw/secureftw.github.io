@@ -88,11 +88,7 @@ const StakingPairCard = (props: IPool & { prices: IPrices }) => {
         )
       : 0;
   const tokenAReserveUSD = tokenAReserveAmount * tokenAPrice;
-	console.log(nepPerYear)
-	console.log("Bonus: " +  bonusPerYear)
-	console.log(tokenAReserveUSD)
   const tokenBReserveUSD = tokenBReserveAmount * tokenBPrice;
-	console.log(tokenBReserveUSD)
   const TVL = tokenAReserveUSD + tokenBReserveUSD;
   const apr = TVL > 0 ? (nepPerYear + bonusPerYear) / TVL * 100 : nepPerYear + bonusPerYear;
 
