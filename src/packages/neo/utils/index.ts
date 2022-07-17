@@ -74,6 +74,7 @@ export const withDecimal = (
 };
 
 export const numberTrim = (no: number, decimals = 2): string => {
+  if (!no) return "0";
   return no
     .toFixed(decimals)
     .replace(/[.,]00$/, "")
@@ -107,10 +108,18 @@ const stringList = [
   "title",
   "description",
   "author",
-	"bonusTokenSymbol"
+  "bonusTokenSymbol",
 ];
 const addressList = ["owner", "account", "creator"];
-const hash160List = ["contractHash", "tokenA", "tokenB", "tokenIn", "tokenOut", "bonusToken", "bonusTokenHash"];
+const hash160List = [
+  "contractHash",
+  "tokenA",
+  "tokenB",
+  "tokenIn",
+  "tokenOut",
+  "bonusToken",
+  "bonusTokenHash",
+];
 const dateList = ["createdAt"];
 const intList = [
   "start",

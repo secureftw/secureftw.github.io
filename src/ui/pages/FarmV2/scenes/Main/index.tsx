@@ -62,7 +62,15 @@ const StakingMain = ({ onRefresh }) => {
           />
         ) : data && data.length > 0 ? (
           <div className="table-container">
-            <table className="table is-fullwidth is-hoverable has-custom-border">
+            <table className="table is-fullwidth">
+	            <thead>
+	            <tr>
+		            <th>Pool</th>
+		            <th>Reward tokens</th>
+		            <th>APR</th>
+		            <th></th>
+	            </tr>
+	            </thead>
               <tbody>
                 {data.map((item, i) => (
                   <StakingPairCard key={"sc" + i} {...item} prices={prices} />

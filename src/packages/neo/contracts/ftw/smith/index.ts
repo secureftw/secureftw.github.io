@@ -373,7 +373,6 @@ export class SmithContract {
     };
     const scripts = [records];
     const res = await Network.read(this.network, scripts);
-		console.log(res)
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }

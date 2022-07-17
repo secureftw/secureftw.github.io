@@ -95,10 +95,6 @@ For fixed top height
   word-break: break-all;
 }
 
-.press-font {
-  font-family: "Press Start 2P" !important;
-}
-
 .pagination-container {
   .pagination-previous,
   .pagination-next {
@@ -133,14 +129,25 @@ For fixed top height
     animation: dash-check 0.9s 0.35s ease-in-out forwards;
   }
 }
-tr.is-flex{
-  align-items: center;
-  justify-content: space-between;
-  td{
-    border:none;
+
+table{
+  tr.is-flex{
+    align-items: center;
+    justify-content: space-between;
+    td{
+      border:none;
+    }
+    &:not(:last-child) {
+      border-bottom: 1px solid $light;
+    }
   }
-  &:not(:last-child) {
-    border-bottom: 1px solid $light;
+  th{
+    font-size: $size-7;
+    font-weight: $weight-semibold;
+  }
+  td{
+    font-size: $size-7;
+    vertical-align: middle!important;
   }
 }
 
@@ -179,19 +186,6 @@ tr.is-flex{
     stroke-dashoffset: 900;
   }
 }
-//
-//
-//.circular--portrait {
-//  position: relative;
-//  overflow: hidden;
-//  border-radius: 50%;
-//  //border: 1px solid #48c78e;
-//  background: white;
-//  img {
-//    width: 100%;
-//    height: auto;
-//  }
-//}
 
 .box.is-hoverable {
   @extend .is-clickable;

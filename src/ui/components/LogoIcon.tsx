@@ -7,16 +7,17 @@ interface ILogoIconProps {
 const LogoIcon = ({ img, width, height }: ILogoIconProps) => {
   return (
     <div
-      className="circular--portrait"
       style={{
         position: "relative",
         borderRadius: "50%",
         background: "white",
         width: width ? width : "30px",
         height: height ? height : "30px",
+	      justifyContent:"center",
+	      display:"flex"
       }}
     >
-      <img style={{ width: "100%", height: "auto" }} src={img} />
+      <img style={{ width: "100%" }} src={img} />
     </div>
   );
 };

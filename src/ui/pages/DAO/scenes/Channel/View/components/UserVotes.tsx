@@ -66,7 +66,7 @@ const UserVotes = ({
                     My votes{" "}
                     {data && <span className="tag">{data.totalItems}</span>}{" "}
                   </h1>
-                  <table className="table is-narrow is-bordered is-fullwidth">
+                  <table className="table is-bordered is-fullwidth">
                     {data.items.map((item, i) => (
                       <tr key={`myvote-${i}`}>
                         <td>{voteOptions[item.optionIndex]}</td>

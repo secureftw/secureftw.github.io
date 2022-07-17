@@ -1,11 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FARM_V2_STAKE_PATH } from "../../../../../consts";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import PairIcons from "../../../../components/PairIcons";
 import { useWallet } from "../../../../../packages/provider";
-import LogoIcon from "../../../../components/LogoIcon";
-import { NEP_LOGO } from "../../../../../packages/neo/contracts/ftw/farm/consts";
-import { ASSET_LIST } from "../../../../../packages/neo/contracts/ftw/swap/consts";
 import { IPool } from "../../../../../packages/neo/contracts/ftw/farm-v2/interfaces";
 import { u } from "@cityofzion/neon-core";
 import { IPrices } from "../../../../../packages/neo/api/interfaces";
@@ -13,13 +10,24 @@ import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { NEP_SCRIPT_HASH } from "../../../../../packages/neo/contracts/ftw/nep-token/consts";
 import { numberTrim } from "../../../../../packages/neo/utils";
+import { FaAngleDown } from "react-icons/fa";
+import { RestAPI } from "../../../../../packages/neo/api";
 
 const StakingPairCard = (props: IPool & { prices: IPrices }) => {
-  const history = useHistory();
   const { network } = useWallet();
-  const bonusTokenLogo = ASSET_LIST[network][props.bonusToken]
-    ? ASSET_LIST[network][props.bonusToken].logo
-    : undefined;
+  const [pairData, setData] = useState<any>();
+  const [isExpanded, setExpanded] = useState(false);
+  useEffect(() => {
+    async function fetch() {
+      try {
+        const res = await new RestAPI(network).getPairDay(
+          `0x${props.tokenA}_0x${props.tokenB}`
+        );
+        setData(res);
+      } catch (e: any) {}
+    }
+    fetch();
+  }, []);
 
   const { isLoaded, data } = useOnChainData(() => {
     return new SwapContract(network).getReserve(props.tokenA, props.tokenB);
@@ -28,6 +36,7 @@ const StakingPairCard = (props: IPool & { prices: IPrices }) => {
   console.log(
     `${props.tokenASymbol}-${props.tokenBSymbol} staked: ${props.tokensStaked}`
   );
+
   if (!isLoaded) return <></>;
 
   let nepPrice =
@@ -35,10 +44,10 @@ const StakingPairCard = (props: IPool & { prices: IPrices }) => {
       ? props.prices["0x" + NEP_SCRIPT_HASH]
       : 0;
 
-	let bonusTokenPrice =
-		props.prices && props.prices["0x" + props.bonusToken]
-			? props.prices["0x" + props.bonusToken]
-			: 0;
+  let bonusTokenPrice =
+    props.prices && props.prices["0x" + props.bonusToken]
+      ? props.prices["0x" + props.bonusToken]
+      : 0;
 
   let tokenAPrice =
     props.prices && props.prices["0x" + props.tokenA]
@@ -57,12 +66,12 @@ const StakingPairCard = (props: IPool & { prices: IPrices }) => {
       )
     ) * nepPrice;
 
-	const bonusPerYear =
-		parseFloat(
-			u.BigInteger.fromNumber(props.bonusTokensPerSecond * 86400 * 365).toDecimal(
-				props.bonusTokenDecimals
-			)
-		) * bonusTokenPrice;
+  const bonusPerYear =
+    parseFloat(
+      u.BigInteger.fromNumber(
+        props.bonusTokensPerSecond * 86400 * 365
+      ).toDecimal(props.bonusTokenDecimals)
+    ) * bonusTokenPrice;
 
   let tokenAReserveAmount =
     props.tokensStaked > 0
@@ -89,64 +98,111 @@ const StakingPairCard = (props: IPool & { prices: IPrices }) => {
       : 0;
   const tokenAReserveUSD = tokenAReserveAmount * tokenAPrice;
   const tokenBReserveUSD = tokenBReserveAmount * tokenBPrice;
+  const feesYear =
+    pairData && pairData.dailyFeesUSD ? pairData.dailyFeesUSD * 365 : 0;
+
   const TVL = tokenAReserveUSD + tokenBReserveUSD;
-  const apr = TVL > 0 ? (nepPerYear + bonusPerYear) / TVL * 100 : nepPerYear + bonusPerYear;
+
+  const stakeAPR = ((nepPerYear + bonusPerYear) / TVL) * 100;
+  const feeAPR = (feesYear / TVL) * 100;
+
+  const totalAPR = stakeAPR + feeAPR;
 
   return (
-    <tr
-      className="is-clickable is-flex"
-      onClick={() =>
-        history.push(
-          `${FARM_V2_STAKE_PATH}?tokenA=${props.tokenA}&tokenB=${props.tokenB}&tokenASymbol=${props.tokenASymbol}&tokenBSymbol=${props.tokenBSymbol}`
-        )
-      }
-    >
-      <td>
-        <div className="level is-mobile">
-          <div className="level-left">
-            <div className="level-item">
-              <PairIcons
-                network={network}
-                tokenA={props.tokenA}
-                tokenB={props.tokenB}
-              />
-            </div>
-            <div className="level-item has-text-weight-medium is-size-6">
-              {props.tokenASymbol} / {props.tokenBSymbol}
+    <>
+      <tr>
+        <td>
+          <div className="level is-mobile">
+            <div className="level-left">
+              <div className="level-item">
+                <PairIcons
+                  network={network}
+                  tokenA={props.tokenA}
+                  tokenB={props.tokenB}
+                  width="20px"
+                  height="20px"
+                />
+              </div>
+              <div className="level-item">
+                <strong>
+                  {props.tokenASymbol} / {props.tokenBSymbol}
+                </strong>
+              </div>
             </div>
           </div>
-        </div>
-      </td>
-      <td>
-        <div className="is-center" style={{ justifyContent: "start" }}>
-          <LogoIcon width="25px" height="25px" img={NEP_LOGO} />
-          <span className="ml-2  is-size-7">
+        </td>
+        <td>
+          <div className="is-center" style={{ justifyContent: "start" }}>
+            {/*<LogoIcon width="25px" height="25px" img={NEP_LOGO} />*/}
             {parseFloat(
               u.BigInteger.fromNumber(props.nepTokensPerSecond).toDecimal(8)
             ) * 86400}{" "}
             NEP
-          </span>
-        </div>
-        {props.bonusTokensPerSecond > 0 ? (
-          <div className="is-center mt-2" style={{ justifyContent: "start" }}>
-            <LogoIcon width="25px" height="25px" img={bonusTokenLogo} />
-            <span className="ml-2  is-size-7">
-              {numberTrim(parseFloat(
-                u.BigInteger.fromNumber(props.bonusTokensPerSecond).toDecimal(8)
-              ) * 86400)}{" "}
-              {props.bonusTokenSymbol}
-            </span>
           </div>
-        ) : (
-          <></>
-        )}
-      </td>
-	    <td>
-		    <small>
-			    <span className="has-text-success">{props.prices ? numberTrim(apr) : "Loading.."}%</span> APR
-		    </small>
-	    </td>
-    </tr>
+          {props.bonusTokensPerSecond > 0 ? (
+            <div className="is-center" style={{ justifyContent: "start" }}>
+              {/*<LogoIcon width="25px" height="25px" img={bonusTokenLogo} />*/}
+              {numberTrim(
+                parseFloat(
+                  u.BigInteger.fromNumber(props.bonusTokensPerSecond).toDecimal(
+                    8
+                  )
+                ) * 86400
+              )}{" "}
+              {props.bonusTokenSymbol}
+            </div>
+          ) : (
+            <></>
+          )}
+        </td>
+        <td>
+          <button
+            onClick={() => setExpanded(!isExpanded)}
+            className="button is-white is-small"
+          >
+            <span className="has-text-success">
+              {props.prices ? numberTrim(totalAPR) : "Loading.."}%
+            </span>
+
+            <span className="icon is-small">
+              <FaAngleDown />
+            </span>
+          </button>
+        </td>
+        <td className="has-text-right">
+          <Link
+            to={`${FARM_V2_STAKE_PATH}?tokenA=${props.tokenA}&tokenB=${props.tokenB}&tokenASymbol=${props.tokenASymbol}&tokenBSymbol=${props.tokenBSymbol}`}
+            className="button is-primary is-small"
+          >
+            Stake
+          </Link>
+        </td>
+      </tr>
+      {isExpanded && (
+        <tr className="has-background-dark">
+          <td colSpan={4} className="has-text-white">
+            <div className="level is-mobile">
+              <div className="level-left">
+                <div className="level-item is-block">
+                  <div className="heading has-text-white">Stake APR</div>
+                  {numberTrim(stakeAPR)}%
+                </div>
+                <div className="level-item has-text-weight-bold">+</div>
+                <div className="level-item is-block">
+                  <div className="heading has-text-white">Fee APR</div>
+                  {numberTrim(feeAPR)}%
+                </div>
+                <div className="level-item has-text-weight-bold">=</div>
+                <div className="level-item is-block">
+                  <div className="heading has-text-white">Total APR</div>
+                  {numberTrim(totalAPR)}%
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
   );
 };
 

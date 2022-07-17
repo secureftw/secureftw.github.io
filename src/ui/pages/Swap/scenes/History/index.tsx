@@ -24,7 +24,7 @@ const History = ({ tokenA, tokenB }: IHistoryProps) => {
     <div>
       {/*<h1 className="is-size-5 has-text-weight-bold">Swap History</h1>*/}
       <div className="table-container">
-        <table className="table is-fullwidth is-bordered is-striped is-narrow">
+        <table className="table is-fullwidth is-bordered is-striped">
           <thead>
             <tr>
               <th>In</th>

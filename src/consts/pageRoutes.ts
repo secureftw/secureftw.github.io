@@ -28,6 +28,7 @@ export const DAO_CHANNEL_CREATE_PATH = "/dao/create";
 export const DAO_CHANNEL_PATH = "/dao/channel";
 export const LOTTO_PATH = "/lotto";
 export const ANALYTICS_PATH = "/analytics";
+export const LP_TOKENS_PATH = "/NFT/lp-tokens";
 export const ANALYTICS_POOLS_PATH = "/analytics/pools";
 export const ANALYTICS_FARM_PATH = "/analytics/farm";
 export const ANALYTICS_TOKENS_PATH = "/analytics/tokens";
@@ -141,6 +142,11 @@ export const NFT_ROUTE = {
       path: GALLERY_PATH,
       network: [MAINNET],
     },
+	  {
+		  label: "LP Tokens",
+		  path: LP_TOKENS_PATH,
+		  network: [MAINNET],
+	  },
   ],
 };
 

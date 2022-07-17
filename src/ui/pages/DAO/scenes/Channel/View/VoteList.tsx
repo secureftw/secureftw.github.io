@@ -39,7 +39,7 @@ const VoteList = ({
       {isLoaded ? (
         data.items.length > 0 ? (
           <div className="table-container">
-            <table className="table is-fullwidth is-narrow is-bordered">
+            <table className="table is-fullwidth is-bordered">
               {data.items.map((item, i) => {
                 const voteAmount = u.BigInteger.fromNumber(
                   item.amount

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,6 +11,9 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { useWallet } from "../../../../packages/provider";
+import { RestAPI } from "../../../../packages/neo/api";
+// import Spinner from "../Spinner";
 
 ChartJS.register(
   CategoryScale,
@@ -43,11 +46,18 @@ export const options = {
   },
   scales: {
     y: {
+      prefix: "$",
       grid: {
         color: "white",
       },
+	    ticks: {
+				callback: (value) => {
+					return '$' + value.toLocaleString();
+				}
+	    }
     },
     x: {
+      // display:false,
       grid: {
         color: "white",
       },
@@ -64,15 +74,50 @@ export const data = {
       fill: true,
       // label: undefined,
       data: [1, 2, 3, 4, 5, 6, 7],
-      borderColor: "rgba(255, 255, 255, 0.0)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
+      borderColor: "rgba(32, 226, 47, 1)",
+      backgroundColor: "rgba(32, 226, 47, 0.56)",
     },
   ],
 };
-const LiquidityChart = (props) => {
+
+const LiquidityChart = () => {
+  const { network } = useWallet();
+  const [data, setData] = useState<any>();
+  const [isLoading, setLoading] = useState(true);
+  useEffect(() => {
+    async function fetch() {
+      try {
+        setLoading(true);
+        const res = await new RestAPI(network).getLiquidity("TOTAL", "15");
+        setData(res);
+        setLoading(false);
+      } catch (e: any) {
+        setLoading(false);
+        // setError(e.message);
+      }
+    }
+    fetch();
+  }, [network]);
+
+  const dataset = useMemo(() => {
+    return {
+      labels: data && data.labels ? data.labels : [],
+      datasets: [
+        {
+          fill: true,
+          // label: undefined,
+          data: data && data.data ? data.data : [],
+          borderColor: "rgba(32, 226, 47, 1)",
+          backgroundColor: "rgba(32, 226, 47, 0.56)",
+        },
+      ],
+    };
+  }, [data]);
+
   return (
-    <div>
-      <Line options={options} data={data} />
+    <div className="is-relative">
+	    {/*<Spinner  />*/}
+      <Line options={options} data={dataset} />
     </div>
   );
 };

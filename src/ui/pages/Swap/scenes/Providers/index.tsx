@@ -27,7 +27,7 @@ const Providers = ({ tokenA, tokenB, totalShare }: IProvidersProps) => {
       {/*<h1 className="is-size-5 has-text-weight-bold">LP History</h1>*/}
       {/*<hr />*/}
       <div className="table-container is-small">
-        <table className="table is-fullwidth is-bordered is-striped is-narrow">
+        <table className="table is-fullwidth is-bordered is-striped">
           <thead>
             <tr>
               <th>Status</th>

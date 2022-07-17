@@ -8,8 +8,16 @@ interface IPairIconsProps {
   network: INetworkType;
   tokenA: string;
   tokenB: string;
+  width?: string;
+  height?: string;
 }
-const PairIcons = ({ network, tokenA, tokenB }: IPairIconsProps) => {
+const PairIcons = ({
+  network,
+  tokenA,
+  tokenB,
+  width,
+  height,
+}: IPairIconsProps) => {
   let token1 = ASSET_LIST[network][tokenA]
     ? ASSET_LIST[network][tokenA]
     : undefined;
@@ -27,9 +35,13 @@ const PairIcons = ({ network, tokenA, tokenB }: IPairIconsProps) => {
   return (
     <div className="is-flex">
       <LogoIcon
+        width={width}
+        height={width}
         img={token1 && token1.logo ? token1.logo : UNKNOWN_TOKEN_IMAGE}
       />
       <LogoIcon
+        width={width}
+        height={width}
         img={token2 && token2.logo ? token2.logo : UNKNOWN_TOKEN_IMAGE}
       />
     </div>

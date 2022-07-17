@@ -31,13 +31,17 @@ export class RestAPI {
     return this.fetchResult(this.endpoint + "/rune/" + tokenId);
   }
 
-  async getPools() {
-    return this.fetchResult(this.endpoint + "/pools");
-  }
+  // async getPools() {
+  //   return this.fetchResult(this.endpoint + "/pools");
+  // }
 
   async getTokens() {
     return this.fetchResult(this.endpoint + "/tokens");
   }
+
+	async getToken(id) {
+		return this.fetchResult(this.endpoint + "/tokens/" + id);
+	}
 
 	async getFarms() {
 		return this.fetchResult(this.endpoint + "/farms");
@@ -45,5 +49,25 @@ export class RestAPI {
 
 	async getPrices() {
 		return this.fetchResult(this.endpoint + "/prices");
+	}
+
+	async getLiquidity(id, days) {
+		return this.fetchResult(this.endpoint + `/tokens/liquidity/${id}/${days}`);
+	}
+
+	async getNEP(days) {
+		return this.fetchResult(this.endpoint + `/nep/${days}`);
+	}
+
+	async getPairs() {
+		return this.fetchResult(this.endpoint + "/pairs");
+	}
+
+	async getPair(id) {
+		return this.fetchResult(this.endpoint + "/pairs/" + id);
+	}
+
+	async getPairDay(id) {
+		return this.fetchResult(this.endpoint + "/pairs/" + id + "/day");
 	}
 }

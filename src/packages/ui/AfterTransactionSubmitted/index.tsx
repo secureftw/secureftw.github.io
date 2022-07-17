@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { INetworkType, Network } from "../../neo/network";
-import RuneLoading from "./RuneLoading";
+// import RuneLoading from "./RuneLoading";
 import CheckMark from "../../../ui/pages/Tournament/scenes/Arena/Players/components/CheckMark";
 import { FaExclamationCircle } from "react-icons/fa";
 import { TESTNET } from "../../neo/consts";

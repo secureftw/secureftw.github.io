@@ -51,7 +51,6 @@ const FarmAnalytics = (props) => {
 				setData(res);
 				setLoading(false);
 			} catch (e: any) {
-				console.log(e)
 				setLoading(false);
 				// setError(e.message);
 			}

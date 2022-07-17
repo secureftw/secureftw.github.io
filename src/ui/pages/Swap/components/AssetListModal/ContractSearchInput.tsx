@@ -33,7 +33,6 @@ const ContractSearchInput = ({
       try {
         const res = await new SwapContract(network).getContractInfo(hash);
         const state = await Network.getContactState(network, hash);
-        console.log(state);
         if (res.decimals === 0) {
           setError(`FTWSwap cannot support tokens with 0 decimals.`);
         } else {
