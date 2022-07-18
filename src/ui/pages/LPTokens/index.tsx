@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageLayout from "../../components/PageLayout";
 import { SwapContract } from "../../../packages/neo/contracts";
 import { useWallet } from "../../../packages/provider";
@@ -6,9 +6,12 @@ import { RestAPI } from "../../../packages/neo/api";
 import { u } from "@cityofzion/neon-core";
 import { numberTrim } from "../../../packages/neo/utils";
 import { SpinnerRoundFilled } from "spinners-react";
+import MyLPTokenList from "./MyLPTokenList";
+import MyLPTokenCard from "./MyLPTokenCard";
 
 const LPTokens = (props) => {
-  const { network } = useWallet();
+  const { connectedWallet, network } = useWallet();
+  const [prices, setPrices] = useState();
   const [id, setId] = useState();
   const [info, setInfo] = useState<any>();
   const [error, setError] = useState("");
@@ -24,9 +27,8 @@ const LPTokens = (props) => {
           info.tokenA,
           info.tokenB
         );
-        const prices = await new RestAPI(network).getPrices();
-        const tokenAPrice = prices["0x" + info.tokenA];
-        const tokenBPrice = prices["0x" + info.tokenB];
+        const tokenAPrice = prices ? prices["0x" + info.tokenA]: 0;
+        const tokenBPrice = prices? prices["0x" + info.tokenB]: 0;
         let tokenAReserve = reserve.pair[info.tokenA].reserveAmount;
         let tokenBReserve = reserve.pair[info.tokenB].reserveAmount;
         let tokenAAmount = parseFloat(
@@ -56,13 +58,25 @@ const LPTokens = (props) => {
       }
     }
   };
+
+  useEffect(() => {
+    async function getPrices() {
+      const prices = await new RestAPI(network).getPrices();
+      setPrices(prices);
+    }
+	  getPrices();
+  }, []);
+
   return (
     <PageLayout>
       <div className="columns is-centered">
         <div className="column is-half">
           <div className="box is-shadowless">
             <h1 className="title is-5">LP token calculator</h1>
-	          <p className="subtitle is-7">FTWSwap LP tokens are NFT. Enter LP token ID to find the token value.</p>
+            <p className="subtitle is-7">
+              FTWSwap LP tokens are NFT. Enter LP token ID to find the token
+              value.
+            </p>
             <div className="field has-addons">
               <div className="control  is-expanded">
                 <input
@@ -98,38 +112,27 @@ const LPTokens = (props) => {
                 </div>
               </div>
             </div>
-          ) : info ? (
+          ) : info && id ? (
             <div className="box is-shadowless">
-              <h1 className="title is-5">{id}</h1>
-              <div className="columns">
-                <div className="column">
-                  <div className="heading">{info.tokenASymbol}</div>
-                  <p>
-                    {numberTrim(info.tokenAAmount)} {info.tokenASymbol}
-                  </p>
-                  <p>${numberTrim(info.tokenAUSD)}</p>
-                </div>
-                <div className="column">
-                  <div className="level-item is-block">
-                    <div className="heading">{info.tokenBSymbol}</div>
-                    <p>
-                      {numberTrim(info.tokenBAmount)} {info.tokenBSymbol}
-                    </p>
-                    <p>${numberTrim(info.tokenBUSD)}</p>
-                  </div>
-                </div>
-                <div className="column">
-                  <div className="level-item is-block">
-                    <div className="heading">Total</div>
-                    <p>
-                      <strong>
-                        ${numberTrim(info.tokenBUSD + info.tokenAUSD)}
-                      </strong>
-                    </p>
-                  </div>
-                </div>
-              </div>
+	            <MyLPTokenCard
+		            tokenId={id}
+		            tokenASymbol={info.tokenASymbol}
+		            tokenAAmount={info.tokenAAmount}
+		            tokenAUSD={info.tokenAUSD}
+		            tokenBSymbol={info.tokenBSymbol}
+		            tokenBAmount={info.tokenBAmount}
+		            tokenBUSD={info.tokenBUSD}
+	            />
             </div>
+          ) : (
+            <></>
+          )}
+          {connectedWallet && prices ? (
+            <MyLPTokenList
+	            prices={prices}
+              connectedWallet={connectedWallet}
+              network={network}
+            />
           ) : (
             <></>
           )}

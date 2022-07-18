@@ -7,11 +7,11 @@ import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { defaultDeadLine } from "./helpers";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
 import {
-  IContractInfo,
-  ILPHistory,
-  IReserve,
-  IReserveData,
-  ISwapsHistory,
+	IContractInfo,
+	ILPHistory, ILPToken,
+	IReserve,
+	IReserveData,
+	ISwapsHistory,
 } from "./interfaces";
 import { SMITH_SCRIPT_HASH } from "../smith/consts";
 import {Signer, WitnessConditionType} from "@cityofzion/neon-core/lib/tx";
@@ -491,7 +491,7 @@ export class SwapContract {
     return parseMapValue(res.stack[0] as any);
   };
 
-  getLPTokens = async (connectedWallet: IConnectedWallet) => {
+  getLPTokens = async (connectedWallet: IConnectedWallet): Promise<ILPToken> => {
     const scripts = [
       {
         scriptHash: this.contractHash,
