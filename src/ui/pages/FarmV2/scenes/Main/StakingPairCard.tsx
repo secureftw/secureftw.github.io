@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FARM_V2_STAKE_PATH } from "../../../../../consts";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PairIcons from "../../../../components/PairIcons";
 import { useWallet } from "../../../../../packages/provider";
 import { IPool } from "../../../../../packages/neo/contracts/ftw/farm-v2/interfaces";
@@ -81,7 +81,7 @@ const StakingPairCard = (props: IPool & { prices: IPrices }) => {
               (data.pair[props.tokenA].reserveAmount * props.tokensStaked) /
                 data.totalShare
             )
-          ).toDecimal(8)
+          ).toDecimal(data.pair[props.tokenA].decimals)
         )
       : 0;
 
@@ -93,7 +93,7 @@ const StakingPairCard = (props: IPool & { prices: IPrices }) => {
               (data.pair[props.tokenB].reserveAmount * props.tokensStaked) /
                 data.totalShare
             )
-          ).toDecimal(8)
+          ).toDecimal(data.pair[props.tokenB].decimals)
         )
       : 0;
   const tokenAReserveUSD = tokenAReserveAmount * tokenAPrice;
@@ -102,7 +102,6 @@ const StakingPairCard = (props: IPool & { prices: IPrices }) => {
     pairData && pairData.dailyFeesUSD ? pairData.dailyFeesUSD * 365 : 0;
 
   const TVL = tokenAReserveUSD + tokenBReserveUSD;
-
   const stakeAPR = ((nepPerYear + bonusPerYear) / TVL) * 100;
   const feeAPR = (feesYear / TVL) * 100;
 
