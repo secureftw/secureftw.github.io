@@ -1,7 +1,6 @@
 import React, {useEffect} from "react";
 import PageLayout from "../../components/PageLayout";
 import {
-  SWAP_PAGE_ROUTE,
   SWAP_PATH,
   SWAP_PATH_HISTORY,
   SWAP_PATH_LIQUIDITY_ADD,

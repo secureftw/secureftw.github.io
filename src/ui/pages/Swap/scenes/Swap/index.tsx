@@ -27,7 +27,6 @@ import ReactTooltip from "react-tooltip";
 import { useApp } from "../../../../../common/hooks/use-app";
 import Providers from "../Providers";
 import History from "../History";
-import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
 import {
   DEFAULT_SLIPPAGE,
   PRICE_IMPACT_LIMIT,
@@ -38,6 +37,7 @@ import { getAfterSlippage } from "../../../../../packages/neo/contracts/ftw/swap
 import SwapDetails from "./components/SwapDetails";
 import { u } from "@cityofzion/neon-core";
 import { handleError } from "../../../../../packages/neo/utils/errors";
+import {GAS_SCRIPT_HASH} from "../../../../../packages/neo/consts/nep17-list";
 
 export interface ITokenState {
   hash: string;

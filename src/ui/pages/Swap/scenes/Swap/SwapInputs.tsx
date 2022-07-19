@@ -4,7 +4,7 @@ import { FaExchangeAlt } from "react-icons/fa";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { INetworkType } from "../../../../../packages/neo/network";
 import { ITokenState } from ".";
-import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts";
+import {GAS_SCRIPT_HASH} from "../../../../../packages/neo/consts/nep17-list";
 
 interface ISwapInputsProps {
   network: INetworkType;

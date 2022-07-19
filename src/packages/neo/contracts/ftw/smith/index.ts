@@ -1,7 +1,7 @@
 import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
-import { DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH } from "../../../consts";
+import { DEFAULT_WITNESS_SCOPE} from "../../../consts";
 import { SMITH_SCRIPT_HASH } from "./consts";
 import {
   ISmithNEP11Info,
@@ -19,6 +19,7 @@ import {
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { IRuneMeta } from "../rune/interfaces";
 import { parseMapValue } from "../../../utils";
+import {GAS_SCRIPT_HASH} from "../../../consts/nep17-list";
 
 export class SmithContract {
   network: INetworkType;

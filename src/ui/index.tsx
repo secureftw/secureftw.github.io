@@ -4,8 +4,6 @@ import { HashRouter as Router, Route } from "react-router-dom";
 import Header from "./components/Header";
 import {
 	COLLECTION_PATH,
-	GASFI_PATH,
-	FUSION_PATH,
 	GALLERY_PATH,
 	HOME_PATH,
 	MIGRATION_PATH,
@@ -26,7 +24,6 @@ import Home from "./pages/Home";
 import Smith from "./pages/Smith";
 import Tournament from "./pages/Tournament";
 import Swap from "./pages/Swap";
-import Fusion from "./pages/Fusion";
 import Migration from "./pages/Migration";
 import ReactGa from "./components/ReactGa";
 import Farm from "./pages/Farm";
@@ -58,7 +55,6 @@ const App = () => {
         <Route path={SWAP_PATH} component={Swap} />
         <Route path={FARM_PATH} component={Farm} />
         <Route path={FARM_V2_PATH} component={FarmV2} />
-        <Route path={FUSION_PATH} component={Fusion} />
         <Route path={DAO_PATH} component={DAO} />
         <Route path={IDO_PATH} component={IDO} />
         <Route exact path={MIGRATION_PATH} component={Migration} />

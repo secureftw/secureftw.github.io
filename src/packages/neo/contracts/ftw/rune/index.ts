@@ -1,11 +1,12 @@
 import { u, wallet as NeonWallet } from "@cityofzion/neon-core";
-import { DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH } from "../../../consts";
+import { DEFAULT_WITNESS_SCOPE} from "../../../consts";
 import { INetworkType, Network } from "../../../network";
 import { RUNE_SCRIPT_HASH, RUNE_PRICE } from "./consts";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { IRuneMeta } from "./interfaces";
 import { parseProperties } from "./helpers";
+import {GAS_SCRIPT_HASH} from "../../../consts/nep17-list";
 
 export class NFTContract {
   network: INetworkType;

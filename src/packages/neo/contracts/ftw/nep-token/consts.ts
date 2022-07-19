@@ -1,2 +1,0 @@
-
-export const NEP_SCRIPT_HASH = "f853a98ac55a756ae42379a312d55ddfdf7c8514"

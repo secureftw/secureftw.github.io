@@ -2,7 +2,6 @@ import { MAINNET, PRIVATENET, TESTNET } from "../packages/neo/consts";
 
 export const HOME_PATH = "/";
 export const MIGRATION_PATH = "/migration";
-export const GASFI_PATH = "/gas";
 export const GALLERY_PATH = "/NFT/gallery";
 export const TOURNAMENT_PATH = "/arena";
 export const IDO_PATH = "/ido";
@@ -22,7 +21,6 @@ export const SWAP_PATH_LIQUIDITY_REMOVE = "/swap/liquidity/remove";
 export const FARM_PATH = "/farm";
 export const FARM_STAKE_PATH = "/farm/stake";
 export const FARM_STAKE_POSITIONS_PATH = "/farm/stake/positions";
-export const FUSION_PATH = "/fusion";
 export const DAO_PATH = "/dao";
 export const DAO_CHANNEL_CREATE_PATH = "/dao/create";
 export const DAO_CHANNEL_PATH = "/dao/channel";
@@ -117,12 +115,6 @@ export const ARCHIVE_ROUTE = {
       network: [MAINNET],
       category: [],
     },
-    // {
-    // 	label: "GAS-FI",
-    // 	path: GASFI_PATH,
-    // 	network: [PRIVATENET],
-    // 	category: [],
-    // },
     {
       label: "Migration",
       path: MIGRATION_PATH,

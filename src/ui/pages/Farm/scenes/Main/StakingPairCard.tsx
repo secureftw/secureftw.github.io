@@ -4,12 +4,9 @@ import { useHistory } from "react-router-dom";
 import { IStakingPairs } from "../../../../../packages/neo/contracts/ftw/farm/interfaces";
 import PairIcons from "../../../../components/PairIcons";
 import { useWallet } from "../../../../../packages/provider";
-import {
-  BNEO_SCRIPT_HASH,
-  GAS_SCRIPT_HASH,
-} from "../../../../../packages/neo/consts";
 import {useOnChainData} from "../../../../../common/hooks/use-onchain-data";
 import {StakingContract} from "../../../../../packages/neo/contracts/ftw/farm";
+import {BNEO_SCRIPT_HASH, GAS_SCRIPT_HASH} from "../../../../../packages/neo/consts/nep17-list";
 
 const StakingPairCard = (props: IStakingPairs) => {
   const history = useHistory();

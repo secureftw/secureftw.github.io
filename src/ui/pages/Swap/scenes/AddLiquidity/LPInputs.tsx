@@ -6,7 +6,7 @@ import { IReserveData } from "../../../../../packages/neo/contracts/ftw/swap/int
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { ITokenState } from "./index";
 import { IConnectedWallet } from "../../../../../packages/neo/wallet/interfaces";
-import {GAS_SCRIPT_HASH} from "../../../../../packages/neo/consts";
+import {GAS_SCRIPT_HASH} from "../../../../../packages/neo/consts/nep17-list";
 
 interface ILPInputsProps {
   network: INetworkType;

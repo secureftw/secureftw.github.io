@@ -4,9 +4,10 @@ import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
 import { RUNE_SCRIPT_HASH } from "../rune";
 import { parsePlayer, parseHistory } from "./helpers";
-import { DEFAULT_WITNESS_SCOPE, GAS_SCRIPT_HASH } from "../../../consts";
+import { DEFAULT_WITNESS_SCOPE} from "../../../consts";
 import { base64ToAddress, toDecimal } from "../../../utils";
 import { u, wallet as NeonWallet } from "@cityofzion/neon-core";
+import {GAS_SCRIPT_HASH} from "../../../consts/nep17-list";
 
 export class TournamentContract {
   network: INetworkType;

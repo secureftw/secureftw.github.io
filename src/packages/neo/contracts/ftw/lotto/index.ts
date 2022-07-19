@@ -2,10 +2,10 @@ import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { wallet } from "../../../index";
-import { GAS_SCRIPT_HASH } from "../../../consts";
 import { LOTTO_SCRIPT_HASH } from "./consts";
 import { IReserve } from "../swap/interfaces";
 import { parseMapValue } from "../../../utils";
+import {GAS_SCRIPT_HASH} from "../../../consts/nep17-list";
 
 export class LottoContract {
   network: INetworkType;

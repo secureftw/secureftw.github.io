@@ -13,8 +13,9 @@ const LogoIcon = ({ img, width, height }: ILogoIconProps) => {
         background: "white",
         width: width ? width : "30px",
         height: height ? height : "30px",
-	      justifyContent:"center",
-	      display:"flex"
+        justifyContent: "center",
+        display: "flex",
+        margin: "auto",
       }}
     >
       <img style={{ width: "100%" }} src={img} />

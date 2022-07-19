@@ -8,10 +8,10 @@ import { u } from "@cityofzion/neon-core";
 import { IPrices } from "../../../../../packages/neo/api/interfaces";
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import { SwapContract } from "../../../../../packages/neo/contracts";
-import { NEP_SCRIPT_HASH } from "../../../../../packages/neo/contracts/ftw/nep-token/consts";
 import { numberTrim } from "../../../../../packages/neo/utils";
 import { FaAngleDown } from "react-icons/fa";
 import { RestAPI } from "../../../../../packages/neo/api";
+import {NEP_SCRIPT_HASH} from "../../../../../packages/neo/consts/nep17-list";
 
 const StakingPairCard = (props: IPool & { prices: IPrices }) => {
   const { network } = useWallet();

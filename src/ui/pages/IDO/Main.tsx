@@ -16,9 +16,9 @@ import { FaArrowDown } from "react-icons/fa";
 import moment from "moment";
 import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubmitted";
 import toast from "react-hot-toast";
-import { NEP_SCRIPT_HASH } from "../../../packages/neo/contracts/ftw/nep-token/consts";
 import { useApp } from "../../../common/hooks/use-app";
 import {handleError} from "../../../packages/neo/utils/errors";
+import {NEP_SCRIPT_HASH} from "../../../packages/neo/consts/nep17-list";
 
 const Main = () => {
   const { toggleWalletSidebar } = useApp();
