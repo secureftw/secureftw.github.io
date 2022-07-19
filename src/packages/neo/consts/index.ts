@@ -60,6 +60,8 @@ export const MAINNET_CONFIG = {
 /* Contract hashes */
 export const GAS_SCRIPT_HASH = NEON_CONST.NATIVE_CONTRACT_HASH.GasToken;
 export const NEO_SCRIPT_HASH = NEON_CONST.NATIVE_CONTRACT_HASH.NeoToken;
+export const USDT_SCRIPT_HASH = "cd48b160c1bbc9d74997b803b9a7ad50a4bef020";
+export const BNEO_SCRIPT_HASH = "48c40d4666f93408be1bef038b6722404d9a4c2a";
 
 /* Dev wallet */
 export const DEV_WALLET_PRIVATE_KEY =
@@ -74,11 +76,6 @@ export const DEFAULT_WITNESS_SCOPE = (senderHash: string) => {
 
 export const UNKNOWN_TOKEN_IMAGE = "/symbols/unknown.png";
 
-export const BNEO_SCRIPT_HASH = {
-  [PRIVATENET]: "48c40d4666f93408be1bef038b6722404d9a4c2a",
-  [TESTNET]: "48c40d4666f93408be1bef038b6722404d9a4c2a",
-  [MAINNET]: "48c40d4666f93408be1bef038b6722404d9a4c2a",
-};
 export const FTW_SCRIPT_HASH = {
   [PRIVATENET]: "c1a56650f12420405c5b7e2634eb3779a0c3e396",
   [TESTNET]: "c1a56650f12420405c5b7e2634eb3779a0c3e396",

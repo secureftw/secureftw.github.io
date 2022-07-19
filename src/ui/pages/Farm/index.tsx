@@ -16,21 +16,16 @@ import ClaimRewards from "./scenes/ClaimRewards";
 import CheckMarketStatus from "./components/CheckMarketStatus";
 
 const Farm = () => {
-  // const { network } = useWallet();
   const [refresh, setRefresh] = useState(0);
-  // if (!FARM_PAGE_ROUTE.network.includes(network)) {
-  //   return <TestnetOnlyRoute title={"FTW Farm"} />;
-  // }
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     document.title = "FTW | Farm";
   }, []);
   return (
     <PageLayout>
       <div className="columns">
-        <div className="column is-6 is-offset-3">
+        <div className="column is-8 is-offset-2">
           <div className="columns">
-            <div className="column is-9">
+            <div className="column is-8">
               <CheckMarketStatus />
               <div className="box is-shadowless">
                 <Route exact={true} path={FARM_PATH} component={StakingMain} />

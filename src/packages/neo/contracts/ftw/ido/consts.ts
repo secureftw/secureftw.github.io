@@ -30,7 +30,7 @@ export const payments = (network: INetworkType) => [
     amount: 1200,
   },
   {
-    contractHash: BNEO_SCRIPT_HASH[network],
+    contractHash: BNEO_SCRIPT_HASH,
     symbol: "bNEO",
     logo: "/symbols/bneo.jpeg",
     decimals: 8,

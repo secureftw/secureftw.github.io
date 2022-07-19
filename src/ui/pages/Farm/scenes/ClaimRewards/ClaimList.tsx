@@ -59,14 +59,14 @@ const ClaimList = ({
 
                   <div className="level-right">
                     <div className="level-item">
-                      <small>APR {item.APR / 100}%</small>
+	                    <CounterUp
+		                    claimable={item.claimable}
+		                    rewardsPerDay={item.rewardsPerDay}
+	                    />
                     </div>
                   </div>
                 </div>
-                <CounterUp
-                  claimable={item.claimable}
-                  rewardsPerDay={item.rewardsPerDay}
-                />
+
               </div>
             </div>
           );

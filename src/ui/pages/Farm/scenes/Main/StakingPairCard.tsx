@@ -15,7 +15,7 @@ const StakingPairCard = (props: IStakingPairs) => {
   const history = useHistory();
   const { network } = useWallet();
   const isBNEOAndGAS =
-    props.tokenA === BNEO_SCRIPT_HASH[network] &&
+    props.tokenA === BNEO_SCRIPT_HASH &&
     props.tokenB === GAS_SCRIPT_HASH;
 
 	const { isLoaded, error, data } = useOnChainData(() => {

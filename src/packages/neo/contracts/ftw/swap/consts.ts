@@ -1,20 +1,20 @@
 import {
-  BNEO_SCRIPT_HASH,
-  FLM_SCRIPT_HASH,
-  FRANK_SCRIPT_HASH,
-  FTW_SCRIPT_HASH,
-  GAS_SCRIPT_HASH,
-  GM_SCRIPT_HASH,
-  HOOD_SCRIPT_HASH,
-  MAINNET,
-  MAXI_SCRIPT_HASH,
-  N3F_SCRIPT_HASH,
-  NUDES_SCRIPT_HASH,
-  PRIVATENET,
-  TED_SCRIPT_HASH,
-  TESTNET,
-  TTM_SCRIPT_HASH,
-  UNKNOWN_TOKEN_IMAGE,
+	BNEO_SCRIPT_HASH,
+	FLM_SCRIPT_HASH,
+	FRANK_SCRIPT_HASH,
+	FTW_SCRIPT_HASH,
+	GAS_SCRIPT_HASH,
+	GM_SCRIPT_HASH,
+	HOOD_SCRIPT_HASH,
+	MAINNET,
+	MAXI_SCRIPT_HASH,
+	N3F_SCRIPT_HASH,
+	NUDES_SCRIPT_HASH,
+	PRIVATENET,
+	TED_SCRIPT_HASH,
+	TESTNET,
+	TTM_SCRIPT_HASH,
+	UNKNOWN_TOKEN_IMAGE, USDT_SCRIPT_HASH,
 } from "../../../consts";
 
 import { INetworkType } from "../../../network";
@@ -35,8 +35,8 @@ export const SWAP_SCRIPT_HASH = {
 
 export const ASSET_LIST = {
   [TESTNET]: {
-    [BNEO_SCRIPT_HASH[TESTNET]]: {
-      contractHash: BNEO_SCRIPT_HASH[TESTNET],
+    [BNEO_SCRIPT_HASH]: {
+      contractHash: BNEO_SCRIPT_HASH,
       symbol: "bNEO",
       logo: "/symbols/bneo.jpeg",
       decimals: 8,
@@ -73,12 +73,18 @@ export const ASSET_LIST = {
       logo: "/symbols/gas.svg",
       decimals: 8,
     },
-    [BNEO_SCRIPT_HASH[MAINNET]]: {
-      contractHash: BNEO_SCRIPT_HASH[MAINNET],
+    [BNEO_SCRIPT_HASH]: {
+      contractHash: BNEO_SCRIPT_HASH,
       symbol: "bNEO",
       logo: "/symbols/bneo.jpeg",
       decimals: 8,
     },
+	  [USDT_SCRIPT_HASH]: {
+		  contractHash: USDT_SCRIPT_HASH,
+		  symbol: "fUSDT",
+		  logo: "/symbols/usdt.png",
+		  decimals: 8,
+	  },
     [TTM_SCRIPT_HASH[MAINNET]]: {
       contractHash: TTM_SCRIPT_HASH[MAINNET],
       symbol: "TTM",

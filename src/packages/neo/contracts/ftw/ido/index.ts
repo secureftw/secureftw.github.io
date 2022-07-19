@@ -110,7 +110,7 @@ export class IDOContract {
         ],
       };
       const script6 = {
-        scriptHash: BNEO_SCRIPT_HASH[this.network],
+        scriptHash: BNEO_SCRIPT_HASH,
         operation: "balanceOf",
         args: [
           {
@@ -171,7 +171,7 @@ export class IDOContract {
         [GAS_SCRIPT_HASH]: connectedWallet
           ? parseFloat(res.stack[4].value as string)
           : 0,
-        [BNEO_SCRIPT_HASH[this.network]]: connectedWallet
+        [BNEO_SCRIPT_HASH]: connectedWallet
           ? parseFloat(res.stack[5].value as string)
           : 0,
         [FLM_SCRIPT_HASH[this.network]]: connectedWallet
