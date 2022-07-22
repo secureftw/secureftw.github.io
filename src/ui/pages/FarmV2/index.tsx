@@ -32,7 +32,6 @@ const Farm = () => {
     }
     fetch();
   }, [refresh, network]);
-	console.log(prices)
   if (!prices) return <></>;
   return (
     <PageLayout>
@@ -74,4 +73,4 @@ const Farm = () => {
   );
 };
 
-export default React.memo(Farm);
+export default Farm;

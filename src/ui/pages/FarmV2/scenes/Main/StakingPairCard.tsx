@@ -118,27 +118,7 @@ const StakingPairCard = ({
 				        {tokenASymbol} / {tokenBSymbol}
 			        </strong>
 		        </div>
-
 	        </div>
-
-          {/*<div className="level is-mobile">*/}
-          {/*  <div className="level-left">*/}
-          {/*    <div className="level-item">*/}
-          {/*      <PairIcons*/}
-          {/*        network={network}*/}
-          {/*        tokenA={tokenA}*/}
-          {/*        tokenB={tokenB}*/}
-          {/*        width="20px"*/}
-          {/*        height="20px"*/}
-          {/*      />*/}
-          {/*    </div>*/}
-          {/*    <div className="level-item">*/}
-          {/*      <strong>*/}
-          {/*        {tokenASymbol} / {tokenBSymbol}*/}
-          {/*      </strong>*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
         </td>
         <td>
           <div className="is-center" style={{ justifyContent: "start" }}>
