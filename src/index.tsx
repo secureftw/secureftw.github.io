@@ -8,11 +8,9 @@ import "./styles/style.scss";
 import App from "./ui";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <AppCContextProvider>
-      <App />
-    </AppCContextProvider>
-  </React.StrictMode>,
+  <AppCContextProvider>
+    <App />
+  </AppCContextProvider>,
   document.getElementById("root")
 );
 

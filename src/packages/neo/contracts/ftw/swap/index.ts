@@ -100,8 +100,6 @@ export class SwapContract {
       //   },
       // ],
     };
-
-
     return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 

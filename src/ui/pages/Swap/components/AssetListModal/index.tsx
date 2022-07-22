@@ -8,6 +8,7 @@ import {
 
 import ContractSearchInput from "./ContractSearchInput";
 import SwapTokenCard from "./SwapTokenCard";
+import { FaPlus } from "react-icons/fa";
 interface IAssetListModalProps {
   activeTokenInput: "A" | "B";
   tokenAHash?: string;
@@ -63,6 +64,15 @@ const AssetListModal = ({
               </>
             );
           })}
+	        <a
+		        onClick={() => setCustomInputMode(true)}
+		        className="button is-fullwidth is-black"
+	        >
+		        <span className="icon">
+			        <FaPlus />
+		        </span>
+		        <span>Custom contract hash</span>
+	        </a>
         </div>
       )}
     </Modal>

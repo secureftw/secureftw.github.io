@@ -10,12 +10,14 @@ import LogoIcon from "../../../../components/LogoIcon";
 import { NEP_LOGO } from "../../../../../packages/neo/contracts/ftw/farm/consts";
 import { handleError } from "../../../../../packages/neo/utils/errors";
 import ClaimList from "./ClaimList";
-import {FarmV2Contract} from "../../../../../packages/neo/contracts/ftw/farm-v2";
+import { FarmV2Contract } from "../../../../../packages/neo/contracts/ftw/farm-v2";
+import {IPrices} from "../../../../../packages/neo/api/interfaces";
 
 interface IClaimRewardsProps {
   pRefresh: number;
+  prices?: IPrices;
 }
-const ClaimRewards = ({ pRefresh }: IClaimRewardsProps) => {
+const ClaimRewards = ({ pRefresh, prices }: IClaimRewardsProps) => {
   const { toggleWalletSidebar } = useApp();
   const { network, connectedWallet } = useWallet();
   const [txid, setTxid] = useState("");
@@ -47,6 +49,7 @@ const ClaimRewards = ({ pRefresh }: IClaimRewardsProps) => {
   const { isLoaded, error, data } = useOnChainData(() => {
     return new FarmV2Contract(network).getClaimable(connectedWallet);
   }, [connectedWallet, network, refresh, pRefresh]);
+
   return (
     <div>
       <div className="level is-mobile">
@@ -55,13 +58,14 @@ const ClaimRewards = ({ pRefresh }: IClaimRewardsProps) => {
             <LogoIcon img={NEP_LOGO} />
           </div>
           <div className="level-item">
-            <h1 className="title is-7 ">Rewards</h1>
+            <h1 className="title is-6 ">Rewards</h1>
           </div>
         </div>
       </div>
 
       <div className="mb-3">
         <ClaimList
+	        prices={prices}
           handleToggle={(item) => {}}
           isClaimNode={false}
           selectedItems={[]}
@@ -71,6 +75,7 @@ const ClaimRewards = ({ pRefresh }: IClaimRewardsProps) => {
           pRefresh={pRefresh}
         />
       </div>
+
       <button
         disabled={isLoaded && data.length === 0}
         onClick={() => {
@@ -87,6 +92,7 @@ const ClaimRewards = ({ pRefresh }: IClaimRewardsProps) => {
 
       {isClaimModalOpen && (
         <ClaimModal
+	        prices={prices}
           network={network}
           connectedWallet={connectedWallet}
           refresh={refresh}

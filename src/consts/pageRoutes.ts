@@ -52,7 +52,7 @@ export const FARM_PAGE_ROUTE = {
 export const FARM_V2_PAGE_ROUTE = {
   label: "Double Farm",
   path: FARM_V2_PATH,
-  network: [TESTNET, MAINNET],
+  network: [MAINNET],
   category: [],
 };
 

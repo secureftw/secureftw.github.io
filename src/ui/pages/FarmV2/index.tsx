@@ -11,12 +11,29 @@ import Stake from "./scenes/Stake";
 import MyPositions from "./scenes/MyPositions";
 import ClaimRewards from "./scenes/ClaimRewards";
 import CheckMarketStatus from "./components/CheckMarketStatus";
+import { RestAPI } from "../../../packages/neo/api";
+import { MAINNET } from "../../../packages/neo/consts";
+import { useWallet } from "../../../packages/provider";
+import { IPrices } from "../../../packages/neo/api/interfaces";
 
 const Farm = () => {
   const [refresh, setRefresh] = useState(0);
+  const { network } = useWallet();
+  const [prices, setPrices] = useState<IPrices | undefined>();
+  // if (!FARM_V2_PAGE_ROUTE.network.includes(network)) {
+  //   return <ProductNotSupportedInNetwork title={"DAO"} network={network} />;
+  // }
+
   useEffect(() => {
     document.title = "FTW | Double Farm";
-  }, []);
+    async function fetch() {
+      const res = await new RestAPI(MAINNET).getPrices();
+      setPrices(res);
+    }
+    fetch();
+  }, [refresh, network]);
+	console.log(prices)
+  if (!prices) return <></>;
   return (
     <PageLayout>
       <div className="columns">
@@ -28,7 +45,7 @@ const Farm = () => {
                 <Route
                   exact={true}
                   path={FARM_V2_PATH}
-                  component={StakingMain}
+                  component={() => <StakingMain prices={prices} />}
                 />
                 <Route
                   exact={true}
@@ -47,7 +64,7 @@ const Farm = () => {
             </div>
             <div className="column is-4">
               <div className="box">
-                <ClaimRewards pRefresh={refresh} />
+                <ClaimRewards pRefresh={refresh} prices={prices} />
               </div>
             </div>
           </div>
@@ -57,4 +74,4 @@ const Farm = () => {
   );
 };
 
-export default Farm;
+export default React.memo(Farm);

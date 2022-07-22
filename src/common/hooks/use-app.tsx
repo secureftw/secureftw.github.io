@@ -38,7 +38,6 @@ export const AppCContextProvider = (props: { children: any }) => {
     walletSidebarStatus,
     toggleWalletSidebar,
   };
-
   return (
     <AppContext.Provider value={contextValue}>
       {props.children}

@@ -8,28 +8,34 @@ import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificati
 import { FarmV2Contract } from "../../../../../packages/neo/contracts/ftw/farm-v2";
 import { RestAPI } from "../../../../../packages/neo/api";
 import { MAINNET } from "../../../../../packages/neo/consts";
+import { NEP_SCRIPT_HASH } from "../../../../../packages/neo/consts/nep17-list";
+import { IPrices } from "../../../../../packages/neo/api/interfaces";
 
-const StakingMain = ({ onRefresh }) => {
+interface IStakingMainProps {
+  prices?: IPrices;
+}
+const StakingMain = ({ prices }: IStakingMainProps) => {
   const { network } = useWallet();
   const [refresh, setRefresh] = useState(0);
-  const [prices, setPrices] = useState();
+  const [data, setData] = useState<any>();
+  const [isLoading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const handleRefresh = () => setRefresh(refresh + 1);
-  const { isLoaded, error, data } = useOnChainData(() => {
-    return new FarmV2Contract(network).getPools();
-  }, [network, refresh]);
-
   useEffect(() => {
     async function fetch() {
+      setError("");
+      setLoading(true);
       try {
-        const res = await new RestAPI(MAINNET).getPrices();
-        setPrices(res);
+        const pools = await new FarmV2Contract(network).getPools();
+        setData(pools);
+        setLoading(false);
       } catch (e: any) {
-        console.error(e);
+        setLoading(false);
+        setError(e.message);
       }
     }
     fetch();
-  }, []);
-
+  }, [refresh, network]);
   return (
     <div>
       <div className="level is-mobile">
@@ -53,33 +59,40 @@ const StakingMain = ({ onRefresh }) => {
       </div>
       <hr />
       <div>
-        {!isLoaded ? (
+        {isLoading ? (
           <div>Loading..</div>
         ) : error ? (
           <ErrorNotificationWithRefresh
             error={error}
             onRefresh={handleRefresh}
           />
-        ) : data && data.length > 0 ? (
+        ) : (
           <div className="table-container">
             <table className="table is-fullwidth">
-	            <thead>
-	            <tr>
-		            <th>Pool</th>
-		            <th>Reward tokens</th>
-		            <th>APR</th>
-		            <th></th>
-	            </tr>
-	            </thead>
+              <thead>
+                <tr>
+                  <th>Pool</th>
+                  <th>Reward tokens</th>
+                  <th>APR</th>
+                  <th></th>
+                </tr>
+              </thead>
               <tbody>
                 {data.map((item, i) => (
-                  <StakingPairCard key={"sc" + i} {...item} prices={prices} />
+                  <StakingPairCard
+                    key={"sc" + i}
+                    {...item}
+                    tokenAPrice={prices ? prices["0x" + item.tokenA] : 0}
+                    tokenBPrice={prices ? prices["0x" + item.tokenB] : 0}
+                    nepPrice={prices ? prices["0x" + NEP_SCRIPT_HASH] : 0}
+                    bonusTokenPrice={
+                      prices ? prices["0x" + item.bonusToken] : 0
+                    }
+                  />
                 ))}
               </tbody>
             </table>
           </div>
-        ) : (
-          <div></div>
         )}
       </div>
     </div>
