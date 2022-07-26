@@ -1,7 +1,7 @@
 import { INetworkType, Network } from "../../../network";
 import { SWAP_SCRIPT_HASH } from "../swap/consts";
 import { IConnectedWallet } from "../../../wallet/interfaces";
-import { tx, wallet as NeonWallet } from "@cityofzion/neon-core";
+import { wallet as NeonWallet } from "@cityofzion/neon-core";
 import { wallet } from "../../../index";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
 import {IClaimableRewards, ILPTokens, IPool} from "./interfaces";

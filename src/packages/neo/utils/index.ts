@@ -110,7 +110,7 @@ const stringList = [
   "author",
   "bonusTokenSymbol",
 ];
-const addressList = ["owner", "account", "creator"];
+const addressList = ["owner", "account", "creator", "receiver"];
 const hash160List = [
   "contractHash",
   "tokenA",
@@ -119,6 +119,7 @@ const hash160List = [
   "tokenOut",
   "bonusToken",
   "bonusTokenHash",
+
 ];
 const dateList = ["createdAt"];
 const intList = [
@@ -152,6 +153,8 @@ const intList = [
   "bonusRewardDebt",
   "accumulatedRewardsPerShare",
   "accumulatedBonusPerShare",
+	"lockedAmount",
+	"releasedAt",
 ];
 const classify = (k: string): any => {
   if (addressList.includes(k)) {

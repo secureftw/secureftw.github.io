@@ -9,10 +9,12 @@ import { GetContractStateResult } from "@cityofzion/neon-core/lib/rpc/Query";
 interface ContractSearchInputProps {
   network: INetworkType;
   onAssetClick: (assetHash: string, symbol: string, decimals: number) => void;
+  filterDecimals?: boolean; // This to know use of swap or locker
 }
 const ContractSearchInput = ({
   network,
   onAssetClick,
+  filterDecimals,
 }: ContractSearchInputProps) => {
   const [customContractHash, setContractHash] = useState("");
   const [contractInfo, setContractInfo] = useState<IContractInfo | undefined>();
@@ -33,7 +35,7 @@ const ContractSearchInput = ({
       try {
         const res = await new SwapContract(network).getContractInfo(hash);
         const state = await Network.getContactState(network, hash);
-        if (res.decimals === 0) {
+        if (res.decimals === 0 && filterDecimals) {
           setError(`FTWSwap cannot support tokens with 0 decimals.`);
         } else {
           setContractInfo(res);

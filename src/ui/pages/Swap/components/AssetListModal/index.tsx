@@ -15,6 +15,7 @@ interface IAssetListModalProps {
   tokenBHash?: string;
   onClose: () => void;
   onAssetClick: (assetHash: string, symbol: string, decimals: number) => void;
+  filterDecimals?: boolean; // This to know use of swap or locker
 }
 
 const AssetListModal = ({
@@ -23,6 +24,7 @@ const AssetListModal = ({
   onAssetClick,
   onClose,
   activeTokenInput,
+  filterDecimals,
 }: IAssetListModalProps) => {
   const { network } = useWallet();
   const [isCustomInputMode, setCustomInputMode] = useState(false);
@@ -48,7 +50,7 @@ const AssetListModal = ({
   return (
     <Modal onClose={onClose}>
       {isCustomInputMode ? (
-        <ContractSearchInput onAssetClick={onAssetClick} network={network} />
+        <ContractSearchInput onAssetClick={onAssetClick} network={network} filterDecimals={filterDecimals} />
       ) : (
         <div>
           {SWAP_ASSET_CATEGORY.map((category) => {
@@ -64,15 +66,15 @@ const AssetListModal = ({
               </>
             );
           })}
-	        <a
-		        onClick={() => setCustomInputMode(true)}
-		        className="button is-fullwidth is-black"
-	        >
-		        <span className="icon">
-			        <FaPlus />
-		        </span>
-		        <span>Custom contract hash</span>
-	        </a>
+          <a
+            onClick={() => setCustomInputMode(true)}
+            className="button is-fullwidth is-black"
+          >
+            <span className="icon">
+              <FaPlus />
+            </span>
+            <span>Custom contract hash</span>
+          </a>
         </div>
       )}
     </Modal>

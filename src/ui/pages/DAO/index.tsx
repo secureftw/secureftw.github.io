@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 import {
   DAO_CHANNEL_CREATE_PATH,
@@ -13,16 +13,13 @@ import { useWallet } from "../../../packages/provider";
 import ProductNotSupportedInNetwork from "../../components/ProductNotSupportedInNetwork";
 
 const Dao = () => {
+  useEffect(() => {
+    document.title = "FTW | DAO";
+  }, []);
   const { network } = useWallet();
   if (!DAO_PAGE_ROUTE.network.includes(network)) {
-    return (
-     <ProductNotSupportedInNetwork title={"DAO"} network={network} />
-    );
+    return <ProductNotSupportedInNetwork title={"DAO"} network={network} />;
   }
-	// eslint-disable-next-line react-hooks/rules-of-hooks
-	useEffect(() => {
-		document.title = "FTW | DAO";
-	}, []);
   return (
     <div>
       <Route exact={true} path={DAO_PATH} component={ChannelList} />

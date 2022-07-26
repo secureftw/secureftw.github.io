@@ -102,6 +102,14 @@ For fixed top height
   }
 }
 
+.is-128x128-desktop{
+  @extend .is-128x128;
+  @include mobile{
+    width: 64px!important;
+    height: 64px!important;
+  }
+}
+
 #Rune {
   .rune {
     @include mobile {

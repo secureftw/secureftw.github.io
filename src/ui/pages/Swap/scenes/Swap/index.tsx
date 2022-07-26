@@ -437,6 +437,7 @@ const Swap = () => {
           tokenBHash={tokenB ? tokenB.hash : undefined}
           onAssetClick={onAssetClick}
           onClose={() => setAssetChangeModalActive("")}
+          filterDecimals={true}
         />
       )}
 
