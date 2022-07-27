@@ -202,10 +202,9 @@ const Create = () => {
             <>
               <div className="box is-shadowless">
                 <div className="content is-small">
-                  <li>You are creating a new proposal of </li>
+	                <li>Fee is <span className="has-text-primary has-text-weight-bold"> 100 NEP</span></li>
                   <li>
-                    You will get your tokens back after{" "}
-                    <strong>proposal expired</strong>.
+                    There is no way to get tokens back earlier than the release time.
                   </li>
                   <li>
                     Do not use <strong>Emojis</strong>.
