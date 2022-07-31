@@ -8,7 +8,7 @@ const Migration = (props) => {
   const [vantaEffect, setVantaEffect] = useState(0);
   const myRef = useRef(null);
   useEffect(() => {
-	  document.title = "FTW | NEP5 Migration";
+	  document.title = "FTW NEP5 Migration";
     if (!vantaEffect) {
       setVantaEffect(
         DOTS({

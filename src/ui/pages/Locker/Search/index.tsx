@@ -3,10 +3,11 @@ import { ILocker } from "../../../../packages/neo/contracts/ftw/locker/interface
 import { LockerContract } from "../../../../packages/neo/contracts/ftw/locker";
 import { useWallet } from "../../../../packages/provider";
 import { FaSearch } from "react-icons/fa";
-import LockerByUserCard from "../LockersByAccount/LockerByUserCard";
+import LockerKeyCard from "../LockerKeys/LockerKeyCard";
 import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { LOCKER_SEARCH_PATH } from "../../../../consts";
+import LockerCard from "./LockerCard";
 
 const LockerSearch = () => {
   const location = useLocation();
@@ -95,16 +96,16 @@ const LockerSearch = () => {
                         <th>Locker no</th>
                         <th>Contract hash</th>
                         <th>Symbol</th>
-                        <th>Sender</th>
-                        <th>Receiver</th>
                         <th>Amount</th>
                         <th>Release at</th>
                         <th>Created at</th>
+                        <th>Time left</th>
+                        <th>Status</th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <LockerByUserCard {...locker} />
+                      <LockerCard {...locker} />
                     </tbody>
                   </table>
                 </div>

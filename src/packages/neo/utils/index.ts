@@ -155,6 +155,7 @@ const intList = [
   "accumulatedBonusPerShare",
 	"lockedAmount",
 	"releasedAt",
+	"releaseAt",
 ];
 const classify = (k: string): any => {
   if (addressList.includes(k)) {

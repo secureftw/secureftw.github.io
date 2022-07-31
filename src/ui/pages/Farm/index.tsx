@@ -18,7 +18,7 @@ import CheckMarketStatus from "./components/CheckMarketStatus";
 const Farm = () => {
   const [refresh, setRefresh] = useState(0);
   useEffect(() => {
-    document.title = "FTW | Farm";
+    document.title = "FTW Farm";
   }, []);
   return (
     <PageLayout>

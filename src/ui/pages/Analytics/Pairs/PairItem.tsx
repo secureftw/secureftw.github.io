@@ -36,7 +36,7 @@ const PairItem = ({
     fetch();
   }, []);
 	if(isLoading) return <></>
-	if(data && data.volumeUSD === 0) return <></>
+	if(data && data.reserveUSD < 100) return <></>
   return (
     <tr>
       <td>

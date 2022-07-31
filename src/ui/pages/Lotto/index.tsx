@@ -7,7 +7,7 @@ import Main from "./Main";
 const Lotto = () => {
 	useEffect(() => {
 		document.title =
-			"FTW | Sweepstake";
+			"FTW Sweepstake";
 	}, []);
   return (
     <div>

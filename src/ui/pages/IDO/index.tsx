@@ -7,7 +7,7 @@ import Main from "./Main";
 const IDO = () => {
 	useEffect(() => {
 		document.title =
-			"FTW | IDO";
+			"FTW IDO";
 	}, []);
   return (
     <div>

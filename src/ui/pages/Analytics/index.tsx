@@ -19,7 +19,7 @@ const Analytics = () => {
   }
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    document.title = "FTW | Analytics";
+    document.title = "FTW Analytics";
   }, []);
   return (
     <PageLayout>

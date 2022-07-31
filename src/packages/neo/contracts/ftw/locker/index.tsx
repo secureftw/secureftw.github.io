@@ -6,10 +6,10 @@ import { LOCKER_SCRIPT_HASH } from "./consts";
 import { NEP_SCRIPT_HASH } from "../../../consts/nep17-list";
 import { parseMapValue } from "../../../utils";
 import {
-  ILocker,
-  ILockerContract,
-  ILockerContracts,
-  ILockersByToken,
+	ILocker,
+	ILockerContract,
+	ILockerContracts, ILockerKeyToken,
+	ILockersByToken,
 } from "./interface";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
 
@@ -76,8 +76,8 @@ export class LockerContract {
         {
           account: senderHash,
           scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [contract.assetHash, NEP_SCRIPT_HASH],
-        },
+          allowedContracts: [contract.assetHash, NEP_SCRIPT_HASH, this.contractHash],
+        }
       ],
     };
     return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
@@ -88,27 +88,31 @@ export class LockerContract {
       connectedWallet.account.address
     );
     const invokeScript = {
-      operation: "unLock",
+      operation: "transfer",
       scriptHash: this.contractHash,
       args: [
-        {
-          type: "Integer",
-          value: lockerNo,
-        },
-        {
-          type: "Hash160",
-          value: senderHash,
-        },
+	      {
+		      type: "Hash160",
+		      value: this.contractHash,
+	      },
+	      {
+		      type: "String",
+		      value: lockerNo,
+	      },
+	      {
+		      type: "Any",
+		      value: null,
+	      },
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
   };
 
-  getToken = async (contractHash): Promise<ILockerContract> => {
+  getContract = async (contractHash): Promise<ILockerContract> => {
     const script = {
       scriptHash: this.contractHash,
-      operation: "getToken",
+      operation: "getContract",
       args: [
         {
           type: "Hash160",
@@ -123,10 +127,10 @@ export class LockerContract {
     return parseMapValue(res.stack[0] as any);
   };
 
-  getTokens = async (): Promise<ILockerContracts> => {
+  getContracts = async (): Promise<ILockerContracts> => {
     const script = {
       scriptHash: this.contractHash,
-      operation: "getTokens",
+      operation: "getContracts",
       args: [
         {
           type: "Integer",
@@ -168,7 +172,7 @@ export class LockerContract {
   ): Promise<ILockersByToken> => {
     const script = {
       scriptHash: this.contractHash,
-      operation: "getLockersByToken",
+      operation: "getLockersByContract",
       args: [
         {
           type: "Hash160",
@@ -191,22 +195,14 @@ export class LockerContract {
     return parseMapValue(res.stack[0] as any);
   };
 
-  getLockersByUser = async (address: string): Promise<ILockersByToken> => {
+  getLockerKeys = async (address: string): Promise<ILockerKeyToken[]> => {
     const script = {
       scriptHash: this.contractHash,
-      operation: "getLockersByOwner",
+      operation: "getKeys",
       args: [
         {
           type: "Hash160",
           value: NeonWallet.getScriptHashFromAddress(address),
-        },
-        {
-          type: "Integer",
-          value: "30",
-        },
-        {
-          type: "Integer",
-          value: "1",
         },
       ],
     };
@@ -214,6 +210,7 @@ export class LockerContract {
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-    return parseMapValue(res.stack[0] as any);
+	  // @ts-ignore
+	  return res.stack[0].value.map((item) => parseMapValue(item));
   };
 }

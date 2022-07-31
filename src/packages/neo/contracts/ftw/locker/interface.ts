@@ -29,3 +29,15 @@ export interface ILocker{
 	description: string
 	releasedAt: number
 }
+
+export interface ILockerKeyToken{
+	owner: string
+	name: string
+	symbol: string
+	decimals: number
+	lockerNo: number
+	contractHash: string
+	amount: number
+	releaseAt: number
+	createdAt: string
+}

@@ -20,7 +20,7 @@ import MarketStatus from "./components/CheckMarketStatus";
 const Swap = () => {
 	useEffect(() => {
 		document.title =
-			"FTW | Swap";
+			"FTW Swap";
 	}, []);
   return (
     <div>

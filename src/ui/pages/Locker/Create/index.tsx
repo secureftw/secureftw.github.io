@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useWallet } from "../../../../packages/provider";
 import toast from "react-hot-toast";
-import MDEditor from "@uiw/react-md-editor";
 import Modal from "../../../components/Modal";
 import AfterTransactionSubmitted from "../../../../packages/ui/AfterTransactionSubmitted";
 import DatePicker from "react-datepicker";
@@ -13,6 +12,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { LOCKER_USER_PATH } from "../../../../consts";
 import { wallet } from "@cityofzion/neon-core";
+// import MDEditor from "@uiw/react-md-editor";
+// import rehypeSanitize from "rehype-sanitize";
 
 export interface IContractState {
   assetHash: string;
@@ -28,22 +29,24 @@ const Create = () => {
   const [contract, setContractHash] = useState<IContractState | undefined>(
     undefined
   );
-  const [receiver, setReceiver] = useState("");
+  const [receiver, setReceiver] = useState(
+    connectedWallet ? connectedWallet.account.address : ""
+  );
   const [amount, setAmount] = useState<number | undefined>(0);
   const [title, setTile] = useState("");
   const [description, setDescription] = useState("");
-  // const [releaseAt, setReleaseAt] = useState(
-  //   new Date(Date.now() + 3600 * 1000 * 24)
-  // );
-  const [releaseAt, setReleaseAt] = useState(new Date(Date.now() + 120000));
+  const [releaseAt, setReleaseAt] = useState(
+    // new Date(Date.now() + 3600 * 1000 * 24)
+    new Date(Date.now())
+  );
   const [txid, setTxid] = useState("");
 
   const onSubmit = async () => {
     if (connectedWallet && contract && receiver && amount) {
-			if(!wallet.isAddress(receiver)){
-				toast.error("Check receiver");
-				return;
-			}
+      if (!wallet.isAddress(receiver)) {
+        toast.error("Check receiver");
+        return;
+      }
       try {
         const res = await new LockerContract(network).create(
           connectedWallet,
@@ -80,7 +83,7 @@ const Create = () => {
   useEffect(() => {
     async function fetch(contractHash) {
       try {
-        const contract = await new LockerContract(network).getToken(
+        const contract = await new LockerContract(network).getContract(
           contractHash
         );
         setContractHash({
@@ -95,7 +98,7 @@ const Create = () => {
     if (params && params.contractHash) {
       fetch(params.contractHash);
     }
-  }, [network]);
+  }, [network, connectedWallet]);
 
   return (
     <div className="columns">
@@ -160,34 +163,35 @@ const Create = () => {
 
               <hr />
 
-              <div className="field">
-                <label className="label">Locker name</label>
-                <div className="control">
-                  <input
-                    placeholder="Locker name"
-                    onChange={(e) => setTile(e.target.value)}
-                    className="input"
-                    type="text"
-                    value={title}
-                  />
-                </div>
-              </div>
+              {/*<div className="field">*/}
+              {/*  <label className="label">Locker name</label>*/}
+              {/*  <div className="control">*/}
+              {/*    <input*/}
+              {/*      placeholder="Locker name"*/}
+              {/*      onChange={(e) => setTile(e.target.value)}*/}
+              {/*      className="input"*/}
+              {/*      type="text"*/}
+              {/*      value={title}*/}
+              {/*    />*/}
+              {/*  </div>*/}
+              {/*</div>*/}
 
-              <div className="field">
-                <label className="label">Description</label>
-                <div className="control">
-                  <MDEditor
-                    value={description}
-                    onChange={(value, event, state) => {
-                      setDescription(value ? value : "");
-                    }}
-                    // @ts-ignore
-                    // rehypePlugins={[[rehypeSanitize]]}
-                  />
-                </div>
-              </div>
+              {/*<div className="field">*/}
+              {/*  <label className="label">Description</label>*/}
+              {/*  <div className="control">*/}
+              {/*    <MDEditor*/}
+              {/*      value={description}*/}
+              {/*      onChange={(value, event, state) => {*/}
+              {/*        setDescription(value ? value : "");*/}
+              {/*      }}*/}
+              {/*      previewOptions={{*/}
+              {/*        rehypePlugins: [[rehypeSanitize]],*/}
+              {/*      }}*/}
+              {/*    />*/}
+              {/*  </div>*/}
+              {/*</div>*/}
 
-              <hr />
+              {/*<hr />*/}
 
               <button
                 disabled={!contract || !receiver || !amount}
@@ -202,9 +206,16 @@ const Create = () => {
             <>
               <div className="box is-shadowless">
                 <div className="content is-small">
-	                <li>Fee is <span className="has-text-primary has-text-weight-bold"> 100 NEP</span></li>
                   <li>
-                    There is no way to get tokens back earlier than the release time.
+                    Fee is{" "}
+                    <span className="has-text-primary has-text-weight-bold">
+                      {" "}
+                      100 NEP
+                    </span>
+                  </li>
+                  <li>
+                    There is no way to get tokens back earlier than the release
+                    time.
                   </li>
                   <li>
                     Do not use <strong>Emojis</strong>.

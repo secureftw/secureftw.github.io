@@ -36,7 +36,7 @@ export const FARM_V2_STAKE_PATH = "/double-farm/stake";
 export const FARM_V2_STAKE_POSITIONS_PATH = "/double-farm/stake/positions";
 export const LOCKER_PATH = "/locker";
 export const LOCKER_CONTRACT_PATH = "/locker/contracts";
-export const LOCKER_USER_PATH = "/locker/users";
+export const LOCKER_USER_PATH = "/locker/keys";
 export const LOCKER_CREATE_PATH = "/locker/create";
 export const LOCKER_SEARCH_PATH = "/locker/search";
 
@@ -64,7 +64,7 @@ export const FARM_V2_PAGE_ROUTE = {
 export const LOCKER_PAGE_ROUTE = {
 	label: "Locker",
 	path: LOCKER_PATH,
-	network: [TESTNET],
+	network: [TESTNET, MAINNET],
 	category: [],
 };
 

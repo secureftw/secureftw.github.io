@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  LOCKER_CREATE_PATH,
-  LOCKER_SEARCH_PATH,
-  LOCKER_USER_PATH,
+	LOCKER_CREATE_PATH, LOCKER_SEARCH_PATH, LOCKER_USER_PATH
 } from "../../../../consts";
 import { useOnChainData } from "../../../../common/hooks/use-onchain-data";
 import { useWallet } from "../../../../packages/provider";
 import { LockerContract } from "../../../../packages/neo/contracts/ftw/locker";
 import LockerTokenCard from "./LockerTokenCard";
-import { FaPlus, FaSearch, FaUser } from "react-icons/fa";
+import {FaInfoCircle, FaKey, FaPlus, FaSearch} from "react-icons/fa";
 import SearchLockerModal from "./SearchLockerModal";
 import ModalCard from "../../../components/Modal";
+import LockerInfoPage from "../InfoPage";
 
-const LockerMain = (props) => {
-  const { network, connectedWallet } = useWallet();
+const LockerMain = () => {
+  const { network } = useWallet();
   const [isSearchModalActive, setSearchModalActive] = useState(false);
+  const [isInfoModalActive, setInfoModalActive] = useState(false);
   const { isLoaded, data } = useOnChainData(() => {
-    return new LockerContract(network).getTokens();
+    return new LockerContract(network).getContracts();
   }, [network]);
   return (
     <>
@@ -39,16 +39,18 @@ const LockerMain = (props) => {
                     <Link to={LOCKER_SEARCH_PATH} className="button is-white">
                       <FaSearch />
                     </Link>
-                    {connectedWallet ? (
-                      <Link
-                        to={`${LOCKER_USER_PATH}/${connectedWallet.account.address}`}
-                        className="button is-white"
-                      >
-                        <FaUser />
-                      </Link>
-                    ) : (
-                      <></>
-                    )}
+	                  <Link
+		                  to={LOCKER_USER_PATH}
+		                  className="button is-white"
+	                  >
+		                  <FaKey />
+	                  </Link>
+	                  <button
+		                  onClick={() => setInfoModalActive(true)}
+		                  className="button is-white"
+	                  >
+		                  <FaInfoCircle />
+	                  </button>
                   </div>
                 </div>
               </div>
@@ -75,6 +77,11 @@ const LockerMain = (props) => {
           <SearchLockerModal />
         </ModalCard>
       )}
+	    {
+		    isInfoModalActive &&   <ModalCard onClose={() => setInfoModalActive(false)}>
+			    <LockerInfoPage network={network} />
+		    </ModalCard>
+	    }
     </>
   );
 };

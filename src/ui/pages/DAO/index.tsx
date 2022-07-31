@@ -14,7 +14,7 @@ import ProductNotSupportedInNetwork from "../../components/ProductNotSupportedIn
 
 const Dao = () => {
   useEffect(() => {
-    document.title = "FTW | DAO";
+    document.title = "FTW DAO";
   }, []);
   const { network } = useWallet();
   if (!DAO_PAGE_ROUTE.network.includes(network)) {

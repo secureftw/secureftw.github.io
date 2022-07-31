@@ -25,7 +25,7 @@ const Farm = () => {
   // }
 
   useEffect(() => {
-    document.title = "FTW | Double Farm";
+    document.title = "FTW Double Farm";
     async function fetch() {
       const res = await new RestAPI(MAINNET).getPrices();
       setPrices(res);
