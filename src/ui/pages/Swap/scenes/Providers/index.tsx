@@ -24,16 +24,16 @@ const Providers = ({ tokenA, tokenB, totalShare }: IProvidersProps) => {
   }, [network, currentPage]);
   return (
     <div>
-      {/*<h1 className="is-size-5 has-text-weight-bold">LP History</h1>*/}
-      {/*<hr />*/}
+      <h1 className="title is-5">LP list</h1>
       <div className="table-container is-small">
-        <table className="table is-fullwidth is-bordered is-striped">
+        <table className="table is-fullwidth is-striped">
           <thead>
             <tr>
+              <th>Token Id</th>
               <th>Status</th>
               <th>Amount</th>
               <th>Lock</th>
-              <th>Owner</th>
+              <th>Provided by</th>
             </tr>
           </thead>
           <tbody>
@@ -49,12 +49,15 @@ const Providers = ({ tokenA, tokenB, totalShare }: IProvidersProps) => {
               </tr>
             ) : (
               data.items.map((lp, i) => {
-                const owership =
+                const percentage =
                   totalShare && totalShare > 0
-                    ? numberTrim((lp.amount / totalShare) * 100)
-                    : "";
+                    ? (lp.amount / totalShare) * 100
+                    : 0;
+                const owership =
+                  percentage >= 1 ? numberTrim(percentage) : "<1";
                 return (
                   <tr key={`lp-${i}`}>
+	                  <td>{lp.tokenId}</td>
                     <td>{lp.isActive ? "Active" : "Withdrawn"}</td>
                     <td>{owership}%</td>
                     <td>{lp.lock}</td>

@@ -84,7 +84,7 @@ const NEP11FormModal = () => {
             <div className="columns">
               <div className="column is-8">
                 <div className="box is-shadowless">
-                  <h1 className="title is-4">NFT Contract</h1>
+                  <h1 className="title is-5">NFT Contract</h1>
                   <p className="subtitle is-6">
                     Create your NFT smart contract
                   </p>
@@ -202,12 +202,16 @@ const NEP11FormModal = () => {
                     <strong>Unicode</strong>.
                   </li>
                   <li>
-                    Deploy fee is <strong>10 GAS</strong>.
-                  </li>
-                  <li>
                     You will be able to mint your NFTs in your contract page
                     after deployment.
                   </li>
+	                <li>
+		                Deploy fee (Blockchain fee) is <strong className="has-text-primary">10 GAS</strong>.
+	                </li>
+	                <li>
+		                Service fee is <strong className="has-text-primary">1000 NEP</strong>.
+	                </li>
+
                   <li>
                     Check contract source code at{" "}
                     <a

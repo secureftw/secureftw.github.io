@@ -9,7 +9,7 @@ import { SpinnerRoundFilled } from "spinners-react";
 import MyLPTokenList from "./MyLPTokenList";
 import MyLPTokenCard from "./MyLPTokenCard";
 
-const LPTokens = (props) => {
+const LPTokens = () => {
   const { connectedWallet, network } = useWallet();
   const [prices, setPrices] = useState();
   const [id, setId] = useState();
@@ -43,6 +43,9 @@ const LPTokens = (props) => {
             .div(reserve.totalShare)
             .toDecimal(reserve.pair[info.tokenB].decimals)
         );
+				console.log(`Shares: ${info.amount}`)
+				console.log(`${reserve.pair[info.tokenA].symbol}: ${tokenAAmount.toLocaleString()}`)
+				console.log(`${reserve.pair[info.tokenB].symbol}: ${tokenBAmount.toLocaleString()}`)
         setInfo({
           tokenASymbol: reserve.pair[info.tokenA].symbol,
           tokenBSymbol: reserve.pair[info.tokenB].symbol,

@@ -1,108 +1,66 @@
-import React from "react";
+import React, { useState } from "react";
 import {
+  LOCKER_CREATE_PATH,
+  LOCKER_SEARCH_PATH,
+  LOCKER_USER_PATH,
   SMITH_CREATE_NEP11_PATH,
   SMITH_CREATE_NEP17_PATH,
   SMITH_PATH,
   SMITH_PATH_NEP11,
 } from "../../../consts";
 import { Link, useLocation } from "react-router-dom";
-import { FaCoins } from "react-icons/fa";
+import { FaCoins, FaInfoCircle, FaKey, FaPlus, FaSearch } from "react-icons/fa";
+import LockerTokenCard from "../Locker/Main/LockerTokenCard";
+import ModalCard from "../../components/Modal";
+import LockerInfoPage from "../Locker/InfoPage";
+import SmithInfo from "./components/SmithInfo";
 
 const Banner = () => {
   const location = useLocation();
+  const [isInfoModalActive, setInfoModalActive] = useState(false);
   return (
-    <section className="hero is-white">
-      <div className="hero-body is-center">
-        <div className="container">
-          <div className="columns">
-            <div className="column is-flex is-hidden-mobile" style={{ alignItems: "center" }}>
-              <figure
-                className="image"
-                style={{ width: "200px", margin: "0 auto" }}
-              >
-                <img src="/logo/NEP_Logo_Smith.svg" />
-              </figure>
+    < div className="box is-shadowless">
+      <div className="level">
+        <div className="level-left">
+          <div className="level-item">
+            <div className="is-block">
+              <h1 className="title is-5 is-marginless">Smith</h1>
+              <p>Create your token smart contracts without codes</p>
             </div>
-            <div className="column is-flex" style={{ alignItems: "center" }}>
-              <div className="">
-                <h1 className="title ">Smith</h1>
-                <p className="subtitle">
-                  Create your token smart contracts without codes
-                </p>
-                <div className="content">
-                  <li>
-                    <a
-                      target="_blank"
-                      href={"https://docs.forthewin.network/smith"}
-                    >
-                      Tutorial for token contract
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      target="_blank"
-                      href={
-                        "https://medium.com/@Forthewin_network/diy-nft-smart-contract-on-neo-without-codes-82957811f5ff"
-                      }
-                    >
-                      Tutorial for NFT contract
-                    </a>
-                  </li>
-	                <li>
-		                <a
-			                target="_blank"
-			                href={
-				                "https://www.youtube.com/watch?v=yqZJE7NXu5o"
-			                }
-		                >
-			                Tutorials on Youtube
-		                </a>
-	                </li>
-                </div>
-                <br />
-                <div className="buttons">
-                  <Link
-                    to={SMITH_CREATE_NEP17_PATH}
-                    className="button is-success is-light"
-                  >
-                    Create Token Contract
-                  </Link>
-                  <Link
-                    to={SMITH_CREATE_NEP11_PATH}
-                    className="button is-info is-light"
-                  >
-                    Create NFT Contract
-                  </Link>
-                </div>
-              </div>
+          </div>
+        </div>
+        <div className="level-right">
+          <div className="level-item">
+            <div className="buttons">
+              <Link
+                to={SMITH_CREATE_NEP17_PATH}
+                className="button is-success is-light"
+              >
+                Token Contract
+              </Link>
+              <Link
+                to={SMITH_CREATE_NEP11_PATH}
+                className="button is-info is-light"
+              >
+                NFT Contract
+              </Link>
+              <button
+                onClick={() => setInfoModalActive(true)}
+                className="button is-white"
+              >
+                <FaInfoCircle />
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <div className="hero-foot">
-        <nav className="tabs is-boxed is-fullwidth">
-          <div className="container">
-            <ul>
-              <li
-                className={location.pathname === SMITH_PATH ? "is-active" : ""}
-              >
-                <Link to={SMITH_PATH}>
-                  <FaCoins />
-                  &nbsp; Token Showcase
-                </Link>
-              </li>
-              <li
-                className={
-                  location.pathname === SMITH_PATH_NEP11 ? "is-active" : ""
-                }
-              >
-                <Link to={SMITH_PATH_NEP11}>&nbsp; NFT Showcase</Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
-    </section>
+
+      {isInfoModalActive && (
+        <ModalCard onClose={() => setInfoModalActive(false)}>
+          <SmithInfo />
+        </ModalCard>
+      )}
+    </div>
   );
 };
 

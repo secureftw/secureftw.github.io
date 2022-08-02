@@ -24,7 +24,7 @@ const ContractCard = ({ data }: IContractCardProps) => {
         <div className="has-text-centered">
           <div
             className="image is-64x64 mb-2"
-            style={{ margin: "auto", borderRadius: "50%" }}
+            style={{ margin: "auto", borderRadius: "50%", width:"40px" }}
           >
             <img
               onError={(e) => {
@@ -36,9 +36,7 @@ const ContractCard = ({ data }: IContractCardProps) => {
               }
             />
           </div>
-          <div className="heading"> #{data.no}</div>
-
-          <strong className="has-text-dark">{data.symbol}</strong>
+          <p className="heading">{data.symbol}</p>
         </div>
       </Link>
     </div>

@@ -22,9 +22,9 @@ const History = ({ tokenA, tokenB }: IHistoryProps) => {
   }, [network, currentPage]);
   return (
     <div>
-      {/*<h1 className="is-size-5 has-text-weight-bold">Swap History</h1>*/}
+      <h1 className="title is-5">Swap history</h1>
       <div className="table-container">
-        <table className="table is-fullwidth is-bordered is-striped">
+        <table className="table is-fullwidth is-striped">
           <thead>
             <tr>
               <th>In</th>

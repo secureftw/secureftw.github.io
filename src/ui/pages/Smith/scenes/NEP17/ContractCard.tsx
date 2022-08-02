@@ -20,8 +20,8 @@ const ContractCard = ({ data }: IContractCardProps) => {
       <Link to={`${SMITH_CONTRACT_NEP17_PATH}/${data.contractHash}`}>
         <div className="has-text-centered">
           <div
-            className="image is-64x64 mb-2"
-            style={{ margin: "auto", borderRadius: "50%" }}
+            className="image mb-3"
+            style={{ margin: "auto", borderRadius: "50%", width: "40px" }}
           >
             <img
               onError={(e) => {
@@ -33,8 +33,7 @@ const ContractCard = ({ data }: IContractCardProps) => {
               }
             />
           </div>
-          <div className="heading">#{data.no}</div>
-          <strong className="has-text-dark">{data.symbol}</strong>
+          <p className="heading">{data.symbol}</p>
         </div>
       </Link>
 

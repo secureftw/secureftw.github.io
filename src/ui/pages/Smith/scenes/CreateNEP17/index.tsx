@@ -10,7 +10,7 @@ import { SMITH_PATH } from "../../../../../consts";
 import Modal from "../../../../components/Modal";
 import PageLayout from "../../../../components/PageLayout";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
-import {handleError} from "../../../../../packages/neo/utils/errors";
+import { handleError } from "../../../../../packages/neo/utils/errors";
 
 const NEP17FormModal = () => {
   const { network, connectedWallet } = useWallet();
@@ -55,12 +55,12 @@ const NEP17FormModal = () => {
               values.name,
               values.author,
               values.description,
-              values.email,
+              values.email
             );
             setTxid(res);
           }
         } catch (e: any) {
-	        toast.error(handleError(e));
+          toast.error(handleError(e));
         }
         // } else {
         //   toast.error("You must have more than 20 GAS.");
@@ -90,9 +90,9 @@ const NEP17FormModal = () => {
           <div className="columns">
             <div className="column is-8">
               <div className="box is-shadowless">
-                <h1 className="title is-4">Token Contract</h1>
+                <h1 className="title is-5">Token Contract</h1>
                 <p className="subtitle is-6">
-                  Create your own token smart contract
+                  Create your token smart contract
                 </p>
                 <hr />
 
@@ -263,11 +263,17 @@ const NEP17FormModal = () => {
                     Do not use <strong>EMOJI</strong> or{" "}
                     <strong>Unicode</strong>.
                   </li>
-                  <li>
-                    Deploy fee is <strong>10 GAS</strong>.
-                  </li>
                   <li>FTWSwap cannot support tokens with 0 decimals.</li>
-	                <li>Your contract will <strong>not</strong> have a <strong>update method</strong>.</li>
+	                <li>
+		                Deploy fee (Blockchain fee) is <strong className="has-text-primary">10 GAS</strong>.
+	                </li>
+	                <li>
+		                Service fee is <strong className="has-text-primary">1000 NEP</strong>.
+	                </li>
+                  <li>
+                    Your contract will <strong>not</strong> have a{" "}
+                    <strong>update method</strong>.
+                  </li>
                   <li>
                     Check contract source code at{" "}
                     <a

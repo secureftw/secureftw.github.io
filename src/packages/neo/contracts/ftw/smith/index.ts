@@ -19,7 +19,7 @@ import {
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { IRuneMeta } from "../rune/interfaces";
 import { parseMapValue } from "../../../utils";
-import {GAS_SCRIPT_HASH} from "../../../consts/nep17-list";
+import {GAS_SCRIPT_HASH, NEP_SCRIPT_HASH} from "../../../consts/nep17-list";
 
 export class SmithContract {
   network: INetworkType;
@@ -88,7 +88,7 @@ export class SmithContract {
         {
           account: senderHash,
           scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [this.contractHash, GAS_SCRIPT_HASH],
+          allowedContracts: [this.contractHash, NEP_SCRIPT_HASH],
         },
       ],
     };
@@ -144,7 +144,7 @@ export class SmithContract {
         {
           account: senderHash,
           scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [this.contractHash, GAS_SCRIPT_HASH],
+          allowedContracts: [this.contractHash, NEP_SCRIPT_HASH],
         },
       ],
     };
@@ -199,7 +199,7 @@ export class SmithContract {
         {
           account: senderHash,
           scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [this.contractHash, GAS_SCRIPT_HASH],
+          allowedContracts: [this.contractHash, NEP_SCRIPT_HASH],
         },
       ],
     };
@@ -272,38 +272,6 @@ export class SmithContract {
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
     return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
-    // const invokeScript: any = {
-    //   invokeArgs: [],
-    //   signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
-    // };
-    // if (logo) {
-    //   invokeScript.invokeArgs.push({
-    //     operation: "updateLogo",
-    //     scriptHash: contractHash,
-    //     args: [
-    //       {
-    //         type: "String",
-    //         value: logo,
-    //       },
-    //     ],
-    //   });
-    // }
-    // if (website) {
-    //   invokeScript.invokeArgs.push({
-    //     operation: "updateWebsite",
-    //     scriptHash: contractHash,
-    //     args: [
-    //       {
-    //         type: "String",
-    //         value: website,
-    //       },
-    //     ],
-    //   });
-    // }
-    // return new wallet.WalletAPI(connectedWallet.key).invokeMulti(
-    //   this.network,
-    //   invokeScript
-    // );
   };
 
   adminUpdate = async (
@@ -342,7 +310,7 @@ export class SmithContract {
       args: [
         {
           type: "Integer",
-          value: "12",
+          value: "30",
         },
         {
           type: "Integer",
@@ -364,7 +332,7 @@ export class SmithContract {
       args: [
         {
           type: "Integer",
-          value: "12",
+          value: "30",
         },
         {
           type: "Integer",
