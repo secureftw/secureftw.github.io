@@ -46,7 +46,7 @@ const MyPositions = ({ onRefresh }) => {
           network={network}
           connectedWallet={connectedWallet}
           refresh={refresh}
-          onRefresh={() => setRefresh(refresh + 1)}
+          // onRefresh={() => setRefresh(refresh + 1)}
           onUnStake={onUnStake}
         />
       ) : (

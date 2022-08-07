@@ -1,42 +1,61 @@
-import React from "react";
-import PositionCard from "./PositionCard";
-import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
-import { StakingContract } from "../../../../../packages/neo/contracts/ftw/farm";
+import React, { useEffect, useState } from "react";
 import { INetworkType } from "../../../../../packages/neo/network";
 import { IConnectedWallet } from "../../../../../packages/neo/wallet/interfaces";
-import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
+import { FarmV2Contract } from "../../../../../packages/neo/contracts/ftw/farm-v2";
+import { RestAPI } from "../../../../../packages/neo/api";
+import PositionCard from "./PositionCard";
+import {StakingContract} from "../../../../../packages/neo/contracts/ftw/farm";
 
 interface IPositionListProps {
   network: INetworkType;
   connectedWallet: IConnectedWallet;
   refresh: number;
-  onRefresh: () => void;
   onUnStake: (tokenId: string) => void;
 }
 const PositionList = ({
   network,
   connectedWallet,
   refresh,
-  onRefresh,
   onUnStake,
 }: IPositionListProps) => {
-  const { isLoaded, error, data } = useOnChainData(() => {
-    return new StakingContract(network).getStakedLPTokens(connectedWallet);
+  const [data, setData] = useState<any>();
+
+  useEffect(() => {
+    async function getData(wallet) {
+      try {
+        const tokens = await new StakingContract(network).getStakedLPTokens(
+          wallet
+        );
+        const prices = await new RestAPI(network).getPrices();
+        setData({
+          tokens,
+          prices,
+        });
+      } catch (e: any) {
+        console.log(e);
+      }
+    }
+    if (connectedWallet) {
+      getData(connectedWallet);
+    }
   }, [connectedWallet, refresh, network]);
+
   return (
     <div>
-      {!isLoaded ? (
-        <div>Loading</div>
-      ) : error ? (
-        <ErrorNotificationWithRefresh error={error} onRefresh={onRefresh} />
-      ) : data && data.length > 0 ? (
+      {!data ? (
+        <></>
+      ) : data.tokens.length > 0 ? (
         <div>
-          {data.map((item, i) => {
-	          return <PositionCard
-		          key={"position" + i}
-		          {...item}
-		          onUnStake={onUnStake}
-	          />
+          {data.tokens.map((item, i) => {
+            return (
+              <PositionCard
+	              network={network}
+                key={"position" + i}
+                prices={data.prices}
+                {...item}
+                onUnStake={onUnStake}
+              />
+            );
           })}
         </div>
       ) : (

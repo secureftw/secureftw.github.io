@@ -4,13 +4,10 @@ import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet as NeonWallet } from "@cityofzion/neon-core";
 import { wallet } from "../../../index";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
-import {IClaimableRewards, ILPTokens, IPool} from "./interfaces";
-import {
-  parseClaimableMap,
-  parseStakedLPTokensMap,
-} from "./helpers";
+import {IClaimableRewards, IPool} from "./interfaces";
 import {FARM_V2_SCRIPT_HASH} from "./consts";
 import {parseMapValue} from "../../../utils";
+import {ILPToken} from "../swap/interfaces";
 
 export class FarmV2Contract {
   network: INetworkType;
@@ -150,11 +147,10 @@ export class FarmV2Contract {
       operation: "getPools",
       args: [],
     };
-    const res = await Network.read(this.network, [script]);
+    const res: any = await Network.read(this.network, [script]);
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-		// @ts-ignore
 	  return res.stack[0].value.map((pair) => {
 		  return parseMapValue(pair);
 	  });
@@ -162,7 +158,7 @@ export class FarmV2Contract {
 
   getStakedLPTokens = async (
     connectedWallet: IConnectedWallet
-  ): Promise<ILPTokens[]> => {
+  ): Promise<ILPToken[]> => {
     const scripts = [
       {
         scriptHash: this.contractHash,
@@ -170,11 +166,13 @@ export class FarmV2Contract {
         args: [{ type: "Address", value: connectedWallet.account.address }],
       },
     ];
-    const res = await Network.read(this.network, scripts);
+    const res: any = await Network.read(this.network, scripts);
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-    return parseStakedLPTokensMap(res as any);
+	  return res.stack[0].value.map((pair) => {
+		  return parseMapValue(pair);
+	  });
   };
 
   getClaimable = async (
@@ -190,9 +188,11 @@ export class FarmV2Contract {
           args: [{ type: "Address", value: connectedWallet.account.address }],
         },
       ];
-      const res = await Network.read(this.network, scripts);
+      const res: any = await Network.read(this.network, scripts);
       if (res.state !== "FAULT") {
-        return parseClaimableMap(res as any);
+	      return res.stack[0].value.map((pair) => {
+		      return parseMapValue(pair);
+	      });
       } else {
         console.error(res.exception);
         return [];
