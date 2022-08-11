@@ -1,7 +1,7 @@
 import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
-import { DEFAULT_WITNESS_SCOPE} from "../../../consts";
+import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
 import { SMITH_SCRIPT_HASH } from "./consts";
 import {
   ISmithNEP11Info,
@@ -19,7 +19,7 @@ import {
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { IRuneMeta } from "../rune/interfaces";
 import { parseMapValue } from "../../../utils";
-import {GAS_SCRIPT_HASH, NEP_SCRIPT_HASH} from "../../../consts/nep17-list";
+import { NEP_SCRIPT_HASH } from "../../../consts/nep17-list";
 
 export class SmithContract {
   network: INetworkType;
@@ -38,7 +38,7 @@ export class SmithContract {
     contractName: string,
     author: string,
     description: string,
-    email: string,
+    email: string
   ): Promise<string> => {
     const senderHash = NeonWallet.getScriptHashFromAddress(
       connectedWallet.account.address
@@ -88,7 +88,7 @@ export class SmithContract {
         {
           account: senderHash,
           scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [this.contractHash, NEP_SCRIPT_HASH],
+          allowedContracts: [this.contractHash, NEP_SCRIPT_HASH[this.network]],
         },
       ],
     };
@@ -144,7 +144,7 @@ export class SmithContract {
         {
           account: senderHash,
           scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [this.contractHash, NEP_SCRIPT_HASH],
+          allowedContracts: [this.contractHash, NEP_SCRIPT_HASH[this.network]],
         },
       ],
     };
@@ -199,7 +199,7 @@ export class SmithContract {
         {
           account: senderHash,
           scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [this.contractHash, NEP_SCRIPT_HASH],
+          allowedContracts: [this.contractHash, NEP_SCRIPT_HASH[this.network]],
         },
       ],
     };
@@ -325,7 +325,9 @@ export class SmithContract {
     return parseMapValue(res.stack[0] as any);
   };
 
-  getNEP11Records = async (page: number): Promise<ISmithNEP11RecordPaginate> => {
+  getNEP11Records = async (
+    page: number
+  ): Promise<ISmithNEP11RecordPaginate> => {
     const records = {
       operation: "getNEP11List",
       scriptHash: this.contractHash,

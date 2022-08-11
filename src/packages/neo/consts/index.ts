@@ -42,13 +42,13 @@ export const PRIVATE_CONFIG = {
 
 export const TESTNET_CONFIG = {
   label: "N3TestNet",
-  url: "seed1t5.neo.org:20333",
+  url: "http://seed1t5.neo.org:20332",
 };
 
 // Using for tx monitor
 export const TESTNET_CONFIG_2 = {
   label: "N3TestNet",
-  url: "seed2t5.neo.org:20333",
+  url: "http://seed2t5.neo.org:20332",
 };
 
 export const MAINNET_CONFIG = {

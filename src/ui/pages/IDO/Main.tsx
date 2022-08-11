@@ -18,10 +18,8 @@ import AfterTransactionSubmitted from "../../../packages/ui/AfterTransactionSubm
 import toast from "react-hot-toast";
 import { useApp } from "../../../common/hooks/use-app";
 import {handleError} from "../../../packages/neo/utils/errors";
-import {NEP_SCRIPT_HASH} from "../../../packages/neo/consts/nep17-list";
 
 const Main = () => {
-  const { toggleWalletSidebar } = useApp();
   const { network, connectedWallet } = useWallet();
   const defaultToken = payments(network)[0];
   const [token, setToken] = useState<

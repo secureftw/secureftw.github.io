@@ -2,19 +2,17 @@ import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { wallet } from "../../../index";
-import {
-  DEFAULT_WITNESS_SCOPE,
-
-
-} from "../../../consts";
+import { DEFAULT_WITNESS_SCOPE, MAINNET } from "../../../consts";
 import { IIDOStatus } from "./interface";
 import { IDO_SCRIPT_HASH } from "./consts";
 import {
-	BNEO_SCRIPT_HASH,
-	FLM_SCRIPT_HASH, GAS_SCRIPT_HASH,
-	GM_SCRIPT_HASH,
-	LRB_SCRIPT_HASH,
-	NEO_SCRIPT_HASH, NEP_SCRIPT_HASH
+  BNEO_SCRIPT_HASH,
+  FLM_SCRIPT_HASH,
+  GAS_SCRIPT_HASH,
+  GM_SCRIPT_HASH,
+  LRB_SCRIPT_HASH,
+  NEO_SCRIPT_HASH,
+  NEP_SCRIPT_HASH,
 } from "../../../consts/nep17-list";
 
 export class IDOContract {
@@ -75,7 +73,7 @@ export class IDOContract {
     };
 
     const script3 = {
-      scriptHash: NEP_SCRIPT_HASH,
+      scriptHash: NEP_SCRIPT_HASH[this.network],
       operation: "balanceOf",
       args: [
         {
@@ -112,7 +110,7 @@ export class IDOContract {
         ],
       };
       const script6 = {
-        scriptHash: BNEO_SCRIPT_HASH,
+        scriptHash: BNEO_SCRIPT_HASH[MAINNET],
         operation: "balanceOf",
         args: [
           {
@@ -173,7 +171,7 @@ export class IDOContract {
         [GAS_SCRIPT_HASH]: connectedWallet
           ? parseFloat(res.stack[4].value as string)
           : 0,
-        [BNEO_SCRIPT_HASH]: connectedWallet
+        [BNEO_SCRIPT_HASH[MAINNET]]: connectedWallet
           ? parseFloat(res.stack[5].value as string)
           : 0,
         [FLM_SCRIPT_HASH[this.network]]: connectedWallet

@@ -3,6 +3,6 @@ import {MAINNET, PRIVATENET, TESTNET} from "../../../consts";
 //NXFcKDFN7iQmgTPSjYKJPYJeBjdBSHHSxs
 export const LOCKER_SCRIPT_HASH = {
 	[PRIVATENET]: "",
-	[TESTNET]: "8a8c112e35d77238c2e7baeacb3dc253f6213a1e",
+	[TESTNET]: "b47bb6177cd86409166c0e0f18641a28e618a585",
 	[MAINNET]: "8a8c112e35d77238c2e7baeacb3dc253f6213a1e",
 };
