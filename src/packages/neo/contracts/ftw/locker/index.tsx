@@ -6,10 +6,11 @@ import { LOCKER_SCRIPT_HASH } from "./consts";
 import { NEP_SCRIPT_HASH } from "../../../consts/nep17-list";
 import { parseMapValue } from "../../../utils";
 import {
-	ILocker,
-	ILockerContract,
-	ILockerContracts, ILockerKeyToken,
-	ILockersByToken,
+  ILocker,
+  ILockerContract,
+  ILockerContracts,
+  ILockerKeyToken,
+  ILockersByToken,
 } from "./interface";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
 
@@ -76,8 +77,12 @@ export class LockerContract {
         {
           account: senderHash,
           scopes: tx.WitnessScope.CustomContracts,
-          allowedContracts: [contract.assetHash, NEP_SCRIPT_HASH, this.contractHash],
-        }
+          allowedContracts: [
+            contract.assetHash,
+            NEP_SCRIPT_HASH,
+            this.contractHash,
+          ],
+        },
       ],
     };
     return wallet.WalletAPI.invoke(connectedWallet, this.network, invokeScript);
@@ -91,18 +96,18 @@ export class LockerContract {
       operation: "transfer",
       scriptHash: this.contractHash,
       args: [
-	      {
-		      type: "Hash160",
-		      value: this.contractHash,
-	      },
-	      {
-		      type: "String",
-		      value: lockerNo,
-	      },
-	      {
-		      type: "Any",
-		      value: null,
-	      },
+        {
+          type: "Hash160",
+          value: this.contractHash,
+        },
+        {
+          type: "String",
+          value: lockerNo,
+        },
+        {
+          type: "Any",
+          value: null,
+        },
       ],
       signers: [DEFAULT_WITNESS_SCOPE(senderHash)],
     };
@@ -168,7 +173,8 @@ export class LockerContract {
   };
 
   getLockersByContract = async (
-    contractHash: string
+    contractHash: string,
+    page: number
   ): Promise<ILockersByToken> => {
     const script = {
       scriptHash: this.contractHash,
@@ -184,7 +190,7 @@ export class LockerContract {
         },
         {
           type: "Integer",
-          value: "1",
+          value: page,
         },
       ],
     };
@@ -210,7 +216,7 @@ export class LockerContract {
     if (res.state === "FAULT") {
       throw new Error(res.exception as string);
     }
-	  // @ts-ignore
-	  return res.stack[0].value.map((item) => parseMapValue(item));
+    // @ts-ignore
+    return res.stack[0].value.map((item) => parseMapValue(item));
   };
 }

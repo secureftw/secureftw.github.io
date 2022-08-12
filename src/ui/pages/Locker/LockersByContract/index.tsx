@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useWallet } from "../../../../packages/provider";
+import Pagination from "bulma-pagination-react";
 import { LockerContract } from "../../../../packages/neo/contracts/ftw/locker";
 import {
   ILockerContract,
   ILockersByToken,
 } from "../../../../packages/neo/contracts/ftw/locker/interface";
-import { u } from "@cityofzion/neon-core";
-import moment from "moment";
-import { FaLock, FaPlus, FaUnlock } from "react-icons/fa";
-import toast from "react-hot-toast";
+import { FaPlus } from "react-icons/fa";
 import { LOCKER_CREATE_PATH } from "../../../../consts";
 import LockerCard from "./LockerCard";
 
 const LockersByContract = () => {
   const { network } = useWallet();
+  const [page, setPage] = useState(1);
   const params = useParams();
   const { contractHash } = params as any;
   const [data, setData] = useState<{
@@ -29,7 +28,8 @@ const LockersByContract = () => {
           contractHash
         );
         const items = await new LockerContract(network).getLockersByContract(
-          contractHash
+          contractHash,
+          page
         );
         setData({
           contract,
@@ -40,7 +40,7 @@ const LockersByContract = () => {
       }
     }
     fetch();
-  }, [network]);
+  }, [network, page]);
   return (
     <div>
       <div className="columns is-centered">
@@ -85,28 +85,39 @@ const LockersByContract = () => {
                 </thead>
                 <tbody>
                   {data ? (
-                    data.items.items.map((locker) => (
-                      <LockerCard contract={data.contract} locker={locker} />
-                    ))
+                    <>
+                      {data.items.items.map((locker) => (
+                        <LockerCard contract={data.contract} locker={locker} />
+                      ))}
+                    </>
                   ) : (
                     <></>
                   )}
                 </tbody>
+                {data && data.items.totalPages > 1 ? (
+                  <tfoot>
+                    <tr>
+                      <td colSpan={6}>
+                        <Pagination
+                          pages={data.items.totalPages}
+                          currentPage={page}
+                          onChange={(v) => {
+                            if (page !== v) {
+                              setPage(v);
+                            }
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  </tfoot>
+                ) : (
+                  <></>
+                )}
               </table>
             </div>
           </div>
         </div>
       </div>
-      {/*{txid && (*/}
-      {/*  <Modal onClose={() => setTxid("")}>*/}
-      {/*    <AfterTransactionSubmitted*/}
-      {/*      txid={txid}*/}
-      {/*      network={network}*/}
-      {/*      onSuccess={handleAfterTx}*/}
-      {/*      onError={() => setTxid("")}*/}
-      {/*    />*/}
-      {/*  </Modal>*/}
-      {/*)}*/}
     </div>
   );
 };
