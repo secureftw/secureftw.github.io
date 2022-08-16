@@ -12,7 +12,7 @@ import { Route } from "react-router-dom";
 import Liquidity from "./scenes/AddLiquidity";
 import History from "./scenes/History";
 import Trade from "./scenes/Swap";
-import Pools from "./scenes/Pools";
+import Pools from "./scenes/PairsFromChain";
 import RemoveLiquidity from "./scenes/RemoveLiquidity";
 import Providers from "./scenes/Providers";
 import MarketStatus from "./components/CheckMarketStatus";

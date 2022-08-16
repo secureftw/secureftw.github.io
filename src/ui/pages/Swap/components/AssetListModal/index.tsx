@@ -55,15 +55,15 @@ const AssetListModal = ({
         <div>
           {SWAP_ASSET_CATEGORY.map((category) => {
             return (
-              <>
+              <div key={category}>
                 <h5 className="title is-6 mb-3">{category} tokens</h5>
                 <div className="columns is-multiline is-mobile">
                   {assets.map((asset) => {
                     if (asset.category !== category) return <></>;
-                    return <SwapTokenCard onClick={onAssetClick} {...asset} />;
+                    return <SwapTokenCard key={asset.contractHash} onClick={onAssetClick} {...asset} />;
                   })}
                 </div>
-              </>
+              </div>
             );
           })}
           <a

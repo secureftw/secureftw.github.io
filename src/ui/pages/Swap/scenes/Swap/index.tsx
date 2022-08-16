@@ -18,7 +18,6 @@ import { IReserveData } from "../../../../../packages/neo/contracts/ftw/swap/int
 import NoLPInfo from "./components/NoLPInfo";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
 import SwapInputs from "./SwapInputs";
-import Pools from "../Pools";
 import {
   SWAP_PATH_LIQUIDITY_ADD,
   SWAP_PATH_LIQUIDITY_REMOVE,
@@ -38,6 +37,7 @@ import SwapDetails from "./components/SwapDetails";
 import { u } from "@cityofzion/neon-core";
 import { handleError } from "../../../../../packages/neo/utils/errors";
 import {GAS_SCRIPT_HASH} from "../../../../../packages/neo/consts/nep17-list";
+import Pairs from "../PairsFromServer";
 
 export interface ITokenState {
   hash: string;
@@ -443,7 +443,7 @@ const Swap = () => {
 
       {isPoolListModalActive && (
         <Modal onClose={() => setPoolListModalActive(false)}>
-          <Pools onPairClick={onPairClick} />
+          <Pairs onClick={onPairClick} />
         </Modal>
       )}
 

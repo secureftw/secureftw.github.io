@@ -7,6 +7,8 @@ export const NEO_SCRIPT_HASH = NEON_CONST.NATIVE_CONTRACT_HASH.NeoToken;
 export const USDT_SCRIPT_HASH = "cd48b160c1bbc9d74997b803b9a7ad50a4bef020";
 export const BNEO_SCRIPT_HASH = "48c40d4666f93408be1bef038b6722404d9a4c2a";
 export const NEP_SCRIPT_HASH = "f853a98ac55a756ae42379a312d55ddfdf7c8514"
+export const FWBTC_SCRIPT_HASH = "d6abe115ecb75e1fa0b42f5e85934ce8c1ae2893"
+export const FWETH_SCRIPT_HASH = "c14b601252aa5dfa6166cf35fe5ccd2e35f3fdf5"
 
 /* TTM HASHES */
 export const WATT_SCRIPT_HASH = "9808fbad45ebca4abe7b4adf1fd4e1f399d0cc22";

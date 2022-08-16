@@ -40,7 +40,7 @@ const PoolCard = ({
           )
         )
       : 0;
-  if (reserveA < 10 || reserveB < 10) return <></>;
+  if (reserveA * reserveB < 100) return <></>;
   return (
     <a
       onClick={() => onPairClick(tokenA, tokenB)}
