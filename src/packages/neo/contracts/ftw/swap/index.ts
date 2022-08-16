@@ -7,15 +7,20 @@ import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { defaultDeadLine } from "./helpers";
 import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
 import {
-	IContractInfo,
-	ILPHistory, ILPToken,
-	IReserve,
-	IReserveData,
-	ISwapsHistory,
+  IContractInfo,
+  ILPHistory,
+  ILPToken,
+  IReserve,
+  IReserveData,
+  ISwapsHistory,
 } from "./interfaces";
 import { SMITH_SCRIPT_HASH } from "../smith/consts";
-import {Signer, WitnessConditionType} from "@cityofzion/neon-core/lib/tx";
-import {WitnessRule, WitnessRuleAction} from "@cityofzion/neon-core/lib/tx/components/WitnessRule";
+import { Signer, WitnessConditionType } from "@cityofzion/neon-core/lib/tx";
+import {
+  WitnessRule,
+  WitnessRuleAction,
+} from "@cityofzion/neon-core/lib/tx/components/WitnessRule";
+import { BNEO_SCRIPT_HASH, NEP_SCRIPT_HASH } from "../../../consts/nep17-list";
 
 export class SwapContract {
   network: INetworkType;
@@ -77,26 +82,26 @@ export class SwapContract {
           value: slippage,
         },
       ],
-	    signers: [
-		    {
-			    account: senderHash,
-			    scopes: tx.WitnessScope.CustomContracts,
-			    allowedContracts: [this.contractHash, tokenA, tokenB],
-		    },
-	    ],
+      signers: [
+        {
+          account: senderHash,
+          scopes: tx.WitnessScope.CustomContracts,
+          allowedContracts: [this.contractHash, tokenA, tokenB],
+        },
+      ],
       // signers: [
       //   {
       //     account: senderHash,
       //     scopes: tx.WitnessScope.WitnessRules,
-	    //     rules: [
-		  //       {
-			//         action: WitnessRuleAction.Allow,
-			//         condition: {
-			// 	        type: WitnessConditionType.And,
-			// 	        hash: this.contractHash,
-			//         }
-		  //       }
-	    //     ]
+      //     rules: [
+      //       {
+      //         action: WitnessRuleAction.Allow,
+      //         condition: {
+      // 	        type: WitnessConditionType.And,
+      // 	        hash: this.contractHash,
+      //         }
+      //       }
+      //     ]
       //   },
       // ],
     };
@@ -317,6 +322,27 @@ export class SwapContract {
     // return ((parseFloat(amount) * reserveBAmount) / reserveAAmount).toString();
   };
 
+  getPathEstimated = async(): Promise<number> => {
+    const script = {
+      scriptHash: this.contractHash,
+      operation: "getEstimatedWithPath",
+      args: [
+        {
+          type: "Array",
+          value: [
+            { type: "Hash160", value: BNEO_SCRIPT_HASH[this.network] },
+            { type: "Hash160", value: NEP_SCRIPT_HASH[this.network] },
+            { type: "Hash160", value: BNEO_SCRIPT_HASH[this.network] },
+          ],
+        },
+        { type: "Integer", value: 10000000 },
+      ],
+    };
+    const res = await Network.read(this.network, [script]);
+		console.log(res)
+    return res.stack[0].value as number;
+  };
+
   getSwapHistory = async (
     tokenA: string,
     tokenB: string,
@@ -489,7 +515,9 @@ export class SwapContract {
     return parseMapValue(res.stack[0] as any);
   };
 
-  getLPTokens = async (connectedWallet: IConnectedWallet): Promise<ILPToken> => {
+  getLPTokens = async (
+    connectedWallet: IConnectedWallet
+  ): Promise<ILPToken> => {
     const scripts = [
       {
         scriptHash: this.contractHash,
