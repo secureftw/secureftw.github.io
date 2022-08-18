@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../../../../components/Modal";
 import { useWallet } from "../../../../../packages/provider";
 import { toast } from "react-hot-toast";
@@ -8,7 +8,8 @@ import AfterTransactionSubmitted from "../../../../../packages/ui/AfterTransacti
 import { useHistory } from "react-router-dom";
 import { SMITH_PATH_NEP11 } from "../../../../../consts";
 import PageLayout from "../../../../components/PageLayout";
-import {handleError} from "../../../../../packages/neo/utils/errors";
+import { handleError } from "../../../../../packages/neo/utils/errors";
+import { SMITH_NEP_FEE } from "../../../../../packages/neo/contracts/ftw/smith/consts";
 
 const NEP11FormModal = () => {
   const history = useHistory();
@@ -20,6 +21,14 @@ const NEP11FormModal = () => {
     author: "",
     description: "",
     email: "",
+  });
+  const [isBalanceLoading, setBalanceLoading] = useState(false);
+  const [balances, setBalances] = useState<{
+    gasBalance: number;
+    nepBalance: number;
+  }>({
+    gasBalance: 0,
+    nepBalance: 0,
   });
 
   const hasEmoji = detectEmojiInString(values) !== 0;
@@ -36,31 +45,48 @@ const NEP11FormModal = () => {
       toast.error(
         "Emoji is not supported yet. Please remove emojis and try again."
       );
-    } else {
-      if (connectedWallet) {
-        try {
-          const res = await new SmithContract(network).isNEP11SymbolTaken(
-            values.symbol
-          );
-          if (res) {
-            toast.error("Token symbol is already taken. Try other symbol.");
-          } else {
-            const res = await new SmithContract(network).createNEP11(
-              connectedWallet,
-              values.name,
-              values.symbol,
-              values.author,
-              values.description,
-              values.email
-            );
-            setTxid(res);
-          }
-        } catch (e: any) {
-	        toast.error(handleError(e));
-        }
+      return;
+    }
+
+    if (!connectedWallet) {
+      toast.error("Please connect wallet.");
+      return;
+    }
+
+    if (isBalanceLoading) {
+      toast.error("Balance check hasn't been done. Please try again.");
+      return;
+    }
+
+    if (balances.nepBalance < SMITH_NEP_FEE[network]) {
+      toast.error("You don't have enough NEP for platform fee.");
+      return;
+    }
+
+    if (balances.gasBalance < 10_00000000) {
+      toast.error("You don't have enough GAS for deploy fee.");
+      return;
+    }
+
+    try {
+      const res = await new SmithContract(network).isNEP11SymbolTaken(
+        values.symbol
+      );
+      if (res) {
+        toast.error("Token symbol is already taken. Try other symbol.");
       } else {
-        toast.error("Please connect wallet.");
+        const res = await new SmithContract(network).createNEP11(
+          connectedWallet,
+          values.name,
+          values.symbol,
+          values.author,
+          values.description,
+          values.email
+        );
+        setTxid(res);
       }
+    } catch (e: any) {
+      toast.error(handleError(e));
     }
   };
 
@@ -69,12 +95,23 @@ const NEP11FormModal = () => {
     history.push(SMITH_PATH_NEP11);
   };
 
-  const firstInput = useRef(null);
-
   useEffect(() => {
-    // @ts-ignore
-    firstInput.current.focus();
-  }, []);
+    // firstInput.current.focus();
+    async function balanceCheck(w) {
+      setBalanceLoading(true);
+      try {
+        const res = await new SmithContract(network).balanceCheck(w);
+        setBalances(res);
+        setBalanceLoading(false);
+      } catch (e: any) {
+        setBalanceLoading(false);
+        console.error(e);
+      }
+    }
+    if (connectedWallet) {
+      balanceCheck(connectedWallet);
+    }
+  }, [connectedWallet, network]);
 
   return (
     <>
@@ -94,7 +131,7 @@ const NEP11FormModal = () => {
                     <div className="control">
                       <input
                         placeholder="My bored club"
-                        ref={firstInput}
+                        // ref={firstInput}
                         value={values.name}
                         onChange={(e) =>
                           handleValueChange("name", e.target.value)
@@ -205,12 +242,14 @@ const NEP11FormModal = () => {
                     You will be able to mint your NFTs in your contract page
                     after deployment.
                   </li>
-	                <li>
-		                Deploy fee (Blockchain fee) is <strong className="has-text-primary">10 GAS</strong>.
-	                </li>
-	                <li>
-		                Service fee is <strong className="has-text-primary">1000 NEP</strong>.
-	                </li>
+                  <li>
+                    Deploy fee (Blockchain fee) is{" "}
+                    <strong className="has-text-primary">10 GAS</strong>.
+                  </li>
+                  <li>
+                    Service fee is{" "}
+                    <strong className="has-text-primary">1000 NEP</strong>.
+                  </li>
 
                   <li>
                     Check contract source code at{" "}

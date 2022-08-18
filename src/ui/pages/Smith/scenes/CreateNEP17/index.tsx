@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useWallet } from "../../../../../packages/provider";
 import { toast } from "react-hot-toast";
 import NumberFormat from "react-number-format";
@@ -11,11 +11,20 @@ import Modal from "../../../../components/Modal";
 import PageLayout from "../../../../components/PageLayout";
 import ConnectWalletButton from "../../../../components/ConnectWalletButton";
 import { handleError } from "../../../../../packages/neo/utils/errors";
+import { SMITH_NEP_FEE } from "../../../../../packages/neo/contracts/ftw/smith/consts";
 
 const NEP17FormModal = () => {
   const { network, connectedWallet } = useWallet();
   const history = useHistory();
   const [txid, setTxid] = useState<string>();
+  const [isBalanceLoading, setBalanceLoading] = useState(false);
+  const [balances, setBalances] = useState<{
+    gasBalance: number;
+    nepBalance: number;
+  }>({
+    gasBalance: 0,
+    nepBalance: 0,
+  });
   const [values, setValues] = useState({
     name: "",
     symbol: "",
@@ -37,37 +46,50 @@ const NEP17FormModal = () => {
       toast.error(
         "Emoji is not supported yet. Please remove emojis and try again."
       );
-    } else {
-      if (connectedWallet) {
-        // if (balanceCheck(connectedWallet.balances, 20)) {
-        try {
-          const res = await new SmithContract(network).isNEP17SymbolTaken(
-            values.symbol
-          );
-          if (res) {
-            toast.error("Token symbol is already taken. Try other symbol.");
-          } else {
-            const res = await new SmithContract(network).createNEP17V3(
-              connectedWallet,
-              values.totalSupply,
-              values.decimals,
-              values.symbol,
-              values.name,
-              values.author,
-              values.description,
-              values.email
-            );
-            setTxid(res);
-          }
-        } catch (e: any) {
-          toast.error(handleError(e));
-        }
-        // } else {
-        //   toast.error("You must have more than 20 GAS.");
-        // }
+      return;
+    }
+
+    if (!connectedWallet) {
+      toast.error("Please connect wallet.");
+      return;
+    }
+
+    if (isBalanceLoading) {
+      toast.error("Balance check hasn't been done. Please try again.");
+      return;
+    }
+
+    if (balances.nepBalance < SMITH_NEP_FEE[network]) {
+      toast.error("You don't have enough NEP for platform fee.");
+      return;
+    }
+
+    if (balances.gasBalance < 10_00000000) {
+      toast.error("You don't have enough GAS for deploy fee.");
+      return;
+    }
+
+    try {
+      const res = await new SmithContract(network).isNEP17SymbolTaken(
+        values.symbol
+      );
+      if (res) {
+        toast.error("Token symbol is already taken. Try other symbol.");
       } else {
-        toast.error("Please connect wallet.");
+        const res = await new SmithContract(network).createNEP17V3(
+          connectedWallet,
+          values.totalSupply,
+          values.decimals,
+          values.symbol,
+          values.name,
+          values.author,
+          values.description,
+          values.email
+        );
+        setTxid(res);
       }
+    } catch (e: any) {
+      toast.error(handleError(e));
     }
   };
 
@@ -76,12 +98,25 @@ const NEP17FormModal = () => {
     history.push(SMITH_PATH);
   };
 
-  const firstInput = useRef(null);
+  // const firstInput = useRef(null);
 
   useEffect(() => {
-    // @ts-ignore
-    firstInput.current.focus();
-  }, []);
+    // firstInput.current.focus();
+    async function balanceCheck(w) {
+      setBalanceLoading(true);
+      try {
+        const res = await new SmithContract(network).balanceCheck(w);
+        setBalances(res);
+        setBalanceLoading(false);
+      } catch (e: any) {
+        setBalanceLoading(false);
+        console.error(e);
+      }
+    }
+    if (connectedWallet) {
+      balanceCheck(connectedWallet);
+    }
+  }, [connectedWallet, network]);
 
   return (
     <PageLayout>
@@ -101,7 +136,7 @@ const NEP17FormModal = () => {
                   <div className="control">
                     <input
                       placeholder="My awesome token"
-                      ref={firstInput}
+                      // ref={firstInput}
                       value={values.name}
                       onChange={(e) =>
                         handleValueChange("name", e.target.value)
@@ -264,12 +299,14 @@ const NEP17FormModal = () => {
                     <strong>Unicode</strong>.
                   </li>
                   <li>FTWSwap cannot support tokens with 0 decimals.</li>
-	                <li>
-		                Deploy fee (Blockchain fee) is <strong className="has-text-primary">10 GAS</strong>.
-	                </li>
-	                <li>
-		                Service fee is <strong className="has-text-primary">1000 NEP</strong>.
-	                </li>
+                  <li>
+                    Deploy fee (Blockchain fee) is{" "}
+                    <strong className="has-text-primary">10 GAS</strong>.
+                  </li>
+                  <li>
+                    Service fee is{" "}
+                    <strong className="has-text-primary">1000 NEP</strong>.
+                  </li>
                   <li>
                     Your contract will <strong>not</strong> have a{" "}
                     <strong>update method</strong>.
