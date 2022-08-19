@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { RestAPI } from "../../../../packages/neo/api";
-import { useWallet } from "../../../../packages/provider";
+import { RestAPI } from "../../../../../../packages/neo/api";
+import { useWallet } from "../../../../../../packages/provider";
 import PairItem from "./PairItem";
 
 const Pairs = (props) => {

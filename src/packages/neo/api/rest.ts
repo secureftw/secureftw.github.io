@@ -1,5 +1,6 @@
 import { INetworkType } from "../network";
 import { ENDPOINT } from "./consts";
+import { ISwapHistoryResult } from "./interfaces";
 
 // interface IRuneFilter = "All" | "Fire" |  ""
 
@@ -39,35 +40,41 @@ export class RestAPI {
     return this.fetchResult(this.endpoint + "/tokens");
   }
 
-	async getToken(id) {
-		return this.fetchResult(this.endpoint + "/tokens/" + id);
-	}
+  async getToken(id) {
+    return this.fetchResult(this.endpoint + "/tokens/" + id);
+  }
 
-	async getFarms() {
-		return this.fetchResult(this.endpoint + "/farms");
-	}
+  async getFarms() {
+    return this.fetchResult(this.endpoint + "/farms");
+  }
 
-	async getPrices() {
-		return this.fetchResult(this.endpoint + "/prices");
-	}
+  async getPrices() {
+    return this.fetchResult(this.endpoint + "/prices");
+  }
 
-	async getLiquidity(id, days) {
-		return this.fetchResult(this.endpoint + `/tokens/liquidity/${id}/${days}`);
-	}
+  async getLiquidity(id, days) {
+    return this.fetchResult(this.endpoint + `/tokens/liquidity/${id}/${days}`);
+  }
 
-	async getNEP(days) {
-		return this.fetchResult(this.endpoint + `/nep/${days}`);
-	}
+  async getNEP(days) {
+    return this.fetchResult(this.endpoint + `/nep/${days}`);
+  }
 
-	async getPairs() {
-		return this.fetchResult(this.endpoint + "/pairs");
-	}
+  async getPairs() {
+    return this.fetchResult(this.endpoint + "/pairs");
+  }
 
-	async getPair(id) {
-		return this.fetchResult(this.endpoint + "/pairs/" + id);
-	}
+  async getPair(id) {
+    return this.fetchResult(this.endpoint + "/pairs/" + id);
+  }
 
-	async getPairDay(id) {
-		return this.fetchResult(this.endpoint + "/pairs/" + id + "/day");
-	}
+  async getPairDay(id) {
+    return this.fetchResult(this.endpoint + "/pairs/" + id + "/day");
+  }
+
+  async getSwapHistory(tokenA, tokenB, page): Promise<ISwapHistoryResult> {
+    return this.fetchResult(
+      this.endpoint + `/pairs/history/swap/${tokenA}/${tokenB}/${page}`
+    );
+  }
 }

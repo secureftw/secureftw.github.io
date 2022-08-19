@@ -25,7 +25,6 @@ import {
 import ReactTooltip from "react-tooltip";
 import { useApp } from "../../../../../common/hooks/use-app";
 import Providers from "../Providers";
-import History from "../History";
 import {
   DEFAULT_SLIPPAGE,
   PRICE_IMPACT_LIMIT,
@@ -36,8 +35,9 @@ import { getAfterSlippage } from "../../../../../packages/neo/contracts/ftw/swap
 import SwapDetails from "./components/SwapDetails";
 import { u } from "@cityofzion/neon-core";
 import { handleError } from "../../../../../packages/neo/utils/errors";
-import {GAS_SCRIPT_HASH} from "../../../../../packages/neo/consts/nep17-list";
+import { GAS_SCRIPT_HASH } from "../../../../../packages/neo/consts/nep17-list";
 import Pairs from "../PairsFromServer";
+import SwapHistory from "../../../Analytics/scenes/PairDetail/SwapHistory";
 
 export interface ITokenState {
   hash: string;
@@ -459,9 +459,25 @@ const Swap = () => {
         <></>
       )}
 
-      {tokenA && tokenB && isSwapHistoryModalActive ? (
+      {tokenA && tokenB && isSwapHistoryModalActive && data ? (
         <Modal onClose={() => setSwapHistoryModalActive(false)}>
-          <History tokenA={tokenA.hash} tokenB={tokenB.hash} />
+	        <>
+		        <SwapHistory
+			        tokenA={"0x" + tokenA.hash}
+			        tokenB={"0x" + tokenB.hash}
+			        network={network}
+			        // Convert
+			        pairs={{
+				        ["0x" + tokenA.hash]: {
+					        ...data.pair[tokenA.hash],
+				        },
+				        ["0x" + tokenB.hash]: {
+					        ...data.pair[tokenB.hash],
+				        },
+			        }}
+		        />
+		        {/*<History tokenA={tokenA.hash} tokenB={tokenB.hash} />*/}
+	        </>
         </Modal>
       ) : (
         <></>

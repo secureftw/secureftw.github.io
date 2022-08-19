@@ -11,9 +11,9 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import {useWallet} from "../../../../packages/provider";
-import {RestAPI} from "../../../../packages/neo/api";
-import {numberTrim} from "../../../../packages/neo/utils";
+import {useWallet} from "../../../../../../packages/provider";
+import {RestAPI} from "../../../../../../packages/neo/api";
+import {numberTrim} from "../../../../../../packages/neo/utils";
 
 ChartJS.register(
   CategoryScale,

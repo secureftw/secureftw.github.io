@@ -1,7 +1,7 @@
 import React from "react";
-import { ASSET_LIST } from "../../../../packages/neo/contracts/ftw/swap/consts";
-import { MAINNET, UNKNOWN_TOKEN_IMAGE } from "../../../../packages/neo/consts";
-import LogoIcon from "../../../components/LogoIcon";
+import { ASSET_LIST } from "../../../../../../packages/neo/contracts/ftw/swap/consts";
+import { MAINNET, UNKNOWN_TOKEN_IMAGE } from "../../../../../../packages/neo/consts";
+import LogoIcon from "../../../../../components/LogoIcon";
 
 const SymbolWithLogo = ({ id, symbol }) => {
   const hash = id.substring(2);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { RestAPI } from "../../../../packages/neo/api";
-import { INetworkType } from "../../../../packages/neo/network";
-import { numberTrim } from "../../../../packages/neo/utils";
+import { RestAPI } from "../../../../../../packages/neo/api";
+import { INetworkType } from "../../../../../../packages/neo/network";
+import { numberTrim } from "../../../../../../packages/neo/utils";
 import SymbolWithLogo from "./SymbolWithLogo";
 import { FaChartLine } from "react-icons/fa";
 

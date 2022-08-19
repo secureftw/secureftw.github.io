@@ -11,8 +11,8 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { useWallet } from "../../../../packages/provider";
-import { RestAPI } from "../../../../packages/neo/api";
+import { useWallet } from "../../../../../../packages/provider";
+import { RestAPI } from "../../../../../../packages/neo/api";
 // import Spinner from "../Spinner";
 
 ChartJS.register(

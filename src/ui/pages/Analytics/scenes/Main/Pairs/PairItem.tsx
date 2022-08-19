@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { RestAPI } from "../../../../packages/neo/api";
-import { INetworkType } from "../../../../packages/neo/network";
-import { FaChartLine } from "react-icons/fa";
-import PairIcons from "../../../components/PairIcons";
-import {numberTrim} from "../../../../packages/neo/utils";
+import { RestAPI } from "../../../../../../packages/neo/api";
+import { INetworkType } from "../../../../../../packages/neo/network";
+import PairIcons from "../../../../../components/PairIcons";
+import { numberTrim } from "../../../../../../packages/neo/utils";
 
 interface IPairItem {
   network: INetworkType;
@@ -35,8 +34,8 @@ const PairItem = ({
     }
     fetch();
   }, []);
-	if(isLoading) return <></>
-	if(data && data.reserveUSD < 100) return <></>
+  if (isLoading) return <></>;
+  if (data && data.reserveUSD < 100) return <></>;
   return (
     <tr>
       <td>
@@ -55,9 +54,9 @@ const PairItem = ({
       <td>{data ? "$" + numberTrim(data.volumeUSD) : ""}</td>
       {/*<td>{data ? "$" + numberTrim(data.feesUSD) : ""}</td>*/}
       <td style={{ textAlign: "right" }}>
-        <button disabled={true} className="button is-small is-white">
-          <FaChartLine />
-        </button>
+        {/*<Link to={`${ANALYTICS_PAIRS_PATH}/${tokenA}_${tokenB}`} className="button is-small is-white">*/}
+        {/*  <FaChartLine />*/}
+        {/*</Link>*/}
       </td>
     </tr>
   );

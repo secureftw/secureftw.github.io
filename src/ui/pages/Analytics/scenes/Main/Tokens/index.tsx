@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import PageLayout from "../../../components/PageLayout";
-import { useWallet } from "../../../../packages/provider";
-import { MAINNET, UNKNOWN_TOKEN_IMAGE } from "../../../../packages/neo/consts";
-import { RestAPI } from "../../../../packages/neo/api";
-import { numberTrim } from "../../../../packages/neo/utils";
-import LogoIcon from "../../../components/LogoIcon";
-import { ASSET_LIST } from "../../../../packages/neo/contracts/ftw/swap/consts";
+import PageLayout from "../../../../../components/PageLayout";
+import { useWallet } from "../../../../../../packages/provider";
+import { MAINNET, UNKNOWN_TOKEN_IMAGE } from "../../../../../../packages/neo/consts";
+import { RestAPI } from "../../../../../../packages/neo/api";
+import { numberTrim } from "../../../../../../packages/neo/utils";
+import LogoIcon from "../../../../../components/LogoIcon";
+import { ASSET_LIST } from "../../../../../../packages/neo/contracts/ftw/swap/consts";
 import TokenItem from "./TokenItem";
 
 // const columns = [

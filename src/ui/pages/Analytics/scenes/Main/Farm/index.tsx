@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
-import PageLayout from "../../../components/PageLayout";
-import {useWallet} from "../../../../packages/provider";
-import {RestAPI} from "../../../../packages/neo/api";
+import PageLayout from "../../../../../components/PageLayout";
+import {useWallet} from "../../../../../../packages/provider";
+import {RestAPI} from "../../../../../../packages/neo/api";
 import DataTable from "react-data-table-component";
-import PairIcons from "../../../components/PairIcons";
-import {MAINNET} from "../../../../packages/neo/consts";
-import {numberTrim} from "../../../../packages/neo/utils";
+import PairIcons from "../../../../../components/PairIcons";
+import {MAINNET} from "../../../../../../packages/neo/consts";
+import {numberTrim} from "../../../../../../packages/neo/utils";
 
 const columns = [
 	{
