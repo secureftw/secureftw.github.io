@@ -46,6 +46,6 @@ export const MAXI_SCRIPT_HASH = "5afb6804ee3598a58f8a0994b1df99d8be43a313";
 export const TED_SCRIPT_HASH = "50b41a55c1d746eec2b86b8f0405fb49fbb96492";
 export const N3F_SCRIPT_HASH = "979b839648d215fe895d559019dedde31fcf45a9";
 export const FRANK_SCRIPT_HASH = "a06cfd7ae9dd7befb7bf8e5b8c5902c969182de0"
-export const HOOD_SCRIPT_HASH = "465f444cb15bab93501099403d40938ed8eae0b3";
+export const HOOD_SCRIPT_HASH = "c8d56cac2dd82e2da605ccae6865a99da491b97e";
 export const B$_SCRIPT_HASH = "3782720ad22ecfdd26cc99135dbc6739a47a38c9";
 export const GLC_SCRIPT_HASH = "77dc8cadcaef3694ab0f23901d8d9d825b19e6a2";

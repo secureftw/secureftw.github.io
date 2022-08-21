@@ -6,7 +6,7 @@ import {
 	FWETH_SCRIPT_HASH,
 	GAS_SCRIPT_HASH,
 	GLC_SCRIPT_HASH,
-	HIST_SCRIPT_HASH,
+	HIST_SCRIPT_HASH, HOOD_SCRIPT_HASH,
 	LITH_SCRIPT_HASH,
 	MAG_SCRIPT_HASH,
 	MAXI_SCRIPT_HASH, N3F_SCRIPT_HASH,
@@ -108,6 +108,13 @@ export const MAINNET_TOKEN_LIST = {
     logo: "/symbols/MAG.svg",
     decimals: 8,
   },
+	[HOOD_SCRIPT_HASH]: {
+		category: TOKEN_CATEGORY_STARTUPS,
+		contractHash: HOOD_SCRIPT_HASH,
+		symbol: "HOOD",
+		logo: "/symbols/hood.png",
+		decimals: 8,
+	},
   [NUDES_SCRIPT_HASH]: {
     category: TOKEN_CATEGORY_STARTUPS,
     contractHash: NUDES_SCRIPT_HASH,

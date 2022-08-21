@@ -17,7 +17,7 @@ const SwapTokenCard = ({
 }: ISwapTokenCardProps) => {
   return (
     <div
-      className="column is-2-desktop is-3-mobile"
+      className="column is-2-desktop is-2-tablet is-3-mobile"
       onClick={() => onClick(contractHash, symbol, decimals)}
       key={`assets-${contractHash}`}
     >

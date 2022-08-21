@@ -55,7 +55,7 @@ const AssetListModal = ({
         <div>
           {SWAP_ASSET_CATEGORY.map((category) => {
             return (
-              <div key={category}>
+              <div key={category} className="block">
                 <h5 className="title is-6 mb-3">{category} tokens</h5>
                 <div className="columns is-multiline is-mobile">
                   {assets.map((asset) => {
