@@ -1,8 +1,14 @@
 import { INetworkType } from "../network";
 import { ENDPOINT } from "./consts";
-import { ISwapHistoryResult } from "./interfaces";
-
-// interface IRuneFilter = "All" | "Fire" |  ""
+import {
+	ILiquidityWithTimeRange, INEPInfoWithTimeRange,
+	IPair, IPairDay,
+	IPairWithNumbers, IPrices,
+	IRuneProperties,
+	ISwapHistoryResult,
+	IToken,
+	ITokenWithNumbers
+} from "./interfaces";
 
 export class RestAPI {
   network: INetworkType;
@@ -24,23 +30,19 @@ export class RestAPI {
     }
   };
 
-  async getRunes(filter) {
+  async getRunes(filter): Promise<IRuneProperties[]> {
     return this.fetchResult(this.endpoint + "/runes/" + filter);
   }
 
-  async getRune(tokenId) {
+  async getRune(tokenId): Promise<IRuneProperties> {
     return this.fetchResult(this.endpoint + "/rune/" + tokenId);
   }
 
-  // async getPools() {
-  //   return this.fetchResult(this.endpoint + "/pools");
-  // }
-
-  async getTokens() {
+  async getTokens(): Promise<IToken[]> {
     return this.fetchResult(this.endpoint + "/tokens");
   }
 
-  async getToken(id) {
+  async getToken(id): Promise<ITokenWithNumbers> {
     return this.fetchResult(this.endpoint + "/tokens/" + id);
   }
 
@@ -48,27 +50,31 @@ export class RestAPI {
     return this.fetchResult(this.endpoint + "/farms");
   }
 
-  async getPrices() {
+  async getPrices(): Promise<IPrices> {
     return this.fetchResult(this.endpoint + "/prices");
   }
 
-  async getLiquidity(id, days) {
+  async getLiquidity(id, days): Promise<ILiquidityWithTimeRange> {
     return this.fetchResult(this.endpoint + `/tokens/liquidity/${id}/${days}`);
   }
 
-  async getNEP(days) {
+  async getNEP(days): Promise<INEPInfoWithTimeRange> {
     return this.fetchResult(this.endpoint + `/nep/${days}`);
   }
 
-  async getPairs() {
+	async getNumbersWithRange(id, days): Promise<INEPInfoWithTimeRange> {
+		return this.fetchResult(this.endpoint + `/tokens/numbers/${id}/${days}`);
+	}
+
+  async getPairs(): Promise<IPair[]> {
     return this.fetchResult(this.endpoint + "/pairs");
   }
 
-  async getPair(id) {
+  async getPair(id): Promise<IPairWithNumbers> {
     return this.fetchResult(this.endpoint + "/pairs/" + id);
   }
 
-  async getPairDay(id) {
+  async getPairDay(id): Promise<IPairDay> {
     return this.fetchResult(this.endpoint + "/pairs/" + id + "/day");
   }
 

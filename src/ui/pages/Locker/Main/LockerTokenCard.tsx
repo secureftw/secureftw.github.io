@@ -1,6 +1,5 @@
 import { u } from "@cityofzion/neon-core";
 import React from "react";
-import LogoIcon from "../../../components/LogoIcon";
 import { ASSET_LIST } from "../../../../packages/neo/contracts/ftw/swap/consts";
 import { useHistory } from "react-router-dom";
 import { LOCKER_PATH } from "../../../../consts";
@@ -32,10 +31,9 @@ const LockerTokenCard = ({
       }}
       className="box has-text-centered is-hoverable"
     >
-      <LogoIcon width="50px" height="50px" img={logo} />
+      <img style={{ width: "64px" }} src={logo} />
       <br />
-      Total locked
-      <br />
+      <div className="heading">Locked</div>
       {`${amount.toLocaleString()} ${symbol}`}
     </div>
   );

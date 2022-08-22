@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import PageLayout from "../../../../components/PageLayout";
 import SwapHistory from "./SwapHistory";
 import { useWallet } from "../../../../../packages/provider";
 import { RestAPI } from "../../../../../packages/neo/api";
 
-const PairDetail = (props) => {
+interface IPairDetailProps{
+	pairId: string
+}
+const PairDetail = ({pairId}: IPairDetailProps) => {
   const { network } = useWallet();
-  const params = useParams();
-  // @ts-ignore
-  const { pairId } = params;
   const pairs = pairId.split("_");
   const tokenA = pairs[0];
   const tokenB = pairs[1];

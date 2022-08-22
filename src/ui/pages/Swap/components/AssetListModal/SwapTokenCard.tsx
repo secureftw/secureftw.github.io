@@ -1,5 +1,4 @@
 import React from "react";
-import LogoIcon from "../../../../components/LogoIcon";
 
 interface ISwapTokenCardProps {
   onClick: (contractHash, symbol, decimals) => void;
@@ -22,7 +21,7 @@ const SwapTokenCard = ({
       key={`assets-${contractHash}`}
     >
       <div className="box is-hoverable has-text-centered">
-        <LogoIcon img={logo} />
+        <img style={{width: "32px"}} src={logo} alt={`${symbol} logo`}/>
         <span className="is-size-7 has-text-weight-semibold">{symbol}</span>
       </div>
     </div>

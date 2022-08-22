@@ -4,6 +4,8 @@ import { INetworkType } from "../../../../../../packages/neo/network";
 import { numberTrim } from "../../../../../../packages/neo/utils";
 import SymbolWithLogo from "./SymbolWithLogo";
 import { FaChartLine } from "react-icons/fa";
+import { ANALYTICS_TOKENS_PATH } from "../../../../../../consts";
+import { Link } from "react-router-dom";
 
 interface ITokenItem {
   id: string;
@@ -27,8 +29,8 @@ const TokenItem = ({ id, symbol, network }: ITokenItem) => {
     }
     fetch();
   }, []);
-	if(isLoading) return <></>
-	if(data && data.tradeVolumeUSD === 0) return <></>
+  if (isLoading) return <></>;
+  if (data && data.tradeVolumeUSD === 0) return <></>;
   return (
     <tr>
       <td>
@@ -37,10 +39,13 @@ const TokenItem = ({ id, symbol, network }: ITokenItem) => {
       <td>{data ? "$" + numberTrim(data.price, 4) : ""}</td>
       <td>{data ? "$" + numberTrim(data.totalLiquidityUSD) : ""}</td>
       <td>{data ? "$" + numberTrim(data.tradeVolumeUSD) : ""}</td>
-      <td style={{textAlign:"right"}}>
-        <button disabled={true} className="button is-small is-white">
+      <td style={{ textAlign: "right" }}>
+        <Link
+          to={`${ANALYTICS_TOKENS_PATH}/${id}`}
+          className="button is-small is-white"
+        >
           <FaChartLine />
-        </button>
+        </Link>
       </td>
     </tr>
   );

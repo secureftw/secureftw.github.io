@@ -14,6 +14,7 @@ import { Line } from "react-chartjs-2";
 import {useWallet} from "../../../../../../packages/provider";
 import {RestAPI} from "../../../../../../packages/neo/api";
 import {numberTrim} from "../../../../../../packages/neo/utils";
+import {NEP_SCRIPT_HASH} from "../../../../../../packages/neo/consts/nep17-list";
 
 ChartJS.register(
   CategoryScale,
@@ -62,28 +63,6 @@ export const options = {
     },
   },
 };
-//
-// const labels = ["January", "February", "March", "April", "May", "June", "July"];
-//
-// export const data = {
-//   labels,
-//   datasets: [
-//     {
-// 	    label: 'Liquidity',
-//       // fill: true,
-//       // label: undefined,
-//       data: [1, 2, 3, 4, 5, 6, 7],
-//       borderColor: "rgba(32, 226, 47, 1)",
-//       backgroundColor: "rgba(32, 226, 47, 1)",
-//     },
-// 	  {
-// 		  label: 'Price',
-// 		  data: [11, 12, 63, 74, 55, 46, 37],
-// 		  borderColor: "#b23bff",
-// 		  backgroundColor: "#b23bff",
-// 	  }
-//   ],
-// };
 
 const NEPChart = () => {
 	const { network } = useWallet();
@@ -93,7 +72,7 @@ const NEPChart = () => {
 		async function fetch() {
 			try {
 				setLoading(true);
-				const res = await new RestAPI(network).getNEP("15");
+				const res = await new RestAPI(network).getNumbersWithRange("0x" + NEP_SCRIPT_HASH,"15");
 				setData(res);
 				setLoading(false);
 			} catch (e: any) {

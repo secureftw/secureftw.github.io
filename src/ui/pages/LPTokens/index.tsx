@@ -4,14 +4,14 @@ import { SwapContract } from "../../../packages/neo/contracts";
 import { useWallet } from "../../../packages/provider";
 import { RestAPI } from "../../../packages/neo/api";
 import { u } from "@cityofzion/neon-core";
-import { numberTrim } from "../../../packages/neo/utils";
 import { SpinnerRoundFilled } from "spinners-react";
 import MyLPTokenList from "./MyLPTokenList";
 import MyLPTokenCard from "./MyLPTokenCard";
+import {IPrices} from "../../../packages/neo/api/interfaces";
 
 const LPTokens = () => {
   const { connectedWallet, network } = useWallet();
-  const [prices, setPrices] = useState();
+  const [prices, setPrices] = useState<IPrices>();
   const [id, setId] = useState();
   const [info, setInfo] = useState<any>();
   const [error, setError] = useState("");
