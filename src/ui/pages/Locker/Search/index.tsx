@@ -3,7 +3,6 @@ import { ILocker } from "../../../../packages/neo/contracts/ftw/locker/interface
 import { LockerContract } from "../../../../packages/neo/contracts/ftw/locker";
 import { useWallet } from "../../../../packages/provider";
 import { FaSearch } from "react-icons/fa";
-import LockerKeyCard from "../LockerKeys/LockerKeyCard";
 import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { LOCKER_SEARCH_PATH } from "../../../../consts";

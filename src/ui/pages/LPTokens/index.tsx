@@ -4,61 +4,71 @@ import { SwapContract } from "../../../packages/neo/contracts";
 import { useWallet } from "../../../packages/provider";
 import { RestAPI } from "../../../packages/neo/api";
 import { u } from "@cityofzion/neon-core";
-import { numberTrim } from "../../../packages/neo/utils";
 import { SpinnerRoundFilled } from "spinners-react";
 import MyLPTokenList from "./MyLPTokenList";
 import MyLPTokenCard from "./MyLPTokenCard";
+import queryString from "query-string";
+import {useHistory, useLocation} from "react-router-dom";
 
 const LPTokens = () => {
+  const location = useLocation();
+	const history = useHistory();
+  const params = queryString.parse(location.search);
+
   const { connectedWallet, network } = useWallet();
+
   const [prices, setPrices] = useState();
-  const [id, setId] = useState();
+  const [id, setId] = useState<any>(params && params.id ? params.id : undefined);
   const [info, setInfo] = useState<any>();
   const [error, setError] = useState("");
   const [isSearching, setSearching] = useState(false);
 
-  const handleSearch = async () => {
-    if (id) {
-      try {
-        setSearching(true);
-        setError("");
-        const info: any = await new SwapContract(network).getProperties(id);
-        const reserve = await new SwapContract(network).getReserve(
-          info.tokenA,
-          info.tokenB
-        );
-        const tokenAPrice = prices ? prices["0x" + info.tokenA]: 0;
-        const tokenBPrice = prices? prices["0x" + info.tokenB]: 0;
-        let tokenAReserve = reserve.pair[info.tokenA].reserveAmount;
-        let tokenBReserve = reserve.pair[info.tokenB].reserveAmount;
-        let tokenAAmount = parseFloat(
-          u.BigInteger.fromNumber(tokenAReserve)
-            .mul(info.amount)
-            .div(reserve.totalShare)
-            .toDecimal(reserve.pair[info.tokenA].decimals)
-        );
-        let tokenBAmount = parseFloat(
-          u.BigInteger.fromNumber(tokenBReserve)
-            .mul(info.amount)
-            .div(reserve.totalShare)
-            .toDecimal(reserve.pair[info.tokenB].decimals)
-        );
-				console.log(`Shares: ${info.amount}`)
-				console.log(`${reserve.pair[info.tokenA].symbol}: ${tokenAAmount.toLocaleString()}`)
-				console.log(`${reserve.pair[info.tokenB].symbol}: ${tokenBAmount.toLocaleString()}`)
-        setInfo({
-          tokenASymbol: reserve.pair[info.tokenA].symbol,
-          tokenBSymbol: reserve.pair[info.tokenB].symbol,
-          tokenAAmount,
-          tokenBAmount,
-          tokenAUSD: tokenAAmount * tokenAPrice,
-          tokenBUSD: tokenBAmount * tokenBPrice,
-        });
-        setSearching(false);
-      } catch (e: any) {
-        setSearching(false);
-        setError(e.message);
-      }
+  const handleSearch = async (id) => {
+    try {
+      setSearching(true);
+      setError("");
+      const info: any = await new SwapContract(network).getProperties(id);
+      const reserve = await new SwapContract(network).getReserve(
+        info.tokenA,
+        info.tokenB
+      );
+      const tokenAPrice = prices ? prices["0x" + info.tokenA] : 0;
+      const tokenBPrice = prices ? prices["0x" + info.tokenB] : 0;
+      let tokenAReserve = reserve.pair[info.tokenA].reserveAmount;
+      let tokenBReserve = reserve.pair[info.tokenB].reserveAmount;
+      let tokenAAmount = parseFloat(
+        u.BigInteger.fromNumber(tokenAReserve)
+          .mul(info.amount)
+          .div(reserve.totalShare)
+          .toDecimal(reserve.pair[info.tokenA].decimals)
+      );
+      let tokenBAmount = parseFloat(
+        u.BigInteger.fromNumber(tokenBReserve)
+          .mul(info.amount)
+          .div(reserve.totalShare)
+          .toDecimal(reserve.pair[info.tokenB].decimals)
+      );
+      console.log(`Shares: ${info.amount}`);
+      console.log(
+        `${reserve.pair[info.tokenA].symbol}: ${tokenAAmount.toLocaleString()}`
+      );
+      console.log(
+        `${reserve.pair[info.tokenB].symbol}: ${tokenBAmount.toLocaleString()}`
+      );
+      setInfo({
+        tokenASymbol: reserve.pair[info.tokenA].symbol,
+        tokenBSymbol: reserve.pair[info.tokenB].symbol,
+        tokenAAmount,
+        tokenBAmount,
+        tokenAUSD: tokenAAmount * tokenAPrice,
+        tokenBUSD: tokenBAmount * tokenBPrice,
+      });
+      setSearching(false);
+	    let search = `?id=${id}`;
+	    history.push(search);
+    } catch (e: any) {
+      setSearching(false);
+      setError(e.message);
     }
   };
 
@@ -67,8 +77,12 @@ const LPTokens = () => {
       const prices = await new RestAPI(network).getPrices();
       setPrices(prices);
     }
-	  getPrices();
-  }, []);
+    getPrices();
+
+    if (params.id) {
+      handleSearch(params.id);
+    }
+  }, [network]);
 
   return (
     <PageLayout>
@@ -93,7 +107,7 @@ const LPTokens = () => {
               </div>
               <div className="control">
                 <button
-                  onClick={handleSearch}
+                  onClick={() => handleSearch(id)}
                   disabled={!id}
                   className={`button is-primary ${
                     isSearching ? "is-loading" : ""
@@ -117,22 +131,22 @@ const LPTokens = () => {
             </div>
           ) : info && id ? (
             <div className="box is-shadowless">
-	            <MyLPTokenCard
-		            tokenId={id}
-		            tokenASymbol={info.tokenASymbol}
-		            tokenAAmount={info.tokenAAmount}
-		            tokenAUSD={info.tokenAUSD}
-		            tokenBSymbol={info.tokenBSymbol}
-		            tokenBAmount={info.tokenBAmount}
-		            tokenBUSD={info.tokenBUSD}
-	            />
+              <MyLPTokenCard
+                tokenId={id}
+                tokenASymbol={info.tokenASymbol}
+                tokenAAmount={info.tokenAAmount}
+                tokenAUSD={info.tokenAUSD}
+                tokenBSymbol={info.tokenBSymbol}
+                tokenBAmount={info.tokenBAmount}
+                tokenBUSD={info.tokenBUSD}
+              />
             </div>
           ) : (
             <></>
           )}
           {connectedWallet && prices ? (
             <MyLPTokenList
-	            prices={prices}
+              prices={prices}
               connectedWallet={connectedWallet}
               network={network}
             />
