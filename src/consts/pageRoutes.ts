@@ -50,7 +50,7 @@ export const SWAP_PAGE_ROUTE = {
 export const FARM_PAGE_ROUTE = {
   label: "Farm",
   path: FARM_PATH,
-  network: [TESTNET, MAINNET],
+  network: [MAINNET],
   category: [],
 };
 
@@ -62,12 +62,11 @@ export const FARM_V2_PAGE_ROUTE = {
 };
 
 export const LOCKER_PAGE_ROUTE = {
-	label: "Locker",
-	path: LOCKER_PATH,
-	network: [TESTNET, MAINNET],
-	category: [],
+  label: "Locker",
+  path: LOCKER_PATH,
+  network: [TESTNET, MAINNET],
+  category: [],
 };
-
 
 export const SMITH_PAGE_ROUTE = {
   label: "Smith",
@@ -79,7 +78,7 @@ export const SMITH_PAGE_ROUTE = {
 export const DAO_PAGE_ROUTE = {
   label: "DAO",
   path: DAO_PATH,
-  network: [PRIVATENET, TESTNET],
+  network: [PRIVATENET],
   category: [],
 };
 
@@ -87,23 +86,7 @@ export const ANALYTICS_ROUTE = {
   label: "Analytics",
   path: ANALYTICS_TOKENS_PATH,
   network: [MAINNET],
-  category: [
-    // {
-    //   label: "Tokens",
-    //   path: ANALYTICS_TOKENS_PATH,
-    //   network: [MAINNET],
-    // },
-    // {
-    //   label: "Pools",
-    //   path: ANALYTICS_POOLS_PATH,
-    //   network: [MAINNET],
-    // },
-    // // {
-    // //   label: "Farm",
-    // //   path: ANALYTICS_FARM_PATH,
-    // //   network: [MAINNET],
-    // // },
-  ],
+  category: [],
 };
 
 export const ARCHIVE_ROUTE = {
@@ -147,11 +130,11 @@ export const NFT_ROUTE = {
       path: GALLERY_PATH,
       network: [MAINNET],
     },
-	  {
-		  label: "LP Tokens",
-		  path: LP_TOKENS_PATH,
-		  network: [MAINNET],
-	  },
+    {
+      label: "LP Tokens",
+      path: LP_TOKENS_PATH,
+      network: [MAINNET],
+    },
   ],
 };
 
@@ -159,8 +142,8 @@ export const MENU = [
   SWAP_PAGE_ROUTE,
   FARM_PAGE_ROUTE,
   FARM_V2_PAGE_ROUTE,
-	SMITH_PAGE_ROUTE,
-	LOCKER_PAGE_ROUTE,
+  SMITH_PAGE_ROUTE,
+  LOCKER_PAGE_ROUTE,
   ANALYTICS_ROUTE,
   DAO_PAGE_ROUTE,
   NFT_ROUTE,
