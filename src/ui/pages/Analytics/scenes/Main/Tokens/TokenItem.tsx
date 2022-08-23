@@ -34,7 +34,7 @@ const TokenItem = ({ id, symbol, network }: ITokenItem) => {
       <td>
         <SymbolWithLogo id={id} symbol={symbol} />
       </td>
-      <td>{data ? "$" + numberTrim(data.price, 4) : ""}</td>
+      <td>{data ? "$" + numberTrim(data.price, 9) : ""}</td>
       <td>{data ? "$" + numberTrim(data.totalLiquidityUSD) : ""}</td>
       <td>{data ? "$" + numberTrim(data.tradeVolumeUSD) : ""}</td>
       <td style={{textAlign:"right"}}>
