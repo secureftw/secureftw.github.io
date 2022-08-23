@@ -12,8 +12,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { LOCKER_USER_PATH } from "../../../../consts";
 import { wallet } from "@cityofzion/neon-core";
-import {SmithContract} from "../../../../packages/neo/contracts/ftw/smith";
-import {LOCKER_NEP_FEE} from "../../../../packages/neo/contracts/ftw/locker/consts";
+import { SmithContract } from "../../../../packages/neo/contracts/ftw/smith";
+import { LOCKER_NEP_FEE } from "../../../../packages/neo/contracts/ftw/locker/consts";
 // import MDEditor from "@uiw/react-md-editor";
 // import rehypeSanitize from "rehype-sanitize";
 
@@ -42,26 +42,26 @@ const Create = () => {
     // new Date(Date.now())
   );
   const [txid, setTxid] = useState("");
-	const [balances, setBalances] = useState<{
-		gasBalance: number;
-		nepBalance: number;
-	}>({
-		gasBalance: 0,
-		nepBalance: 0,
-	});
+  const [balances, setBalances] = useState<{
+    gasBalance: number;
+    nepBalance: number;
+  }>({
+    gasBalance: 0,
+    nepBalance: 0,
+  });
 
   const onSubmit = async () => {
-	  if (connectedWallet && contract && receiver && amount) {
+    if (connectedWallet && contract && receiver && amount) {
+      console.log(balances);
+      if (!wallet.isAddress(receiver)) {
+        toast.error("Please check receiver");
+        return;
+      }
 
-		  if (!wallet.isAddress(receiver)) {
-			  toast.error("Please check receiver");
-			  return;
-		  }
-
-		  if (balances.nepBalance < LOCKER_NEP_FEE[network]) {
-			  toast.error("You don't have enough NEP for platform fee.");
-			  return;
-		  }
+      if (balances.nepBalance < LOCKER_NEP_FEE[network]) {
+        toast.error("You don't have enough NEP for platform fee.");
+        return;
+      }
 
       try {
         const res = await new LockerContract(network).create(
@@ -97,27 +97,30 @@ const Create = () => {
   // }, [description]);
 
   useEffect(() => {
-    async function fetch(contractHash) {
+    async function fetch() {
       try {
-        const contract = await new LockerContract(network).getContract(
-          contractHash
-        );
-        setContractHash({
-          assetHash: contract.contractHash,
-          decimals: contract.decimals,
-          symbol: contract.symbol,
-        });
-	      if(connectedWallet){
-		      const res = await new SmithContract(network).balanceCheck(connectedWallet);
-		      setBalances(res);
-	      }
+        if (params && params.contractHash) {
+          const contract = await new LockerContract(network).getContract(
+	          params.contractHash
+          );
+          setContractHash({
+            assetHash: contract.contractHash,
+            decimals: contract.decimals,
+            symbol: contract.symbol,
+          });
+        }
+
+        if (connectedWallet) {
+          const res = await new SmithContract(network).balanceCheck(
+            connectedWallet
+          );
+          setBalances(res);
+        }
       } catch (e: any) {
         console.error(e);
       }
     }
-    if (params && params.contractHash) {
-      fetch(params.contractHash);
-    }
+		fetch()
   }, [network, connectedWallet]);
 
   return (
