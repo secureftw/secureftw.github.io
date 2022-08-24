@@ -23,7 +23,7 @@ const LPTokens = () => {
   const [error, setError] = useState("");
   const [isSearching, setSearching] = useState(false);
 
-  const handleSearch = async (id) => {
+  const handleSearch = async (id, _prices) => {
     try {
       setSearching(true);
       setError("");
@@ -32,8 +32,8 @@ const LPTokens = () => {
         info.tokenA,
         info.tokenB
       );
-      const tokenAPrice = prices ? prices["0x" + info.tokenA] : 0;
-      const tokenBPrice = prices ? prices["0x" + info.tokenB] : 0;
+      const tokenAPrice = _prices ? _prices["0x" + info.tokenA] : 0;
+      const tokenBPrice = _prices ? _prices["0x" + info.tokenB] : 0;
       let tokenAReserve = reserve.pair[info.tokenA].reserveAmount;
       let tokenBReserve = reserve.pair[info.tokenB].reserveAmount;
       let tokenAAmount = parseFloat(
@@ -73,15 +73,14 @@ const LPTokens = () => {
   };
 
   useEffect(() => {
-    async function getPrices() {
-      const prices = await new RestAPI(network).getPrices();
-      setPrices(prices);
+    async function fetch() {
+      const res = await new RestAPI(network).getPrices();
+      setPrices(res);
+	    if (params.id) {
+		    await handleSearch(params.id, res);
+	    }
     }
-    getPrices();
-
-    if (params.id) {
-      handleSearch(params.id);
-    }
+	  fetch();
   }, [network]);
 
   return (
@@ -107,7 +106,7 @@ const LPTokens = () => {
               </div>
               <div className="control">
                 <button
-                  onClick={() => handleSearch(id)}
+                  onClick={() => handleSearch(id, prices)}
                   disabled={!id}
                   className={`button is-primary ${
                     isSearching ? "is-loading" : ""
