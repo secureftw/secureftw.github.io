@@ -11,9 +11,9 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { useWallet } from "../../../../../../packages/provider";
-import { RestAPI } from "../../../../../../packages/neo/api";
-// import Spinner from "../Spinner";
+import { useWallet } from "../../../../../packages/provider";
+import { RestAPI } from "../../../../../packages/neo/api";
+import { numberTrim } from "../../../../../packages/neo/utils";
 
 ChartJS.register(
   CategoryScale,
@@ -29,9 +29,6 @@ ChartJS.register(
 export const options = {
   responsive: true,
   elements: {
-    line: {
-      tension: 0.4,
-    },
     point: {
       radius: 0,
     },
@@ -46,18 +43,16 @@ export const options = {
   },
   scales: {
     y: {
-      prefix: "$",
       grid: {
         color: "white",
       },
-	    ticks: {
-				callback: (value) => {
-					return '$' + value.toLocaleString();
-				}
-	    }
+      ticks: {
+        callback: (value) => {
+          return "$" + numberTrim(value, 4);
+        },
+      },
     },
     x: {
-      // display:false,
       grid: {
         color: "white",
       },
@@ -65,22 +60,11 @@ export const options = {
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      fill: true,
-      // label: undefined,
-      data: [1, 2, 3, 4, 5, 6, 7],
-      borderColor: "rgba(32, 226, 47, 1)",
-      backgroundColor: "rgba(32, 226, 47, 0.56)",
-    },
-  ],
-};
-
-const LiquidityChart = () => {
+interface ITokenPriceChartProps{
+	tokenId: string
+	days: string
+}
+const TokenPriceChart = ({ tokenId, days }: ITokenPriceChartProps) => {
   const { network } = useWallet();
   const [data, setData] = useState<any>();
   const [isLoading, setLoading] = useState(true);
@@ -88,7 +72,10 @@ const LiquidityChart = () => {
     async function fetch() {
       try {
         setLoading(true);
-        const res = await new RestAPI(network).getLiquidity("TOTAL", "15");
+        const res = await new RestAPI(network).getNumbersWithRange(
+          tokenId,
+	        days
+        );
         setData(res);
         setLoading(false);
       } catch (e: any) {
@@ -104,22 +91,19 @@ const LiquidityChart = () => {
       labels: data && data.labels ? data.labels : [],
       datasets: [
         {
-          fill: true,
-          // label: undefined,
-          data: data && data.data ? data.data : [],
-          borderColor: "rgba(32, 226, 47, 1)",
-          backgroundColor: "rgba(32, 226, 47, 0.56)",
+          label: "Price",
+          data: data && data.prices ? data.prices : [],
+          borderColor: "#b23bff",
+          backgroundColor: "#b23bff",
         },
       ],
     };
   }, [data]);
-
   return (
-    <div className="is-relative">
-	    {/*<Spinner  />*/}
+    <div>
       <Line options={options} data={dataset} />
     </div>
   );
 };
 
-export default LiquidityChart;
+export default TokenPriceChart;

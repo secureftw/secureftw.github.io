@@ -3,6 +3,7 @@ import { RestAPI } from "../../../../../../packages/neo/api";
 import { INetworkType } from "../../../../../../packages/neo/network";
 import PairIcons from "../../../../../components/PairIcons";
 import { numberTrim } from "../../../../../../packages/neo/utils";
+import { FaChartLine } from "react-icons/fa";
 
 interface IPairItem {
   network: INetworkType;
@@ -10,6 +11,7 @@ interface IPairItem {
   tokenB: string;
   tokenASymbol: string;
   tokenBSymbol: string;
+  onClick: () => void;
 }
 const PairItem = ({
   tokenA,
@@ -17,6 +19,7 @@ const PairItem = ({
   tokenASymbol,
   tokenBSymbol,
   network,
+  onClick,
 }: IPairItem) => {
   const [data, setData] = useState<any>();
   const [isLoading, setLoading] = useState(true);
@@ -54,9 +57,9 @@ const PairItem = ({
       <td>{data ? "$" + numberTrim(data.volumeUSD) : ""}</td>
       {/*<td>{data ? "$" + numberTrim(data.feesUSD) : ""}</td>*/}
       <td style={{ textAlign: "right" }}>
-        {/*<Link to={`${ANALYTICS_PAIRS_PATH}/${tokenA}_${tokenB}`} className="button is-small is-white">*/}
-        {/*  <FaChartLine />*/}
-        {/*</Link>*/}
+        <button onClick={onClick} className="button is-small is-white">
+          <FaChartLine />
+        </button>
       </td>
     </tr>
   );

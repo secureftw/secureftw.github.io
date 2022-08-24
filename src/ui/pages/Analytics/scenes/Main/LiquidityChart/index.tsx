@@ -50,11 +50,11 @@ export const options = {
       grid: {
         color: "white",
       },
-	    ticks: {
-				callback: (value) => {
-					return '$' + value.toLocaleString();
-				}
-	    }
+      ticks: {
+        callback: (value) => {
+          return "$" + value.toLocaleString();
+        },
+      },
     },
     x: {
       // display:false,
@@ -80,7 +80,11 @@ export const data = {
   ],
 };
 
-const LiquidityChart = () => {
+interface ILiquidityChartProps {
+  id: string;
+  days: string;
+}
+const LiquidityChart = ({ id, days }: ILiquidityChartProps) => {
   const { network } = useWallet();
   const [data, setData] = useState<any>();
   const [isLoading, setLoading] = useState(true);
@@ -88,7 +92,7 @@ const LiquidityChart = () => {
     async function fetch() {
       try {
         setLoading(true);
-        const res = await new RestAPI(network).getLiquidity("TOTAL", "15");
+        const res = await new RestAPI(network).getLiquidity(id, days);
         setData(res);
         setLoading(false);
       } catch (e: any) {
@@ -116,7 +120,6 @@ const LiquidityChart = () => {
 
   return (
     <div className="is-relative">
-	    {/*<Spinner  />*/}
       <Line options={options} data={dataset} />
     </div>
   );

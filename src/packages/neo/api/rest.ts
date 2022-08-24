@@ -83,4 +83,10 @@ export class RestAPI {
       this.endpoint + `/pairs/history/swap/${tokenA}/${tokenB}/${page}`
     );
   }
+
+	async getSingleSwapHistory(tokenId, page): Promise<ISwapHistoryResult> {
+		return this.fetchResult(
+			this.endpoint + `/tokens/swap/${tokenId}/${page}`
+		);
+	}
 }

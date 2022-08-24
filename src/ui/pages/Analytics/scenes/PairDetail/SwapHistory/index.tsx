@@ -46,7 +46,6 @@ const SwapHistory = ({ network, tokenA, tokenB, pairs }: ISwapHistoryProps) => {
   console.log(data);
   return (
     <div>
-      <h1 className="title is-5">Swap history</h1>
       <div className="table-container">
         <table className="table is-fullwidth is-striped">
           <thead>

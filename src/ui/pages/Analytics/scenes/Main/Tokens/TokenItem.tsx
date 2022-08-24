@@ -4,15 +4,14 @@ import { INetworkType } from "../../../../../../packages/neo/network";
 import { numberTrim } from "../../../../../../packages/neo/utils";
 import SymbolWithLogo from "./SymbolWithLogo";
 import { FaChartLine } from "react-icons/fa";
-import { ANALYTICS_TOKENS_PATH } from "../../../../../../consts";
-import { Link } from "react-router-dom";
 
 interface ITokenItem {
   id: string;
   network: INetworkType;
   symbol: string;
+  onClick: (id: string) => void;
 }
-const TokenItem = ({ id, symbol, network }: ITokenItem) => {
+const TokenItem = ({ id, symbol, network, onClick }: ITokenItem) => {
   const [data, setData] = useState<any>();
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
@@ -40,12 +39,12 @@ const TokenItem = ({ id, symbol, network }: ITokenItem) => {
       <td>{data ? "$" + numberTrim(data.totalLiquidityUSD) : ""}</td>
       <td>{data ? "$" + numberTrim(data.tradeVolumeUSD) : ""}</td>
       <td style={{ textAlign: "right" }}>
-        <Link
-          to={`${ANALYTICS_TOKENS_PATH}/${id}`}
+        <button
+          onClick={() => onClick(id)}
           className="button is-small is-white"
         >
           <FaChartLine />
-        </Link>
+        </button>
       </td>
     </tr>
   );

@@ -5,21 +5,13 @@ import { withDecimal } from "../../../../../../packages/neo/utils";
 import TruncatedAddress from "../../../../../components/TruncatedAddress";
 import Pagination from "bulma-pagination-react";
 import moment from "moment";
+import { MAINNET_TOKEN_LIST } from "../../../../../../packages/neo/contracts/ftw/swap/mainnet-token-list";
 
 interface ISwapHistoryProps {
-  tokenA: string;
-  tokenB: string;
+  id: string;
   network: INetworkType;
-  pairs: {
-    [key: string]: {
-      symbol: string;
-      decimals: number;
-      price?: number;
-    };
-  };
 }
-const SwapHistory = ({ network, tokenA, tokenB, pairs }: ISwapHistoryProps) => {
-  console.log(pairs);
+const SwapHistory = ({ network, id }: ISwapHistoryProps) => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState<any>();
   const [isLoading, setLoading] = useState(true);
@@ -29,11 +21,7 @@ const SwapHistory = ({ network, tokenA, tokenB, pairs }: ISwapHistoryProps) => {
       setError("");
       setLoading(true);
       try {
-        const res = await new RestAPI(network).getSwapHistory(
-          tokenA,
-          tokenB,
-          page
-        );
+        const res = await new RestAPI(network).getSingleSwapHistory(id, page);
         setData(res);
         setLoading(false);
       } catch (e: any) {
@@ -43,10 +31,8 @@ const SwapHistory = ({ network, tokenA, tokenB, pairs }: ISwapHistoryProps) => {
     }
     fetch();
   }, [network, page]);
-  console.log(data);
   return (
     <div>
-      <h1 className="title is-5">Swap history</h1>
       <div className="table-container">
         <table className="table is-fullwidth is-striped">
           <thead>
@@ -67,25 +53,41 @@ const SwapHistory = ({ network, tokenA, tokenB, pairs }: ISwapHistoryProps) => {
             ) : data ? (
               data.items.length > 0 ? (
                 data.items.map((swap, i) => {
+                  const tokenIn = MAINNET_TOKEN_LIST[swap.base_id.substring(2)];
+                  const tokenOut =
+                    MAINNET_TOKEN_LIST[swap.quote_id.substring(2)];
                   return (
-                    <tr key={`swap-${i}`}>
+                    <tr key={`single-swap-${i}`}>
                       <td>
-                        {withDecimal(
-                          swap.base_amount,
-                          pairs[swap.base_id].decimals,
-                          true
+                        {tokenIn ? (
+                          <>
+                            {withDecimal(
+                              swap.base_amount,
+                              tokenIn.decimals,
+                              true
+                            )}
+                            &nbsp;
+                            <strong>{tokenIn.symbol}</strong>
+                          </>
+                        ) : (
+                          <>{swap.base_amount}</>
                         )}
-                        &nbsp;
-                        <strong>{pairs[swap.base_id].symbol}</strong>
                       </td>
                       <td>
-                        {withDecimal(
-                          swap.quote_amount,
-                          pairs[swap.quote_id].decimals,
-                          true
+                        {tokenOut ? (
+                          <>
+                            {" "}
+                            {withDecimal(
+                              swap.quote_amount,
+                              tokenOut.decimals,
+                              true
+                            )}
+                            &nbsp;
+                            <strong>{tokenOut.symbol}</strong>
+                          </>
+                        ) : (
+                          <>{swap.quote_amount}</>
                         )}
-                        &nbsp;
-                        <strong>{pairs[swap.quote_id].symbol}</strong>
                       </td>
                       <td>
                         <TruncatedAddress address={swap.account} />

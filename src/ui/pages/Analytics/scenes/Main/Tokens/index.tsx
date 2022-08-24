@@ -4,14 +4,25 @@ import { RestAPI } from "../../../../../../packages/neo/api";
 import TokenItem from "./TokenItem";
 import ModalCard from "../../../../../components/Modal";
 import TokenDetail from "../../TokenDetail";
+import {
+  ANALYTICS_PATH,
+  ANALYTICS_TOKENS_PATH,
+} from "../../../../../../consts";
 
 const TokensAnalytics = (props) => {
   const { network } = useWallet();
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setLoading] = useState(true);
-  const [isModalActive, setModalActive] = useState(
-    "0x48c40d4666f93408be1bef038b6722404d9a4c2a"
-  );
+  const [isModalActive, setModalActive] = useState("");
+  const handleTokenClick = (id: string) => {
+    setModalActive(id);
+    window.history.replaceState(null, "", `#${ANALYTICS_TOKENS_PATH}/${id}`);
+  };
+
+  const handleModalClose = () => {
+    window.history.replaceState(null, "", `#${ANALYTICS_PATH}`);
+    setModalActive("");
+  };
 
   useEffect(() => {
     async function fetch() {
@@ -42,6 +53,7 @@ const TokensAnalytics = (props) => {
         <tbody>
           {data.map((token) => (
             <TokenItem
+              onClick={handleTokenClick}
               key={token.id}
               id={token.id}
               network={network}
@@ -51,10 +63,10 @@ const TokensAnalytics = (props) => {
         </tbody>
       </table>
       {isModalActive !== "" ? (
-        <ModalCard isLarge={true} onClose={() => setModalActive("")}>
-          <>
-            <TokenDetail tokenId={isModalActive} />
-          </>
+        <ModalCard isLarge={true} onClose={handleModalClose}>
+	        <div className="has-modal-page">
+		        <TokenDetail tokenId={isModalActive} />
+	        </div>
         </ModalCard>
       ) : (
         <></>
