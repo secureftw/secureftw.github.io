@@ -2,11 +2,28 @@ import React, { useEffect, useState } from "react";
 import { RestAPI } from "../../../../../../packages/neo/api";
 import { useWallet } from "../../../../../../packages/provider";
 import PairItem from "./PairItem";
+import {
+	ANALYTICS_PAIRS_PATH,
+	ANALYTICS_PATH,
+	ANALYTICS_TOKENS_PATH,
+} from "../../../../../../consts";
+import ModalCard from "../../../../../components/Modal";
+import PairDetail from "../../PairDetail";
 
 const Pairs = (props) => {
   const { network } = useWallet();
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setLoading] = useState(true);
+  const [isModalActive, setModalActive] = useState("");
+  const handleTokenClick = (id: string) => {
+    setModalActive(id);
+    window.history.replaceState(null, "", `#${ANALYTICS_PAIRS_PATH}/${id}`);
+  };
+
+  const handleModalClose = () => {
+    window.history.replaceState(null, "", `#${ANALYTICS_PATH}`);
+    setModalActive("");
+  };
   useEffect(() => {
     async function fetch() {
       try {
@@ -22,6 +39,7 @@ const Pairs = (props) => {
     fetch();
   }, []);
   return (
+
     <div className="table-container">
       <table className="table is-fullwidth">
         <thead>
@@ -36,6 +54,7 @@ const Pairs = (props) => {
         <tbody>
           {data.map((pair) => (
             <PairItem
+              onClick={() => handleTokenClick(pair.id)}
               key={pair.id}
               tokenA={pair.token_A_id}
               tokenB={pair.token_B_id}
@@ -46,6 +65,15 @@ const Pairs = (props) => {
           ))}
         </tbody>
       </table>
+      {isModalActive !== "" ? (
+        <ModalCard isLarge={true} onClose={handleModalClose}>
+          <div className="has-modal-page">
+            <PairDetail id={isModalActive} />
+          </div>
+        </ModalCard>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

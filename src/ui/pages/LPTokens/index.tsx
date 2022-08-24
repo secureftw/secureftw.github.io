@@ -17,7 +17,7 @@ const LPTokens = () => {
 
   const { connectedWallet, network } = useWallet();
 
-  const [prices, setPrices] = useState();
+  const [prices, setPrices] = useState<any>();
   const [id, setId] = useState<any>(params && params.id ? params.id : undefined);
   const [info, setInfo] = useState<any>();
   const [error, setError] = useState("");

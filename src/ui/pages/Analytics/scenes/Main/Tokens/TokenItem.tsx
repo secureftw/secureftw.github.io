@@ -9,8 +9,9 @@ interface ITokenItem {
   id: string;
   network: INetworkType;
   symbol: string;
+  onClick: (id: string) => void;
 }
-const TokenItem = ({ id, symbol, network }: ITokenItem) => {
+const TokenItem = ({ id, symbol, network, onClick }: ITokenItem) => {
   const [data, setData] = useState<any>();
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
@@ -27,8 +28,8 @@ const TokenItem = ({ id, symbol, network }: ITokenItem) => {
     }
     fetch();
   }, []);
-	if(isLoading) return <></>
-	if(data && data.tradeVolumeUSD === 0) return <></>
+  if (isLoading) return <></>;
+  if (data && data.tradeVolumeUSD === 0) return <></>;
   return (
     <tr>
       <td>
@@ -37,8 +38,11 @@ const TokenItem = ({ id, symbol, network }: ITokenItem) => {
       <td>{data ? "$" + numberTrim(data.price, 9) : ""}</td>
       <td>{data ? "$" + numberTrim(data.totalLiquidityUSD) : ""}</td>
       <td>{data ? "$" + numberTrim(data.tradeVolumeUSD) : ""}</td>
-      <td style={{textAlign:"right"}}>
-        <button disabled={true} className="button is-small is-white">
+      <td style={{ textAlign: "right" }}>
+        <button
+          onClick={() => onClick(id)}
+          className="button is-small is-white"
+        >
           <FaChartLine />
         </button>
       </td>

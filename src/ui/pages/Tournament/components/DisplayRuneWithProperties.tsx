@@ -4,6 +4,7 @@ import { IRuneMeta } from "../../../../packages/neo/contracts/ftw/rune/interface
 import { RestAPI } from "../../../../packages/neo/api";
 // tslint:disable-next-line:no-submodule-imports
 import { FaStar } from "react-icons/fa";
+import {IRuneProperties} from "../../../../packages/neo/api/interfaces";
 
 interface IDisplayRuneProps {
   width: string;
@@ -22,7 +23,7 @@ const DisplayRuneWithProperties = ({
   isOwner,
   onClick,
 }: IDisplayRuneProps) => {
-  const [token, setToken] = useState<IRuneMeta>();
+  const [token, setToken] = useState<IRuneProperties>();
   useEffect(() => {
     async function fetchRune() {
       try {

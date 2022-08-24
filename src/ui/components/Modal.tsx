@@ -6,8 +6,15 @@ interface IProps {
   children: ReactElement;
   isLoading?: boolean;
   error?: string;
+  isLarge?: boolean;
 }
-const ModalCard = ({ onClose, children, isLoading, error }: IProps) => {
+const ModalCard = ({
+  onClose,
+  children,
+  isLoading,
+  error,
+  isLarge,
+}: IProps) => {
   React.useEffect(() => {
     $("html").addClass("is-clipped");
     return () => {
@@ -15,7 +22,10 @@ const ModalCard = ({ onClose, children, isLoading, error }: IProps) => {
     };
   }, []);
   return (
-    <div className="modal is-active" style={{ zIndex: 99 }}>
+    <div
+      className={`modal is-active ${isLarge ? "is-large" : ""}`}
+      style={{ zIndex: 99 }}
+    >
       <div className="modal-background" onClick={onClose} />
       <section className="modal-content">
         <div className="box">

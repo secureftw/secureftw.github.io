@@ -65,7 +65,6 @@ IIDOInfoProps) => {
       {/*<div className="level is-mobile">*/}
       {/*  <div className="level-left">*/}
       {/*    <div className="level-item">*/}
-      {/*      <LogoIcon img={NEP_LOGO} />*/}
       {/*    </div>*/}
       {/*    <div className="level-item">*/}
       {/*      <small>{TOTAL_TOKENS_FOR_SALE.toLocaleString()} NEP</small>*/}
