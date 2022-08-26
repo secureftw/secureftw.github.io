@@ -42,13 +42,15 @@ export const PRIVATE_CONFIG = {
 
 export const TESTNET_CONFIG = {
   label: "N3TestNet",
-  url: "http://seed1t5.neo.org:20332",
+  // url: "http://seed1t5.neo.org:20332",
+  url: "https://us-central1-ez-router.cloudfunctions.net/route/seed1t5.neo.org:20332",
 };
 
 // Using for tx monitor
 export const TESTNET_CONFIG_2 = {
   label: "N3TestNet",
-  url: "http://seed2t5.neo.org:20332",
+  // url: "http://seed2t5.neo.org:20332",
+  url: "https://us-central1-ez-router.cloudfunctions.net/route/seed1t5.neo.org:20332",
 };
 
 export const MAINNET_CONFIG = {
@@ -58,7 +60,7 @@ export const MAINNET_CONFIG = {
 
 /* Dev wallet */
 export const DEV_WALLET_PRIVATE_KEY =
-  "7b5d7fda53932ed9d43eb848dd521455767a4d40b5a994e6f351605e5a4ce26a";
+  "";
 
 export const DEFAULT_WITNESS_SCOPE = (senderHash: string) => {
   return {
