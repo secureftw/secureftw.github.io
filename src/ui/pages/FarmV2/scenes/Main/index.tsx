@@ -3,11 +3,8 @@ import { Link } from "react-router-dom";
 import { FARM_V2_STAKE_POSITIONS_PATH } from "../../../../../consts";
 import StakingPairCard from "./StakingPairCard";
 import { useWallet } from "../../../../../packages/provider";
-import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import ErrorNotificationWithRefresh from "../../../../components/ErrorNotificationWithRefresh";
 import { FarmV2Contract } from "../../../../../packages/neo/contracts/ftw/farm-v2";
-import { RestAPI } from "../../../../../packages/neo/api";
-import { MAINNET } from "../../../../../packages/neo/consts";
 import { NEP_SCRIPT_HASH } from "../../../../../packages/neo/consts/nep17-list";
 import { IPrices } from "../../../../../packages/neo/api/interfaces";
 

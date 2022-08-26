@@ -79,7 +79,7 @@ export class LockerContract {
           scopes: tx.WitnessScope.CustomContracts,
           allowedContracts: [
             contract.assetHash,
-            NEP_SCRIPT_HASH,
+            NEP_SCRIPT_HASH[this.network],
             this.contractHash,
           ],
         },

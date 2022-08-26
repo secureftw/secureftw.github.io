@@ -15,11 +15,6 @@ import {
   ISwapsHistory,
 } from "./interfaces";
 import { SMITH_SCRIPT_HASH } from "../smith/consts";
-import { Signer, WitnessConditionType } from "@cityofzion/neon-core/lib/tx";
-import {
-  WitnessRule,
-  WitnessRuleAction,
-} from "@cityofzion/neon-core/lib/tx/components/WitnessRule";
 import { BNEO_SCRIPT_HASH, NEP_SCRIPT_HASH } from "../../../consts/nep17-list";
 
 export class SwapContract {

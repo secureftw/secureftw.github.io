@@ -32,7 +32,7 @@ const AnalyticsMain = () => {
         <div className="column is-6">
           <div className="box is-shadowless">
             <h1 className="title is-6">NEP</h1>
-            <PriceChart tokenId={"0x" + NEP_SCRIPT_HASH} days={"20"} />
+            <PriceChart tokenId={"0x" + NEP_SCRIPT_HASH[network]} days={"20"} />
           </div>
         </div>
         <div className="column is-6">
