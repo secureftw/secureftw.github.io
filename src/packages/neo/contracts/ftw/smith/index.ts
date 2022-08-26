@@ -1,7 +1,7 @@
 import { INetworkType, Network } from "../../../network";
 import { IConnectedWallet } from "../../../wallet/interfaces";
 import { wallet } from "../../../index";
-import { DEFAULT_WITNESS_SCOPE } from "../../../consts";
+import { DEFAULT_WITNESS_SCOPE} from "../../../consts";
 import { SMITH_SCRIPT_HASH } from "./consts";
 import {
   ISmithNEP11Info,
@@ -19,7 +19,7 @@ import {
 import { tx, u, wallet as NeonWallet } from "@cityofzion/neon-core";
 import { IRuneMeta } from "../rune/interfaces";
 import { parseMapValue } from "../../../utils";
-import { GAS_SCRIPT_HASH, NEP_SCRIPT_HASH } from "../../../consts/nep17-list";
+import {GAS_SCRIPT_HASH, NEP_SCRIPT_HASH} from "../../../consts/nep17-list";
 
 export class SmithContract {
   network: INetworkType;
@@ -38,7 +38,7 @@ export class SmithContract {
     contractName: string,
     author: string,
     description: string,
-    email: string
+    email: string,
   ): Promise<string> => {
     const senderHash = NeonWallet.getScriptHashFromAddress(
       connectedWallet.account.address
@@ -325,9 +325,7 @@ export class SmithContract {
     return parseMapValue(res.stack[0] as any);
   };
 
-  getNEP11Records = async (
-    page: number
-  ): Promise<ISmithNEP11RecordPaginate> => {
+  getNEP11Records = async (page: number): Promise<ISmithNEP11RecordPaginate> => {
     const records = {
       operation: "getNEP11List",
       scriptHash: this.contractHash,
@@ -481,44 +479,5 @@ export class SmithContract {
       throw new Error(res.exception as string);
     }
     return res.stack[0].value as boolean;
-  };
-
-  balanceCheck = async (
-    connectedWallet: IConnectedWallet,
-  ): Promise<{
-    gasBalance: number;
-    nepBalance: number;
-  }> => {
-	  const ownerHash = NeonWallet.getScriptHashFromAddress(
-		  connectedWallet.account.address
-	  );
-    const script1 = {
-      scriptHash: GAS_SCRIPT_HASH,
-      operation: "balanceOf",
-      args: [
-        {
-          type: "Hash160",
-          value: ownerHash,
-        },
-      ],
-    };
-    const script2 = {
-      scriptHash: NEP_SCRIPT_HASH,
-      operation: "balanceOf",
-      args: [
-        {
-          type: "Hash160",
-          value: ownerHash,
-        },
-      ],
-    };
-    const res = await Network.read(this.network, [script1, script2]);
-    if (res.state === "FAULT") {
-      throw new Error(res.exception as string);
-    }
-    return {
-      gasBalance: parseFloat(res.stack[0].value as string),
-      nepBalance: parseFloat(res.stack[1].value as string),
-    };
   };
 }

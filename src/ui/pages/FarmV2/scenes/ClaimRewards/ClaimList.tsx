@@ -74,7 +74,7 @@ const ClaimList = ({
                             tokensStaked={item.tokensStaked}
                             share={item.share}
                             pricePerToken={
-                              prices ? prices["0x" + NEP_SCRIPT_HASH] : 0
+                              prices ? prices["0x" + NEP_SCRIPT_HASH[network]] : 0
                             }
                           />
                         ) : (
@@ -86,40 +86,44 @@ const ClaimList = ({
                             tokensStaked={item.tokensStaked}
                             share={item.share}
                             pricePerToken={
-                              prices ? prices["0x" + NEP_SCRIPT_HASH] : 0
+                              prices ? prices["0x" + NEP_SCRIPT_HASH[network]] : 0
                             }
                           />
                         )}
                       </small>
                       {item.bonusTokensPerSecond > 0 ? (
-												<div className="mt-2">
-													<small>
-														{rewardDisplayType === REALTIME ? (
-															<CounterUp
-																symbol={item.bonusTokenSymbol}
-																claimable={item.bonusToHarvest}
-																rewardsPerSecond={item.bonusTokensPerSecond}
-																tokensStaked={item.tokensStaked}
-																share={item.share}
-																pricePerToken={
-																	prices ? prices["0x" + item.bonusTokenHash] : 0
-																}
-															/>
-														) : (
-															<RewardsInRange
-																timeRangeType={rewardDisplayType}
-																symbol={item.bonusTokenSymbol}
-																claimable={item.bonusToHarvest}
-																rewardsPerSecond={item.bonusTokensPerSecond}
-																tokensStaked={item.tokensStaked}
-																share={item.share}
-																pricePerToken={
-																	prices ? prices["0x" + item.bonusTokenHash] : 0
-																}
-															/>
-														)}
-													</small>
-												</div>
+                        <div className="mt-2">
+                          <small>
+                            {rewardDisplayType === REALTIME ? (
+                              <CounterUp
+                                symbol={item.bonusTokenSymbol}
+                                claimable={item.bonusToHarvest}
+                                rewardsPerSecond={item.bonusTokensPerSecond}
+                                tokensStaked={item.tokensStaked}
+                                share={item.share}
+                                pricePerToken={
+                                  prices
+                                    ? prices["0x" + item.bonusTokenHash]
+                                    : 0
+                                }
+                              />
+                            ) : (
+                              <RewardsInRange
+                                timeRangeType={rewardDisplayType}
+                                symbol={item.bonusTokenSymbol}
+                                claimable={item.bonusToHarvest}
+                                rewardsPerSecond={item.bonusTokensPerSecond}
+                                tokensStaked={item.tokensStaked}
+                                share={item.share}
+                                pricePerToken={
+                                  prices
+                                    ? prices["0x" + item.bonusTokenHash]
+                                    : 0
+                                }
+                              />
+                            )}
+                          </small>
+                        </div>
                       ) : (
                         <></>
                       )}

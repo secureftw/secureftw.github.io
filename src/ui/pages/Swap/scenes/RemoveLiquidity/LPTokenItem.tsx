@@ -4,7 +4,6 @@ import { ILPToken } from "../../../../../packages/neo/contracts/ftw/swap/interfa
 import { useOnChainData } from "../../../../../common/hooks/use-onchain-data";
 import { SwapContract } from "../../../../../packages/neo/contracts";
 import { INetworkType } from "../../../../../packages/neo/network";
-import { toDecimal } from "../../../../../packages/neo/utils";
 import { u } from "@cityofzion/neon-core";
 interface ILPTokenListProps extends ILPToken {
   onRemove: (tokenId: string) => void;
@@ -39,7 +38,7 @@ const LPTokenItem = ({
     <div className="media">
       <div className="media-content">
         <p className="mb-2">
-          <strong>{name}</strong>
+          <strong>{tokenId}</strong>
           <br />
           <small>
             Share of pool / {((amount / data.totalShare) * 100).toFixed(2)}%

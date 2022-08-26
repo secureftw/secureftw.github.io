@@ -1,12 +1,14 @@
 import { CONST } from "../../../index";
 import { INetworkType } from "../../../network";
 import {
-	BNEO_SCRIPT_HASH,
-	FLM_SCRIPT_HASH, GAS_SCRIPT_HASH,
-	GM_SCRIPT_HASH,
-	LRB_SCRIPT_HASH,
-	NEO_SCRIPT_HASH
+  BNEO_SCRIPT_HASH,
+  FLM_SCRIPT_HASH,
+  GAS_SCRIPT_HASH,
+  GM_SCRIPT_HASH,
+  LRB_SCRIPT_HASH,
+  NEO_SCRIPT_HASH,
 } from "../../../consts/nep17-list";
+import {MAINNET} from "../../../consts";
 
 export const LAUNCH_AT = 1655229600000; // June 14th 6PM UTC (11AM LA)
 export const END_AT = 1655827200000; // June 14th 6PM UTC (11AM LA)
@@ -29,7 +31,7 @@ export const payments = (network: INetworkType) => [
     amount: 1200,
   },
   {
-    contractHash: BNEO_SCRIPT_HASH,
+    contractHash: BNEO_SCRIPT_HASH[MAINNET],
     symbol: "bNEO",
     logo: "/symbols/bneo.jpeg",
     decimals: 8,

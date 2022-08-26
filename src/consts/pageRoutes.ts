@@ -49,7 +49,7 @@ export const SWAP_PAGE_ROUTE = {
 export const FARM_PAGE_ROUTE = {
   label: "Farm",
   path: FARM_PATH,
-  network: [TESTNET, MAINNET],
+  network: [MAINNET],
   category: [],
 };
 
@@ -77,7 +77,7 @@ export const SMITH_PAGE_ROUTE = {
 export const DAO_PAGE_ROUTE = {
   label: "DAO",
   path: DAO_PATH,
-  network: [PRIVATENET, TESTNET],
+  network: [PRIVATENET],
   category: [],
 };
 
@@ -85,23 +85,7 @@ export const ANALYTICS_ROUTE = {
   label: "Analytics",
   path: ANALYTICS_PATH,
   network: [MAINNET],
-  category: [
-    // {
-    //   label: "Tokens",
-    //   path: ANALYTICS_TOKENS_PATH,
-    //   network: [MAINNET],
-    // },
-    // {
-    //   label: "Pools",
-    //   path: ANALYTICS_POOLS_PATH,
-    //   network: [MAINNET],
-    // },
-    // // {
-    // //   label: "Farm",
-    // //   path: ANALYTICS_FARM_PATH,
-    // //   network: [MAINNET],
-    // // },
-  ],
+  category: [],
 };
 
 export const ARCHIVE_ROUTE = {

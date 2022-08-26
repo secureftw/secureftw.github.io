@@ -84,7 +84,7 @@ const StakingMain = ({ prices }: IStakingMainProps) => {
                     {...item}
                     tokenAPrice={prices ? prices["0x" + item.tokenA] : 0}
                     tokenBPrice={prices ? prices["0x" + item.tokenB] : 0}
-                    nepPrice={prices ? prices["0x" + NEP_SCRIPT_HASH] : 0}
+                    nepPrice={prices ? prices["0x" + NEP_SCRIPT_HASH[network]] : 0}
                     bonusTokenPrice={
                       prices ? prices["0x" + item.bonusToken] : 0
                     }
