@@ -1,10 +1,12 @@
 import {
-  B$_SCRIPT_HASH,
   BNEO_SCRIPT_HASH,
   FRANK_SCRIPT_HASH,
+  FWBTC_SCRIPT_HASH,
+  FWETH_SCRIPT_HASH,
   GAS_SCRIPT_HASH,
   GLC_SCRIPT_HASH,
   HIST_SCRIPT_HASH,
+  HOOD_SCRIPT_HASH,
   LITH_SCRIPT_HASH,
   MAG_SCRIPT_HASH,
   MAXI_SCRIPT_HASH,
@@ -31,6 +33,13 @@ export const MAINNET_TOKEN_LIST = {
     logo: "/symbols/nep.png",
     decimals: 8,
   },
+  [BNEO_SCRIPT_HASH[MAINNET]]: {
+    category: TOKEN_CATEGORY_GENERAL,
+    contractHash: BNEO_SCRIPT_HASH[MAINNET],
+    symbol: "bNEO",
+    logo: "/symbols/bneo.jpeg",
+    decimals: 8,
+  },
   [GAS_SCRIPT_HASH]: {
     category: TOKEN_CATEGORY_GENERAL,
     contractHash: GAS_SCRIPT_HASH,
@@ -38,12 +47,19 @@ export const MAINNET_TOKEN_LIST = {
     logo: "/symbols/gas.svg",
     decimals: 8,
   },
-  [BNEO_SCRIPT_HASH[MAINNET]]: {
+  [FWBTC_SCRIPT_HASH]: {
     category: TOKEN_CATEGORY_GENERAL,
-    contractHash: BNEO_SCRIPT_HASH[MAINNET],
-    symbol: "bNEO",
-    logo: "/symbols/bneo.jpeg",
+    contractHash: FWBTC_SCRIPT_HASH,
+    symbol: "fWBTC",
+    logo: "/symbols/btc.png",
     decimals: 8,
+  },
+  [FWETH_SCRIPT_HASH]: {
+    category: TOKEN_CATEGORY_GENERAL,
+    contractHash: FWETH_SCRIPT_HASH,
+    symbol: "fWETH",
+    logo: "/symbols/eth.png",
+    decimals: 18,
   },
   [USDT_SCRIPT_HASH]: {
     category: TOKEN_CATEGORY_GENERAL,
@@ -52,13 +68,13 @@ export const MAINNET_TOKEN_LIST = {
     logo: "/symbols/usdt.png",
     decimals: 6,
   },
-  // [TTM_SCRIPT_HASH]: {
-  //   category: TOKEN_CATEGORY_METAVERSE,
-  //   contractHash: TTM_SCRIPT_HASH,
-  //   symbol: "TTM",
-  //   logo: "/symbols/ttm.png",
-  //   decimals: 8,
-  // },
+  [TTM_SCRIPT_HASH]: {
+    category: TOKEN_CATEGORY_METAVERSE,
+    contractHash: TTM_SCRIPT_HASH,
+    symbol: "TTM",
+    logo: "/symbols/ttm.png",
+    decimals: 8,
+  },
   [TGAS_SCRIPT_HASH]: {
     category: TOKEN_CATEGORY_METAVERSE,
     contractHash: TGAS_SCRIPT_HASH,
@@ -92,6 +108,13 @@ export const MAINNET_TOKEN_LIST = {
     contractHash: MAG_SCRIPT_HASH,
     symbol: "MAG",
     logo: "/symbols/MAG.svg",
+    decimals: 8,
+  },
+  [HOOD_SCRIPT_HASH]: {
+    category: TOKEN_CATEGORY_STARTUPS,
+    contractHash: HOOD_SCRIPT_HASH,
+    symbol: "HOOD",
+    logo: "/symbols/hood.png",
     decimals: 8,
   },
   [NUDES_SCRIPT_HASH]: {

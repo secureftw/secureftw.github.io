@@ -317,7 +317,7 @@ export class SwapContract {
     // return ((parseFloat(amount) * reserveBAmount) / reserveAAmount).toString();
   };
 
-  getPathEstimated = async(): Promise<number> => {
+  getPathEstimated = async (): Promise<number> => {
     const script = {
       scriptHash: this.contractHash,
       operation: "getEstimatedWithPath",
@@ -334,7 +334,7 @@ export class SwapContract {
       ],
     };
     const res = await Network.read(this.network, [script]);
-		console.log(res)
+    console.log(res);
     return res.stack[0].value as number;
   };
 
