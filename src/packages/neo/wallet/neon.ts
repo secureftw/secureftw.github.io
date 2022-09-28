@@ -14,14 +14,14 @@ const getWcNeonWalletInstance = async (
   window.Buffer = buffer.Buffer;
   const instance = new WcSdk(
     await SignClient.init({
-      projectId: "your_project_id", // the ID of your project on Wallet Connect website
+      projectId: "b691f14b8343e73c585d305eac3f6804", // the ID of your project on Wallet Connect website
       relayUrl: "wss://relay.walletconnect.com", // we are using walletconnect's official relay server
       metadata: {
-        name: "your_app_name", // your application name to be displayed on the wallet
-        description: "your_app_desc", // description to be shown on the wallet
-        url: "your_app_url", // url to be linked on the wallet
+        name: "FTW", // your application name to be displayed on the wallet
+        description: "All-in-one solution for crypto projects", // description to be shown on the wallet
+        url: "https://www.forthewin.network", // url to be linked on the wallet
         icons: [
-          "your_app_icon_url",
+          "https://www.forthewin.network/logo/FTW_512_512.svg",
         ], // icon to be shown on the wallet
       },
     })
